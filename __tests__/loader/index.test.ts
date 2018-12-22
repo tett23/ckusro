@@ -1,7 +1,7 @@
 import { FileTypeDirectory, FileTypeFile, load } from '../../src/loader';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
-describe('load', () => {
+describe(load.name, () => {
   beforeEach(() => {
     mockFileSystem({
       '/foo/bar/baz.md': '# test file',

@@ -1,6 +1,6 @@
 import { mergeConfig } from '../../src/config';
 
-describe('mergeConfig', () => {
+describe(mergeConfig.name, () => {
   it('override properties', () => {
     const actual = mergeConfig({ targetDirectory: 'hoge' });
 
