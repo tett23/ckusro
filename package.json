@@ -64,6 +64,5 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
-    "directory-tree": "^2.2.0"
   }
 }
