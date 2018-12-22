@@ -7,6 +7,8 @@
     "start": "npm run watch",
     "build": "webpack --mode production",
     "watch": "webpack --mode development --watch",
+    "test": "jest",
+    "test-watch": "jest --watchAll",
     "lint": "tslint --fix ./src ./__tests__"
   },
   "repository": {
