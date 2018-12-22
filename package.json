@@ -9,7 +9,7 @@
     "watch": "webpack --mode development --watch",
     "test": "jest",
     "test-watch": "jest --watchAll",
-    "lint": "tslint --fix ./src ./__tests__"
+    "lint": "tslint --fix -p ./tsconfig.json"
   },
   "repository": {
     "type": "git",
@@ -55,11 +55,13 @@
     "ts-loader": "^5.3.2",
     "tslint": "^5.10.0",
     "tslint-config-prettier": "^1.12.0",
-    "tslint-config-standard": "^8.0.1",
     "tslint-loader": "^3.6.0",
     "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.2.2",
     "webpack": "^4.28.1",
     "webpack-cli": "^3.1.2"
+  },
+  "dependencies": {
+    "directory-tree": "^2.2.0"
   }
 }
