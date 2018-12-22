@@ -3,12 +3,7 @@
     "outDir": "./lib",
     "baseUrl": "./src",
     "paths": {
-      "*": ["node_modules*"],
-      "shared*": ["app/javascript/shared*"],
-      "portfolio*": ["app/javascript/portfolio*"],
-      "jobs*": ["app/javascript/jobs*"],
-      "vendor*": ["app/javascript/vendor*"],
-      "images*": ["app/assets/images*"]
+      "*": ["node_modules*"]
     },
     "module": "commonjs",
     "moduleResolution": "node",
@@ -17,7 +12,14 @@
     "newLine": "LF",
     "sourceMap": true,
     "jsx": "react",
-    "lib": ["es2015", "es2016", "es2017", "dom", "esnext.asynciterable", "esnext.array"],
+    "lib": [
+      "es2015",
+      "es2016",
+      "es2017",
+      "dom",
+      "esnext.asynciterable",
+      "esnext.array"
+    ],
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
