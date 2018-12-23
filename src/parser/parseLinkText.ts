@@ -46,6 +46,7 @@ export function determineLinkFile(link: IncompletenessLink, files: CkusroFile[])
   const namespaceItems = files.flatMap((f) => (link.namespace === f.namespace ? [f] : []));
 
   // TODO: Implement anchor variable
+  // TODO: It must consider the case where relative path
 
   switch (linkType(link.name)) {
     case LinkTypeAbsolute:
