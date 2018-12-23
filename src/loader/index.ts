@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { basename } from 'path';
+import { join as joinPath } from 'path';
 import { promisify } from 'util';
 
 const stat = promisify(fs.stat);
@@ -16,11 +17,14 @@ export type CkusroObject = {
   children: CkusroObject[];
 };
 
-export async function tree(path: string, extensions: RegExp): Promise<CkusroObject | null> {
+export async function tree(path: string, extensions: RegExp, basePath: string): Promise<CkusroObject | null> {
   const res = await stat(path).catch(() => null);
   if (res == null) {
     return null;
   }
+
+  const itemPath = joinPath('/', path.slice(basePath.length));
+
   if (res.isFile()) {
     if (!extensions.test(path)) {
       return null;
@@ -28,7 +32,7 @@ export async function tree(path: string, extensions: RegExp): Promise<CkusroObje
 
     return {
       name: basename(path),
-      path,
+      path: itemPath,
       fileType: StatTypeFile,
       children: [],
     };
@@ -42,13 +46,13 @@ export async function tree(path: string, extensions: RegExp): Promise<CkusroObje
     return null;
   }
 
-  const children = (await Promise.all(entries.map((item) => tree(`${path}/${item}`, extensions)))).filter(
+  const children = (await Promise.all(entries.map((item) => tree(`${path}/${item}`, extensions, basePath)))).filter(
     Boolean,
   ) as CkusroObject[];
 
   const ret: CkusroObject = {
     name: basename(path),
-    path,
+    path: itemPath,
     fileType: StatTypeDirectory,
     children,
   };
@@ -69,7 +73,7 @@ export async function load(
     name: basename(targetDirectory),
     path: targetDirectory,
   };
-  const node = await tree(targetDirectory, extensions);
+  const node = await tree(targetDirectory, extensions, targetDirectory);
   if (node == null) {
     return new Error('');
   }
@@ -87,8 +91,10 @@ export type CkusroId = string;
 export type CkusroFile = {
   id: CkusroId;
   name: string;
+  path: string;
   fileType: FileType;
   isLoaded: boolean;
+  content: string | null;
   weakDependencies: CkusroId[];
   strongDependencies: CkusroId[];
   variables: any[];
@@ -153,8 +159,10 @@ function transform(node: CkusroObject): CkusroFile {
   return {
     id: node.path,
     name: node.name,
+    path: node.path,
     fileType: detectType(node.fileType, node.name),
     isLoaded: false,
+    content: null,
     weakDependencies: [],
     strongDependencies: [],
     variables: [],

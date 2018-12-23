@@ -1,6 +1,7 @@
 import {
   build,
   buildDependencyTable,
+  CkusroFile,
   CkusroObject,
   detectType,
   FileTypeDirectory,
@@ -34,17 +35,17 @@ describe(load.name, () => {
 
     expect(node).toEqual({
       name: 'foo',
-      path: '/foo',
+      path: '/',
       fileType: StatTypeDirectory,
       children: [
         {
           name: 'bar',
-          path: '/foo/bar',
+          path: '/bar',
           fileType: StatTypeDirectory,
           children: [
             {
               name: 'baz.md',
-              path: '/foo/bar/baz.md',
+              path: '/bar/baz.md',
               fileType: StatTypeFile,
               children: [],
             },
@@ -93,8 +94,10 @@ describe(buildDependencyTable.name, () => {
       {
         id: '1',
         name: 'foo.md',
+        path: '/foo.md',
         fileType: FileTypeMarkdown,
         isLoaded: true,
+        content: null,
         weakDependencies: ['2'],
         strongDependencies: ['3'],
         variables: [],
@@ -102,8 +105,10 @@ describe(buildDependencyTable.name, () => {
       {
         id: '2',
         name: 'foo.md',
+        path: '/foo.md',
         fileType: FileTypeMarkdown,
         isLoaded: true,
+        content: null,
         weakDependencies: [],
         strongDependencies: [],
         variables: [],
@@ -111,8 +116,10 @@ describe(buildDependencyTable.name, () => {
       {
         id: '3',
         name: 'foo.md',
+        path: '/foo.md',
         fileType: FileTypeMarkdown,
         isLoaded: true,
+        content: null,
         weakDependencies: [],
         strongDependencies: [],
         variables: [],
@@ -159,13 +166,14 @@ describe(build.name, () => {
       ],
     };
     const actual = build(tree);
-
-    expect(actual).toEqual([
+    const expected: CkusroFile[] = [
       {
         id: '/foo',
         name: 'foo',
+        path: '/foo',
         fileType: FileTypeDirectory,
         isLoaded: false,
+        content: null,
         weakDependencies: [],
         strongDependencies: [],
         variables: [],
@@ -173,8 +181,10 @@ describe(build.name, () => {
       {
         id: '/foo/bar',
         name: 'bar',
+        path: '/foo/bar',
         fileType: FileTypeDirectory,
         isLoaded: false,
+        content: null,
         weakDependencies: [],
         strongDependencies: [],
         variables: [],
@@ -182,12 +192,16 @@ describe(build.name, () => {
       {
         id: '/foo/bar/baz.md',
         name: 'baz.md',
+        path: '/foo/bar/baz.md',
         fileType: FileTypeMarkdown,
         isLoaded: false,
+        content: null,
         weakDependencies: [],
         strongDependencies: [],
         variables: [],
       },
-    ]);
+    ];
+
+    expect(actual).toEqual(expected);
   });
 });
