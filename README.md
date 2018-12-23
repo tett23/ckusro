@@ -1,12 +1,11 @@
-# TypeScript boilerplate
+# ckusro
 
-## Features
+## Installation
 
-- TypeScript
-- TSlint
-- Prettier
-- Jest
-- Webpack
+``` sh
+$ yarn install
+$ yarn start
+```
 
 ## License
 
