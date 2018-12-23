@@ -1,4 +1,5 @@
 import {
+  buildDependencyTable,
   detectType,
   FileTypeDirectory,
   FileTypeMarkdown,
@@ -67,5 +68,54 @@ describe(detectType.name, () => {
     const actual = detectType(StatTypeFile, 'foo.bar');
 
     expect(actual).toBe(FileTypeRaw);
+  });
+});
+
+describe(buildDependencyTable.name, () => {
+  it('returns FileTypeDirectory when statType is StatTypeDirectory', () => {
+    const actual = buildDependencyTable([
+      {
+        id: '1',
+        name: 'foo.md',
+        fileType: FileTypeMarkdown,
+        isLoaded: true,
+        weakDependencies: ['2'],
+        strongDependencies: ['3'],
+        variables: [],
+      },
+      {
+        id: '2',
+        name: 'foo.md',
+        fileType: FileTypeMarkdown,
+        isLoaded: true,
+        weakDependencies: [],
+        strongDependencies: [],
+        variables: [],
+      },
+      {
+        id: '3',
+        name: 'foo.md',
+        fileType: FileTypeMarkdown,
+        isLoaded: true,
+        weakDependencies: [],
+        strongDependencies: [],
+        variables: [],
+      },
+    ]);
+
+    expect(actual).toMatchObject({
+      '1': {
+        weakDependencies: [],
+        strongDependencies: [],
+      },
+      '2': {
+        weakDependencies: ['1'],
+        strongDependencies: [],
+      },
+      '3': {
+        weakDependencies: [],
+        strongDependencies: ['1'],
+      },
+    });
   });
 });
