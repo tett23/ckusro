@@ -11,6 +11,7 @@ export type StatType = typeof StatTypeDirectory | typeof StatTypeFile;
 
 export type CkusroObject = {
   name: string;
+  path: string;
   fileType: StatType;
   children: CkusroObject[];
 };
@@ -27,6 +28,7 @@ async function tree(path: string, extensions: RegExp): Promise<CkusroObject | nu
 
     return {
       name: basename(path),
+      path,
       fileType: StatTypeFile,
       children: [],
     };
@@ -46,6 +48,7 @@ async function tree(path: string, extensions: RegExp): Promise<CkusroObject | nu
 
   const ret: CkusroObject = {
     name: basename(path),
+    path,
     fileType: StatTypeDirectory,
     children,
   };
@@ -127,4 +130,20 @@ export function buildDependencyTable(files: CkusroFile[]): DependencyTable {
     acc[id] = { weakDependencies: weak, strongDependencies: strong };
     return acc;
   }, {});
+}
+
+function transform(node: CkusroObject): CkusroFile {
+  return {
+    id: node.path,
+    name: node.name,
+    fileType: detectType(node.fileType, node.name),
+    isLoaded: false,
+    weakDependencies: [],
+    strongDependencies: [],
+    variables: [],
+  };
+}
+
+export function build(node: CkusroObject): CkusroFile[] {
+  return [transform(node)].concat(node.children.flatMap((item) => build(item)));
 }

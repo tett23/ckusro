@@ -1,5 +1,7 @@
 import {
+  build,
   buildDependencyTable,
+  CkusroObject,
   detectType,
   FileTypeDirectory,
   FileTypeMarkdown,
@@ -25,16 +27,19 @@ describe(load.name, () => {
   it('load items', async () => {
     const actual = await load('/foo', /\.(md|txt)$/);
 
-    expect(actual).toMatchObject({
+    expect(actual).toEqual({
       name: 'foo',
+      path: '/foo',
       fileType: StatTypeDirectory,
       children: [
         {
           name: 'bar',
+          path: '/foo/bar',
           fileType: StatTypeDirectory,
           children: [
             {
               name: 'baz.md',
+              path: '/foo/bar/baz.md',
               fileType: StatTypeFile,
               children: [],
             },
@@ -103,7 +108,7 @@ describe(buildDependencyTable.name, () => {
       },
     ]);
 
-    expect(actual).toMatchObject({
+    expect(actual).toEqual({
       '1': {
         weakDependencies: [],
         strongDependencies: [],
@@ -117,5 +122,61 @@ describe(buildDependencyTable.name, () => {
         strongDependencies: ['1'],
       },
     });
+  });
+});
+
+describe(build.name, () => {
+  it('load items', async () => {
+    const tree: CkusroObject = {
+      name: 'foo',
+      path: '/foo',
+      fileType: StatTypeDirectory,
+      children: [
+        {
+          name: 'bar',
+          path: '/foo/bar',
+          fileType: StatTypeDirectory,
+          children: [
+            {
+              name: 'baz.md',
+              path: '/foo/bar/baz.md',
+              fileType: StatTypeFile,
+              children: [],
+            },
+          ],
+        },
+      ],
+    };
+    const actual = build(tree);
+
+    expect(actual).toEqual([
+      {
+        id: '/foo',
+        name: 'foo',
+        fileType: FileTypeDirectory,
+        isLoaded: false,
+        weakDependencies: [],
+        strongDependencies: [],
+        variables: [],
+      },
+      {
+        id: '/foo/bar',
+        name: 'bar',
+        fileType: FileTypeDirectory,
+        isLoaded: false,
+        weakDependencies: [],
+        strongDependencies: [],
+        variables: [],
+      },
+      {
+        id: '/foo/bar/baz.md',
+        name: 'baz.md',
+        fileType: FileTypeMarkdown,
+        isLoaded: false,
+        weakDependencies: [],
+        strongDependencies: [],
+        variables: [],
+      },
+    ]);
   });
 });
