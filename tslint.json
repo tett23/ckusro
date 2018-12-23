@@ -8,6 +8,7 @@
     "object-literal-sort-keys": false,
     "no-console": [true, "log"],
     "max-classes-per-file": false,
+    "no-unused-variable": [true, {"ignore-pattern": "^_"}],
     "prettier": [
       true,
       {

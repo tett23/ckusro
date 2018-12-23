@@ -21,7 +21,7 @@
       "esnext.array"
     ],
     "strict": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "strictNullChecks": true,
