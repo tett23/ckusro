@@ -10,6 +10,7 @@ import {
   FileTypeText,
   load,
   loadContent,
+  loadDependency,
   LoaderContext,
   StatTypeDirectory,
   StatTypeFile,
@@ -328,5 +329,74 @@ describe(loadContent, () => {
     };
 
     expect(actual).toEqual(expected);
+  });
+});
+
+describe(loadDependency, () => {
+  const context: LoaderContext = {
+    name: 'test',
+    path: '/test',
+  };
+  it('assigns dependencies', () => {
+    const file: CkusroFile = {
+      id: 'test:/foo.md',
+      namespace: 'test',
+      name: 'foo.md',
+      path: '/foo.md',
+      fileType: FileTypeMarkdown,
+      isLoaded: true,
+      content: '[[bar.md]]',
+      weakDependencies: [],
+      strongDependencies: [],
+      variables: [],
+    };
+    const files: CkusroFile[] = [
+      {
+        id: 'test:/bar.md',
+        namespace: 'test',
+        name: 'bar.md',
+        path: '/bar.md',
+        fileType: FileTypeMarkdown,
+        isLoaded: true,
+        content: '',
+        weakDependencies: [],
+        strongDependencies: [],
+        variables: [],
+      },
+    ];
+    const actual = loadDependency(context, file, files);
+    const expected = {
+      id: 'test:/foo.md',
+      namespace: 'test',
+      name: 'foo.md',
+      path: '/foo.md',
+      fileType: FileTypeMarkdown,
+      isLoaded: true,
+      content: '[[bar.md]]',
+      weakDependencies: ['test:/bar.md'],
+      strongDependencies: ['test:/bar.md'],
+      variables: [],
+    };
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('returns same object when isLoaded is false', () => {
+    const file: CkusroFile = {
+      id: 'test:/foo.md',
+      namespace: 'test',
+      name: 'foo.md',
+      path: '/foo.md',
+      fileType: FileTypeMarkdown,
+      isLoaded: false,
+      content: null,
+      weakDependencies: [],
+      strongDependencies: [],
+      variables: [],
+    };
+    const files: CkusroFile[] = [];
+    const actual = loadDependency(context, file, files);
+
+    expect(actual).toBe(file);
   });
 });

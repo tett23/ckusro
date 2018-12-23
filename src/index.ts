@@ -1,6 +1,15 @@
 import 'core-js/fn/array/flat-map';
 import { CkusroConfig, mergeConfig } from './config';
-import { build, buildDependencyTable, CkusroFile, DependencyTable, load, LoaderContext } from './loader';
+import {
+  build,
+  buildDependencyTable,
+  CkusroFile,
+  DependencyTable,
+  load,
+  loadContent,
+  loadDependency,
+  LoaderContext,
+} from './loader';
 
 export type GlobalState = {
   context: LoaderContext;
@@ -15,12 +24,14 @@ export default async function main(config: CkusroConfig): Promise<GlobalState | 
   }
   const [context, root] = result;
 
-  const files = build(context, root);
-  const dependencies = buildDependencyTable(files);
+  const ps = build(context, root).map(async (item) => await loadContent(context, item));
+  const files = await Promise.all(ps);
+  const dependencyLoaded = files.map((item) => loadDependency(context, item, files));
+  const dependencies = buildDependencyTable(dependencyLoaded);
 
   return {
     context,
-    files,
+    files: dependencyLoaded,
     dependencyTable: dependencies,
   };
 }

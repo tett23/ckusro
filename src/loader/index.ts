@@ -2,6 +2,7 @@ import fs from 'fs';
 import { basename } from 'path';
 import { join as joinPath } from 'path';
 import { promisify } from 'util';
+import { buildAst, determineDependency } from '../parser';
 
 const stat = promisify(fs.stat);
 const readdir = promisify(fs.readdir);
@@ -203,4 +204,18 @@ export async function loadContent(context: LoaderContext, file: CkusroFile): Pro
     content: content.toString(),
   };
   return Object.assign({}, file, merge);
+}
+
+export function loadDependency(context: LoaderContext, file: CkusroFile, files: CkusroFile[]): CkusroFile {
+  if (!file.isLoaded) {
+    return file;
+  }
+
+  const rootNode = buildAst(file.content || '');
+  const dependencyFiles = determineDependency(context, rootNode, files);
+
+  return Object.assign({}, file, {
+    weakDependencies: dependencyFiles.map(({ id }) => id),
+    strongDependencies: dependencyFiles.map(({ id }) => id),
+  });
 }
