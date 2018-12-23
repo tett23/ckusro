@@ -5,13 +5,13 @@ import { promisify } from 'util';
 const stat = promisify(fs.stat);
 const readdir = promisify(fs.readdir);
 
-export const FileTypeDirectory: 'directory' = 'directory';
-export const FileTypeFile: 'file' = 'file';
-export type FileType = typeof FileTypeDirectory | typeof FileTypeFile;
+export const StatTypeDirectory: 'directory' = 'directory';
+export const StatTypeFile: 'file' = 'file';
+export type StatType = typeof StatTypeDirectory | typeof StatTypeFile;
 
 export type CkusroObject = {
   name: string;
-  fileType: FileType;
+  fileType: StatType;
   children: CkusroObject[];
 };
 
@@ -27,7 +27,7 @@ async function tree(path: string, extensions: RegExp): Promise<CkusroObject | nu
 
     return {
       name: basename(path),
-      fileType: FileTypeFile,
+      fileType: StatTypeFile,
       children: [],
     };
   }
@@ -46,7 +46,7 @@ async function tree(path: string, extensions: RegExp): Promise<CkusroObject | nu
 
   const ret: CkusroObject = {
     name: basename(path),
-    fileType: FileTypeDirectory,
+    fileType: StatTypeDirectory,
     children,
   };
 

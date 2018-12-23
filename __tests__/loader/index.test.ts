@@ -1,4 +1,4 @@
-import { FileTypeDirectory, FileTypeFile, load } from '../../src/loader';
+import { load, StatTypeDirectory, StatTypeFile } from '../../src/loader';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(load.name, () => {
@@ -17,15 +17,15 @@ describe(load.name, () => {
 
     expect(actual).toMatchObject({
       name: 'foo',
-      fileType: FileTypeDirectory,
+      fileType: StatTypeDirectory,
       children: [
         {
           name: 'bar',
-          fileType: FileTypeDirectory,
+          fileType: StatTypeDirectory,
           children: [
             {
               name: 'baz.md',
-              fileType: FileTypeFile,
+              fileType: StatTypeFile,
               children: [],
             },
           ],
