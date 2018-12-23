@@ -237,3 +237,18 @@ export function loadDependencies(
     strongDependencies: dependencyFiles.map(({ id }) => id),
   });
 }
+
+export function isWritableFile(fileType: FileType): boolean {
+  switch (fileType) {
+    case FileTypeDirectory:
+      return false;
+    case FileTypeDoesNotExist:
+      return false;
+    case FileTypeMarkdown:
+      return true;
+    case FileTypeText:
+      return true;
+    case FileTypeRaw:
+      return true;
+  }
+}

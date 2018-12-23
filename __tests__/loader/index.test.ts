@@ -4,10 +4,13 @@ import {
   CkusroFile,
   CkusroObject,
   detectType,
+  FileType,
   FileTypeDirectory,
+  FileTypeDoesNotExist,
   FileTypeMarkdown,
   FileTypeRaw,
   FileTypeText,
+  isWritableFile,
   load,
   loadContent,
   loadDependencies,
@@ -398,5 +401,24 @@ describe(loadDependencies, () => {
     const actual = loadDependencies(context, file, files);
 
     expect(actual).toBe(file);
+  });
+});
+
+describe(isWritableFile, () => {
+  it('', () => {
+    const data: Array<[FileType, boolean]> = [
+      [FileTypeDirectory, false],
+      [FileTypeDoesNotExist, false],
+      [FileTypeMarkdown, true],
+      [FileTypeText, true],
+      [FileTypeRaw, true],
+    ];
+
+    data.forEach((item) => {
+      const [value, expected] = item;
+      const actual = isWritableFile(value);
+
+      expect(actual).toBe(expected);
+    });
   });
 });
