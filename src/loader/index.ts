@@ -86,7 +86,13 @@ export const FileTypeDirectory: 'directory' = 'directory';
 export const FileTypeMarkdown: 'markdown' = 'markdown';
 export const FileTypeText: 'text' = 'text';
 export const FileTypeRaw: 'raw' = 'raw';
-export type FileType = typeof FileTypeDirectory | typeof FileTypeMarkdown | typeof FileTypeText | typeof FileTypeRaw;
+export const FileTypeDoesNotExist: 'does_not_exist' = 'does_not_exist';
+export type FileType =
+  | typeof FileTypeDirectory
+  | typeof FileTypeMarkdown
+  | typeof FileTypeText
+  | typeof FileTypeRaw
+  | typeof FileTypeDoesNotExist;
 export type CkusroId = string;
 
 export type CkusroFile = {
