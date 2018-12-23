@@ -1,4 +1,4 @@
-import { LoaderContext } from '../loader';
+import { CkusroFile, LoaderContext } from '../loader';
 
 export type Link = {
   namespace: string;
@@ -28,4 +28,16 @@ export default function parseLinkText(context: LoaderContext, text: string): Lin
     page,
     anchor,
   };
+}
+
+export function determineLinkFile(link: Link, files: CkusroFile[]): CkusroFile | null {
+  const namespaceItems = files.flatMap((f) => (link.namespace === f.namespace ? [f] : []));
+
+  if (link.page.startsWith('/')) {
+    return namespaceItems.find(({ path }) => path === link.page) || null;
+  }
+
+  // TODO: Implement anchor variable
+
+  return namespaceItems.find(({ name }) => name === link.page) || null;
 }
