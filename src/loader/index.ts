@@ -16,7 +16,7 @@ export type CkusroObject = {
   children: CkusroObject[];
 };
 
-async function tree(path: string, extensions: RegExp): Promise<CkusroObject | null> {
+export async function tree(path: string, extensions: RegExp): Promise<CkusroObject | null> {
   const res = await stat(path).catch(() => null);
   if (res == null) {
     return null;
@@ -56,8 +56,25 @@ async function tree(path: string, extensions: RegExp): Promise<CkusroObject | nu
   return ret;
 }
 
-export async function load(targetDirectory: string, extensions: RegExp): Promise<CkusroObject | null> {
-  return await tree(targetDirectory, extensions);
+export type LoaderContext = {
+  name: string;
+  path: string;
+};
+
+export async function load(
+  targetDirectory: string,
+  extensions: RegExp,
+): Promise<[LoaderContext, CkusroObject] | Error> {
+  const context: LoaderContext = {
+    name: basename(targetDirectory),
+    path: targetDirectory,
+  };
+  const node = await tree(targetDirectory, extensions);
+  if (node == null) {
+    return new Error('');
+  }
+
+  return [context, node];
 }
 
 export const FileTypeDirectory: 'directory' = 'directory';

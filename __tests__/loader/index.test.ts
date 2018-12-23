@@ -25,9 +25,14 @@ describe(load.name, () => {
   });
 
   it('load items', async () => {
-    const actual = await load('/foo', /\.(md|txt)$/);
+    const [context, node]: any = await load('/foo', /\.(md|txt)$/);
 
-    expect(actual).toEqual({
+    expect(context).toEqual({
+      name: 'foo',
+      path: '/foo',
+    });
+
+    expect(node).toEqual({
       name: 'foo',
       path: '/foo',
       fileType: StatTypeDirectory,
@@ -47,6 +52,12 @@ describe(load.name, () => {
         },
       ],
     });
+  });
+
+  it('returns Error when directory does not exist', async () => {
+    const actual = await load('/bar', /\.(md|txt)$/);
+
+    expect(actual).toBeInstanceOf(Error);
   });
 });
 
