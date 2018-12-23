@@ -10,7 +10,7 @@ import {
   FileTypeMarkdown,
   FileTypeRaw,
   FileTypeText,
-  isWritableFile,
+  isWritableFileType,
   load,
   loadContent,
   loadDependencies,
@@ -404,7 +404,7 @@ describe(loadDependencies, () => {
   });
 });
 
-describe(isWritableFile, () => {
+describe(isWritableFileType, () => {
   it('', () => {
     const data: Array<[FileType, boolean]> = [
       [FileTypeDirectory, false],
@@ -416,7 +416,7 @@ describe(isWritableFile, () => {
 
     data.forEach((item) => {
       const [value, expected] = item;
-      const actual = isWritableFile(value);
+      const actual = isWritableFileType(value);
 
       expect(actual).toBe(expected);
     });

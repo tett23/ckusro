@@ -238,7 +238,7 @@ export function loadDependencies(
   });
 }
 
-export function isWritableFile(fileType: FileType): boolean {
+export function isWritableFileType(fileType: FileType): boolean {
   switch (fileType) {
     case FileTypeDirectory:
       return false;
