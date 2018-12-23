@@ -1,8 +1,10 @@
-import { CkusroConfig } from '../src/config';
-import main from '../src/index';
-import { mockFileSystem, restoreFileSystem } from './__helpers__/fs';
+import { CkusroConfig } from '../../src/config';
+import buildGlobalState, {
+  GlobalState,
+} from '../../src/staticRenderer/buildGlobalState';
+import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
-describe(main.name, () => {
+describe(buildGlobalState, () => {
   beforeEach(() => {
     mockFileSystem({
       '/test/foo/bar/baz.md': '# test file',
@@ -12,6 +14,10 @@ describe(main.name, () => {
     restoreFileSystem();
   });
 
+  function isGlobalState(obj: any): obj is GlobalState {
+    return 'context' in obj && 'files' in obj && 'dependencyTable' in obj;
+  }
+
   it('returns GlobalState', async () => {
     const conf: CkusroConfig = {
       targetDirectory: '/test',
@@ -20,9 +26,9 @@ describe(main.name, () => {
         extensions: /\.(md|txt)$/,
       },
     };
-    const actual = await main(conf);
+    const actual = await buildGlobalState(conf);
 
-    expect(actual).toEqual([true]);
+    expect(isGlobalState(actual)).toBeTruthy();
   });
 
   it('returns Error when directory does not exist', async () => {
@@ -33,7 +39,7 @@ describe(main.name, () => {
         extensions: /\.(md|txt)$/,
       },
     };
-    const actual = await main(conf);
+    const actual = await buildGlobalState(conf);
 
     expect(actual).toBeInstanceOf(Error);
   });

@@ -1,43 +1,89 @@
+import over from 'ramda/es/over';
 import { CkusroConfig } from '../../src/config';
-import { buildGlobalState } from '../../src/staticRenderer';
-import { GlobalState } from '../../src/staticRenderer';
+import {
+  CkusroFile,
+  FileTypeDirectory,
+  FileTypeMarkdown,
+} from '../../src/loader';
+import render, {
+  buildHTML,
+  filterWritable,
+  parse,
+} from '../../src/staticRenderer';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
-describe(buildGlobalState, () => {
+describe(render, () => {
   beforeEach(() => {
     mockFileSystem({
-      '/foo/bar/baz.md': '# test file',
+      '/test/foo/bar/baz.md': '# test file',
     });
   });
   afterEach(() => {
     restoreFileSystem();
   });
 
-  function isGlobalState(obj: any): obj is GlobalState {
-    return 'context' in obj && 'files' in obj && 'dependencyTable' in obj;
+  it('returns boolean array', async () => {
+    const conf: CkusroConfig = {
+      targetDirectory: '/test',
+      outputDirectory: '/out',
+      loader: {
+        extensions: /\.(md|txt)$/,
+      },
+    };
+    const actual = await render(conf);
+
+    expect(actual).toEqual([true]);
+  });
+});
+
+describe(filterWritable, () => {
+  const template = {
+    id: 'test:/foo.md',
+    namespace: 'test',
+    name: 'foo.md',
+    path: '/foo.md',
+    fileType: FileTypeMarkdown,
+    isLoaded: true,
+    content: '[[bar.md]]',
+    weakDependencies: ['test:/bar.md'],
+    strongDependencies: ['test:/bar.md'],
+    variables: [],
+  };
+
+  function buildFile(overrides: Partial<CkusroFile>): CkusroFile {
+    return Object.assign({}, template, overrides);
   }
 
-  it('returns GlobalState', async () => {
-    const conf: CkusroConfig = {
-      targetDirectory: '/foo',
-      loader: {
-        extensions: /\.(md|txt)$/,
-      },
-    };
-    const actual = await buildGlobalState(conf);
+  it('returns Object 1-tuple', () => {
+    const file: CkusroFile = buildFile({});
+    const actual = filterWritable(file);
 
-    expect(isGlobalState(actual)).toBeTruthy();
+    expect(actual).toEqual([
+      {
+        path: file.path,
+        content: buildHTML(parse(file.content || ''), {}),
+      },
+    ]);
   });
 
-  it('returns Error when directory does not exist', async () => {
-    const conf: CkusroConfig = {
-      targetDirectory: '/does_not_exist',
-      loader: {
-        extensions: /\.(md|txt)$/,
-      },
-    };
-    const actual = await buildGlobalState(conf);
+  it('returns 0-tuple when fileType is not writable type', () => {
+    const file: CkusroFile = buildFile({ fileType: FileTypeDirectory });
+    const actual = filterWritable(file);
 
-    expect(actual).toBeInstanceOf(Error);
+    expect(actual).toEqual([]);
+  });
+
+  it('returns 0-tuple when isLoaded is false', () => {
+    const file: CkusroFile = buildFile({ isLoaded: false });
+    const actual = filterWritable(file);
+
+    expect(actual).toEqual([]);
+  });
+
+  it('returns 0-tuple when isLoaded is false', () => {
+    const file: CkusroFile = buildFile({ content: null });
+    const actual = filterWritable(file);
+
+    expect(actual).toEqual([]);
   });
 });

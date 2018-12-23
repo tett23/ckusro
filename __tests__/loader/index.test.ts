@@ -368,7 +368,7 @@ describe(loadDependencies, () => {
       },
     ];
     const actual = loadDependencies(context, file, files);
-    const expected = {
+    const expected: CkusroFile = {
       id: 'test:/foo.md',
       namespace: 'test',
       name: 'foo.md',
