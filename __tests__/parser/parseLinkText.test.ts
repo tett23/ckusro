@@ -1,12 +1,12 @@
 import { CkusroFile, FileTypeDirectory } from '../../src/loader';
-import parseLinkText, { determineLinkFile, Link } from '../../src/parser/parseLinkText';
+import parseLinkText, { determineLinkFile, IncompletenessLink, Link } from '../../src/parser/parseLinkText';
 
 describe(parseLinkText, () => {
   it('parses page', () => {
     const actual = parseLinkText({ name: 'test', path: '/test' }, '/foo');
-    const expected: Link = {
+    const expected: IncompletenessLink = {
       namespace: 'test',
-      page: '/foo',
+      name: '/foo',
       anchor: null,
     };
 
@@ -15,9 +15,9 @@ describe(parseLinkText, () => {
 
   it('parses namespace', () => {
     const actual = parseLinkText({ name: 'test', path: '/test' }, 'foo:/bar');
-    const expected: Link = {
+    const expected: IncompletenessLink = {
       namespace: 'foo',
-      page: '/bar',
+      name: '/bar',
       anchor: null,
     };
 
@@ -26,9 +26,9 @@ describe(parseLinkText, () => {
 
   it('parses anchor', () => {
     const actual = parseLinkText({ name: 'test', path: '/test' }, 'foo:/bar#baz');
-    const expected: Link = {
+    const expected: IncompletenessLink = {
       namespace: 'foo',
-      page: '/bar',
+      name: '/bar',
       anchor: 'baz',
     };
 
@@ -37,7 +37,7 @@ describe(parseLinkText, () => {
 });
 
 describe(determineLinkFile, () => {
-  it('returns CkusroFile when page is absolute path', () => {
+  it('returns true when page is absolute path', () => {
     const files: CkusroFile[] = [
       {
         id: '/foo',
@@ -52,17 +52,23 @@ describe(determineLinkFile, () => {
         variables: [],
       },
     ];
-    const link: Link = {
+    const link: IncompletenessLink = {
       namespace: 'test',
-      page: '/foo',
+      name: '/foo',
       anchor: null,
     };
     const actual = determineLinkFile(link, files);
+    const expected: Link = {
+      namespace: 'test',
+      path: '/foo',
+      anchor: null,
+      isExist: true,
+    };
 
-    expect(actual).toEqual(files[0]);
+    expect(actual).toEqual(expected);
   });
 
-  it('returns CkusroFile when page is name', () => {
+  it('returns true when page is name', () => {
     const files: CkusroFile[] = [
       {
         id: '/foo',
@@ -77,14 +83,20 @@ describe(determineLinkFile, () => {
         variables: [],
       },
     ];
-    const link: Link = {
+    const link: IncompletenessLink = {
       namespace: 'test',
-      page: 'foo',
+      name: 'foo',
       anchor: null,
     };
     const actual = determineLinkFile(link, files);
+    const expected: Link = {
+      namespace: 'test',
+      path: '/foo',
+      anchor: null,
+      isExist: true,
+    };
 
-    expect(actual).toEqual(files[0]);
+    expect(actual).toEqual(expected);
   });
 
   it('returns null when page does not exist', () => {
@@ -102,13 +114,19 @@ describe(determineLinkFile, () => {
         variables: [],
       },
     ];
-    const link: Link = {
+    const link: IncompletenessLink = {
       namespace: 'test',
-      page: 'bar',
+      name: 'bar',
       anchor: null,
     };
     const actual = determineLinkFile(link, files);
+    const expected: Link = {
+      namespace: 'test',
+      path: '/bar',
+      anchor: null,
+      isExist: false,
+    };
 
-    expect(actual).toBe(null);
+    expect(actual).toEqual(expected);
   });
 });
