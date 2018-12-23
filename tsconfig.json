@@ -28,7 +28,7 @@
     "esModuleInterop": true,
     "allowJs": true
   },
-  "include": ["./src/**/*"],
-  "exclude": [".git", "node_modules", "./__test__/**/*"],
+  "include": ["./src/**/*", "./__tests__/**/*"],
+  "exclude": [".git", "node_modules"],
   "eslint.autoFixOnSave": true
 }

@@ -19,8 +19,5 @@
       }
     ]
   },
-  "rulesDirectory": ["tslint-plugin-prettier"],
-  "linterOptions": {
-    "exclude": ["./node_modules/**/*"]
-  }
+  "rulesDirectory": ["tslint-plugin-prettier"]
 }

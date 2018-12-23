@@ -1,5 +1,14 @@
-import { build, CkusroFile, FileTypeDirectory, FileTypeDoesNotExist, LoaderContext } from '../../src/loader';
-import { buildAst, buildDoesNotExistFile, determineDependency } from '../../src/parser';
+import {
+  CkusroFile,
+  FileTypeDirectory,
+  FileTypeDoesNotExist,
+  LoaderContext,
+} from '../../src/loader';
+import {
+  buildAst,
+  buildDoesNotExistFile,
+  determineDependency,
+} from '../../src/parser';
 
 describe(buildAst, () => {
   it('builds AST', () => {
@@ -19,11 +28,18 @@ describe(buildAst, () => {
             },
           ],
           depth: 1,
-          position: { end: { column: 7, line: 1, offset: 6 }, indent: [], start: { column: 1, line: 1, offset: 0 } },
+          position: {
+            end: { column: 7, line: 1, offset: 6 },
+            indent: [],
+            start: { column: 1, line: 1, offset: 0 },
+          },
           type: 'heading',
         },
       ],
-      position: { end: { column: 7, line: 1, offset: 6 }, start: { column: 1, line: 1, offset: 0 } },
+      position: {
+        end: { column: 7, line: 1, offset: 6 },
+        start: { column: 1, line: 1, offset: 0 },
+      },
       type: 'root',
     };
 

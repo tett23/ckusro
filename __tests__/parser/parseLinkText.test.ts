@@ -1,5 +1,9 @@
 import { CkusroFile, FileTypeDirectory } from '../../src/loader';
-import parseLinkText, { determineLinkFile, IncompletenessLink, Link } from '../../src/parser/parseLinkText';
+import parseLinkText, {
+  determineLinkFile,
+  IncompletenessLink,
+  Link,
+} from '../../src/parser/parseLinkText';
 
 describe(parseLinkText, () => {
   it('parses page', () => {
@@ -25,7 +29,10 @@ describe(parseLinkText, () => {
   });
 
   it('parses anchor', () => {
-    const actual = parseLinkText({ name: 'test', path: '/test' }, 'foo:/bar#baz');
+    const actual = parseLinkText(
+      { name: 'test', path: '/test' },
+      'foo:/bar#baz',
+    );
     const expected: IncompletenessLink = {
       namespace: 'foo',
       name: '/bar',

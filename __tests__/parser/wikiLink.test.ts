@@ -23,19 +23,25 @@ describe(wikiLink, () => {
   it('parses wikiLink', () => {
     const result = parse('[[foo]]');
 
-    expect(result.trim()).toEqual('<WikiLink linkTarget="foo" className="">foo</WikiLink>');
+    expect(result.trim()).toEqual(
+      '<WikiLink linkTarget="foo" className="">foo</WikiLink>',
+    );
   });
 
   it('appends className', () => {
     const result = parse('[[foo]]', { className: 'test' });
 
-    expect(result.trim()).toEqual('<WikiLink linkTarget="foo" className="test">foo</WikiLink>');
+    expect(result.trim()).toEqual(
+      '<WikiLink linkTarget="foo" className="test">foo</WikiLink>',
+    );
   });
 
   it('displays alias textg when wrote with pipe', () => {
     const result = parse('[[foo|bar]]');
 
-    expect(result.trim()).toEqual('<WikiLink linkTarget="foo" className="">bar</WikiLink>');
+    expect(result.trim()).toEqual(
+      '<WikiLink linkTarget="foo" className="">bar</WikiLink>',
+    );
   });
 
   it('nothing to do when text is srrounded by single bracket', () => {

@@ -1,6 +1,5 @@
 import { CkusroConfig } from '../src/config';
 import main, { GlobalState } from '../src/index';
-import * as loader from '../src/loader';
 import { mockFileSystem, restoreFileSystem } from './__helpers__/fs';
 
 describe(main.name, () => {
