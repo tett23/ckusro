@@ -56,3 +56,38 @@ async function tree(path: string, extensions: RegExp): Promise<CkusroObject | nu
 export async function load(targetDirectory: string, extensions: RegExp): Promise<CkusroObject | null> {
   return await tree(targetDirectory, extensions);
 }
+
+export const FileTypeDirectory: 'directory' = 'directory';
+export const FileTypeMarkdown: 'markdown' = 'markdown';
+export const FileTypeText: 'text' = 'text';
+export const FileTypeRaw: 'raw' = 'raw';
+export type FileType = typeof FileTypeDirectory | typeof FileTypeMarkdown | typeof FileTypeText | typeof FileTypeRaw;
+export type CkusroId = string;
+
+export type CkusroFile = {
+  id: CkusroId;
+  name: string;
+  fileType: FileType;
+  isLoaded: boolean;
+  weakDependencies: CkusroId[];
+  strongDependencies: CkusroId[];
+  variables: any[];
+};
+
+export function detectType(statType: StatType, name: string): FileType {
+  if (statType === StatTypeDirectory) {
+    return FileTypeDirectory;
+  }
+
+  const tmp = name.split('.');
+  const ext = tmp[tmp.length - 1];
+
+  switch (ext) {
+    case 'md':
+      return FileTypeMarkdown;
+    case 'txt':
+      return FileTypeText;
+    default:
+      return FileTypeRaw;
+  }
+}
