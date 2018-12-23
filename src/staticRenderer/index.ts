@@ -16,7 +16,7 @@ export type GlobalState = {
   dependencyTable: DependencyTable;
 };
 
-export default async function render(
+export async function buildGlobalState(
   config: CkusroConfig,
 ): Promise<GlobalState | Error> {
   const result = await load(config.targetDirectory, config.loader.extensions);
@@ -39,4 +39,10 @@ export default async function render(
     files: dependencyLoaded,
     dependencyTable: dependencies,
   };
+}
+
+export default async function render(config: CkusroConfig) {
+  const globalState = buildGlobalState(config);
+
+  return globalState;
 }
