@@ -10,7 +10,7 @@ const defaultOptions: Options = {
   visitor,
 };
 
-const wikiLinkRegExp = /\[\[(.+?)\]\]/;
+const wikiLinkRegExp = /^\[\[(.+?)\]\]/;
 
 export default function attacher(userOptions?: unknown) {
   // @ts-ignore
@@ -51,15 +51,8 @@ export default function attacher(userOptions?: unknown) {
   }
 }
 
-function locator(value: string, fromIndex: number): number {
-  const re = new RegExp(wikiLinkRegExp.source);
-  re.lastIndex = fromIndex - 1;
-  const match = re.exec(value);
-  if (match == null) {
-    return -1;
-  }
-
-  return match.index;
+export function locator(value: string, fromIndex: number): number {
+  return value.indexOf('[[', fromIndex);
 }
 
 function visitor(node: Node): string {

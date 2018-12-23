@@ -6,9 +6,13 @@ import parseLinkText, { determineLinkFile } from './parseLinkText';
 import wikiLink from './wikiLink';
 
 export function buildAst(content: string): Root {
-  return mdx
-    .createMdxAstCompiler({ mdPlugins: [[wikiLink, {}]] })
-    .parse(content);
+  try {
+    return mdx
+      .createMdxAstCompiler({ mdPlugins: [[wikiLink, {}]] })
+      .parse(content);
+  } catch (e) {
+    throw e;
+  }
 }
 
 function targetData(data: { internalLink?: any } | null): string | null {
