@@ -709,6 +709,13 @@
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.10.tgz#4897974cc317bf99d4fe6af1efa15957fa9c94de"
   integrity sha512-DC8xTuW/6TYgvEg3HEXS7cu9OijFqprVDXXiOcdOKZCU/5PJNLZU37VVvmZHdtMiGOa8wAA/We+JzbdxFzQTRQ==
 
+"@types/mdast@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@types/mdast/-/mdast-3.0.1.tgz#57e15b4679385d5e9fa6b9827e4ff48b743e4a28"
+  integrity sha512-uXoBWVbGdqS7IhgM6J4khDm+A7ozyy20nhZ1F0SVdkLlYObcaweCSeJG/vuCRnAQL/qjwhj5JK9QymoOSx5QVA==
+  dependencies:
+    "@types/unist" "*"
+
 "@types/mock-fs@^3.6.30":
   version "3.6.30"
   resolved "https://registry.yarnpkg.com/@types/mock-fs/-/mock-fs-3.6.30.tgz#4d812541e87b23577261a5aa95f704dd3d01e410"
@@ -4057,6 +4064,11 @@ mdast-util-to-hast@^4.0.0:
     unist-util-position "^3.0.0"
     unist-util-visit "^1.1.0"
     xtend "^4.0.1"
+
+mdast@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/mdast/-/mdast-3.0.0.tgz#626bce9603ed43fb6fb053245a6e4a17f4457aa8"
+  integrity sha1-YmvOlgPtQ/tvsFMkWm5KF/RFeqg=
 
 mdurl@^1.0.1:
   version "1.0.1"
