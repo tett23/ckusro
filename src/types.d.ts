@@ -13,5 +13,6 @@ declare module '@mdx-js/mdx' {
     parse: (text: string) => any
   }
 
-  export function createMdxAstCompiler(config: Config): Compiler
+  export function createMdxAstCompiler(config: Config): Compiler;
+  export function sync(template: string, config: Config): string;
 }
