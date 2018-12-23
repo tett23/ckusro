@@ -1,7 +1,5 @@
 const config = {
-  entry: {
-    'main': `${__dirname}/src/index.ts`
-  },
+  entry: ["@babel/polyfill", "core-js", "./src/index.ts"],
   output: {
     path: `${__dirname}/lib`,
     filename: '[name].js'
@@ -9,12 +7,15 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.(js|ts)x?$/,
         exclude: /node_modules/,
-        use: [
-          'ts-loader',
-          'tslint-loader'
-        ]
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins: ['@babel/plugin-proposal-object-rest-spread']
+          }
+        }
       },
     ]
   },

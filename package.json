@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run watch",
-    "build": "webpack --mode production",
-    "watch": "webpack --mode development --watch",
+    "start": "yarn build && node lib/index.js",
+    "build": "babel src --extensions .js,.jsx,.ts,.tsx --out-dir lib --source-maps",
+    "watch": "yarn build --watch",
     "test": "jest",
     "test-watch": "jest --watchAll",
     "lint": "tslint --fix -p ./tsconfig.json"
@@ -48,8 +48,18 @@
     "testURL": "http://localhost/"
   },
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.1.0",
     "@types/jest": "^23.3.10",
     "@types/mock-fs": "^3.6.30",
+    "babel-loader": "^8.0.4",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "core-js": "^2.6.1",
     "jest": "^23.6.0",
     "mock-fs": "^4.7.0",
     "prettier": "^1.12.1",
@@ -63,6 +73,5 @@
     "webpack": "^4.28.1",
     "webpack-cli": "^3.1.2"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
