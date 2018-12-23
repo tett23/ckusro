@@ -15,7 +15,7 @@ export default async function main(config: CkusroConfig): Promise<GlobalState | 
   }
   const [context, root] = result;
 
-  const files = build(root);
+  const files = build(context, root);
   const dependencies = buildDependencyTable(files);
 
   return {

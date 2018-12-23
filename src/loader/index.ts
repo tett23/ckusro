@@ -91,6 +91,7 @@ export type CkusroId = string;
 
 export type CkusroFile = {
   id: CkusroId;
+  namespace: string;
   name: string;
   path: string;
   fileType: FileType;
@@ -156,9 +157,10 @@ export function buildDependencyTable(files: CkusroFile[]): DependencyTable {
   }, {});
 }
 
-function transform(node: CkusroObject): CkusroFile {
+function transform(context: LoaderContext, node: CkusroObject): CkusroFile {
   return {
     id: node.path,
+    namespace: context.name,
     name: node.name,
     path: node.path,
     fileType: detectType(node.fileType, node.name),
@@ -170,8 +172,8 @@ function transform(node: CkusroObject): CkusroFile {
   };
 }
 
-export function build(node: CkusroObject): CkusroFile[] {
-  return [transform(node)].concat(node.children.flatMap((item) => build(item)));
+export function build(context: LoaderContext, node: CkusroObject): CkusroFile[] {
+  return [transform(context, node)].concat(node.children.flatMap((item) => build(context, item)));
 }
 
 export async function loadContent(context: LoaderContext, file: CkusroFile): Promise<CkusroFile> {

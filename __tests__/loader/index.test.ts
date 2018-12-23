@@ -95,6 +95,7 @@ describe(buildDependencyTable.name, () => {
     const actual = buildDependencyTable([
       {
         id: '1',
+        namespace: 'foo',
         name: 'foo.md',
         path: '/foo.md',
         fileType: FileTypeMarkdown,
@@ -106,6 +107,7 @@ describe(buildDependencyTable.name, () => {
       },
       {
         id: '2',
+        namespace: 'foo',
         name: 'foo.md',
         path: '/foo.md',
         fileType: FileTypeMarkdown,
@@ -117,6 +119,7 @@ describe(buildDependencyTable.name, () => {
       },
       {
         id: '3',
+        namespace: 'foo',
         name: 'foo.md',
         path: '/foo.md',
         fileType: FileTypeMarkdown,
@@ -167,10 +170,12 @@ describe(build.name, () => {
         },
       ],
     };
-    const actual = build(tree);
+    const context: LoaderContext = { name: 'foo', path: '/foo' };
+    const actual = build(context, tree);
     const expected: CkusroFile[] = [
       {
         id: '/foo',
+        namespace: 'foo',
         name: 'foo',
         path: '/foo',
         fileType: FileTypeDirectory,
@@ -182,6 +187,7 @@ describe(build.name, () => {
       },
       {
         id: '/foo/bar',
+        namespace: 'foo',
         name: 'bar',
         path: '/foo/bar',
         fileType: FileTypeDirectory,
@@ -193,6 +199,7 @@ describe(build.name, () => {
       },
       {
         id: '/foo/bar/baz.md',
+        namespace: 'foo',
         name: 'baz.md',
         path: '/foo/bar/baz.md',
         fileType: FileTypeMarkdown,
@@ -225,6 +232,7 @@ describe(loadContent, () => {
     };
     const file: CkusroFile = {
       id: '/foo/bar/baz.md',
+      namespace: 'foo',
       name: 'baz.md',
       path: '/bar/baz.md',
       fileType: FileTypeMarkdown,
@@ -238,6 +246,7 @@ describe(loadContent, () => {
     const actual = await loadContent(context, file);
     const expected: CkusroFile = {
       id: '/foo/bar/baz.md',
+      namespace: 'foo',
       name: 'baz.md',
       path: '/bar/baz.md',
       fileType: FileTypeMarkdown,
@@ -258,6 +267,7 @@ describe(loadContent, () => {
     };
     const file: CkusroFile = {
       id: '/bar',
+      namespace: 'foo',
       name: 'bar',
       path: '/bar',
       fileType: FileTypeDirectory,
@@ -271,6 +281,7 @@ describe(loadContent, () => {
     const actual = await loadContent(context, file);
     const expected: CkusroFile = {
       id: '/bar',
+      namespace: 'foo',
       name: 'bar',
       path: '/bar',
       fileType: FileTypeDirectory,
@@ -291,6 +302,7 @@ describe(loadContent, () => {
     };
     const file: CkusroFile = {
       id: '/does_not_exist.md',
+      namespace: 'foo',
       name: 'does_not_exist.md',
       path: '/does_not_exist.md',
       fileType: FileTypeMarkdown,
@@ -304,6 +316,7 @@ describe(loadContent, () => {
     const actual = await loadContent(context, file);
     const expected: CkusroFile = {
       id: '/does_not_exist.md',
+      namespace: 'foo',
       name: 'does_not_exist.md',
       path: '/does_not_exist.md',
       fileType: FileTypeMarkdown,
