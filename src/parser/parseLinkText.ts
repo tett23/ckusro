@@ -14,7 +14,10 @@ export type Link = {
   isExist: boolean;
 };
 
-export default function parseLinkText(context: LoaderContext, text: string): IncompletenessLink {
+export default function parseLinkText(
+  context: LoaderContext,
+  text: string,
+): IncompletenessLink {
   let namespace;
   let tmp;
   if (text.includes(':')) {
@@ -42,8 +45,13 @@ const LinkTypeAbsolute: 'absolute' = 'absolute';
 const LinkTypeName: 'name' = 'name';
 type LinkTypes = typeof LinkTypeAbsolute | typeof LinkTypeName;
 
-export function determineLinkFile(link: IncompletenessLink, files: CkusroFile[]): Link {
-  const namespaceItems = files.flatMap((f) => (link.namespace === f.namespace ? [f] : []));
+export function determineLinkFile(
+  link: IncompletenessLink,
+  files: CkusroFile[],
+): Link {
+  const namespaceItems = files.flatMap((f) =>
+    link.namespace === f.namespace ? [f] : [],
+  );
 
   // TODO: Implement anchor variable
   // TODO: It must consider the case where relative path
@@ -64,7 +72,10 @@ function linkType(name: string): LinkTypes {
   return LinkTypeName;
 }
 
-function determineAbsoluteLink(link: IncompletenessLink, files: CkusroFile[]): Link {
+function determineAbsoluteLink(
+  link: IncompletenessLink,
+  files: CkusroFile[],
+): Link {
   const ret = {
     namespace: link.namespace,
     path: link.name,
@@ -79,7 +90,10 @@ function determineAbsoluteLink(link: IncompletenessLink, files: CkusroFile[]): L
   return Object.assign(ret, { isExist: true });
 }
 
-function determineNameLink(link: IncompletenessLink, files: CkusroFile[]): Link {
+function determineNameLink(
+  link: IncompletenessLink,
+  files: CkusroFile[],
+): Link {
   const ret = {
     namespace: link.namespace,
     anchor: link.anchor,

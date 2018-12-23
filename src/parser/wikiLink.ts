@@ -18,7 +18,11 @@ export default function attacher(userOptions?: unknown) {
   const options: Options = { ...defaultOptions, ...userOptions } as any;
 
   Parser.prototype.inlineTokenizers.wikiLink = inlineTokenizer;
-  Parser.prototype.inlineMethods.splice(Parser.prototype.inlineMethods.indexOf('autoLink'), 0, 'wikiLink');
+  Parser.prototype.inlineMethods.splice(
+    Parser.prototype.inlineMethods.indexOf('autoLink'),
+    0,
+    'wikiLink',
+  );
   inlineTokenizer.locator = locator;
 
   if (Compiler != null) {
@@ -36,8 +40,8 @@ export default function attacher(userOptions?: unknown) {
 
     return eat(matchText)({
       type: 'jsx',
-      value: `<WikiLink linkTarget="${linkTarget}" className="${options.className || ''}">${alias ||
-        linkTarget}</WikiLink>`,
+      value: `<WikiLink linkTarget="${linkTarget}" className="${options.className ||
+        ''}">${alias || linkTarget}</WikiLink>`,
       data: {
         internalLink: {
           target: linkTarget,

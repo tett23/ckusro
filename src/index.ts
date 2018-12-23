@@ -17,16 +17,22 @@ export type GlobalState = {
   dependencyTable: DependencyTable;
 };
 
-export default async function main(config: CkusroConfig): Promise<GlobalState | Error> {
+export default async function main(
+  config: CkusroConfig,
+): Promise<GlobalState | Error> {
   const result = await load(config.targetDirectory, config.loader.extensions);
   if (result instanceof Error) {
     return result;
   }
   const [context, root] = result;
 
-  const ps = build(context, root).map(async (item) => await loadContent(context, item));
+  const ps = build(context, root).map(
+    async (item) => await loadContent(context, item),
+  );
   const files = await Promise.all(ps);
-  const dependencyLoaded = files.map((item) => loadDependencies(context, item, files));
+  const dependencyLoaded = files.map((item) =>
+    loadDependencies(context, item, files),
+  );
   const dependencies = buildDependencyTable(dependencyLoaded);
 
   return {

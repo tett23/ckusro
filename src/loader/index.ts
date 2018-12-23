@@ -19,7 +19,11 @@ export type CkusroObject = {
   children: CkusroObject[];
 };
 
-export async function tree(path: string, extensions: RegExp, basePath: string): Promise<CkusroObject | null> {
+export async function tree(
+  path: string,
+  extensions: RegExp,
+  basePath: string,
+): Promise<CkusroObject | null> {
   const res = await stat(path).catch(() => null);
   if (res == null) {
     return null;
@@ -48,9 +52,9 @@ export async function tree(path: string, extensions: RegExp, basePath: string): 
     return null;
   }
 
-  const children = (await Promise.all(entries.map((item) => tree(`${path}/${item}`, extensions, basePath)))).filter(
-    Boolean,
-  ) as CkusroObject[];
+  const children = (await Promise.all(
+    entries.map((item) => tree(`${path}/${item}`, extensions, basePath)),
+  )).filter(Boolean) as CkusroObject[];
 
   const ret: CkusroObject = {
     name: basename(path),
@@ -179,11 +183,19 @@ function transform(context: LoaderContext, node: CkusroObject): CkusroFile {
   };
 }
 
-export function build(context: LoaderContext, node: CkusroObject): CkusroFile[] {
-  return [transform(context, node)].concat(node.children.flatMap((item) => build(context, item)));
+export function build(
+  context: LoaderContext,
+  node: CkusroObject,
+): CkusroFile[] {
+  return [transform(context, node)].concat(
+    node.children.flatMap((item) => build(context, item)),
+  );
 }
 
-export async function loadContent(context: LoaderContext, file: CkusroFile): Promise<CkusroFile> {
+export async function loadContent(
+  context: LoaderContext,
+  file: CkusroFile,
+): Promise<CkusroFile> {
   if (file.fileType === FileTypeDirectory) {
     return Object.assign({}, file, {
       isLoaded: true,
@@ -191,7 +203,9 @@ export async function loadContent(context: LoaderContext, file: CkusroFile): Pro
     });
   }
 
-  const content = await readFile(joinPath(context.path, file.path)).catch(() => null);
+  const content = await readFile(joinPath(context.path, file.path)).catch(
+    () => null,
+  );
   if (content == null) {
     return Object.assign({}, file, {
       isLoaded: true,
@@ -206,7 +220,11 @@ export async function loadContent(context: LoaderContext, file: CkusroFile): Pro
   return Object.assign({}, file, merge);
 }
 
-export function loadDependencies(context: LoaderContext, file: CkusroFile, files: CkusroFile[]): CkusroFile {
+export function loadDependencies(
+  context: LoaderContext,
+  file: CkusroFile,
+  files: CkusroFile[],
+): CkusroFile {
   if (!file.isLoaded) {
     return file;
   }

@@ -6,7 +6,9 @@ import parseLinkText, { determineLinkFile } from './parseLinkText';
 import wikiLink from './wikiLink';
 
 export function buildAst(content: string): Root {
-  return mdx.createMdxAstCompiler({ mdPlugins: [[wikiLink, {}]] }).parse(content);
+  return mdx
+    .createMdxAstCompiler({ mdPlugins: [[wikiLink, {}]] })
+    .parse(content);
 }
 
 function targetData(data: { internalLink?: any } | null): string | null {
@@ -15,11 +17,16 @@ function targetData(data: { internalLink?: any } | null): string | null {
 
 function visit(node: Parent | Content): string[] {
   return [targetData(node.data || null)]
-    .concat(((node.children as any) || []).flatMap((n: any): string[] => visit(n)))
+    .concat(
+      ((node.children as any) || []).flatMap((n: any): string[] => visit(n)),
+    )
     .flatMap((v: string | null) => (v == null ? [] : [v]));
 }
 
-export function buildDoesNotExistFile(namespace: string, path: string): CkusroFile {
+export function buildDoesNotExistFile(
+  namespace: string,
+  path: string,
+): CkusroFile {
   const absolutePath = joinPath('/', path);
 
   return {
@@ -36,13 +43,18 @@ export function buildDoesNotExistFile(namespace: string, path: string): CkusroFi
   };
 }
 
-export function determineDependency(context: LoaderContext, rootNode: Root, files: CkusroFile[]): CkusroFile[] {
+export function determineDependency(
+  context: LoaderContext,
+  rootNode: Root,
+  files: CkusroFile[],
+): CkusroFile[] {
   return visit(rootNode)
     .map((item) => parseLinkText(context, item))
     .map((item) => determineLinkFile(item, files))
     .map(
       ({ namespace: ln, path: lp }) =>
-        files.find(({ namespace: fn, path: fp }) => ln === fn && lp === fp) || buildDoesNotExistFile(ln, lp),
+        files.find(({ namespace: fn, path: fp }) => ln === fn && lp === fp) ||
+        buildDoesNotExistFile(ln, lp),
     )
     .flatMap((f) => (f ? [f] : []));
 }
