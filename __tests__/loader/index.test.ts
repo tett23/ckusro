@@ -9,6 +9,8 @@ import {
   FileTypeRaw,
   FileTypeText,
   load,
+  loadContent,
+  LoaderContext,
   StatTypeDirectory,
   StatTypeFile,
 } from '../../src/loader';
@@ -201,6 +203,116 @@ describe(build.name, () => {
         variables: [],
       },
     ];
+
+    expect(actual).toEqual(expected);
+  });
+});
+
+describe(loadContent, () => {
+  beforeEach(() => {
+    mockFileSystem({
+      '/foo/bar/baz.md': '# test file',
+    });
+  });
+  afterEach(() => {
+    restoreFileSystem();
+  });
+
+  it('returns file content', async () => {
+    const context: LoaderContext = {
+      name: 'foo',
+      path: '/foo',
+    };
+    const file: CkusroFile = {
+      id: '/foo/bar/baz.md',
+      name: 'baz.md',
+      path: '/bar/baz.md',
+      fileType: FileTypeMarkdown,
+      isLoaded: false,
+      content: null,
+      weakDependencies: [],
+      strongDependencies: [],
+      variables: [],
+    };
+
+    const actual = await loadContent(context, file);
+    const expected: CkusroFile = {
+      id: '/foo/bar/baz.md',
+      name: 'baz.md',
+      path: '/bar/baz.md',
+      fileType: FileTypeMarkdown,
+      isLoaded: true,
+      content: '# test file',
+      weakDependencies: [],
+      strongDependencies: [],
+      variables: [],
+    };
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('returns null content when fileType is directory', async () => {
+    const context: LoaderContext = {
+      name: 'foo',
+      path: '/foo',
+    };
+    const file: CkusroFile = {
+      id: '/bar',
+      name: 'bar',
+      path: '/bar',
+      fileType: FileTypeDirectory,
+      isLoaded: false,
+      content: null,
+      weakDependencies: [],
+      strongDependencies: [],
+      variables: [],
+    };
+
+    const actual = await loadContent(context, file);
+    const expected: CkusroFile = {
+      id: '/bar',
+      name: 'bar',
+      path: '/bar',
+      fileType: FileTypeDirectory,
+      isLoaded: true,
+      content: null,
+      weakDependencies: [],
+      strongDependencies: [],
+      variables: [],
+    };
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('returns null content when file does not exist', async () => {
+    const context: LoaderContext = {
+      name: 'foo',
+      path: '/foo',
+    };
+    const file: CkusroFile = {
+      id: '/does_not_exist.md',
+      name: 'does_not_exist.md',
+      path: '/does_not_exist.md',
+      fileType: FileTypeMarkdown,
+      isLoaded: false,
+      content: null,
+      weakDependencies: [],
+      strongDependencies: [],
+      variables: [],
+    };
+
+    const actual = await loadContent(context, file);
+    const expected: CkusroFile = {
+      id: '/does_not_exist.md',
+      name: 'does_not_exist.md',
+      path: '/does_not_exist.md',
+      fileType: FileTypeMarkdown,
+      isLoaded: true,
+      content: null,
+      weakDependencies: [],
+      strongDependencies: [],
+      variables: [],
+    };
 
     expect(actual).toEqual(expected);
   });

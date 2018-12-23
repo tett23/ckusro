@@ -5,6 +5,7 @@ import { promisify } from 'util';
 
 const stat = promisify(fs.stat);
 const readdir = promisify(fs.readdir);
+const readFile = promisify(fs.readFile);
 
 export const StatTypeDirectory: 'directory' = 'directory';
 export const StatTypeFile: 'file' = 'file';
@@ -171,4 +172,27 @@ function transform(node: CkusroObject): CkusroFile {
 
 export function build(node: CkusroObject): CkusroFile[] {
   return [transform(node)].concat(node.children.flatMap((item) => build(item)));
+}
+
+export async function loadContent(context: LoaderContext, file: CkusroFile): Promise<CkusroFile> {
+  if (file.fileType === FileTypeDirectory) {
+    return Object.assign({}, file, {
+      isLoaded: true,
+      content: null,
+    });
+  }
+
+  const content = await readFile(joinPath(context.path, file.path)).catch(() => null);
+  if (content == null) {
+    return Object.assign({}, file, {
+      isLoaded: true,
+      content: null,
+    });
+  }
+
+  const merge: Partial<CkusroFile> = {
+    isLoaded: true,
+    content: content.toString(),
+  };
+  return Object.assign({}, file, merge);
 }
