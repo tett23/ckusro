@@ -7,7 +7,7 @@ import {
   DependencyTable,
   load,
   loadContent,
-  loadDependency,
+  loadDependencies,
   LoaderContext,
 } from './loader';
 
@@ -26,7 +26,7 @@ export default async function main(config: CkusroConfig): Promise<GlobalState | 
 
   const ps = build(context, root).map(async (item) => await loadContent(context, item));
   const files = await Promise.all(ps);
-  const dependencyLoaded = files.map((item) => loadDependency(context, item, files));
+  const dependencyLoaded = files.map((item) => loadDependencies(context, item, files));
   const dependencies = buildDependencyTable(dependencyLoaded);
 
   return {

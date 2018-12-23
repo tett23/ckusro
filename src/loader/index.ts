@@ -206,7 +206,7 @@ export async function loadContent(context: LoaderContext, file: CkusroFile): Pro
   return Object.assign({}, file, merge);
 }
 
-export function loadDependency(context: LoaderContext, file: CkusroFile, files: CkusroFile[]): CkusroFile {
+export function loadDependencies(context: LoaderContext, file: CkusroFile, files: CkusroFile[]): CkusroFile {
   if (!file.isLoaded) {
     return file;
   }

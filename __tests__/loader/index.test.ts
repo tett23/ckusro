@@ -10,7 +10,7 @@ import {
   FileTypeText,
   load,
   loadContent,
-  loadDependency,
+  loadDependencies,
   LoaderContext,
   StatTypeDirectory,
   StatTypeFile,
@@ -332,7 +332,7 @@ describe(loadContent, () => {
   });
 });
 
-describe(loadDependency, () => {
+describe(loadDependencies, () => {
   const context: LoaderContext = {
     name: 'test',
     path: '/test',
@@ -364,7 +364,7 @@ describe(loadDependency, () => {
         variables: [],
       },
     ];
-    const actual = loadDependency(context, file, files);
+    const actual = loadDependencies(context, file, files);
     const expected = {
       id: 'test:/foo.md',
       namespace: 'test',
@@ -395,7 +395,7 @@ describe(loadDependency, () => {
       variables: [],
     };
     const files: CkusroFile[] = [];
-    const actual = loadDependency(context, file, files);
+    const actual = loadDependencies(context, file, files);
 
     expect(actual).toBe(file);
   });
