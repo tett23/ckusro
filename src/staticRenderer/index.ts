@@ -20,6 +20,7 @@ export default async function render(config: CkusroConfig) {
 
   const ps: Array<Promise<boolean>> = globalState.files
     .flatMap((item) => filterWritable(item))
+    .map(buildWriteInfo)
     .map(({ path, content }) => {
       return curriedWriteFile(path, content);
     });
@@ -27,12 +28,8 @@ export default async function render(config: CkusroConfig) {
   return await Promise.all(ps);
 }
 
-export function filterWritable({
-  path,
-  fileType,
-  content,
-  isLoaded,
-}: CkusroFile): Array<{ path: string; content: string }> {
+export function filterWritable(file: CkusroFile): CkusroFile[] {
+  const { fileType, content, isLoaded } = file;
   if (!isWritableFileType(fileType)) {
     return [];
   }
@@ -40,9 +37,23 @@ export function filterWritable({
     return [];
   }
 
-  const mdxContent = buildHTML(parse(content), {});
+  return [file];
+}
 
-  return [{ path, content: mdxContent }];
+export type WriteInfo = {
+  path: string;
+  content: string | Buffer;
+};
+
+export function buildWriteInfo(file: CkusroFile): WriteInfo {
+  if (!file.isLoaded || file.content == null) {
+    throw new Error('');
+  }
+
+  return {
+    path: file.path,
+    content: buildHTML(parse(file.content), {}),
+  };
 }
 
 export function parse(content: string) {
