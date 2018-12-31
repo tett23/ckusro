@@ -5,8 +5,8 @@ describe(render, () => {
   it('renders correctly', () => {
     const file = buildFile();
     const actual = render({
-      file,
-      files: [],
+      fileId: file.id,
+      files: [file],
     });
 
     expect(actual).toMatchSnapshot();

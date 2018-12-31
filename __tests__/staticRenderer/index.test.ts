@@ -6,7 +6,7 @@ import {
   FileTypeMarkdown,
   FileTypeText,
 } from '../../src/loader';
-import render, {
+import staticRenderer, {
   buildHTML,
   buildProps,
   buildWriteInfo,
@@ -19,7 +19,7 @@ import render, {
 import { buildFile, buildGlobalState } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
-describe(render, () => {
+describe(staticRenderer, () => {
   beforeEach(() => {
     mockFileSystem({
       '/test/foo/bar/baz.md': '# test file',
@@ -37,7 +37,7 @@ describe(render, () => {
         extensions: /\.(md|txt)$/,
       },
     };
-    const actual = await render(conf);
+    const actual = await staticRenderer(conf);
 
     expect(actual).toEqual([true]);
   });
@@ -157,7 +157,7 @@ describe(buildProps, () => {
     const actual = buildProps(files, file);
     const expected = [file].concat(files).map(({ id }) => id);
 
-    expect(actual.id).toEqual(file.id);
+    expect(actual.fileId).toEqual(file.id);
     expect(actual.files.map(({ id }) => id)).toEqual(expected);
   });
 });

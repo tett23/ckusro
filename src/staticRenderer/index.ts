@@ -5,10 +5,12 @@ import { CkusroConfig } from '../config';
 import { CkusroFile, isWritableFileType } from '../loader';
 import { FileType, FileTypeMarkdown, FileTypeText } from '../loader';
 import wikiLink from '../parser/wikiLink';
+import { Props } from './assets/components';
 import buildGlobalState, { GlobalState } from './buildGlobalState';
 import writeFile from './io';
+import render from './render';
 
-export default async function render(config: CkusroConfig) {
+export default async function staticRenderer(config: CkusroConfig) {
   const globalState = await buildGlobalState(config);
 
   if (globalState instanceof Error) {
@@ -67,11 +69,6 @@ export function buildWriteInfo(
   };
 }
 
-type Props = {
-  id: string;
-  files: CkusroFile[];
-};
-
 export function buildProps(files: CkusroFile[], file: CkusroFile): Props {
   const strongDeps = file.strongDependencies.flatMap((id) => {
     const f = files.find((item) => id === item.id);
@@ -86,7 +83,7 @@ export function buildProps(files: CkusroFile[], file: CkusroFile): Props {
   const deps = [file].concat(strongDeps).concat(weakDeps);
 
   return {
-    id: file.id,
+    fileId: file.id,
     files: deps,
   };
 }
@@ -99,15 +96,9 @@ export function parse(content: string) {
 
 export function buildHTML(props: Props) {
   return `
-  <html>
-    <div id="root"></div>
-    <script>window.DEFAULT_PROPS = ${JSON.stringify(props)}</script>
-    <script>
-      const defaultProps = window.DEFAULT_PROPS;
-      const init = require('../../').default;
-      init(defaultProps);
-    </script>
-  </html>
+<html>
+  ${render(props)}
+</html>
   `;
 }
 
