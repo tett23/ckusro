@@ -56,11 +56,13 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.1.0",
     "@types/jest": "^23.3.10",
+    "@types/lodash.merge": "^4.6.4",
     "@types/mdast": "^3.0.1",
     "@types/mkdirp": "^0.5.2",
     "@types/mock-fs": "^3.6.30",
     "@types/ramda": "^0.25.45",
     "@types/unist": "^2.0.2",
+    "@types/uuid": "^3.4.4",
     "babel-loader": "^8.0.4",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "core-js": "^2.6.1",
@@ -83,7 +85,9 @@
   },
   "dependencies": {
     "@mdx-js/mdx": "^0.16.6",
+    "lodash.merge": "^4.6.1",
     "mkdirp": "^0.5.1",
-    "ramda": "^0.26.1"
+    "ramda": "^0.26.1",
+    "uuid": "^3.3.2"
   }
 }

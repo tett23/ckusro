@@ -5,7 +5,7 @@ import { CkusroConfig } from '../config';
 import { CkusroFile, isWritableFileType } from '../loader';
 import { FileType, FileTypeMarkdown, FileTypeText } from '../loader';
 import wikiLink from '../parser/wikiLink';
-import buildGlobalState from './buildGlobalState';
+import buildGlobalState, { GlobalState } from './buildGlobalState';
 import writeFile from './io';
 
 export default async function render(config: CkusroConfig) {
@@ -19,10 +19,13 @@ export default async function render(config: CkusroConfig) {
     config.outputDirectory,
     globalState.context.name,
   );
+  const curriedBuildProps = curry(buildProps)(globalState.files);
 
   const ps: Array<Promise<boolean>> = globalState.files
     .flatMap(filterWritable)
     .map(curriedBuildWriteInfo)
+    .map(({ path, file }): [string, Props] => [path, curriedBuildProps(file)])
+    .map(([path, props]) => ({ path, content: buildHTML(props) }))
     .map(writeFile);
 
   return await Promise.all(ps);
@@ -40,16 +43,16 @@ export function filterWritable(file: CkusroFile): CkusroFile[] {
   return [file];
 }
 
-export type WriteInfo = {
+export type FileInfo = {
   path: string;
-  content: string | Buffer;
+  file: CkusroFile;
 };
 
 export function buildWriteInfo(
   outputDirectory: string,
   contextName: string,
   file: CkusroFile,
-): WriteInfo {
+): FileInfo {
   if (!file.isLoaded || file.content == null) {
     throw new Error('');
   }
@@ -60,7 +63,31 @@ export function buildWriteInfo(
       contextName,
       replacePath(file),
     ),
-    content: buildHTML(parse(file.content), {}),
+    file,
+  };
+}
+
+type Props = {
+  id: string;
+  files: CkusroFile[];
+};
+
+export function buildProps(files: CkusroFile[], file: CkusroFile): Props {
+  const strongDeps = file.strongDependencies.flatMap((id) => {
+    const f = files.find((item) => id === item.id);
+
+    return f != null ? [f] : [];
+  });
+  const weakDeps = file.weakDependencies.flatMap((id) => {
+    const f = files.find((item) => id === item.id);
+
+    return f != null ? [f] : [];
+  });
+  const deps = [file].concat(strongDeps).concat(weakDeps);
+
+  return {
+    id: file.id,
+    files: deps,
   };
 }
 
@@ -70,12 +97,11 @@ export function parse(content: string) {
   });
 }
 
-export function buildHTML(mdxText: any, props: any) {
+export function buildHTML(props: Props) {
   return `
   <html>
     <div id="root"></div>
     <script>window.DEFAULT_PROPS = ${JSON.stringify(props)}</script>
-    <script>window.MDX = ${mdxText}</script>
     <script>
       const defaultProps = window.DEFAULT_PROPS
       ReactDOM.render(React.createElement(MyComponent, defaultProps), document.querySelector('#root'))

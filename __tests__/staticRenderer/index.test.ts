@@ -1,38 +1,23 @@
 import { CkusroConfig } from '../../src/config';
 import {
+  buildDependencyTable,
   CkusroFile,
   FileTypeDirectory,
   FileTypeMarkdown,
   FileTypeText,
-  LoaderContext,
 } from '../../src/loader';
 import render, {
   buildHTML,
+  buildProps,
   buildWriteInfo,
   determineAbsolutePath,
+  FileInfo,
   filterWritable,
   parse,
   replacePath,
-  WriteInfo,
 } from '../../src/staticRenderer';
+import { buildFile, buildGlobalState } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
-
-const template = {
-  id: 'test:/foo.md',
-  namespace: 'test',
-  name: 'foo.md',
-  path: '/foo.md',
-  fileType: FileTypeMarkdown,
-  isLoaded: true,
-  content: '[[bar.md]]',
-  weakDependencies: ['test:/bar.md'],
-  strongDependencies: ['test:/bar.md'],
-  variables: [],
-};
-
-function buildFile(overrides: Partial<CkusroFile> = {}): CkusroFile {
-  return Object.assign({}, template, overrides);
-}
 
 describe(render, () => {
   beforeEach(() => {
@@ -92,9 +77,9 @@ describe(buildWriteInfo, () => {
   it('returns WriteInfo', () => {
     const file = buildFile({});
     const actual = buildWriteInfo('/test', 'ns', file);
-    const expected: WriteInfo = {
+    const expected: FileInfo = {
       path: '/test/ns/foo.html',
-      content: buildHTML(parse(file.content as string), {}),
+      file,
     };
 
     expect(actual).toEqual(expected);
@@ -158,5 +143,21 @@ describe(determineAbsolutePath, () => {
     const actual = () => determineAbsolutePath('/test', 'namespace', 'foo.md');
 
     expect(actual).toThrowError('filePath must start with `/`');
+  });
+});
+
+describe(buildProps, () => {
+  it('', () => {
+    const files = [buildFile(), buildFile()];
+    const file = buildFile({
+      strongDependencies: [files[0].id],
+      weakDependencies: [files[1].id],
+    });
+    const dependencyTable = buildDependencyTable([file].concat(files));
+    const actual = buildProps(files, file);
+    const expected = [file].concat(files).map(({ id }) => id);
+
+    expect(actual.id).toEqual(file.id);
+    expect(actual.files.map(({ id }) => id)).toEqual(expected);
   });
 });

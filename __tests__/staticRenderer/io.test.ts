@@ -1,5 +1,4 @@
-import { WriteInfo } from '../../src/staticRenderer';
-import writeFile from '../../src/staticRenderer/io';
+import writeFile, { WriteInfo } from '../../src/staticRenderer/io';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(writeFile, () => {
