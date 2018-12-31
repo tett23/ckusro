@@ -1,0 +1,155 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`buildAst builds AST 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "children": Array [
+        Object {
+          "position": Position {
+            "end": Object {
+              "column": 7,
+              "line": 1,
+              "offset": 6,
+            },
+            "indent": Array [],
+            "start": Object {
+              "column": 3,
+              "line": 1,
+              "offset": 2,
+            },
+          },
+          "type": "text",
+          "value": "hoge",
+        },
+      ],
+      "depth": 1,
+      "position": Position {
+        "end": Object {
+          "column": 7,
+          "line": 1,
+          "offset": 6,
+        },
+        "indent": Array [],
+        "start": Object {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
+      "type": "heading",
+    },
+  ],
+  "position": Object {
+    "end": Object {
+      "column": 7,
+      "line": 1,
+      "offset": 6,
+    },
+    "start": Object {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
+  "type": "root",
+}
+`;
+
+exports[`buildAst paeses wikiLink 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "children": Array [
+        Object {
+          "position": Position {
+            "end": Object {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+            "indent": Array [],
+            "start": Object {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "text",
+          "value": "foo",
+        },
+        Object {
+          "data": Object {
+            "component": "WikiLink",
+            "props": Object {
+              "internalLink": Object {
+                "target": "foo",
+              },
+              "text": "foo",
+            },
+          },
+          "position": Position {
+            "end": Object {
+              "column": 11,
+              "line": 1,
+              "offset": 10,
+            },
+            "indent": Array [],
+            "start": Object {
+              "column": 4,
+              "line": 1,
+              "offset": 3,
+            },
+          },
+          "type": "jsx",
+          "value": "<WikiLink linkTarget=\\"foo\\" className=\\"\\">foo</WikiLink>",
+        },
+        Object {
+          "position": Position {
+            "end": Object {
+              "column": 14,
+              "line": 1,
+              "offset": 13,
+            },
+            "indent": Array [],
+            "start": Object {
+              "column": 11,
+              "line": 1,
+              "offset": 10,
+            },
+          },
+          "type": "text",
+          "value": "bar",
+        },
+      ],
+      "position": Position {
+        "end": Object {
+          "column": 14,
+          "line": 1,
+          "offset": 13,
+        },
+        "indent": Array [],
+        "start": Object {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
+      "type": "paragraph",
+    },
+  ],
+  "position": Object {
+    "end": Object {
+      "column": 14,
+      "line": 1,
+      "offset": 13,
+    },
+    "start": Object {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
+  "type": "root",
+}
+`;

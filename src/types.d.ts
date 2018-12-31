@@ -1,5 +1,9 @@
 declare module "remark-parse"
 declare module "remark-stringify"
+declare module "remark-breaks"
+declare module 'remark-rehype'
+declare module "rehype-react"
+declare module 'hast-util-from-dom'
 declare module '@mdx-js/mdx' {
   export type Config = {
     mdPlugins: any[],

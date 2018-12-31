@@ -1,12 +1,10 @@
-import mdx from '@mdx-js/mdx';
 import { extname, join as joinPath } from 'path';
 import { curry } from 'ramda';
 import { CkusroConfig } from '../config';
 import { CkusroFile, isWritableFileType } from '../loader';
 import { FileType, FileTypeMarkdown, FileTypeText } from '../loader';
-import wikiLink from '../parser/wikiLink';
 import { Props } from './assets/components';
-import buildGlobalState, { GlobalState } from './buildGlobalState';
+import buildGlobalState from './buildGlobalState';
 import writeFile from './io';
 import render from './render';
 
@@ -86,12 +84,6 @@ export function buildProps(files: CkusroFile[], file: CkusroFile): Props {
     fileId: file.id,
     files: deps,
   };
-}
-
-export function parse(content: string) {
-  return mdx.sync(content, {
-    mdPlugins: [[wikiLink, {}]],
-  });
 }
 
 export function buildHTML(props: Props) {

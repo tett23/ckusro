@@ -13,10 +13,9 @@ import staticRenderer, {
   determineAbsolutePath,
   FileInfo,
   filterWritable,
-  parse,
   replacePath,
 } from '../../src/staticRenderer';
-import { buildFile, buildGlobalState } from '../__fixtures__';
+import { buildFile } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(staticRenderer, () => {

@@ -43,8 +43,12 @@ export default function attacher(userOptions?: unknown) {
       value: `<WikiLink linkTarget="${linkTarget}" className="${options.className ||
         ''}">${alias || linkTarget}</WikiLink>`,
       data: {
-        internalLink: {
-          target: linkTarget,
+        component: 'WikiLink',
+        props: {
+          text: alias || linkTarget,
+          internalLink: {
+            target: linkTarget,
+          },
         },
       },
     });
@@ -56,5 +60,5 @@ export function locator(value: string, fromIndex: number): number {
 }
 
 function visitor(node: Node): string {
-  return `[[${node.data.internalLink.target}]]`;
+  return `[[${node.data.props.internalLink.target}]]`;
 }

@@ -13,94 +13,14 @@ import {
 describe(buildAst, () => {
   it('builds AST', () => {
     const actual = buildAst('# hoge');
-    const expected = {
-      children: [
-        {
-          children: [
-            {
-              position: {
-                end: { column: 7, line: 1, offset: 6 },
-                indent: [],
-                start: { column: 3, line: 1, offset: 2 },
-              },
-              type: 'text',
-              value: 'hoge',
-            },
-          ],
-          depth: 1,
-          position: {
-            end: { column: 7, line: 1, offset: 6 },
-            indent: [],
-            start: { column: 1, line: 1, offset: 0 },
-          },
-          type: 'heading',
-        },
-      ],
-      position: {
-        end: { column: 7, line: 1, offset: 6 },
-        start: { column: 1, line: 1, offset: 0 },
-      },
-      type: 'root',
-    };
 
-    expect(actual).toEqual(expected);
+    expect(actual).toMatchSnapshot();
   });
 
   it('paeses wikiLink', () => {
     const actual = buildAst('foo[[foo]]bar');
-    const expected = {
-      children: [
-        {
-          children: [
-            {
-              position: {
-                end: { column: 4, line: 1, offset: 3 },
-                indent: [],
-                start: { column: 1, line: 1, offset: 0 },
-              },
-              type: 'text',
-              value: 'foo',
-            },
-            {
-              data: { internalLink: { target: 'foo' } },
-              position: {
-                end: { column: 11, line: 1, offset: 10 },
-                indent: [],
-                start: { column: 4, line: 1, offset: 3 },
-              },
-              type: 'jsx',
-              value: '<WikiLink linkTarget="foo" className="">foo</WikiLink>',
-            },
-            {
-              position: {
-                end: { column: 14, line: 1, offset: 13 },
-                indent: [],
-                start: { column: 11, line: 1, offset: 10 },
-              },
-              type: 'text',
-              value: 'bar',
-            },
-          ],
-          position: {
-            end: { column: 14, line: 1, offset: 13 },
-            indent: [],
-            start: { column: 1, line: 1, offset: 0 },
-          },
-          type: 'paragraph',
-        },
-      ],
-      position: {
-        end: { column: 14, line: 1, offset: 13 },
-        start: {
-          column: 1,
-          line: 1,
-          offset: 0,
-        },
-      },
-      type: 'root',
-    };
 
-    expect(actual).toEqual(expected);
+    expect(actual).toMatchSnapshot();
   });
 });
 

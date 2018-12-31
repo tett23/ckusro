@@ -26,7 +26,8 @@
     "noImplicitReturns": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
-    "allowJs": true
+    "allowJs": true,
+    "resolveJsonModule": true
   },
   "include": ["./src/**/*", "./__tests__/**/*"],
   "exclude": [".git", "node_modules"],
