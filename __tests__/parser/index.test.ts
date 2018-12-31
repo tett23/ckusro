@@ -9,6 +9,7 @@ import {
   buildDoesNotExistFile,
   determineDependency,
 } from '../../src/parser';
+import { buildFile, buildLoaderContext } from '../__fixtures__';
 
 describe(buildAst, () => {
   it('builds AST', () => {
@@ -53,14 +54,10 @@ describe(buildDoesNotExistFile, () => {
 
 describe(determineDependency, () => {
   it('returns CkusroIds', () => {
-    const context: LoaderContext = {
-      name: 'test',
-      path: '/test',
-    };
+    const context = buildLoaderContext({ name: 'test', path: '/test' });
     const rootNode = buildAst('[[test:foo]]');
     const files: CkusroFile[] = [
-      {
-        id: '/foo',
+      buildFile({
         namespace: 'test',
         name: 'foo',
         path: '/foo',
@@ -69,8 +66,7 @@ describe(determineDependency, () => {
         content: null,
         weakDependencies: [],
         strongDependencies: [],
-        variables: [],
-      },
+      }),
     ];
     const actual = determineDependency(context, rootNode, files);
 
