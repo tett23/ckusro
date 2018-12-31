@@ -103,8 +103,9 @@ export function buildHTML(props: Props) {
     <div id="root"></div>
     <script>window.DEFAULT_PROPS = ${JSON.stringify(props)}</script>
     <script>
-      const defaultProps = window.DEFAULT_PROPS
-      ReactDOM.render(React.createElement(MyComponent, defaultProps), document.querySelector('#root'))
+      const defaultProps = window.DEFAULT_PROPS;
+      const init = require('../../').default;
+      init(defaultProps);
     </script>
   </html>
   `;
