@@ -1,18 +1,16 @@
 import fs from 'fs';
 import mkdirp from 'mkdirp';
-import { dirname, join as joinPath } from 'path';
+import { dirname } from 'path';
 import { promisify } from 'util';
+import { WriteInfo } from './index';
 
 const asyncWriteFile = promisify(fs.writeFile);
 const asyncMkdirP = promisify(mkdirp);
 
-export default async function writeFile(
-  outputDir: string,
-  namespace: string,
-  filePath: string,
-  content: string | Buffer,
-): Promise<boolean> {
-  const path = determineAbsolutePath(outputDir, namespace, filePath);
+export default async function writeFile({
+  path,
+  content,
+}: WriteInfo): Promise<boolean> {
   const mkdirResult = await asyncMkdirP(dirname(path))
     .then(() => true)
     .catch(() => false);
@@ -23,19 +21,4 @@ export default async function writeFile(
   return await asyncWriteFile(path, content)
     .then(() => true)
     .catch(() => false);
-}
-
-export function determineAbsolutePath(
-  outputDir: string,
-  contextName: string,
-  filePath: string,
-): string {
-  if (!outputDir.startsWith('/')) {
-    throw new Error('outputDir must start with `/`');
-  }
-  if (!filePath.startsWith('/')) {
-    throw new Error('filePath must start with `/`');
-  }
-
-  return joinPath(outputDir, contextName, filePath);
 }

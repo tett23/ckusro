@@ -3,12 +3,16 @@ import {
   CkusroFile,
   FileTypeDirectory,
   FileTypeMarkdown,
+  FileTypeText,
+  LoaderContext,
 } from '../../src/loader';
 import render, {
   buildHTML,
   buildWriteInfo,
+  determineAbsolutePath,
   filterWritable,
   parse,
+  replacePath,
   WriteInfo,
 } from '../../src/staticRenderer';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
@@ -26,7 +30,7 @@ const template = {
   variables: [],
 };
 
-function buildFile(overrides: Partial<CkusroFile>): CkusroFile {
+function buildFile(overrides: Partial<CkusroFile> = {}): CkusroFile {
   return Object.assign({}, template, overrides);
 }
 
@@ -87,9 +91,9 @@ describe(filterWritable, () => {
 describe(buildWriteInfo, () => {
   it('returns WriteInfo', () => {
     const file = buildFile({});
-    const actual = buildWriteInfo(file);
+    const actual = buildWriteInfo('/test', 'ns', file);
     const expected: WriteInfo = {
-      path: file.path,
+      path: '/test/ns/foo.html',
       content: buildHTML(parse(file.content as string), {}),
     };
 
@@ -98,15 +102,61 @@ describe(buildWriteInfo, () => {
 
   it('throws Error when isLoaded is false', () => {
     const file = buildFile({ isLoaded: false });
-    const actual = () => buildWriteInfo(file);
+    const actual = () => buildWriteInfo('/test', 'foo', file);
 
     expect(actual).toThrowError();
   });
 
   it('throws Error when content is null', () => {
     const file = buildFile({ content: null });
-    const actual = () => buildWriteInfo(file);
+    const actual = () => buildWriteInfo('/test', 'foo', file);
 
     expect(actual).toThrowError();
+  });
+});
+
+describe(replacePath, () => {
+  it('replaces path', () => {
+    const file = buildFile({ path: '/test.md', fileType: FileTypeMarkdown });
+    const actual = replacePath(file);
+
+    expect(actual).toBe('/test.html');
+  });
+
+  it('throws Error when fileType is not markdown or txt', () => {
+    const data: Array<[CkusroFile, boolean]> = [
+      [buildFile({ fileType: FileTypeMarkdown }), false],
+      [buildFile({ fileType: FileTypeText }), false],
+      [buildFile({ fileType: FileTypeDirectory }), true],
+    ];
+    data.forEach(([file, isThrowError]) => {
+      const actual = () => replacePath(file);
+
+      if (isThrowError) {
+        expect(actual).toThrowError();
+      } else {
+        expect(actual).not.toThrowError();
+      }
+    });
+  });
+});
+
+describe(determineAbsolutePath, () => {
+  it('returns absolute path', () => {
+    const actual = determineAbsolutePath('/test', 'namespace', '/foo.md');
+
+    expect(actual).toBe('/test/namespace/foo.md');
+  });
+
+  it('threw error when outputDir is not absolute path', () => {
+    const actual = () => determineAbsolutePath('test', 'namespace', '/foo.md');
+
+    expect(actual).toThrowError('outputDir must start with `/`');
+  });
+
+  it('threw error when filePath is not absolute path', () => {
+    const actual = () => determineAbsolutePath('/test', 'namespace', 'foo.md');
+
+    expect(actual).toThrowError('filePath must start with `/`');
   });
 });
