@@ -97,6 +97,7 @@
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-redux": "^6.0.0",
+    "rehype-parse": "^6.0.0",
     "rehype-react": "^3.1.0",
     "remark-breaks": "^1.0.2",
     "remark-react": "^5.0.1",

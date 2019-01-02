@@ -1,7 +1,8 @@
-import fromDOM from 'hast-util-from-dom';
 import merge from 'lodash.merge';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
+import rehypeParse from 'rehype-parse';
+import unified from 'unified';
 
 export type Options = {
   components: any;
@@ -32,9 +33,11 @@ export default function transform(
     return node;
   }
 
-  const str = ReactDOMServer.renderToString(<Component {...props || {}} />);
-  const dom = new DOMParser().parseFromString(str, 'text/html');
-  const hast = fromDOM(dom).children[0].children[1].children[0];
+  const html = ReactDOMServer.renderToString(<Component {...props || {}} />);
+  const hast: any = unified()
+    .use(rehypeParse)
+    .parse(html);
+  const body = hast.children[0].children[1].children;
 
-  return hast;
+  return body;
 }
