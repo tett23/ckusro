@@ -9,39 +9,38 @@ export type TreeViewItem = {
 export default function buildNamespaceTree(
   files: CkusroFile[],
 ): TreeViewItem[] {
-  const rootItems = files.flatMap((item) => (item.path === '/' ? [item] : []));
+  const rootItems = files.filter((item) => item.path === '/');
 
   return rootItems.map(({ id, namespace }) => {
     return {
       id,
-      children: buildTree(namespace, '/', files),
+      children: buildTree(
+        '/',
+        files.filter(
+          ({ namespace: ns, path }) => ns === namespace && path !== '/',
+        ),
+      ),
     };
   });
 }
 
 export function buildTree(
-  namespace: string,
   parentPath: string,
   files: CkusroFile[],
 ): TreeViewItem[] {
-  return files
-    .flatMap((item) => {
-      if (item.namespace !== namespace) {
-        return [];
-      }
-      if (!item.path.startsWith(parentPath)) {
-        return [];
-      }
+  const scope = files.filter(({ path }) => {
+    if (!path.startsWith(parentPath)) {
+      return false;
+    }
 
-      const base = item.path.slice(parentPath.length + 1);
-      if (base === '') {
-        return [];
-      }
+    return path.slice(parentPath.length + 1) !== '';
+  });
+  const children = scope.filter(({ path }) => {
+    return path.slice(parentPath.length + 1).split(sep).length === 1;
+  });
 
-      return base.split(sep).length === 1 ? [item] : [];
-    })
-    .map(({ id, path }) => ({
-      id,
-      children: buildTree(namespace, path, files),
-    }));
+  return children.map(({ id, path }) => ({
+    id,
+    children: buildTree(path, scope),
+  }));
 }

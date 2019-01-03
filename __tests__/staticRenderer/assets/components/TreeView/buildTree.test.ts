@@ -9,10 +9,6 @@ import buildNamespaceTree, {
 } from '../../../../../src/staticRenderer/assets/components/TreeView/buildTree';
 import { buildFile } from '../../../../__fixtures__';
 
-function _findId(items: CkusroFile[], path: string): string {
-  return (items.find((item) => item.path === path) || { id: null }).id || '';
-}
-
 describe(buildNamespaceTree, () => {
   it('returns root items', () => {
     const files = [
@@ -27,7 +23,6 @@ describe(buildNamespaceTree, () => {
         path: '/',
       }),
     ];
-    const findId = (path: string) => _findId(files, path);
 
     const actual = buildNamespaceTree(files).map(({ id }) => id);
     const expected = [files[0].id, files[1].id];
@@ -37,6 +32,10 @@ describe(buildNamespaceTree, () => {
 });
 
 describe(buildTree, () => {
+  function _findId(items: CkusroFile[], path: string): string {
+    return (items.find((item) => item.path === path) || { id: null }).id || '';
+  }
+
   it('returns children items', () => {
     const files = [
       buildFile({
@@ -62,7 +61,7 @@ describe(buildTree, () => {
     ];
     const findId = (path: string) => _findId(files, path);
 
-    const actual = buildTree('ns_1', '/', files);
+    const actual = buildTree('/', files);
     const expected: TreeViewItem[] = [
       {
         id: findId('/foo'),
