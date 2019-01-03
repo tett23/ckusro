@@ -1,15 +1,19 @@
+import { join } from 'path';
 import React, { ReactNode } from 'react';
-import { CkusroFile } from '../../../../loader';
+import { CkusroFile, LoaderContext } from '../../../../loader';
 
 export type Props = {
   file: CkusroFile;
+  context: LoaderContext;
   children?: ReactNode;
 };
 
-export default function TreeViewItem({ file, children }: Props) {
+export default function TreeViewItem({ context, file, children }: Props) {
   return (
     <li>
-      <div>{file.name}</div>
+      <div>
+        <a href={join(context.path, file.path)}>{file.name}</a>
+      </div>
       <Children items={children} />
     </li>
   );
@@ -20,5 +24,5 @@ function Children({ items }: { items: ReactNode }) {
     return null;
   }
 
-  return <ul>items</ul>;
+  return <ul>{items}</ul>;
 }

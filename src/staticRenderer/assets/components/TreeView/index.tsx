@@ -1,21 +1,16 @@
 import React from 'react';
-import { CkusroFile } from '../../../../loader';
+import { CkusroFile, LoaderContext } from '../../../../loader';
 import buildNamespaceTree, { TreeViewItem } from './buildTree';
 import TreeViewItemComponent from './TreeViewItem';
 
 export type Props = {
+  contexts: LoaderContext[];
   files: CkusroFile[];
-  currentId: string;
 };
 
 type Table = { [key in string]: CkusroFile };
 
-export default function TreeView({ files, currentId }: Props) {
-  const currentFile = files.find((item) => currentId === item.id);
-  if (currentFile == null) {
-    throw new Error(`CkusroFile not found. id=${currentId}`);
-  }
-
+export default function TreeView({ contexts, files }: Props) {
   const tv = buildNamespaceTree(files);
   const table = files.reduce(
     (acc, item) => {
@@ -24,20 +19,29 @@ export default function TreeView({ files, currentId }: Props) {
     },
     {} as Table,
   );
-  const items = tv.map((tvi) => gen(table, tvi));
+  const items = tv.map((tvi) => {
+    const context = contexts.find(
+      (item) => item.name === table[tvi.id].namespace,
+    );
+    if (context == null) {
+      throw new Error(`Context not found. name=${table[tvi.id].name}`);
+    }
+
+    return gen(table, context, tvi);
+  });
 
   return <ul>{items}</ul>;
 }
 
-function gen(table: Table, tvi: TreeViewItem) {
+function gen(table: Table, context: LoaderContext, tvi: TreeViewItem) {
   const file = table[tvi.id];
   if (file == null) {
     throw new Error('');
   }
 
   return (
-    <TreeViewItemComponent key={file.id} file={file}>
-      {tvi.children.map((item) => gen(table, item))}
+    <TreeViewItemComponent key={file.id} context={context} file={file}>
+      {tvi.children.map((item) => gen(table, context, item))}
     </TreeViewItemComponent>
   );
 }

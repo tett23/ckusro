@@ -4,6 +4,12 @@ exports[`TreeViewItem renders correctly 1`] = `
 ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <TreeViewItem
+    context={
+      Object {
+        "name": "test_namespace",
+        "path": "/test",
+      }
+    }
     file={
       Object {
         "content": "[[bar.md]]",
@@ -38,7 +44,11 @@ ShallowWrapper {
     "props": Object {
       "children": Array [
         <div>
-          foo.md
+          <a
+            href="/test/foo.md"
+          >
+            foo.md
+          </a>
         </div>,
         <Children />,
       ],
@@ -50,10 +60,25 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "host",
         "props": Object {
-          "children": "foo.md",
+          "children": <a
+            href="/test/foo.md"
+          >
+            foo.md
+          </a>,
         },
         "ref": null,
-        "rendered": "foo.md",
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "foo.md",
+            "href": "/test/foo.md",
+          },
+          "ref": null,
+          "rendered": "foo.md",
+          "type": "a",
+        },
         "type": "div",
       },
       Object {
@@ -78,7 +103,11 @@ ShallowWrapper {
       "props": Object {
         "children": Array [
           <div>
-            foo.md
+            <a
+              href="/test/foo.md"
+            >
+              foo.md
+            </a>
           </div>,
           <Children />,
         ],
@@ -90,10 +119,25 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "host",
           "props": Object {
-            "children": "foo.md",
+            "children": <a
+              href="/test/foo.md"
+            >
+              foo.md
+            </a>,
           },
           "ref": null,
-          "rendered": "foo.md",
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "foo.md",
+              "href": "/test/foo.md",
+            },
+            "ref": null,
+            "rendered": "foo.md",
+            "type": "a",
+          },
           "type": "div",
         },
         Object {
@@ -135,6 +179,12 @@ exports[`TreeViewItem renders correctly when the component have children 1`] = `
 ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <TreeViewItem
+    context={
+      Object {
+        "name": "test_namespace",
+        "path": "/test",
+      }
+    }
     file={
       Object {
         "content": "[[bar.md]]",
@@ -155,6 +205,12 @@ ShallowWrapper {
     }
   >
     <TreeViewItem
+      context={
+        Object {
+          "name": "test_namespace",
+          "path": "/test",
+        }
+      }
       file={
         Object {
           "content": "[[bar.md]]",
@@ -190,11 +246,21 @@ ShallowWrapper {
     "props": Object {
       "children": Array [
         <div>
-          foo.md
+          <a
+            href="/test/foo.md"
+          >
+            foo.md
+          </a>
         </div>,
         <Children
           items={
             <TreeViewItem
+              context={
+                Object {
+                  "name": "test_namespace",
+                  "path": "/test",
+                }
+              }
               file={
                 Object {
                   "content": "[[bar.md]]",
@@ -225,10 +291,25 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "host",
         "props": Object {
-          "children": "foo.md",
+          "children": <a
+            href="/test/foo.md"
+          >
+            foo.md
+          </a>,
         },
         "ref": null,
-        "rendered": "foo.md",
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "foo.md",
+            "href": "/test/foo.md",
+          },
+          "ref": null,
+          "rendered": "foo.md",
+          "type": "a",
+        },
         "type": "div",
       },
       Object {
@@ -237,6 +318,12 @@ ShallowWrapper {
         "nodeType": "function",
         "props": Object {
           "items": <TreeViewItem
+            context={
+              Object {
+                "name": "test_namespace",
+                "path": "/test",
+              }
+            }
             file={
               Object {
                 "content": "[[bar.md]]",
@@ -272,11 +359,21 @@ ShallowWrapper {
       "props": Object {
         "children": Array [
           <div>
-            foo.md
+            <a
+              href="/test/foo.md"
+            >
+              foo.md
+            </a>
           </div>,
           <Children
             items={
               <TreeViewItem
+                context={
+                  Object {
+                    "name": "test_namespace",
+                    "path": "/test",
+                  }
+                }
                 file={
                   Object {
                     "content": "[[bar.md]]",
@@ -307,10 +404,25 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "host",
           "props": Object {
-            "children": "foo.md",
+            "children": <a
+              href="/test/foo.md"
+            >
+              foo.md
+            </a>,
           },
           "ref": null,
-          "rendered": "foo.md",
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "foo.md",
+              "href": "/test/foo.md",
+            },
+            "ref": null,
+            "rendered": "foo.md",
+            "type": "a",
+          },
           "type": "div",
         },
         Object {
@@ -319,6 +431,12 @@ ShallowWrapper {
           "nodeType": "function",
           "props": Object {
             "items": <TreeViewItem
+              context={
+                Object {
+                  "name": "test_namespace",
+                  "path": "/test",
+                }
+              }
               file={
                 Object {
                   "content": "[[bar.md]]",

@@ -1,11 +1,11 @@
 import React from 'react';
-import { CkusroFile } from '../../../loader';
+import { CkusroFile, LoaderContext } from '../../../loader';
 import Breadcrumbs from './Breadcrumbs';
 import { Markdown } from './Markdown';
 import TreeView from './TreeView';
 
 export type Props = {
-  currentFileId: string;
+  contexts: LoaderContext[];
   files: CkusroFile[];
   markdown: {
     currentFileId: string;
@@ -13,8 +13,8 @@ export type Props = {
   };
 };
 
-export default function App({ currentFileId, files, markdown }: Props) {
-  const file = files.find(({ id }) => currentFileId === id);
+export default function App({ contexts, files, markdown }: Props) {
+  const file = files.find(({ id }) => markdown.currentFileId === id);
   if (file == null) {
     throw new Error('File not found.');
   }
@@ -29,7 +29,7 @@ export default function App({ currentFileId, files, markdown }: Props) {
         <Breadcrumbs namespace={file.namespace} path={file.path} />
       </nav>
       <nav>
-        <TreeView currentId={currentFileId} files={files} />
+        <TreeView contexts={contexts} files={files} />
       </nav>
       <section>
         <h1>{file.name}</h1>

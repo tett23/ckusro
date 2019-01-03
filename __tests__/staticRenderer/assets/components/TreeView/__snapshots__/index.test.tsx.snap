@@ -4,7 +4,18 @@ exports[`TreeView renders correctly 1`] = `
 ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <TreeView
-    currentId="test1"
+    contexts={
+      Array [
+        Object {
+          "name": "test1",
+          "path": "/test1",
+        },
+        Object {
+          "name": "test2",
+          "path": "/test2",
+        },
+      ]
+    }
     files={
       Array [
         Object {
@@ -73,6 +84,12 @@ ShallowWrapper {
     "props": Object {
       "children": Array [
         <TreeViewItem
+          context={
+            Object {
+              "name": "test1",
+              "path": "/test1",
+            }
+          }
           file={
             Object {
               "content": "[[bar.md]]",
@@ -93,6 +110,12 @@ ShallowWrapper {
           }
         >
           <TreeViewItem
+            context={
+              Object {
+                "name": "test1",
+                "path": "/test1",
+              }
+            }
             file={
               Object {
                 "content": "[[bar.md]]",
@@ -114,6 +137,12 @@ ShallowWrapper {
           />
         </TreeViewItem>,
         <TreeViewItem
+          context={
+            Object {
+              "name": "test2",
+              "path": "/test2",
+            }
+          }
           file={
             Object {
               "content": "[[bar.md]]",
@@ -144,6 +173,12 @@ ShallowWrapper {
         "props": Object {
           "children": Array [
             <TreeViewItem
+              context={
+                Object {
+                  "name": "test1",
+                  "path": "/test1",
+                }
+              }
               file={
                 Object {
                   "content": "[[bar.md]]",
@@ -164,6 +199,10 @@ ShallowWrapper {
               }
             />,
           ],
+          "context": Object {
+            "name": "test1",
+            "path": "/test1",
+          },
           "file": Object {
             "content": "[[bar.md]]",
             "fileType": "markdown",
@@ -189,6 +228,10 @@ ShallowWrapper {
             "nodeType": "function",
             "props": Object {
               "children": Array [],
+              "context": Object {
+                "name": "test1",
+                "path": "/test1",
+              },
               "file": Object {
                 "content": "[[bar.md]]",
                 "fileType": "markdown",
@@ -219,6 +262,10 @@ ShallowWrapper {
         "nodeType": "function",
         "props": Object {
           "children": Array [],
+          "context": Object {
+            "name": "test2",
+            "path": "/test2",
+          },
           "file": Object {
             "content": "[[bar.md]]",
             "fileType": "markdown",
@@ -251,6 +298,12 @@ ShallowWrapper {
       "props": Object {
         "children": Array [
           <TreeViewItem
+            context={
+              Object {
+                "name": "test1",
+                "path": "/test1",
+              }
+            }
             file={
               Object {
                 "content": "[[bar.md]]",
@@ -271,6 +324,12 @@ ShallowWrapper {
             }
           >
             <TreeViewItem
+              context={
+                Object {
+                  "name": "test1",
+                  "path": "/test1",
+                }
+              }
               file={
                 Object {
                   "content": "[[bar.md]]",
@@ -292,6 +351,12 @@ ShallowWrapper {
             />
           </TreeViewItem>,
           <TreeViewItem
+            context={
+              Object {
+                "name": "test2",
+                "path": "/test2",
+              }
+            }
             file={
               Object {
                 "content": "[[bar.md]]",
@@ -322,6 +387,12 @@ ShallowWrapper {
           "props": Object {
             "children": Array [
               <TreeViewItem
+                context={
+                  Object {
+                    "name": "test1",
+                    "path": "/test1",
+                  }
+                }
                 file={
                   Object {
                     "content": "[[bar.md]]",
@@ -342,6 +413,10 @@ ShallowWrapper {
                 }
               />,
             ],
+            "context": Object {
+              "name": "test1",
+              "path": "/test1",
+            },
             "file": Object {
               "content": "[[bar.md]]",
               "fileType": "markdown",
@@ -367,6 +442,10 @@ ShallowWrapper {
               "nodeType": "function",
               "props": Object {
                 "children": Array [],
+                "context": Object {
+                  "name": "test1",
+                  "path": "/test1",
+                },
                 "file": Object {
                   "content": "[[bar.md]]",
                   "fileType": "markdown",
@@ -397,6 +476,10 @@ ShallowWrapper {
           "nodeType": "function",
           "props": Object {
             "children": Array [],
+            "context": Object {
+              "name": "test2",
+              "path": "/test2",
+            },
             "file": Object {
               "content": "[[bar.md]]",
               "fileType": "markdown",

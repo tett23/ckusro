@@ -1,7 +1,7 @@
 import { extname, join as joinPath } from 'path';
 import { curry } from 'ramda';
 import { CkusroConfig } from '../config';
-import { CkusroFile, isWritableFileType } from '../loader';
+import { CkusroFile, isWritableFileType, LoaderContext } from '../loader';
 import { FileType, FileTypeMarkdown, FileTypeText } from '../loader';
 import { Props } from './assets/components';
 import buildGlobalState from './buildGlobalState';
@@ -19,7 +19,10 @@ export default async function staticRenderer(config: CkusroConfig) {
     config.outputDirectory,
     globalState.context.name,
   );
-  const curriedBuildProps = curry(buildProps)(globalState.files);
+  const curriedBuildProps = curry(buildProps)(
+    [globalState.context],
+    globalState.files,
+  );
 
   const ps: Array<Promise<boolean>> = globalState.files
     .flatMap(filterWritable)
@@ -67,7 +70,11 @@ export function buildWriteInfo(
   };
 }
 
-export function buildProps(files: CkusroFile[], file: CkusroFile): Props {
+export function buildProps(
+  contexts: LoaderContext[],
+  files: CkusroFile[],
+  file: CkusroFile,
+): Props {
   const strongDeps = file.strongDependencies.flatMap((id) => {
     const f = files.find((item) => id === item.id);
 
@@ -81,7 +88,7 @@ export function buildProps(files: CkusroFile[], file: CkusroFile): Props {
   const deps = [file].concat(strongDeps).concat(weakDeps);
 
   return {
-    currentFileId: file.id,
+    contexts,
     files,
     markdown: {
       currentFileId: file.id,

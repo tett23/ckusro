@@ -13,7 +13,7 @@ import staticRenderer, {
   filterWritable,
   replacePath,
 } from '../../src/staticRenderer';
-import { buildFile } from '../__fixtures__';
+import { buildFile, buildLoaderContext } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(staticRenderer, () => {
@@ -151,11 +151,12 @@ describe(buildProps, () => {
       strongDependencies: [referenced[0].id],
       weakDependencies: [referenced[1].id],
     });
+    const contexts = [buildLoaderContext({ name: file.namespace })];
     const files = [file].concat(unreferenced).concat(referenced);
-    const actual = buildProps(files, file);
+    const actual = buildProps(contexts, files, file);
     const expected = [file].concat(referenced).map(({ id }) => id);
 
-    expect(actual.currentFileId).toEqual(file.id);
+    expect(actual.contexts).toEqual(contexts);
     expect(actual.files.map(({ id }) => id)).toEqual(files.map(({ id }) => id));
     expect(actual.markdown.currentFileId).toEqual(file.id);
     expect(actual.markdown.files.map(({ id }) => id)).toEqual(expected);
