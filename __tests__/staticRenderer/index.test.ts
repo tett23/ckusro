@@ -1,13 +1,11 @@
 import { CkusroConfig } from '../../src/config';
 import {
-  buildDependencyTable,
   CkusroFile,
   FileTypeDirectory,
   FileTypeMarkdown,
   FileTypeText,
 } from '../../src/loader';
 import staticRenderer, {
-  buildHTML,
   buildProps,
   buildWriteInfo,
   determineAbsolutePath,
@@ -147,16 +145,19 @@ describe(determineAbsolutePath, () => {
 
 describe(buildProps, () => {
   it('', () => {
-    const files = [buildFile(), buildFile()];
+    const unreferenced = [buildFile()];
+    const referenced = [buildFile(), buildFile()];
     const file = buildFile({
-      strongDependencies: [files[0].id],
-      weakDependencies: [files[1].id],
+      strongDependencies: [referenced[0].id],
+      weakDependencies: [referenced[1].id],
     });
-    const dependencyTable = buildDependencyTable([file].concat(files));
+    const files = [file].concat(unreferenced).concat(referenced);
     const actual = buildProps(files, file);
-    const expected = [file].concat(files).map(({ id }) => id);
+    const expected = [file].concat(referenced).map(({ id }) => id);
 
-    expect(actual.fileId).toEqual(file.id);
-    expect(actual.files.map(({ id }) => id)).toEqual(expected);
+    expect(actual.currentFileId).toEqual(file.id);
+    expect(actual.files.map(({ id }) => id)).toEqual(files.map(({ id }) => id));
+    expect(actual.markdown.currentFileId).toEqual(file.id);
+    expect(actual.markdown.files.map(({ id }) => id)).toEqual(expected);
   });
 });

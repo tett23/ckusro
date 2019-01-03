@@ -4,15 +4,26 @@ import remarkBreaks from 'remark-breaks';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import unified from 'unified';
+import { CkusroFile } from '../../../../loader';
 import wikiLink from '../../../../parser/wikiLink';
 import WikiLink from '../wiki/WikiLink';
 import transformWikiLink, { Options } from './handlers/WikiLink';
 
 export type Props = {
-  text: string;
+  currentFileId: string;
+  files: CkusroFile[];
 };
 
-export function Markdown({ text }: Props) {
+export function Markdown({ currentFileId, files }: Props) {
+  const file = files.find(({ id }) => id === currentFileId);
+  if (file == null) {
+    throw new Error(`File not found. id == ${currentFileId}`);
+  }
+
+  return buildJSX(file.content || '');
+}
+
+export function buildJSX(content: string) {
   const remarkResolveJSXOptions: Options = {
     components: {
       WikiLink,
@@ -32,7 +43,7 @@ export function Markdown({ text }: Props) {
         },
       },
     })
-    .processSync(text).contents;
+    .processSync(content).contents;
 
   return jsx;
 }

@@ -1,9 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Markdown  1`] = `
-ReactWrapper {
+exports[`Markdown renders correctly 1`] = `
+ShallowWrapper {
+  Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <Markdown
-    text="[[foo]]"
+    currentFileId="test1"
+    files={
+      Array [
+        Object {
+          "content": "[[foo]]",
+          "fileType": "markdown",
+          "id": "test1",
+          "isLoaded": true,
+          "name": "foo.md",
+          "namespace": "test",
+          "path": "/foo.md",
+          "strongDependencies": Array [
+            "test:/bar.md",
+          ],
+          "variables": Array [],
+          "weakDependencies": Array [
+            "test:/bar.md",
+          ],
+        },
+      ]
+    }
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
@@ -13,23 +34,43 @@ ReactWrapper {
     "simulateEvent": [Function],
     "unmount": [Function],
   },
-  Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__node__): Object {
     "instance": null,
-    "key": undefined,
-    "nodeType": "function",
+    "key": "h-1",
+    "nodeType": "host",
     "props": Object {
-      "text": "[[foo]]",
-    },
-    "ref": null,
-    "rendered": Object {
-      "instance": <p>
+      "children": Array [
         <span
           data-reactroot=""
         >
           foo
-        </span>
-      </p>,
+        </span>,
+      ],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": "h-2",
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            "foo",
+          ],
+          "data-reactroot": "",
+        },
+        "ref": null,
+        "rendered": Array [
+          "foo",
+        ],
+        "type": "span",
+      },
+    ],
+    "type": "p",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
       "key": "h-1",
       "nodeType": "host",
       "props": Object {
@@ -44,11 +85,7 @@ ReactWrapper {
       "ref": null,
       "rendered": Array [
         Object {
-          "instance": <span
-            data-reactroot=""
-          >
-            foo
-          </span>,
+          "instance": null,
           "key": "h-2",
           "nodeType": "host",
           "props": Object {
@@ -65,63 +102,6 @@ ReactWrapper {
         },
       ],
       "type": "p",
-    },
-    "type": [Function],
-  },
-  Symbol(enzyme.__nodes__): Array [
-    Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "function",
-      "props": Object {
-        "text": "[[foo]]",
-      },
-      "ref": null,
-      "rendered": Object {
-        "instance": <p>
-          <span
-            data-reactroot=""
-          >
-            foo
-          </span>
-        </p>,
-        "key": "h-1",
-        "nodeType": "host",
-        "props": Object {
-          "children": Array [
-            <span
-              data-reactroot=""
-            >
-              foo
-            </span>,
-          ],
-        },
-        "ref": null,
-        "rendered": Array [
-          Object {
-            "instance": <span
-              data-reactroot=""
-            >
-              foo
-            </span>,
-            "key": "h-2",
-            "nodeType": "host",
-            "props": Object {
-              "children": Array [
-                "foo",
-              ],
-              "data-reactroot": "",
-            },
-            "ref": null,
-            "rendered": Array [
-              "foo",
-            ],
-            "type": "span",
-          },
-        ],
-        "type": "p",
-      },
-      "type": [Function],
     },
   ],
   Symbol(enzyme.__options__): Object {
@@ -142,4 +122,14 @@ ReactWrapper {
     },
   },
 }
+`;
+
+exports[`buildJSX renders correctly 1`] = `
+<p>
+  <span
+    data-reactroot=""
+  >
+    foo
+  </span>
+</p>
 `;

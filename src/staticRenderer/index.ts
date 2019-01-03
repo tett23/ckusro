@@ -81,8 +81,12 @@ export function buildProps(files: CkusroFile[], file: CkusroFile): Props {
   const deps = [file].concat(strongDeps).concat(weakDeps);
 
   return {
-    fileId: file.id,
-    files: deps,
+    currentFileId: file.id,
+    files,
+    markdown: {
+      currentFileId: file.id,
+      files: deps,
+    },
   };
 }
 

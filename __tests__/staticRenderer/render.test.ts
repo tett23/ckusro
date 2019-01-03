@@ -5,8 +5,12 @@ describe(render, () => {
   it('renders correctly', () => {
     const file = buildFile();
     const actual = render({
-      fileId: file.id,
+      currentFileId: file.id,
       files: [file],
+      markdown: {
+        currentFileId: file.id,
+        files: [file],
+      },
     });
 
     expect(actual).toMatchSnapshot();

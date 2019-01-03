@@ -2,7 +2,6 @@ import {
   CkusroFile,
   FileTypeDirectory,
   FileTypeDoesNotExist,
-  LoaderContext,
 } from '../../src/loader';
 import {
   buildAst,
