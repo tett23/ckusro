@@ -1,0 +1,368 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TreeViewItem renders correctly 1`] = `
+ShallowWrapper {
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <TreeViewItem
+    file={
+      Object {
+        "content": "[[bar.md]]",
+        "fileType": "markdown",
+        "id": "test_1",
+        "isLoaded": true,
+        "name": "foo.md",
+        "namespace": "test",
+        "path": "/foo.md",
+        "strongDependencies": Array [
+          "test:/bar.md",
+        ],
+        "variables": Array [],
+        "weakDependencies": Array [
+          "test:/bar.md",
+        ],
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateError": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <div>
+          foo.md
+        </div>,
+        <Children />,
+      ],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "foo.md",
+        },
+        "ref": null,
+        "rendered": "foo.md",
+        "type": "div",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "items": undefined,
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": "li",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <div>
+            foo.md
+          </div>,
+          <Children />,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "foo.md",
+          },
+          "ref": null,
+          "rendered": "foo.md",
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "items": undefined,
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": "li",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+        "lifecycles": Object {
+          "componentDidUpdate": Object {
+            "onSetState": true,
+          },
+          "getDerivedStateFromProps": true,
+          "getSnapshotBeforeUpdate": true,
+          "setState": Object {
+            "skipsComponentDidUpdateOnNullish": true,
+          },
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`TreeViewItem renders correctly when the component have children 1`] = `
+ShallowWrapper {
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <TreeViewItem
+    file={
+      Object {
+        "content": "[[bar.md]]",
+        "fileType": "markdown",
+        "id": "test_1",
+        "isLoaded": true,
+        "name": "foo.md",
+        "namespace": "test",
+        "path": "/foo.md",
+        "strongDependencies": Array [
+          "test:/bar.md",
+        ],
+        "variables": Array [],
+        "weakDependencies": Array [
+          "test:/bar.md",
+        ],
+      }
+    }
+  >
+    <TreeViewItem
+      file={
+        Object {
+          "content": "[[bar.md]]",
+          "fileType": "markdown",
+          "id": "test_2",
+          "isLoaded": true,
+          "name": "foo.md",
+          "namespace": "test",
+          "path": "/foo.md",
+          "strongDependencies": Array [
+            "test:/bar.md",
+          ],
+          "variables": Array [],
+          "weakDependencies": Array [
+            "test:/bar.md",
+          ],
+        }
+      }
+    />
+  </TreeViewItem>,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateError": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <div>
+          foo.md
+        </div>,
+        <Children
+          items={
+            <TreeViewItem
+              file={
+                Object {
+                  "content": "[[bar.md]]",
+                  "fileType": "markdown",
+                  "id": "test_2",
+                  "isLoaded": true,
+                  "name": "foo.md",
+                  "namespace": "test",
+                  "path": "/foo.md",
+                  "strongDependencies": Array [
+                    "test:/bar.md",
+                  ],
+                  "variables": Array [],
+                  "weakDependencies": Array [
+                    "test:/bar.md",
+                  ],
+                }
+              }
+            />
+          }
+        />,
+      ],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "foo.md",
+        },
+        "ref": null,
+        "rendered": "foo.md",
+        "type": "div",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "items": <TreeViewItem
+            file={
+              Object {
+                "content": "[[bar.md]]",
+                "fileType": "markdown",
+                "id": "test_2",
+                "isLoaded": true,
+                "name": "foo.md",
+                "namespace": "test",
+                "path": "/foo.md",
+                "strongDependencies": Array [
+                  "test:/bar.md",
+                ],
+                "variables": Array [],
+                "weakDependencies": Array [
+                  "test:/bar.md",
+                ],
+              }
+            }
+          />,
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": "li",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <div>
+            foo.md
+          </div>,
+          <Children
+            items={
+              <TreeViewItem
+                file={
+                  Object {
+                    "content": "[[bar.md]]",
+                    "fileType": "markdown",
+                    "id": "test_2",
+                    "isLoaded": true,
+                    "name": "foo.md",
+                    "namespace": "test",
+                    "path": "/foo.md",
+                    "strongDependencies": Array [
+                      "test:/bar.md",
+                    ],
+                    "variables": Array [],
+                    "weakDependencies": Array [
+                      "test:/bar.md",
+                    ],
+                  }
+                }
+              />
+            }
+          />,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "foo.md",
+          },
+          "ref": null,
+          "rendered": "foo.md",
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "items": <TreeViewItem
+              file={
+                Object {
+                  "content": "[[bar.md]]",
+                  "fileType": "markdown",
+                  "id": "test_2",
+                  "isLoaded": true,
+                  "name": "foo.md",
+                  "namespace": "test",
+                  "path": "/foo.md",
+                  "strongDependencies": Array [
+                    "test:/bar.md",
+                  ],
+                  "variables": Array [],
+                  "weakDependencies": Array [
+                    "test:/bar.md",
+                  ],
+                }
+              }
+            />,
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": "li",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+        "lifecycles": Object {
+          "componentDidUpdate": Object {
+            "onSetState": true,
+          },
+          "getDerivedStateFromProps": true,
+          "getSnapshotBeforeUpdate": true,
+          "setState": Object {
+            "skipsComponentDidUpdateOnNullish": true,
+          },
+        },
+      },
+    },
+  },
+}
+`;
