@@ -74,10 +74,7 @@ describe(determineDependency, () => {
   });
 
   it('returns empty array when file does not exist', () => {
-    const context: LoaderContext = {
-      name: 'test',
-      path: '/test',
-    };
+    const context = buildLoaderContext({ name: 'test', path: '/test' });
     const rootNode = buildAst('[[test:does_not_exist]]');
     const files: CkusroFile[] = [];
     const actual = determineDependency(context, rootNode, files);
