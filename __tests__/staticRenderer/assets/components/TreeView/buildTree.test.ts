@@ -62,7 +62,7 @@ describe(buildTree, () => {
     ];
     const findId = (path: string) => _findId(files, path);
 
-    const actual = buildTree('/', files);
+    const actual = buildTree('ns_1', '/', files);
     const expected: TreeViewItem[] = [
       {
         id: findId('/foo'),
