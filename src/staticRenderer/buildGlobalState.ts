@@ -9,9 +9,11 @@ import {
   loadDependencies,
   LoaderContext,
 } from '../loader';
+import { newOutputContext, OutputContext } from '../models/outputContext';
 
 export type GlobalState = {
-  context: LoaderContext;
+  loaderContexts: LoaderContext[];
+  outputContexts: OutputContext[];
   files: CkusroFile[];
   dependencyTable: DependencyTable;
 };
@@ -23,19 +25,24 @@ export default async function buildGlobalState(
   if (result instanceof Error) {
     return result;
   }
-  const [context, root] = result;
+  const [loaderContext, root] = result;
 
-  const ps = build(context, root).map(
-    async (item) => await loadContent(context, item),
+  const ps = build(loaderContext, root).map(
+    async (item) => await loadContent(loaderContext, item),
   );
   const files = await Promise.all(ps);
   const dependencyLoaded = files.map((item) =>
-    loadDependencies(context, item, files),
+    loadDependencies(loaderContext, item, files),
   );
   const dependencies = buildDependencyTable(dependencyLoaded);
+  const loaderContexts = [loaderContext];
+  const outputContexts = loaderContexts.map((context) =>
+    newOutputContext(config, context),
+  );
 
   return {
-    context,
+    loaderContexts,
+    outputContexts,
     files: dependencyLoaded,
     dependencyTable: dependencies,
   };

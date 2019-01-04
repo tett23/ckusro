@@ -13,7 +13,12 @@ import staticRenderer, {
   filterWritable,
   replacePath,
 } from '../../src/staticRenderer';
-import { buildFile, buildLoaderContext } from '../__fixtures__';
+import {
+  buildFile,
+  buildGlobalState,
+  buildLoaderContext,
+  buildOutputContext,
+} from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(staticRenderer, () => {
@@ -73,9 +78,10 @@ describe(filterWritable, () => {
 describe(buildWriteInfo, () => {
   it('returns WriteInfo', () => {
     const file = buildFile({});
-    const actual = buildWriteInfo('/test', 'ns', file);
+    const context = buildOutputContext({ path: '/out/ns', name: 'ns' });
+    const actual = buildWriteInfo(context, file);
     const expected: FileInfo = {
-      path: '/test/ns/foo.html',
+      path: '/out/ns/foo.html',
       file,
     };
 
@@ -84,14 +90,16 @@ describe(buildWriteInfo, () => {
 
   it('throws Error when isLoaded is false', () => {
     const file = buildFile({ isLoaded: false });
-    const actual = () => buildWriteInfo('/test', 'foo', file);
+    const context = buildOutputContext({ path: '/out', name: 'ns' });
+    const actual = () => buildWriteInfo(context, file);
 
     expect(actual).toThrowError();
   });
 
   it('throws Error when content is null', () => {
     const file = buildFile({ content: null });
-    const actual = () => buildWriteInfo('/test', 'foo', file);
+    const context = buildOutputContext({ path: '/out', name: 'ns' });
+    const actual = () => buildWriteInfo(context, file);
 
     expect(actual).toThrowError();
   });
@@ -125,19 +133,19 @@ describe(replacePath, () => {
 
 describe(determineAbsolutePath, () => {
   it('returns absolute path', () => {
-    const actual = determineAbsolutePath('/test', 'namespace', '/foo.md');
+    const actual = determineAbsolutePath('/test/namespace', '/foo.md');
 
     expect(actual).toBe('/test/namespace/foo.md');
   });
 
   it('threw error when outputDir is not absolute path', () => {
-    const actual = () => determineAbsolutePath('test', 'namespace', '/foo.md');
+    const actual = () => determineAbsolutePath('test/namespace', '/foo.md');
 
     expect(actual).toThrowError('outputDir must start with `/`');
   });
 
   it('threw error when filePath is not absolute path', () => {
-    const actual = () => determineAbsolutePath('/test', 'namespace', 'foo.md');
+    const actual = () => determineAbsolutePath('/test/namespace', 'foo.md');
 
     expect(actual).toThrowError('filePath must start with `/`');
   });
@@ -151,13 +159,12 @@ describe(buildProps, () => {
       strongDependencies: [referenced[0].id],
       weakDependencies: [referenced[1].id],
     });
-    const contexts = [buildLoaderContext({ name: file.namespace })];
     const files = [file].concat(unreferenced).concat(referenced);
-    const actual = buildProps(contexts, files, file);
+    const globalState = buildGlobalState({ files });
+    const actual = buildProps(globalState, file);
     const expected = [file].concat(referenced).map(({ id }) => id);
 
-    expect(actual.contexts).toEqual(contexts);
-    expect(actual.files.map(({ id }) => id)).toEqual(files.map(({ id }) => id));
+    expect(actual.globalState).toEqual(globalState);
     expect(actual.markdown.currentFileId).toEqual(file.id);
     expect(actual.markdown.files.map(({ id }) => id)).toEqual(expected);
   });

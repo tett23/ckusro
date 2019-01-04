@@ -1,13 +1,17 @@
 import render from '../../src/staticRenderer/render';
-import { buildFile, buildLoaderContext } from '../__fixtures__';
+import {
+  buildFile,
+  buildGlobalState,
+  buildLoaderContext,
+} from '../__fixtures__';
 
 describe(render, () => {
   it('renders correctly', () => {
     const file = buildFile();
     const contexts = [buildLoaderContext({ name: file.namespace })];
+    const globalState = buildGlobalState({ files: [file] });
     const actual = render({
-      contexts,
-      files: [file],
+      globalState,
       markdown: {
         currentFileId: file.id,
         files: [file],

@@ -15,7 +15,12 @@ describe(buildGlobalState, () => {
   });
 
   function isGlobalState(obj: any): obj is GlobalState {
-    return 'context' in obj && 'files' in obj && 'dependencyTable' in obj;
+    return (
+      'loaderContexts' in obj &&
+      'outputContexts' in obj &&
+      'files' in obj &&
+      'dependencyTable' in obj
+    );
   }
 
   it('returns GlobalState', async () => {

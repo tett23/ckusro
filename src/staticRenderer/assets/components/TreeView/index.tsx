@@ -1,10 +1,11 @@
 import React from 'react';
-import { CkusroFile, LoaderContext } from '../../../../loader';
+import { CkusroFile } from '../../../../loader';
+import { OutputContext } from '../../../../models/outputContext';
 import buildNamespaceTree, { TreeViewItem } from './buildTree';
 import TreeViewItemComponent from './TreeViewItem';
 
 export type Props = {
-  contexts: LoaderContext[];
+  contexts: OutputContext[];
   files: CkusroFile[];
 };
 
@@ -33,7 +34,7 @@ export default function TreeView({ contexts, files }: Props) {
   return <ul>{items}</ul>;
 }
 
-function gen(table: Table, context: LoaderContext, tvi: TreeViewItem) {
+function gen(table: Table, context: OutputContext, tvi: TreeViewItem) {
   const file = table[tvi.id];
   if (file == null) {
     throw new Error('');

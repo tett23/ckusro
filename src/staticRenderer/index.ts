@@ -1,10 +1,11 @@
 import { extname, join as joinPath } from 'path';
 import { curry } from 'ramda';
 import { CkusroConfig } from '../config';
-import { CkusroFile, isWritableFileType, LoaderContext } from '../loader';
+import { CkusroFile, isWritableFileType } from '../loader';
 import { FileType, FileTypeMarkdown, FileTypeText } from '../loader';
+import { OutputContext } from '../models/outputContext';
 import { Props } from './assets/components';
-import buildGlobalState from './buildGlobalState';
+import buildGlobalState, { GlobalState } from './buildGlobalState';
 import writeFile from './io';
 import render from './render';
 
@@ -16,13 +17,9 @@ export default async function staticRenderer(config: CkusroConfig) {
   }
 
   const curriedBuildWriteInfo = curry(buildWriteInfo)(
-    config.outputDirectory,
-    globalState.context.name,
+    globalState.outputContexts[0],
   );
-  const curriedBuildProps = curry(buildProps)(
-    [globalState.context],
-    globalState.files,
-  );
+  const curriedBuildProps = curry(buildProps)(globalState);
 
   const ps: Array<Promise<boolean>> = globalState.files
     .flatMap(filterWritable)
@@ -52,8 +49,7 @@ export type FileInfo = {
 };
 
 export function buildWriteInfo(
-  outputDirectory: string,
-  contextName: string,
+  context: OutputContext,
   file: CkusroFile,
 ): FileInfo {
   if (!file.isLoaded || file.content == null) {
@@ -61,35 +57,26 @@ export function buildWriteInfo(
   }
 
   return {
-    path: determineAbsolutePath(
-      outputDirectory,
-      contextName,
-      replacePath(file),
-    ),
+    path: determineAbsolutePath(context.path, replacePath(file)),
     file,
   };
 }
 
-export function buildProps(
-  contexts: LoaderContext[],
-  files: CkusroFile[],
-  file: CkusroFile,
-): Props {
+export function buildProps(globalState: GlobalState, file: CkusroFile): Props {
   const strongDeps = file.strongDependencies.flatMap((id) => {
-    const f = files.find((item) => id === item.id);
+    const f = globalState.files.find((item) => id === item.id);
 
     return f != null ? [f] : [];
   });
   const weakDeps = file.weakDependencies.flatMap((id) => {
-    const f = files.find((item) => id === item.id);
+    const f = globalState.files.find((item) => id === item.id);
 
     return f != null ? [f] : [];
   });
   const deps = [file].concat(strongDeps).concat(weakDeps);
 
   return {
-    contexts,
-    files,
+    globalState,
     markdown: {
       currentFileId: file.id,
       files: deps,
@@ -125,7 +112,6 @@ export function convertExt(fileType: FileType): string {
 
 export function determineAbsolutePath(
   outputDir: string,
-  contextName: string,
   filePath: string,
 ): string {
   if (!outputDir.startsWith('/')) {
@@ -135,5 +121,5 @@ export function determineAbsolutePath(
     throw new Error('filePath must start with `/`');
   }
 
-  return joinPath(outputDir, contextName, filePath);
+  return joinPath(outputDir, filePath);
 }
