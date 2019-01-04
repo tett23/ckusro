@@ -1,5 +1,6 @@
 import { resolve as resolvePath } from 'path';
-import { CkusroConfig, mergeConfig } from '../../src/config';
+import { mergeConfig } from '../../src/config';
+import { CkusroConfig } from '../../src/models/ckusroConfig';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(mergeConfig.name, () => {
@@ -18,7 +19,7 @@ describe(mergeConfig.name, () => {
     const expected: CkusroConfig = {
       targetDirectory: '/test',
       outputDirectory: '/out',
-      loader: {
+      loaderConfig: {
         extensions: /\.(md|txt)$/,
       },
     };
@@ -34,7 +35,7 @@ describe(mergeConfig.name, () => {
     const expected: CkusroConfig = {
       targetDirectory: resolvePath('test'),
       outputDirectory: resolvePath('out'),
-      loader: {
+      loaderConfig: {
         extensions: /\.(md|txt)$/,
       },
     };

@@ -5,7 +5,7 @@ import { CkusroConfig } from '../models/ckusroConfig';
 const defaultConfig: CkusroConfig = {
   targetDirectory: '../trapahi/wiki',
   outputDirectory: './out',
-  loader: {
+  loaderConfig: {
     extensions: /\.(md|txt)$/,
   },
 };

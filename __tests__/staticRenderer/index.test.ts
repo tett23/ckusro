@@ -10,7 +10,6 @@ import staticRenderer, {
 import {
   buildFile,
   buildGlobalState,
-  buildLoaderContext,
   buildOutputContext,
 } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
@@ -29,7 +28,7 @@ describe(staticRenderer, () => {
     const conf: CkusroConfig = {
       targetDirectory: '/test',
       outputDirectory: '/out',
-      loader: {
+      loaderConfig: {
         extensions: /\.(md|txt)$/,
       },
     };

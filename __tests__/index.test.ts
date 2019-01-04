@@ -1,5 +1,5 @@
-import { CkusroConfig } from '../src/config';
 import main from '../src/index';
+import { CkusroConfig } from '../src/models/ckusroConfig';
 import { mockFileSystem, restoreFileSystem } from './__helpers__/fs';
 
 describe(main.name, () => {
@@ -16,7 +16,7 @@ describe(main.name, () => {
     const conf: CkusroConfig = {
       targetDirectory: '/test',
       outputDirectory: '/out',
-      loader: {
+      loaderConfig: {
         extensions: /\.(md|txt)$/,
       },
     };
@@ -29,7 +29,7 @@ describe(main.name, () => {
     const conf: CkusroConfig = {
       targetDirectory: '/does_not_exist',
       outputDirectory: '/out',
-      loader: {
+      loaderConfig: {
         extensions: /\.(md|txt)$/,
       },
     };

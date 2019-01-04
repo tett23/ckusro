@@ -21,7 +21,10 @@ export type GlobalState = {
 export default async function buildGlobalState(
   config: CkusroConfig,
 ): Promise<GlobalState | Error> {
-  const result = await load(config.targetDirectory, config.loader.extensions);
+  const result = await load(
+    config.targetDirectory,
+    config.loaderConfig.extensions,
+  );
   if (result instanceof Error) {
     return result;
   }

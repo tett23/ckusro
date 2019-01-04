@@ -27,7 +27,7 @@ describe(buildGlobalState, () => {
     const conf: CkusroConfig = {
       targetDirectory: '/test',
       outputDirectory: '/out',
-      loader: {
+      loaderConfig: {
         extensions: /\.(md|txt)$/,
       },
     };
@@ -40,7 +40,7 @@ describe(buildGlobalState, () => {
     const conf: CkusroConfig = {
       targetDirectory: '/does_not_exist',
       outputDirectory: '/out',
-      loader: {
+      loaderConfig: {
         extensions: /\.(md|txt)$/,
       },
     };

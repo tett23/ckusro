@@ -44,10 +44,10 @@ export function buildGlobalState(
 export function buildCkusroConfig(
   overrides: DeepPartial<CkusroConfig> = {},
 ): CkusroConfig {
-  const config = {
+  const config: CkusroConfig = {
     targetDirectory: '/test',
     outputDirectory: '/out',
-    loader: {
+    loaderConfig: {
       extensions: /\.(md|txt)$/,
     },
   };
