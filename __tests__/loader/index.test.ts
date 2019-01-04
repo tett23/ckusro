@@ -10,6 +10,7 @@ import {
   StatTypeDirectory,
   StatTypeFile,
 } from '../../src/loader';
+import { TargetDirectory } from '../../src/models/ckusroConfig';
 import {
   CkusroFile,
   FileType,
@@ -34,7 +35,13 @@ describe(load.name, () => {
   });
 
   it('load items', async () => {
-    const [context, node]: any = await load('/foo', /\.(md|txt)$/);
+    const targetDirectory: TargetDirectory = {
+      path: '/foo',
+      name: 'foo',
+      innerPath: '.',
+    };
+    const results: any = await load([targetDirectory], /\.(md|txt)$/);
+    const [context, node] = results[0];
 
     expect(context).toEqual({
       name: 'foo',
@@ -64,7 +71,12 @@ describe(load.name, () => {
   });
 
   it('returns Error when directory does not exist', async () => {
-    const actual = await load('/bar', /\.(md|txt)$/);
+    const targetDirectory: TargetDirectory = {
+      path: '/does_not_exist',
+      name: 'does_not_exist',
+      innerPath: './',
+    };
+    const actual = await load([targetDirectory], /\.(md|txt)$/);
 
     expect(actual).toBeInstanceOf(Error);
   });

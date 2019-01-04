@@ -6,7 +6,9 @@ import { buildCkusroConfig, buildLoaderContext } from '../__fixtures__';
 
 describe(newOutputContext, () => {
   it('returns OutputContext', () => {
-    const config = buildCkusroConfig({ targetDirectory: '/out' });
+    const config = buildCkusroConfig({
+      targetDirectories: [{ path: '/out', name: 'out', innerPath: './' }],
+    });
     const loaderContext = buildLoaderContext({ name: 'test_ns' });
     const actual = newOutputContext(config, loaderContext);
     const expected: OutputContext = {

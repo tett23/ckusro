@@ -2,6 +2,7 @@ import fs from 'fs';
 import { basename } from 'path';
 import { join as joinPath } from 'path';
 import { promisify } from 'util';
+import { TargetDirectory } from '../models/ckusroConfig';
 import {
   CkusroFile,
   CkusroId,
@@ -81,19 +82,33 @@ export type LoaderContext = {
 };
 
 export async function load(
-  targetDirectory: string,
+  targetDirectories: TargetDirectory[],
   extensions: RegExp,
-): Promise<[LoaderContext, CkusroObject] | Error> {
-  const context: LoaderContext = {
-    name: basename(targetDirectory),
-    path: targetDirectory,
-  };
-  const node = await tree(targetDirectory, extensions, targetDirectory);
-  if (node == null) {
-    return new Error('');
+): Promise<Array<[LoaderContext, CkusroObject]> | Error> {
+  const contexts: LoaderContext[] = targetDirectories.map((item) => ({
+    name: item.name,
+    path: joinPath(item.path, item.innerPath),
+  }));
+  const ps = contexts.map(
+    async (context): Promise<[LoaderContext, CkusroObject] | Error> => {
+      const node = await tree(context.path, extensions, context.path);
+      if (node == null) {
+        return new Error('');
+      }
+
+      return [context, node];
+    },
+  );
+  const items = await Promise.all(ps);
+
+  const err = items.flatMap((item) => (item instanceof Error ? [item] : []));
+  if (err.length >= 1) {
+    return err[0];
   }
 
-  return [context, node];
+  const ret = items.flatMap((item) => (item instanceof Error ? [] : [item]));
+
+  return ret;
 }
 
 export function detectType(statType: StatType, name: string): FileType {

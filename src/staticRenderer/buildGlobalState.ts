@@ -21,24 +21,25 @@ export type GlobalState = {
 export default async function buildGlobalState(
   config: CkusroConfig,
 ): Promise<GlobalState | Error> {
-  const result = await load(
-    config.targetDirectory,
+  const results = await load(
+    config.targetDirectories,
     config.loaderConfig.extensions,
   );
-  if (result instanceof Error) {
-    return result;
+  if (results instanceof Error) {
+    return results;
   }
-  const [loaderContext, root] = result;
+  const ps = results.flatMap(async ([loaderContext, root]) => {
+    const pps = build(loaderContext, root).map(
+      async (item) => await loadContent(loaderContext, item),
+    );
+    const items = await Promise.all(pps);
 
-  const ps = build(loaderContext, root).map(
-    async (item) => await loadContent(loaderContext, item),
-  );
-  const files = await Promise.all(ps);
-  const dependencyLoaded = files.map((item) =>
-    loadDependencies(loaderContext, item, files),
-  );
-  const dependencies = buildDependencyTable(dependencyLoaded);
-  const loaderContexts = [loaderContext];
+    return items.map((item) => loadDependencies(loaderContext, item, items));
+  });
+
+  const files = (await Promise.all(ps)).flatMap((item) => item);
+  const dependencies = buildDependencyTable(files);
+  const loaderContexts = results.map(([context]) => context);
   const outputContexts = loaderContexts.map((context) =>
     newOutputContext(config, context),
   );
@@ -46,7 +47,7 @@ export default async function buildGlobalState(
   return {
     loaderContexts,
     outputContexts,
-    files: dependencyLoaded,
+    files,
     dependencyTable: dependencies,
   };
 }

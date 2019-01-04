@@ -25,7 +25,13 @@ describe(buildGlobalState, () => {
 
   it('returns GlobalState', async () => {
     const conf: CkusroConfig = {
-      targetDirectory: '/test',
+      targetDirectories: [
+        {
+          path: '/test',
+          name: 'test',
+          innerPath: './',
+        },
+      ],
       outputDirectory: '/out',
       loaderConfig: {
         extensions: /\.(md|txt)$/,
@@ -38,7 +44,13 @@ describe(buildGlobalState, () => {
 
   it('returns Error when directory does not exist', async () => {
     const conf: CkusroConfig = {
-      targetDirectory: '/does_not_exist',
+      targetDirectories: [
+        {
+          path: '/does_not_exist',
+          name: 'does_not_exist',
+          innerPath: './',
+        },
+      ],
       outputDirectory: '/out',
       loaderConfig: {
         extensions: /\.(md|txt)$/,

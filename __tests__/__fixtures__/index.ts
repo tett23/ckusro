@@ -45,8 +45,14 @@ export function buildCkusroConfig(
   overrides: DeepPartial<CkusroConfig> = {},
 ): CkusroConfig {
   const config: CkusroConfig = {
-    targetDirectory: '/test',
     outputDirectory: '/out',
+    targetDirectories: [
+      {
+        path: '/test/test_ns',
+        name: 'test_ns',
+        innerPath: './',
+      },
+    ],
     loaderConfig: {
       extensions: /\.(md|txt)$/,
     },

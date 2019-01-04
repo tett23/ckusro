@@ -1,10 +1,16 @@
 import merge from 'lodash.merge';
-import { resolve as resolvePath } from 'path';
+import { normalize, resolve as resolvePath } from 'path';
 import { CkusroConfig } from '../models/ckusroConfig';
 
 const defaultConfig: CkusroConfig = {
-  targetDirectory: '../trapahi/wiki',
   outputDirectory: './out',
+  targetDirectories: [
+    {
+      path: '../trapahi',
+      name: 'trapahi',
+      innerPath: 'wiki',
+    },
+  ],
   loaderConfig: {
     extensions: /\.(md|txt)$/,
   },
@@ -15,7 +21,11 @@ export function mergeConfig(conf: DeepPartial<CkusroConfig>): CkusroConfig {
 
   return {
     ...tmp,
-    targetDirectory: resolvePath(tmp.targetDirectory),
+    targetDirectories: tmp.targetDirectories.map((item) => ({
+      ...item,
+      path: resolvePath(item.path),
+      innerPath: normalize(item.innerPath),
+    })),
     outputDirectory: resolvePath(tmp.outputDirectory),
   };
 }

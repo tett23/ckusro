@@ -5,7 +5,7 @@ import { mockFileSystem, restoreFileSystem } from './__helpers__/fs';
 describe(main.name, () => {
   beforeEach(() => {
     mockFileSystem({
-      '/test/foo/bar/baz.md': '# test file',
+      '/test/test_ns/foo/bar/baz.md': '# test file',
     });
   });
   afterEach(() => {
@@ -14,7 +14,13 @@ describe(main.name, () => {
 
   it('returns GlobalState', async () => {
     const conf: CkusroConfig = {
-      targetDirectory: '/test',
+      targetDirectories: [
+        {
+          path: '/test/test_ns',
+          name: 'test_ns',
+          innerPath: './',
+        },
+      ],
       outputDirectory: '/out',
       loaderConfig: {
         extensions: /\.(md|txt)$/,
@@ -27,7 +33,13 @@ describe(main.name, () => {
 
   it('returns Error when directory does not exist', async () => {
     const conf: CkusroConfig = {
-      targetDirectory: '/does_not_exist',
+      targetDirectories: [
+        {
+          path: '/does_not_exist',
+          name: 'does_not_exist',
+          innerPath: './',
+        },
+      ],
       outputDirectory: '/out',
       loaderConfig: {
         extensions: /\.(md|txt)$/,

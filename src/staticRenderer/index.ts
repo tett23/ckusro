@@ -14,7 +14,6 @@ import render from './render';
 
 export default async function staticRenderer(config: CkusroConfig) {
   const globalState = await buildGlobalState(config);
-
   if (globalState instanceof Error) {
     return globalState;
   }

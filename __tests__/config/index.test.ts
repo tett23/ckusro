@@ -1,9 +1,9 @@
-import { resolve as resolvePath } from 'path';
+import { normalize, resolve as resolvePath } from 'path';
 import { mergeConfig } from '../../src/config';
 import { CkusroConfig } from '../../src/models/ckusroConfig';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
-describe(mergeConfig.name, () => {
+describe(mergeConfig, () => {
   beforeEach(() => {
     mockFileSystem({});
   });
@@ -13,11 +13,23 @@ describe(mergeConfig.name, () => {
 
   it('override properties', () => {
     const actual = mergeConfig({
-      targetDirectory: '/test',
+      targetDirectories: [
+        {
+          path: '/test',
+          name: 'test',
+          innerPath: './',
+        },
+      ],
       outputDirectory: '/out',
     });
     const expected: CkusroConfig = {
-      targetDirectory: '/test',
+      targetDirectories: [
+        {
+          path: '/test',
+          name: 'test',
+          innerPath: './',
+        },
+      ],
       outputDirectory: '/out',
       loaderConfig: {
         extensions: /\.(md|txt)$/,
@@ -29,11 +41,23 @@ describe(mergeConfig.name, () => {
 
   it('resolve paths', () => {
     const actual = mergeConfig({
-      targetDirectory: 'test',
+      targetDirectories: [
+        {
+          path: '/test',
+          name: 'test',
+          innerPath: './',
+        },
+      ],
       outputDirectory: 'out',
     });
     const expected: CkusroConfig = {
-      targetDirectory: resolvePath('test'),
+      targetDirectories: [
+        {
+          path: resolvePath('/test'),
+          name: 'test',
+          innerPath: normalize('./'),
+        },
+      ],
       outputDirectory: resolvePath('out'),
       loaderConfig: {
         extensions: /\.(md|txt)$/,

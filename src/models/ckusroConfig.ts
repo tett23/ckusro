@@ -1,6 +1,12 @@
+export type TargetDirectory = {
+  path: string;
+  name: string;
+  innerPath: string;
+};
+
 export type CkusroConfig = {
-  targetDirectory: string;
   outputDirectory: string;
+  targetDirectories: TargetDirectory[];
   loaderConfig: {
     extensions: RegExp;
   };

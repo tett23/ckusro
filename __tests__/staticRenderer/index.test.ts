@@ -26,7 +26,13 @@ describe(staticRenderer, () => {
 
   it('returns boolean array', async () => {
     const conf: CkusroConfig = {
-      targetDirectory: '/test',
+      targetDirectories: [
+        {
+          path: '/test',
+          name: 'test',
+          innerPath: './',
+        },
+      ],
       outputDirectory: '/out',
       loaderConfig: {
         extensions: /\.(md|txt)$/,
