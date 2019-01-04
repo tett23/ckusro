@@ -11,7 +11,7 @@ import staticRenderer, {
   determineAbsolutePath,
   FileInfo,
   filterWritable,
-  replacePath,
+  replaceExt,
 } from '../../src/staticRenderer';
 import {
   buildFile,
@@ -105,10 +105,10 @@ describe(buildWriteInfo, () => {
   });
 });
 
-describe(replacePath, () => {
+describe(replaceExt, () => {
   it('replaces path', () => {
     const file = buildFile({ path: '/test.md', fileType: FileTypeMarkdown });
-    const actual = replacePath(file);
+    const actual = replaceExt(file);
 
     expect(actual).toBe('/test.html');
   });
@@ -120,7 +120,7 @@ describe(replacePath, () => {
       [buildFile({ fileType: FileTypeDirectory }), true],
     ];
     data.forEach(([file, isThrowError]) => {
-      const actual = () => replacePath(file);
+      const actual = () => replaceExt(file);
 
       if (isThrowError) {
         expect(actual).toThrowError();

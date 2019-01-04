@@ -57,7 +57,7 @@ export function buildWriteInfo(
   }
 
   return {
-    path: determineAbsolutePath(context.path, replacePath(file)),
+    path: determineAbsolutePath(context.path, replaceExt(file)),
     file,
   };
 }
@@ -92,7 +92,7 @@ export function buildHTML(props: Props) {
   `;
 }
 
-export function replacePath(file: CkusroFile): string {
+export function replaceExt(file: CkusroFile): string {
   const ext = extname(file.path);
   const replaced = file.path.replace(ext, convertExt(file.fileType));
 
