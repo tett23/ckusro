@@ -2,12 +2,8 @@ import {
   CkusroFile,
   FileTypeDirectory,
   FileTypeDoesNotExist,
-} from '../../src/loader';
-import {
-  buildAst,
-  buildDoesNotExistFile,
-  determineDependency,
-} from '../../src/parser';
+} from '../../src/models/ckusroFile';
+import { buildAst, determineDependency } from '../../src/parser';
 import { buildFile, buildLoaderContext } from '../__fixtures__';
 
 describe(buildAst, () => {
@@ -21,33 +17,6 @@ describe(buildAst, () => {
     const actual = buildAst('foo[[foo]]bar');
 
     expect(actual).toMatchSnapshot();
-  });
-});
-
-describe(buildDoesNotExistFile, () => {
-  const expected: CkusroFile = {
-    id: 'test:/does_not_exist',
-    namespace: 'test',
-    name: 'does_not_exist',
-    path: '/does_not_exist',
-    fileType: FileTypeDoesNotExist,
-    isLoaded: false,
-    content: null,
-    weakDependencies: [],
-    strongDependencies: [],
-    variables: [],
-  };
-
-  it('returns FileTypeDoesNotExist object', () => {
-    const actual = buildDoesNotExistFile('test', '/does_not_exist');
-
-    expect(actual).toEqual(expected);
-  });
-
-  it('transforms path into absolute path', () => {
-    const actual = buildDoesNotExistFile('test', 'does_not_exist');
-
-    expect(actual).toEqual(expected);
   });
 });
 

@@ -2,7 +2,7 @@ import {
   CkusroFile,
   FileTypeDirectory,
   FileTypeMarkdown,
-} from '../../../../../src/loader';
+} from '../../../../../src/models/ckusroFile';
 import buildNamespaceTree, {
   buildTree,
   TreeViewItem,

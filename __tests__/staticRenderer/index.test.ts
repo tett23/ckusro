@@ -1,17 +1,11 @@
 import { CkusroConfig } from '../../src/config';
-import {
-  CkusroFile,
-  FileTypeDirectory,
-  FileTypeMarkdown,
-  FileTypeText,
-} from '../../src/loader';
+import { CkusroFile, FileTypeDirectory } from '../../src/models/ckusroFile';
 import staticRenderer, {
   buildProps,
   buildWriteInfo,
   determineAbsolutePath,
   FileInfo,
   filterWritable,
-  replaceExt,
 } from '../../src/staticRenderer';
 import {
   buildFile,
@@ -102,32 +96,6 @@ describe(buildWriteInfo, () => {
     const actual = () => buildWriteInfo(context, file);
 
     expect(actual).toThrowError();
-  });
-});
-
-describe(replaceExt, () => {
-  it('replaces path', () => {
-    const file = buildFile({ path: '/test.md', fileType: FileTypeMarkdown });
-    const actual = replaceExt(file);
-
-    expect(actual).toBe('/test.html');
-  });
-
-  it('throws Error when fileType is not markdown or txt', () => {
-    const data: Array<[CkusroFile, boolean]> = [
-      [buildFile({ fileType: FileTypeMarkdown }), false],
-      [buildFile({ fileType: FileTypeText }), false],
-      [buildFile({ fileType: FileTypeDirectory }), true],
-    ];
-    data.forEach(([file, isThrowError]) => {
-      const actual = () => replaceExt(file);
-
-      if (isThrowError) {
-        expect(actual).toThrowError();
-      } else {
-        expect(actual).not.toThrowError();
-      }
-    });
   });
 });
 

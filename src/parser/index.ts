@@ -1,9 +1,9 @@
 import { Content, Parent, Root } from 'mdast';
-import { basename, join as joinPath } from 'path';
 import remarkBreaks from 'remark-breaks';
 import remarkParse from 'remark-parse';
 import unified from 'unified';
-import { CkusroFile, FileTypeDoesNotExist, LoaderContext } from '../loader';
+import { LoaderContext } from '../loader';
+import { CkusroFile, newDoesNotExistFile } from '../models/ckusroFile';
 import parseLinkText, { determineLinkFile } from './parseLinkText';
 import wikiLink from './wikiLink';
 
@@ -38,26 +38,6 @@ function visit(node: Parent | Content): string[] {
     .flatMap((v: string | null) => (v == null ? [] : [v]));
 }
 
-export function buildDoesNotExistFile(
-  namespace: string,
-  path: string,
-): CkusroFile {
-  const absolutePath = joinPath('/', path);
-
-  return {
-    id: `${namespace}:${absolutePath}`,
-    namespace,
-    name: basename(path),
-    path: absolutePath,
-    fileType: FileTypeDoesNotExist,
-    isLoaded: false,
-    content: null,
-    weakDependencies: [],
-    strongDependencies: [],
-    variables: [],
-  };
-}
-
 export function determineDependency(
   context: LoaderContext,
   rootNode: Root,
@@ -69,7 +49,7 @@ export function determineDependency(
     .map(
       ({ namespace: ln, path: lp }) =>
         files.find(({ namespace: fn, path: fp }) => ln === fn && lp === fp) ||
-        buildDoesNotExistFile(ln, lp),
+        newDoesNotExistFile(ln, lp),
     )
     .flatMap((f) => (f ? [f] : []));
 }

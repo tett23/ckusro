@@ -1,5 +1,5 @@
 import React from 'react';
-import { CkusroFile } from '../../../../loader';
+import { CkusroFile } from '../../../../models/ckusroFile';
 import { OutputContext } from '../../../../models/outputContext';
 import buildNamespaceTree, { TreeViewItem } from './buildTree';
 import TreeViewItemComponent from './TreeViewItem';

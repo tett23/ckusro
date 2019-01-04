@@ -1,5 +1,5 @@
 import { sep } from 'path';
-import { CkusroFile } from '../../../../loader';
+import { CkusroFile } from '../../../../models/ckusroFile';
 
 export type TreeViewItem = {
   id: string;

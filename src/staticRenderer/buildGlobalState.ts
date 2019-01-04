@@ -2,13 +2,13 @@ import { CkusroConfig } from '../config';
 import {
   build,
   buildDependencyTable,
-  CkusroFile,
   DependencyTable,
   load,
   loadContent,
   loadDependencies,
   LoaderContext,
 } from '../loader';
+import { CkusroFile } from '../models/ckusroFile';
 import { newOutputContext, OutputContext } from '../models/outputContext';
 
 export type GlobalState = {

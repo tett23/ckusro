@@ -1,16 +1,8 @@
 import {
   build,
   buildDependencyTable,
-  CkusroFile,
   CkusroObject,
   detectType,
-  FileType,
-  FileTypeDirectory,
-  FileTypeDoesNotExist,
-  FileTypeMarkdown,
-  FileTypeRaw,
-  FileTypeText,
-  isWritableFileType,
   load,
   loadContent,
   loadDependencies,
@@ -18,6 +10,16 @@ import {
   StatTypeDirectory,
   StatTypeFile,
 } from '../../src/loader';
+import {
+  CkusroFile,
+  FileType,
+  FileTypeDirectory,
+  FileTypeDoesNotExist,
+  FileTypeMarkdown,
+  FileTypeRaw,
+  FileTypeText,
+  isWritableFileType,
+} from '../../src/models/ckusroFile';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(load.name, () => {

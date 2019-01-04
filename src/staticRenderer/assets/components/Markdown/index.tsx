@@ -4,7 +4,7 @@ import remarkBreaks from 'remark-breaks';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import unified from 'unified';
-import { CkusroFile } from '../../../../loader';
+import { CkusroFile } from '../../../../models/ckusroFile';
 import wikiLink from '../../../../parser/wikiLink';
 import WikiLink from '../wiki/WikiLink';
 import transformWikiLink, { Options } from './handlers/WikiLink';

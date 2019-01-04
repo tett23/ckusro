@@ -1,5 +1,5 @@
 import React from 'react';
-import { CkusroFile, LoaderContext } from '../../../loader';
+import { CkusroFile } from '../../../models/ckusroFile';
 import { GlobalState } from '../../../staticRenderer/buildGlobalState';
 import Breadcrumbs from './Breadcrumbs';
 import { Markdown } from './Markdown';

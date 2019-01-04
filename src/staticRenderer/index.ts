@@ -1,8 +1,11 @@
-import { extname, join as joinPath } from 'path';
+import { join as joinPath } from 'path';
 import { curry } from 'ramda';
 import { CkusroConfig } from '../config';
-import { CkusroFile, isWritableFileType } from '../loader';
-import { FileType, FileTypeMarkdown, FileTypeText } from '../loader';
+import {
+  CkusroFile,
+  isWritableFileType,
+  replaceExt,
+} from '../models/ckusroFile';
 import { OutputContext } from '../models/outputContext';
 import { Props } from './assets/components';
 import buildGlobalState, { GlobalState } from './buildGlobalState';
@@ -90,24 +93,6 @@ export function buildHTML(props: Props) {
   ${render(props)}
 </html>
   `;
-}
-
-export function replaceExt(file: CkusroFile): string {
-  const ext = extname(file.path);
-  const replaced = file.path.replace(ext, convertExt(file.fileType));
-
-  return replaced;
-}
-
-export function convertExt(fileType: FileType): string {
-  switch (fileType) {
-    case FileTypeMarkdown:
-      return '.html';
-    case FileTypeText:
-      return '.html';
-    default:
-      throw new Error('');
-  }
 }
 
 export function determineAbsolutePath(

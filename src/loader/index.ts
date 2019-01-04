@@ -2,6 +2,15 @@ import fs from 'fs';
 import { basename } from 'path';
 import { join as joinPath } from 'path';
 import { promisify } from 'util';
+import {
+  CkusroFile,
+  CkusroId,
+  FileType,
+  FileTypeDirectory,
+  FileTypeMarkdown,
+  FileTypeRaw,
+  FileTypeText,
+} from '../models/ckusroFile';
 import { buildAst, determineDependency } from '../parser';
 
 const stat = promisify(fs.stat);
@@ -86,32 +95,6 @@ export async function load(
 
   return [context, node];
 }
-
-export const FileTypeDirectory: 'directory' = 'directory';
-export const FileTypeMarkdown: 'markdown' = 'markdown';
-export const FileTypeText: 'text' = 'text';
-export const FileTypeRaw: 'raw' = 'raw';
-export const FileTypeDoesNotExist: 'does_not_exist' = 'does_not_exist';
-export type FileType =
-  | typeof FileTypeDirectory
-  | typeof FileTypeMarkdown
-  | typeof FileTypeText
-  | typeof FileTypeRaw
-  | typeof FileTypeDoesNotExist;
-export type CkusroId = string;
-
-export type CkusroFile = {
-  id: CkusroId;
-  namespace: string;
-  name: string;
-  path: string;
-  fileType: FileType;
-  isLoaded: boolean;
-  content: string | null;
-  weakDependencies: CkusroId[];
-  strongDependencies: CkusroId[];
-  variables: any[];
-};
 
 export function detectType(statType: StatType, name: string): FileType {
   if (statType === StatTypeDirectory) {
@@ -236,19 +219,4 @@ export function loadDependencies(
     weakDependencies: dependencyFiles.map(({ id }) => id),
     strongDependencies: dependencyFiles.map(({ id }) => id),
   });
-}
-
-export function isWritableFileType(fileType: FileType): boolean {
-  switch (fileType) {
-    case FileTypeDirectory:
-      return false;
-    case FileTypeDoesNotExist:
-      return false;
-    case FileTypeMarkdown:
-      return true;
-    case FileTypeText:
-      return true;
-    case FileTypeRaw:
-      return true;
-  }
 }
