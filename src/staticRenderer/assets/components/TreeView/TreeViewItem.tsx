@@ -1,7 +1,7 @@
 import { join } from 'path';
 import React, { ReactNode } from 'react';
 import { LoaderContext } from '../../../../loader';
-import { CkusroFile } from '../../../../models/ckusroFile';
+import { CkusroFile, replaceExt } from '../../../../models/ckusroFile';
 
 export type Props = {
   file: CkusroFile;
@@ -13,7 +13,7 @@ export default function TreeViewItem({ context, file, children }: Props) {
   return (
     <li>
       <div>
-        <a href={join(context.path, file.path)}>{file.name}</a>
+        <a href={join(context.path, replaceExt(file))}>{file.name}</a>
       </div>
       <Children items={children} />
     </li>

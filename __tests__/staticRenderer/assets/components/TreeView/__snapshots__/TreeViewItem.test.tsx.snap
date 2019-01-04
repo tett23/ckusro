@@ -45,7 +45,7 @@ ShallowWrapper {
       "children": Array [
         <div>
           <a
-            href="/test/foo.md"
+            href="/test/foo.html"
           >
             foo.md
           </a>
@@ -61,7 +61,7 @@ ShallowWrapper {
         "nodeType": "host",
         "props": Object {
           "children": <a
-            href="/test/foo.md"
+            href="/test/foo.html"
           >
             foo.md
           </a>,
@@ -73,7 +73,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": "foo.md",
-            "href": "/test/foo.md",
+            "href": "/test/foo.html",
           },
           "ref": null,
           "rendered": "foo.md",
@@ -104,7 +104,7 @@ ShallowWrapper {
         "children": Array [
           <div>
             <a
-              href="/test/foo.md"
+              href="/test/foo.html"
             >
               foo.md
             </a>
@@ -120,7 +120,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <a
-              href="/test/foo.md"
+              href="/test/foo.html"
             >
               foo.md
             </a>,
@@ -132,7 +132,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": "foo.md",
-              "href": "/test/foo.md",
+              "href": "/test/foo.html",
             },
             "ref": null,
             "rendered": "foo.md",
@@ -247,7 +247,7 @@ ShallowWrapper {
       "children": Array [
         <div>
           <a
-            href="/test/foo.md"
+            href="/test/foo.html"
           >
             foo.md
           </a>
@@ -292,7 +292,7 @@ ShallowWrapper {
         "nodeType": "host",
         "props": Object {
           "children": <a
-            href="/test/foo.md"
+            href="/test/foo.html"
           >
             foo.md
           </a>,
@@ -304,7 +304,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": "foo.md",
-            "href": "/test/foo.md",
+            "href": "/test/foo.html",
           },
           "ref": null,
           "rendered": "foo.md",
@@ -360,7 +360,7 @@ ShallowWrapper {
         "children": Array [
           <div>
             <a
-              href="/test/foo.md"
+              href="/test/foo.html"
             >
               foo.md
             </a>
@@ -405,7 +405,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <a
-              href="/test/foo.md"
+              href="/test/foo.html"
             >
               foo.md
             </a>,
@@ -417,7 +417,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": "foo.md",
-              "href": "/test/foo.md",
+              "href": "/test/foo.html",
             },
             "ref": null,
             "rendered": "foo.md",
