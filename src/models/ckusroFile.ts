@@ -26,21 +26,26 @@ export type CkusroFile = {
   variables: any[];
 };
 
-export function replaceExt(file: CkusroFile): string {
-  const ext = extname(file.path);
-  const replaced = file.path.replace(ext, convertExt(file.fileType));
+export function replaceExt({ fileType, path }: CkusroFile): string {
+  const newExt = convertExt(fileType);
+  if (newExt instanceof Error) {
+    return path;
+  }
+
+  const ext = extname(path);
+  const replaced = path.replace(ext, newExt);
 
   return replaced;
 }
 
-export function convertExt(fileType: FileType): string {
+export function convertExt(fileType: FileType): string | Error {
   switch (fileType) {
     case FileTypeMarkdown:
       return '.html';
     case FileTypeText:
       return '.html';
     default:
-      throw new Error('');
+      return new Error('');
   }
 }
 
