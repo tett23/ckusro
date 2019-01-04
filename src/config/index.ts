@@ -1,3 +1,4 @@
+import merge from 'lodash.merge';
 import { resolve as resolvePath } from 'path';
 import { CkusroConfig } from '../models/ckusroConfig';
 
@@ -9,8 +10,8 @@ const defaultConfig: CkusroConfig = {
   },
 };
 
-export function mergeConfig(conf: Partial<CkusroConfig>): CkusroConfig {
-  const tmp = { ...defaultConfig, ...conf };
+export function mergeConfig(conf: DeepPartial<CkusroConfig>): CkusroConfig {
+  const tmp = merge(defaultConfig, conf);
 
   return {
     ...tmp,
