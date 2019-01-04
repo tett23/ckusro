@@ -1,7 +1,7 @@
 import merge from 'lodash.merge';
 import uuid from 'uuid/v4';
-import { CkusroConfig } from '../../src/config';
 import { LoaderContext } from '../../src/loader';
+import { CkusroConfig } from '../../src/models/ckusroConfig';
 import { CkusroFile, FileTypeMarkdown } from '../../src/models/ckusroFile';
 import { OutputContext } from '../../src/models/outputContext';
 import { GlobalState } from '../../src/staticRenderer/buildGlobalState';

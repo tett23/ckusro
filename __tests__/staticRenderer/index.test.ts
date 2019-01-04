@@ -1,4 +1,4 @@
-import { CkusroConfig } from '../../src/config';
+import { CkusroConfig } from '../../src/models/ckusroConfig';
 import { CkusroFile, FileTypeDirectory } from '../../src/models/ckusroFile';
 import staticRenderer, {
   buildProps,

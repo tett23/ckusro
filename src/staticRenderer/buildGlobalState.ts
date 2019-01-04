@@ -1,4 +1,3 @@
-import { CkusroConfig } from '../config';
 import {
   build,
   buildDependencyTable,
@@ -8,6 +7,7 @@ import {
   loadDependencies,
   LoaderContext,
 } from '../loader';
+import { CkusroConfig } from '../models/ckusroConfig';
 import { CkusroFile } from '../models/ckusroFile';
 import { newOutputContext, OutputContext } from '../models/outputContext';
 

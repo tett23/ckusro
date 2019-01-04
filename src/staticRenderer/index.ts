@@ -1,6 +1,6 @@
 import { join as joinPath } from 'path';
 import { curry } from 'ramda';
-import { CkusroConfig } from '../config';
+import { CkusroConfig } from '../models/ckusroConfig';
 import {
   CkusroFile,
   isWritableFileType,

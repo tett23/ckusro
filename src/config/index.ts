@@ -1,12 +1,5 @@
 import { resolve as resolvePath } from 'path';
-
-export type CkusroConfig = {
-  targetDirectory: string;
-  outputDirectory: string;
-  loader: {
-    extensions: RegExp;
-  };
-};
+import { CkusroConfig } from '../models/ckusroConfig';
 
 const defaultConfig: CkusroConfig = {
   targetDirectory: '../trapahi/wiki',
