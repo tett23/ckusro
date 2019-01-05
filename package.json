@@ -3,8 +3,11 @@
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "ckusro": "./bin/index.js"
+  },
   "scripts": {
-    "start": "yarn build && node lib/index.js",
+    "start": "yarn build",
     "build": "babel src --extensions .js,.jsx,.ts,.tsx --out-dir lib --source-maps",
     "watch": "yarn build --watch",
     "test": "jest",
