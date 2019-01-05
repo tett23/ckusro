@@ -58,6 +58,7 @@
     "@types/enzyme": "^3.1.15",
     "@types/enzyme-adapter-react-16": "^1.0.3",
     "@types/jest": "^23.3.10",
+    "@types/js-yaml": "^3.11.4",
     "@types/lodash.merge": "^4.6.4",
     "@types/mdast": "^3.0.1",
     "@types/mkdirp": "^0.5.2",
@@ -92,6 +93,7 @@
   },
   "dependencies": {
     "@mdx-js/mdx": "^0.16.6",
+    "js-yaml": "^3.12.0",
     "lodash.merge": "^4.6.1",
     "mkdirp": "^0.5.1",
     "ramda": "^0.26.1",
