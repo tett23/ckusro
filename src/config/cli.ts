@@ -50,7 +50,7 @@ export function loadConfigFile(path: string): DeepPartial<CkusroConfig> {
   const ext = extname(path);
   switch (ext) {
     case '.js':
-      return require(path);
+      return toCkusroConfig(require(path));
     case '.json': {
       const json = readFileSync(path, { encoding: 'utf8' });
       return toCkusroConfig(JSON.parse(json));

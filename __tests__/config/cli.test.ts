@@ -94,16 +94,10 @@ describe(loadConfigFile, () => {
     restoreFileSystem();
   });
 
-  it.skip('parses js file', () => {
-    const json = JSON.stringify(conf, jsonReplacer);
-    const js = `module.exports = ${json}`;
-    mockFileSystem({
-      '/configs/config.js': js,
-    });
+  it('parses js file', () => {
     const actual = loadConfigFile('/configs/config.js');
 
     expect(actual).toEqual(conf);
-    restoreFileSystem();
   });
 
   it('parses json file', () => {
