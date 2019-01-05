@@ -5,11 +5,14 @@ import staticRenderer, {
   buildWriteInfo,
   determineAbsolutePath,
   FileInfo,
+  filterNamespace,
   filterWritable,
+  renderEachNamesace,
 } from '../../src/staticRenderer';
 import {
   buildFile,
   buildGlobalState,
+  buildLoaderContext,
   buildOutputContext,
 } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
@@ -41,6 +44,47 @@ describe(staticRenderer, () => {
     const actual = await staticRenderer(conf);
 
     expect(actual).toEqual([true]);
+  });
+});
+
+describe(renderEachNamesace, () => {
+  beforeEach(() => {
+    mockFileSystem({
+      '/test/ns/foo/bar/baz.md': '# test file',
+    });
+  });
+  afterEach(() => {
+    restoreFileSystem();
+  });
+
+  it('returns boolean array', async () => {
+    const outputContext = buildOutputContext({ name: 'ns', path: '/out' });
+    const loaderContext = buildLoaderContext({ name: 'ns', path: '/test/ns' });
+    const files = [buildFile({ namespace: outputContext.name })];
+    const globalState = buildGlobalState({
+      loaderContexts: [loaderContext],
+      outputContexts: [outputContext],
+      files,
+    });
+    const actual = await renderEachNamesace(globalState, outputContext);
+
+    expect(actual).toEqual([true]);
+  });
+});
+
+describe(filterNamespace, () => {
+  it('returns 1-tuple when match namespace', () => {
+    const file = buildFile({ namespace: 'ns1' });
+    const actual = filterNamespace('ns1', file);
+
+    expect(actual).toEqual([file]);
+  });
+
+  it('returns 0-tuple when does not match namespace', () => {
+    const file = buildFile({ namespace: 'ns2' });
+    const actual = filterNamespace('ns1', file);
+
+    expect(actual).toEqual([]);
   });
 });
 

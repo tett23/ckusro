@@ -12,18 +12,30 @@ import buildGlobalState, { GlobalState } from './buildGlobalState';
 import writeFile from './io';
 import render from './render';
 
-export default async function staticRenderer(config: CkusroConfig) {
+export default async function staticRenderer(
+  config: CkusroConfig,
+): Promise<boolean[] | Error> {
   const globalState = await buildGlobalState(config);
   if (globalState instanceof Error) {
     return globalState;
   }
 
-  const curriedBuildWriteInfo = curry(buildWriteInfo)(
-    globalState.outputContexts[0],
-  );
+  const curried = curry(renderEachNamesace)(globalState);
+  const ps = globalState.outputContexts.map(curried);
+
+  return (await Promise.all(ps)).flatMap((items) => items);
+}
+
+export async function renderEachNamesace(
+  globalState: GlobalState,
+  context: OutputContext,
+): Promise<boolean[]> {
+  const curriedFilterNamespace = curry(filterNamespace)(context.name);
+  const curriedBuildWriteInfo = curry(buildWriteInfo)(context);
   const curriedBuildProps = curry(buildProps)(globalState);
 
   const ps: Array<Promise<boolean>> = globalState.files
+    .flatMap(curriedFilterNamespace)
     .flatMap(filterWritable)
     .map(curriedBuildWriteInfo)
     .map(({ path, file }): [string, Props] => [path, curriedBuildProps(file)])
@@ -31,6 +43,13 @@ export default async function staticRenderer(config: CkusroConfig) {
     .map(writeFile);
 
   return await Promise.all(ps);
+}
+
+export function filterNamespace(
+  namespace: string,
+  file: CkusroFile,
+): CkusroFile[] | [] {
+  return namespace === file.namespace ? [file] : [];
 }
 
 export function filterWritable(file: CkusroFile): CkusroFile[] {
