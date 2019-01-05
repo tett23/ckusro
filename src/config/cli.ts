@@ -5,6 +5,7 @@ import { extname } from 'path';
 import yargs, { Argv } from 'yargs';
 import { CkusroConfig, TargetDirectory } from '../models/ckusroConfig';
 import { mergeConfig } from './index';
+import toCkusroConfig from './toCkusroConfig';
 
 export type Options = {};
 
@@ -45,33 +46,19 @@ export default function cli(args: string[]): CkusroConfig {
   return mergeConfig(merge(options.config, overrides(options)));
 }
 
-const regexpPattern = /\/(.+)\/([a-z]?)/;
-
-function jsonReviver(_: any, value: any) {
-  if (typeof value === 'string') {
-    if (regexpPattern.test(value)) {
-      const [__, pattern, flags] = regexpPattern.exec(value) as RegExpExecArray;
-
-      return new RegExp(pattern, flags);
-    }
-  }
-
-  return value;
-}
-
-export function loadConfigFile(path: string): CkusroConfig {
+export function loadConfigFile(path: string): DeepPartial<CkusroConfig> {
   const ext = extname(path);
   switch (ext) {
     case '.js':
       return require(path);
     case '.json': {
       const json = readFileSync(path, { encoding: 'utf8' });
-      return JSON.parse(json, jsonReviver);
+      return toCkusroConfig(JSON.parse(json));
     }
     case '.yaml':
     case '.yml': {
       const yaml = readFileSync(path, { encoding: 'utf8' });
-      return jsyaml.load(yaml);
+      return toCkusroConfig(jsyaml.load(yaml));
     }
     default:
       throw new Error('Invalid file');

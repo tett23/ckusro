@@ -27,4 +27,6 @@ declare type DeepPartial<T> = {
     : T[P] extends ReadonlyArray<infer U>
     ? ReadonlyArray<DeepPartial<U>>
     : DeepPartial<T[P]>
-};
+}
+
+declare type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;

@@ -1,5 +1,6 @@
 import jsyaml from 'js-yaml';
 import cli, { loadConfigFile } from '../../src/config/cli';
+import { PrimitiveCkusroConfig } from '../../src/config/toCkusroConfig';
 import { CkusroConfig } from '../../src/models/ckusroConfig';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
@@ -64,7 +65,7 @@ describe(cli, () => {
 });
 
 describe(loadConfigFile, () => {
-  const conf: DeepPartial<CkusroConfig> = {
+  const conf: DeepPartial<PrimitiveCkusroConfig> = {
     outputDirectory: '/out',
     targetDirectories: [
       {
@@ -73,6 +74,9 @@ describe(loadConfigFile, () => {
         innerPath: '.',
       },
     ],
+    loaderConfig: {
+      extensions: /.md/,
+    },
   };
 
   beforeEach(() => {
