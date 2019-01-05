@@ -1,11 +1,8 @@
 import 'core-js/fn/array/flat-map';
-import { mergeConfig } from './config';
-import { CkusroConfig } from './models/ckusroConfig';
+import cli from './config/cli';
 import staticRenderer from './staticRenderer';
 
-export default async function main(config: CkusroConfig) {
-  return await staticRenderer(config);
+export default async function main(argv: string[]) {
+  const conf = cli(argv);
+  return await staticRenderer(conf);
 }
-
-const conf = mergeConfig({});
-main(conf);
