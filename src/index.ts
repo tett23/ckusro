@@ -1,5 +1,4 @@
 import 'core-js/fn/array/flat-map';
-import yargs from 'yargs';
 import { mergeConfig } from './config';
 import { CkusroConfig } from './models/ckusroConfig';
 import staticRenderer from './staticRenderer';

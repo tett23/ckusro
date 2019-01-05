@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+import jsyaml from 'js-yaml';
 import merge from 'lodash.merge';
 import { extname } from 'path';
 import yargs, { Argv } from 'yargs';
@@ -62,12 +63,16 @@ export function loadConfigFile(path: string): CkusroConfig {
   const ext = extname(path);
   switch (ext) {
     case '.js':
+      return require(path);
     case '.json': {
       const json = readFileSync(path, { encoding: 'utf8' });
       return JSON.parse(json, jsonReviver);
     }
     case '.yaml':
-    case '.yml':
+    case '.yml': {
+      const yaml = readFileSync(path, { encoding: 'utf8' });
+      return jsyaml.load(yaml);
+    }
     default:
       throw new Error('Invalid file');
   }

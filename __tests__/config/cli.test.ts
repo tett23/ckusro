@@ -1,3 +1,4 @@
+import jsyaml from 'js-yaml';
 import cli, { loadConfigFile } from '../../src/config/cli';
 import { CkusroConfig } from '../../src/models/ckusroConfig';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
@@ -63,7 +64,7 @@ describe(cli, () => {
 });
 
 describe(loadConfigFile, () => {
-  const conf: CkusroConfig = {
+  const conf: DeepPartial<CkusroConfig> = {
     outputDirectory: '/out',
     targetDirectories: [
       {
@@ -72,26 +73,43 @@ describe(loadConfigFile, () => {
         innerPath: '.',
       },
     ],
-    loaderConfig: {
-      extensions: /.md/,
-    },
   };
 
   beforeEach(() => {
     const json = JSON.stringify(conf, jsonReplacer);
+    const yaml = jsyaml.dump(conf);
+    const js = `module.exports = ${json}`;
+
     mockFileSystem({
-      '/config.json': json,
+      '/configs/config.js': js,
+      '/configs/config.json': json,
+      '/configs/config.yml': yaml,
     });
   });
   afterEach(() => {
     restoreFileSystem();
   });
 
-  it('parses js file', () => {});
+  it.skip('parses js file', () => {
+    const json = JSON.stringify(conf, jsonReplacer);
+    const js = `module.exports = ${json}`;
+    mockFileSystem({
+      '/configs/config.js': js,
+    });
+    const actual = loadConfigFile('/configs/config.js');
+
+    expect(actual).toEqual(conf);
+    restoreFileSystem();
+  });
 
   it('parses json file', () => {
-    const actual = loadConfigFile('/config.json');
-    console.log(actual);
+    const actual = loadConfigFile('/configs/config.json');
+
+    expect(actual).toEqual(conf);
+  });
+
+  it('parses yaml file', () => {
+    const actual = loadConfigFile('/configs/config.yml');
 
     expect(actual).toEqual(conf);
   });
