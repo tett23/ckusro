@@ -26,7 +26,12 @@ describe(toCkusroConfig, () => {
 
 describe(isPartializedPrimitiveCkusroConfig, () => {
   it('returns true when argument is valid object', () => {
-    const data = [{}];
+    const data: Array<DeepPartial<PrimitiveCkusroConfig>> = [
+      {},
+      { outputDirectory: '/test' },
+      { targetDirectories: [] },
+      { loaderConfig: { extensions: '/.md/' } },
+    ];
     data.forEach((value) => {
       const actual = isPartializedPrimitiveCkusroConfig(value);
 
