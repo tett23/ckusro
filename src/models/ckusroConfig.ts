@@ -1,3 +1,5 @@
+import { isNonNullObject } from '../utils/types';
+
 export type TargetDirectory = {
   path: string;
   name: string;
@@ -15,23 +17,18 @@ export type CkusroConfig = {
 };
 
 export function isTargetDirectory(obj: any): obj is TargetDirectory {
-  if (!('path' in obj)) {
+  if (!isNonNullObject(obj)) {
     return false;
   }
+
   if (typeof obj.path !== 'string') {
     return false;
   }
 
-  if (!('name' in obj)) {
-    return false;
-  }
   if (typeof obj.name !== 'string') {
     return false;
   }
 
-  if (!('innerPath' in obj)) {
-    return false;
-  }
   if (typeof obj.innerPath !== 'string') {
     return false;
   }
@@ -48,9 +45,14 @@ export function isTargetDirectories(obj: any): obj is TargetDirectory[] {
 }
 
 export function isLoaderConfig(obj: any): obj is LoaderConfig {
+  if (!isNonNullObject(obj)) {
+    return false;
+  }
+
   if (!('extensions' in obj)) {
     return false;
   }
+
   if (!(obj.extensions instanceof RegExp)) {
     return false;
   }
@@ -59,6 +61,10 @@ export function isLoaderConfig(obj: any): obj is LoaderConfig {
 }
 
 export function isCkusroConfig(obj: any): obj is CkusroConfig {
+  if (!isNonNullObject(obj)) {
+    return false;
+  }
+
   if (!('outputDirectory' in obj)) {
     return false;
   }
