@@ -1,4 +1,4 @@
-import { CkusroFile, FileTypeDirectory } from '../../src/loader';
+import { CkusroFile, FileTypeDirectory } from '../../src/models/ckusroFile';
 import parseLinkText, {
   determineLinkFile,
   IncompletenessLink,
