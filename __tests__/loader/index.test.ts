@@ -192,7 +192,7 @@ describe(build.name, () => {
     const actual = build(context, tree);
     const expected: CkusroFile[] = [
       {
-        id: '/foo',
+        id: 'foo:/foo',
         namespace: 'foo',
         name: 'foo',
         path: '/foo',
@@ -204,7 +204,7 @@ describe(build.name, () => {
         variables: [],
       },
       {
-        id: '/foo/bar',
+        id: 'foo:/foo/bar',
         namespace: 'foo',
         name: 'bar',
         path: '/foo/bar',
@@ -216,7 +216,7 @@ describe(build.name, () => {
         variables: [],
       },
       {
-        id: '/foo/bar/baz.md',
+        id: 'foo:/foo/bar/baz.md',
         namespace: 'foo',
         name: 'baz.md',
         path: '/foo/bar/baz.md',

@@ -168,7 +168,7 @@ export function buildDependencyTable(files: CkusroFile[]): DependencyTable {
 
 function transform(context: LoaderContext, node: CkusroObject): CkusroFile {
   return {
-    id: node.path,
+    id: `${context.name}:${node.path}`,
     namespace: context.name,
     name: node.name,
     path: node.path,
