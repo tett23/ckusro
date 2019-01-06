@@ -5,10 +5,10 @@ import {
   load,
   loadContent,
   loadDependencies,
-  LoaderContext,
 } from '../loader';
 import { CkusroConfig } from '../models/ckusroConfig';
 import { CkusroFile } from '../models/ckusroFile';
+import { LoaderContext } from '../models/loaderContext';
 import { newOutputContext, OutputContext } from '../models/outputContext';
 
 export type GlobalState = {

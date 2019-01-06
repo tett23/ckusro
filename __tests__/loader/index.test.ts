@@ -6,7 +6,6 @@ import {
   load,
   loadContent,
   loadDependencies,
-  LoaderContext,
   StatTypeDirectory,
   StatTypeFile,
 } from '../../src/loader';
@@ -21,6 +20,7 @@ import {
   FileTypeText,
   isWritableFileType,
 } from '../../src/models/ckusroFile';
+import { LoaderContext } from '../../src/models/loaderContext';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(load.name, () => {

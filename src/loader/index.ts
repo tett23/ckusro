@@ -12,6 +12,7 @@ import {
   FileTypeRaw,
   FileTypeText,
 } from '../models/ckusroFile';
+import { LoaderContext } from '../models/loaderContext';
 import { buildAst, determineDependency } from '../parser';
 
 const stat = promisify(fs.stat);
@@ -75,11 +76,6 @@ export async function tree(
 
   return ret;
 }
-
-export type LoaderContext = {
-  name: string;
-  path: string;
-};
 
 export async function load(
   targetDirectories: TargetDirectory[],

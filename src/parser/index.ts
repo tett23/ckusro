@@ -2,8 +2,8 @@ import { Content, Parent, Root } from 'mdast';
 import remarkBreaks from 'remark-breaks';
 import remarkParse from 'remark-parse';
 import unified from 'unified';
-import { LoaderContext } from '../loader';
 import { CkusroFile, newDoesNotExistFile } from '../models/ckusroFile';
+import { LoaderContext } from '../models/loaderContext';
 import wikiLink from '../plugins/ckusro-plugin-parser-WikiLink';
 import parseLinkText, { determineLinkFile } from './parseLinkText';
 

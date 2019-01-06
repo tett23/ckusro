@@ -1,6 +1,6 @@
 import { join } from 'path';
-import { LoaderContext } from '../loader';
 import { CkusroConfig } from '../models/ckusroConfig';
+import { LoaderContext } from './loaderContext';
 
 export type OutputContext = {
   name: string;
