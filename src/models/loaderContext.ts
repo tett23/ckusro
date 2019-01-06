@@ -16,3 +16,7 @@ export function newLoaderContext({
     path: join(path, innerPath),
   };
 }
+
+export function newLoaderContexts(targets: TargetDirectory[]): LoaderContext[] {
+  return targets.map(newLoaderContext);
+}
