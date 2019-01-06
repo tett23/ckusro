@@ -10,6 +10,8 @@ import { buildDependencyTable, invert } from '../../src/models/dependencyTable';
 import { GlobalState } from '../../src/models/globalState';
 import { LoaderContext } from '../../src/models/loaderContext';
 import { OutputContext } from '../../src/models/outputContext';
+import { DefaultPluginsConfig } from '../../src/models/pluginConfig';
+import defaultPlugins from '../../src/models/plugins/defaultPlugins';
 
 export function buildLoaderContext(
   overrides: Partial<LoaderContext> = {},
@@ -55,6 +57,19 @@ export function buildGlobalState(
   return ret;
 }
 
+export function buildDefaultPluginsConfig(
+  overrides: DeepPartial<DefaultPluginsConfig> = {},
+): DefaultPluginsConfig {
+  const data = {
+    parsers: {
+      enableWikiLink: true,
+    },
+    components: {},
+  };
+
+  return merge(data, overrides);
+}
+
 export function buildCkusroConfig(
   overrides: DeepPartial<CkusroConfig> = {},
 ): CkusroConfig {
@@ -70,6 +85,7 @@ export function buildCkusroConfig(
     loaderConfig: {
       extensions: /\.(md|txt)$/,
     },
+    plugins: defaultPlugins(buildDefaultPluginsConfig()),
   };
 
   const ret = merge(defaultConfig, config, overrides);
