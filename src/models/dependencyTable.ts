@@ -23,28 +23,32 @@ function buildDepMap(files: CkusroFile[]): RefTuple[] {
 }
 
 export function buildDependency(id: CkusroId, files: CkusroFile[]): RefTuple {
-  const weak = weakDependencies(id, files);
-  const strong = strongDependencies(id, files);
+  const [weak, strong] = files
+    .map(
+      ({
+        id: refId,
+        strongDependencies,
+        weakDependencies,
+      }): [CkusroId[], CkusroId[]] => {
+        return [
+          dependency(id, refId, weakDependencies),
+          dependency(id, refId, strongDependencies),
+        ];
+      },
+    )
+    .flatMap(([w, s]) => [w, s]);
 
   return [id, weak, strong];
 }
 
-function weakDependencies(id: CkusroId, files: CkusroFile[]) {
-  return files.flatMap(({ id: refId, weakDependencies: deps }) => {
-    if (!deps.includes(id)) {
-      return [];
-    }
+function dependency(
+  id: CkusroId,
+  refId: CkusroId,
+  deps: CkusroId[],
+): CkusroId[] {
+  if (!deps.includes(id)) {
+    return [];
+  }
 
-    return [refId];
-  });
-}
-
-function strongDependencies(id: CkusroId, files: CkusroFile[]) {
-  return files.flatMap(({ id: refId, strongDependencies: deps }) => {
-    if (!deps.includes(id)) {
-      return [];
-    }
-
-    return [refId];
-  });
+  return [refId];
 }
