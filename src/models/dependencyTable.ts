@@ -7,10 +7,19 @@ export type DependencyTable = {
   };
 };
 
-type RefTuple = [string, string[], string[]];
+type RefTuple = [CkusroId, CkusroId[], CkusroId[]];
 
 export function buildDependencyTable(files: CkusroFile[]): DependencyTable {
-  const depMap = files.map(
+  const depMap = buildDepMap(files);
+
+  return depMap.reduce((acc: DependencyTable, [id, weak, strong]) => {
+    acc[id] = { weakDependencies: weak, strongDependencies: strong };
+    return acc;
+  }, {});
+}
+
+function buildDepMap(files: CkusroFile[]): RefTuple[] {
+  return files.map(
     ({ id }): RefTuple => {
       const weak = files.flatMap(({ id: refId, weakDependencies }) => {
         if (!weakDependencies.includes(id)) {
@@ -30,9 +39,4 @@ export function buildDependencyTable(files: CkusroFile[]): DependencyTable {
       return [id, weak, strong];
     },
   );
-
-  return depMap.reduce((acc: DependencyTable, [id, weak, strong]) => {
-    acc[id] = { weakDependencies: weak, strongDependencies: strong };
-    return acc;
-  }, {});
 }
