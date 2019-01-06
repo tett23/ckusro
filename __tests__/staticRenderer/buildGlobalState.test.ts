@@ -20,7 +20,7 @@ describe(buildGlobalState, () => {
       'loaderContexts' in obj &&
       'outputContexts' in obj &&
       'files' in obj &&
-      'dependencyTable' in obj
+      'invertedDependencyTable' in obj
     );
   }
 
@@ -36,7 +36,7 @@ describe(buildGlobalState, () => {
     });
     const actual = await buildGlobalState(conf);
 
-    expect(isGlobalState(actual)).toBeTruthy();
+    expect(isGlobalState(actual)).toBe(true);
   });
 
   it('returns Error when directory does not exist', async () => {

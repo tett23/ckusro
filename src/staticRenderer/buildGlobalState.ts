@@ -13,7 +13,7 @@ export type GlobalState = {
   loaderContexts: LoaderContext[];
   outputContexts: OutputContext[];
   files: CkusroFile[];
-  dependencyTable: DependencyTable;
+  invertedDependencyTable: DependencyTable;
 };
 
 export default async function buildGlobalState(
@@ -36,7 +36,7 @@ export default async function buildGlobalState(
   });
 
   const files = (await Promise.all(ps)).flatMap((item) => item);
-  const dependencies = invert(buildDependencyTable(files));
+  const invertedDependencyTable = invert(buildDependencyTable(files));
   const loaderContexts = results.map(([context]) => context);
   const outputContexts = loaderContexts.map((context) =>
     newOutputContext(config, context),
@@ -46,6 +46,6 @@ export default async function buildGlobalState(
     loaderContexts,
     outputContexts,
     files,
-    dependencyTable: dependencies,
+    invertedDependencyTable,
   };
 }
