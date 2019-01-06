@@ -4,6 +4,7 @@ import { CkusroFile } from '../models/ckusroFile';
 import {
   buildDependencyTable,
   DependencyTable,
+  invert,
 } from '../models/dependencyTable';
 import { LoaderContext } from '../models/loaderContext';
 import { newOutputContext, OutputContext } from '../models/outputContext';
@@ -35,7 +36,7 @@ export default async function buildGlobalState(
   });
 
   const files = (await Promise.all(ps)).flatMap((item) => item);
-  const dependencies = buildDependencyTable(files);
+  const dependencies = invert(buildDependencyTable(files));
   const loaderContexts = results.map(([context]) => context);
   const outputContexts = loaderContexts.map((context) =>
     newOutputContext(config, context),

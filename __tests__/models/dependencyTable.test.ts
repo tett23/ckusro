@@ -2,6 +2,8 @@ import { FileTypeMarkdown } from '../../src/models/ckusroFile';
 import {
   buildDependency,
   buildDependencyTable,
+  DependencyTable,
+  invert,
 } from '../../src/models/dependencyTable';
 import { buildFile } from '../__fixtures__';
 
@@ -48,16 +50,16 @@ describe(buildDependencyTable, () => {
 
     expect(actual).toEqual({
       '1': {
-        weakDependencies: [],
-        strongDependencies: [],
+        weakDependencies: ['2'],
+        strongDependencies: ['3'],
       },
       '2': {
-        weakDependencies: ['1'],
+        weakDependencies: [],
         strongDependencies: [],
       },
       '3': {
         weakDependencies: [],
-        strongDependencies: ['1'],
+        strongDependencies: [],
       },
     });
   });
@@ -97,6 +99,42 @@ describe(buildDependency, () => {
     const files = [file, strongDep];
     const actual = buildDependency(strongDep.id, files);
     const expected = [strongDep.id, [], [file.id]];
+
+    expect(actual).toEqual(expected);
+  });
+});
+
+describe(invert, () => {
+  it('returns inverted DepencencyTable', () => {
+    const table: DependencyTable = {
+      '1': {
+        weakDependencies: ['2'],
+        strongDependencies: ['3'],
+      },
+      '2': {
+        weakDependencies: [],
+        strongDependencies: [],
+      },
+      '3': {
+        weakDependencies: [],
+        strongDependencies: [],
+      },
+    };
+    const actual = invert(table);
+    const expected: DependencyTable = {
+      '1': {
+        weakDependencies: [],
+        strongDependencies: [],
+      },
+      '2': {
+        weakDependencies: ['1'],
+        strongDependencies: [],
+      },
+      '3': {
+        weakDependencies: [],
+        strongDependencies: ['1'],
+      },
+    };
 
     expect(actual).toEqual(expected);
   });

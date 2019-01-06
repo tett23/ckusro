@@ -10,16 +10,25 @@ export type DependencyTable = {
 type RefTuple = [CkusroId, CkusroId[], CkusroId[]];
 
 export function buildDependencyTable(files: CkusroFile[]): DependencyTable {
-  const depMap = buildDepMap(files);
+  return files.reduce((acc: DependencyTable, file) => {
+    const strongDependencies = file.strongDependencies.flatMap((id) => {
+      const f = files.find((item) => id === item.id);
 
-  return depMap.reduce((acc: DependencyTable, [id, weak, strong]) => {
-    acc[id] = { weakDependencies: weak, strongDependencies: strong };
+      return f != null ? [f.id] : [];
+    });
+    const weakDependencies = file.weakDependencies.flatMap((id) => {
+      const f = files.find((item) => id === item.id);
+
+      return f != null ? [f.id] : [];
+    });
+
+    acc[file.id] = {
+      weakDependencies,
+      strongDependencies,
+    };
+
     return acc;
   }, {});
-}
-
-function buildDepMap(files: CkusroFile[]): RefTuple[] {
-  return files.map(({ id }) => id).map((id) => buildDependency(id, files));
 }
 
 export function buildDependency(id: CkusroId, files: CkusroFile[]): RefTuple {
@@ -51,4 +60,36 @@ function dependency(
   }
 
   return [refId];
+}
+
+export function invert(table: DependencyTable): DependencyTable {
+  return Object.entries(table).reduce(
+    (acc: DependencyTable, [id, { weakDependencies, strongDependencies }]) => {
+      acc[id] = acc[id] || {
+        weakDependencies: [],
+        strongDependencies: [],
+      };
+
+      weakDependencies.forEach((refId) => {
+        acc[refId] = acc[refId] || {
+          weakDependencies: [],
+          strongDependencies: [],
+        };
+
+        acc[refId].weakDependencies.push(id);
+      });
+
+      strongDependencies.forEach((refId) => {
+        acc[refId] = acc[refId] || {
+          weakDependencies: [],
+          strongDependencies: [],
+        };
+
+        acc[refId].strongDependencies.push(id);
+      });
+
+      return acc;
+    },
+    {},
+  );
 }
