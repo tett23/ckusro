@@ -39,6 +39,7 @@ export function buildGlobalState(
     loaderContexts: [buildLoaderContext()],
     outputContexts: [buildOutputContext()],
     files: [],
+    dependencyTable: {},
     invertedDependencyTable: {},
   };
 

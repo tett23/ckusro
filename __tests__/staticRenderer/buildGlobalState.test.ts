@@ -20,6 +20,7 @@ describe(buildGlobalState, () => {
       'loaderContexts' in obj &&
       'outputContexts' in obj &&
       'files' in obj &&
+      'dependencyTable' in obj &&
       'invertedDependencyTable' in obj
     );
   }
