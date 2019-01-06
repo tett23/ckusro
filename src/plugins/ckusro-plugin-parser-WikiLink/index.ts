@@ -12,7 +12,7 @@ const defaultOptions: Options = {
 
 const wikiLinkRegExp = /^\[\[(.+?)\]\]/;
 
-export default function attacher(userOptions?: unknown) {
+export default function wikiLink(userOptions?: unknown) {
   // @ts-ignore
   const { Parser, Compiler } = this;
   const options: Options = { ...defaultOptions, ...userOptions } as any;
