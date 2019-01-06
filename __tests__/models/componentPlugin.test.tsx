@@ -9,6 +9,7 @@ describe(isComponentPlugin, () => {
   it('judges type', () => {
     const data: Array<[any, boolean]> = [
       [{ name: 'test', plugin: (_: Props) => <div /> }, true],
+      [{ name: 1, plugin: (_: Props) => <div /> }, false],
       [{ name: 'test', plugin: () => null }, false],
       [{}, false],
       [null, false],

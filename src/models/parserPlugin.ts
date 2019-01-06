@@ -25,6 +25,9 @@ export function isParserPlugin(obj: any): obj is ParserPlugin {
   if (typeof obj.plugin !== 'function') {
     return false;
   }
+  if (obj.plugin.length !== 1) {
+    return false;
+  }
 
   return true;
 }
