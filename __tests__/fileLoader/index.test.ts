@@ -4,12 +4,12 @@ import {
   load,
   loadContent,
   loadDependencies,
-} from '../../src/loader';
+} from '../../src/fileLoader';
 import {
   CkusroObject,
   StatTypeDirectory,
   StatTypeFile,
-} from '../../src/loader/ckusroObject';
+} from '../../src/fileLoader/ckusroObject';
 import { TargetDirectory } from '../../src/models/ckusroConfig';
 import {
   CkusroFile,

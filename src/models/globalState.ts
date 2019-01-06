@@ -1,4 +1,4 @@
-import { build, load, loadContent, loadDependencies } from '../loader';
+import { build, load, loadContent, loadDependencies } from '../fileLoader';
 import { CkusroConfig } from './ckusroConfig';
 import { CkusroFile } from './ckusroFile';
 import {

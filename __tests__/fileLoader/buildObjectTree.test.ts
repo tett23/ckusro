@@ -1,9 +1,9 @@
-import { buildObjectTree } from '../../src/loader/buildObjectTree';
+import { buildObjectTree } from '../../src/fileLoader/buildObjectTree';
 import {
   CkusroObject,
   StatTypeDirectory,
   StatTypeFile,
-} from '../../src/loader/ckusroObject';
+} from '../../src/fileLoader/ckusroObject';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(buildObjectTree, () => {
