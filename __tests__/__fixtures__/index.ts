@@ -42,6 +42,10 @@ export function buildGlobalState(
     files: [],
     dependencyTable: {},
     invertedDependencyTable: {},
+    plugins: {
+      parsers: [],
+      components: [],
+    },
   };
 
   const ret = merge(globalState, overrides);

@@ -8,6 +8,7 @@ import {
 } from './dependencyTable';
 import { LoaderContext } from './loaderContext';
 import { newOutputContext, OutputContext } from './outputContext';
+import { Plugins } from './plugins';
 
 export type GlobalState = {
   loaderContexts: LoaderContext[];
@@ -15,6 +16,7 @@ export type GlobalState = {
   files: CkusroFile[];
   dependencyTable: DependencyTable;
   invertedDependencyTable: DependencyTable;
+  plugins: Plugins;
 };
 
 export default async function newGlobalState(
@@ -50,5 +52,6 @@ export default async function newGlobalState(
     files,
     dependencyTable,
     invertedDependencyTable,
+    plugins: config.plugins,
   };
 }
