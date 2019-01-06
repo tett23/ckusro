@@ -1,5 +1,4 @@
 import fs from 'fs';
-import { basename } from 'path';
 import { join as joinPath } from 'path';
 import { promisify } from 'util';
 import { TargetDirectory } from '../models/ckusroConfig';
@@ -14,63 +13,10 @@ import {
 } from '../models/ckusroFile';
 import { LoaderContext } from '../models/loaderContext';
 import { buildAst, determineDependency } from '../parser';
-import {
-  CkusroObject,
-  StatType,
-  StatTypeDirectory,
-  StatTypeFile,
-} from './ckusroObject';
+import { buildObjectTree } from './buildObjectTree';
+import { CkusroObject, StatType, StatTypeDirectory } from './ckusroObject';
 
-const stat = promisify(fs.stat);
-const readdir = promisify(fs.readdir);
 const readFile = promisify(fs.readFile);
-
-export async function tree(
-  path: string,
-  extensions: RegExp,
-  basePath: string,
-): Promise<CkusroObject | null> {
-  const res = await stat(path).catch(() => null);
-  if (res == null) {
-    return null;
-  }
-
-  const itemPath = joinPath('/', path.slice(basePath.length));
-
-  if (res.isFile()) {
-    if (!extensions.test(path)) {
-      return null;
-    }
-
-    return {
-      name: basename(path),
-      path: itemPath,
-      fileType: StatTypeFile,
-      children: [],
-    };
-  }
-  if (!res.isDirectory()) {
-    return null;
-  }
-
-  const entries = await readdir(path).catch(() => null);
-  if (entries == null) {
-    return null;
-  }
-
-  const children = (await Promise.all(
-    entries.map((item) => tree(`${path}/${item}`, extensions, basePath)),
-  )).filter(Boolean) as CkusroObject[];
-
-  const ret: CkusroObject = {
-    name: basename(path),
-    path: itemPath,
-    fileType: StatTypeDirectory,
-    children,
-  };
-
-  return ret;
-}
 
 export async function load(
   targetDirectories: TargetDirectory[],
@@ -82,7 +28,11 @@ export async function load(
   }));
   const ps = contexts.map(
     async (context): Promise<[LoaderContext, CkusroObject] | Error> => {
-      const node = await tree(context.path, extensions, context.path);
+      const node = await buildObjectTree(
+        context.path,
+        extensions,
+        context.path,
+      );
       if (node == null) {
         return new Error('');
       }
