@@ -14,21 +14,16 @@ import {
 } from '../models/ckusroFile';
 import { LoaderContext } from '../models/loaderContext';
 import { buildAst, determineDependency } from '../parser';
+import {
+  CkusroObject,
+  StatType,
+  StatTypeDirectory,
+  StatTypeFile,
+} from './ckusroObject';
 
 const stat = promisify(fs.stat);
 const readdir = promisify(fs.readdir);
 const readFile = promisify(fs.readFile);
-
-export const StatTypeDirectory: 'directory' = 'directory';
-export const StatTypeFile: 'file' = 'file';
-export type StatType = typeof StatTypeDirectory | typeof StatTypeFile;
-
-export type CkusroObject = {
-  name: string;
-  path: string;
-  fileType: StatType;
-  children: CkusroObject[];
-};
 
 export async function tree(
   path: string,

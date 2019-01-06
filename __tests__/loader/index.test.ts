@@ -1,14 +1,16 @@
 import {
   build,
   buildDependencyTable,
-  CkusroObject,
   detectType,
   load,
   loadContent,
   loadDependencies,
+} from '../../src/loader';
+import {
+  CkusroObject,
   StatTypeDirectory,
   StatTypeFile,
-} from '../../src/loader';
+} from '../../src/loader/ckusroObject';
 import { TargetDirectory } from '../../src/models/ckusroConfig';
 import {
   CkusroFile,
