@@ -4,8 +4,9 @@ describe(isParserPlugin, () => {
   it('judges type', () => {
     const data: Array<[any, boolean]> = [
       [{ name: 'test', plugin: (_: any) => {} }, true], // tslint:disable-line no-empty
-      [{ name: 1, plugin: (_: any) => {} }, false], // tslint:disable-line no-empty
-      [{ name: 'test', plugin: () => {} }, false], // tslint:disable-line no-empty
+      [{ name: 'test', plugin: () => {} }, true], // tslint:disable-line no-empty
+      [{ name: 'test', plugin: (_: any, __: any) => {} }, false], // tslint:disable-line no-empty
+      [{ name: 1, plugin: () => {} }, false], // tslint:disable-line no-empty
       [{}, false],
       [null, false],
       [undefined, false],
@@ -23,9 +24,9 @@ describe(isParserPlugins, () => {
   it('judges type', () => {
     const data: Array<[any, boolean]> = [
       [[], true],
+      [{ name: 'test', plugin: () => {} }, true], // tslint:disable-line no-empty
       [[{ name: 'test', plugin: (_: any) => {} }], true], // tslint:disable-line no-empty
-      [[{ name: 'test', plugin: () => {} }], false], // tslint:disable-line no-empty
-      [{ name: 'test', plugin: () => {} }, false], // tslint:disable-line no-empty
+      [[{ name: 'test', plugin: (_: any, __: any) => {} }], false], // tslint:disable-line no-empty
       [{}, false],
       [null, false],
       [undefined, false],

@@ -2,7 +2,7 @@ import { isNonNullObject } from '../utils/types';
 
 export type ParserPlugin = {
   name: string;
-  plugin: (options: any) => void;
+  plugin: (options?: any) => void;
 };
 
 export function isParserPlugins(obj: any): obj is ParserPlugin[] {
@@ -25,7 +25,8 @@ export function isParserPlugin(obj: any): obj is ParserPlugin {
   if (typeof obj.plugin !== 'function') {
     return false;
   }
-  if (obj.plugin.length !== 1) {
+  const arity = obj.plugin.length;
+  if (!(arity === 0 || arity === 1)) {
     return false;
   }
 
