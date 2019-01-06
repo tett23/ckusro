@@ -3,6 +3,7 @@ import { curry } from 'ramda';
 import { CkusroConfig } from '../models/ckusroConfig';
 import {
   CkusroFile,
+  CkusroId,
   isWritableFileType,
   replaceExt,
 } from '../models/ckusroFile';
@@ -38,7 +39,9 @@ export async function renderEachNamesace(
     .flatMap(curriedFilterNamespace)
     .flatMap(filterWritable)
     .map(curriedBuildWriteInfo)
-    .map(({ path, file }): [string, Props] => [path, curriedBuildProps(file)])
+    .map(
+      ({ path, file }): [string, Props] => [path, curriedBuildProps(file.id)],
+    )
     .map(([path, props]) => ({ path, content: buildHTML(props) }))
     .map(writeFile);
 
@@ -83,17 +86,17 @@ export function buildWriteInfo(
   };
 }
 
-export function buildProps(globalState: GlobalState, file: CkusroFile): Props {
+export function buildProps(globalState: GlobalState, id: CkusroId): Props {
   const { weakDependencies, strongDependencies } = globalState.dependencyTable[
-    file.id
+    id
   ];
-  const ids = [file.id].concat(weakDependencies).concat(strongDependencies);
+  const ids = [id].concat(weakDependencies).concat(strongDependencies);
   const deps = globalState.files.filter((f) => ids.includes(f.id));
 
   return {
     globalState,
     markdown: {
-      currentFileId: file.id,
+      currentFileId: id,
       files: deps,
     },
   };

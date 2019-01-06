@@ -176,7 +176,7 @@ describe(buildProps, () => {
     });
     const files = [file].concat(unreferenced).concat(referenced);
     const globalState = buildGlobalState({ files });
-    const actual = buildProps(globalState, file);
+    const actual = buildProps(globalState, file.id);
     const expected = [file].concat(referenced).map(({ id }) => id);
 
     expect(actual.globalState).toEqual(globalState);
