@@ -5,9 +5,11 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import unified from 'unified';
 import { CkusroFile } from '../../../../models/ckusroFile';
+import transformWikiLink, {
+  Options,
+} from '../../../../plugins/ckusro-plugin-component-WikiLink';
 import wikiLink from '../../../../plugins/ckusro-plugin-parser-WikiLink';
 import WikiLink from '../wiki/WikiLink';
-import transformWikiLink, { Options } from './handlers/WikiLink';
 
 export type Props = {
   currentFileId: string;
