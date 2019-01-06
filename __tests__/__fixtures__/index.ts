@@ -1,7 +1,8 @@
 import merge from 'lodash.merge';
 import uuid from 'uuid/v4';
+import { defaultConfig } from '../../src/config';
 import { LoaderContext } from '../../src/loader';
-import { CkusroConfig } from '../../src/models/ckusroConfig';
+import { CkusroConfig, isCkusroConfig } from '../../src/models/ckusroConfig';
 import { CkusroFile, FileTypeMarkdown } from '../../src/models/ckusroFile';
 import { OutputContext } from '../../src/models/outputContext';
 import { GlobalState } from '../../src/staticRenderer/buildGlobalState';
@@ -44,7 +45,7 @@ export function buildGlobalState(
 export function buildCkusroConfig(
   overrides: DeepPartial<CkusroConfig> = {},
 ): CkusroConfig {
-  const config: CkusroConfig = {
+  const config: DeepPartial<CkusroConfig> = {
     outputDirectory: '/out',
     targetDirectories: [
       {
@@ -56,13 +57,14 @@ export function buildCkusroConfig(
     loaderConfig: {
       extensions: /\.(md|txt)$/,
     },
-    plugins: {
-      parsers: [],
-      components: [],
-    },
   };
 
-  return merge(config, overrides);
+  const ret = merge(defaultConfig, config, overrides);
+  if (!isCkusroConfig(ret)) {
+    throw new Error('Malformed config.');
+  }
+
+  return ret;
 }
 
 export function buildFile(overrides: Partial<CkusroFile> = {}): CkusroFile {

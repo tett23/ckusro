@@ -1,14 +1,20 @@
 import merge from 'lodash.merge';
 import { normalize, resolve as resolvePath } from 'path';
 import { CkusroConfig, isCkusroConfig } from '../models/ckusroConfig';
+import wikiLink from '../plugins/ckusro-plugin-parser-WikiLink';
 
-const defaultConfig: Omit<CkusroConfig, 'outputDirectory'> = {
+export const defaultConfig: Omit<CkusroConfig, 'outputDirectory'> = {
   targetDirectories: [],
   loaderConfig: {
     extensions: /\.(md|txt)$/,
   },
   plugins: {
-    parsers: [],
+    parsers: [
+      {
+        name: wikiLink.name,
+        plugin: wikiLink,
+      },
+    ],
     components: [],
   },
 };
