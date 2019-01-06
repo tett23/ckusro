@@ -1,9 +1,9 @@
 import {
   build,
   detectType,
-  load,
   loadContent,
   loadDependencies,
+  loadRootObjects,
 } from '../../src/fileLoader';
 import {
   CkusroObject,
@@ -22,10 +22,10 @@ import {
   isWritableFileType,
 } from '../../src/models/ckusroFile';
 import { LoaderContext } from '../../src/models/loaderContext';
-import { buildFile } from '../__fixtures__';
+import { buildFile, buildLoaderContext } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
-describe(load.name, () => {
+describe(loadRootObjects.name, () => {
   beforeEach(() => {
     mockFileSystem({
       '/foo/bar/baz.md': '# test file',
@@ -37,20 +37,15 @@ describe(load.name, () => {
   });
 
   it('load items', async () => {
-    const targetDirectory: TargetDirectory = {
-      path: '/foo',
-      name: 'foo',
-      innerPath: '.',
-    };
-    const results: any = await load([targetDirectory], /\.(md|txt)$/);
+    const loaderContext = buildLoaderContext({ path: '/foo', name: 'foo' });
+    const results: any = await loadRootObjects([loaderContext], /\.(md|txt)$/);
     const [context, node] = results[0];
 
-    expect(context).toEqual({
+    const expectedContext: LoaderContext = {
       name: 'foo',
       path: '/foo',
-    });
-
-    expect(node).toEqual({
+    };
+    const expectedNode: CkusroObject = {
       name: 'foo',
       path: '/',
       fileType: StatTypeDirectory,
@@ -69,7 +64,10 @@ describe(load.name, () => {
           ],
         },
       ],
-    });
+    };
+
+    expect(context).toEqual(expectedContext);
+    expect(node).toEqual(expectedNode);
   });
 
   it('returns Error when directory does not exist', async () => {
@@ -78,7 +76,7 @@ describe(load.name, () => {
       name: 'does_not_exist',
       innerPath: './',
     };
-    const actual = await load([targetDirectory], /\.(md|txt)$/);
+    const actual = await loadRootObjects([targetDirectory], /\.(md|txt)$/);
 
     expect(actual).toBeInstanceOf(Error);
   });

@@ -1,7 +1,6 @@
 import fs from 'fs';
 import { join as joinPath } from 'path';
 import { promisify } from 'util';
-import { TargetDirectory } from '../models/ckusroConfig';
 import {
   CkusroFile,
   FileType,
@@ -18,14 +17,10 @@ import { CkusroObject, StatType, StatTypeDirectory } from './ckusroObject';
 
 const readFile = promisify(fs.readFile);
 
-export async function load(
-  targetDirectories: TargetDirectory[],
+export async function loadRootObjects(
+  contexts: LoaderContext[],
   extensions: RegExp,
 ): Promise<Array<[LoaderContext, CkusroObject]> | Error> {
-  const contexts: LoaderContext[] = targetDirectories.map((item) => ({
-    name: item.name,
-    path: joinPath(item.path, item.innerPath),
-  }));
   const ps = contexts.map(
     async (context): Promise<[LoaderContext, CkusroObject] | Error> => {
       const node = await buildObjectTree(
