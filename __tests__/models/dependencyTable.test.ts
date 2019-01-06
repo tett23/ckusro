@@ -1,5 +1,9 @@
 import { FileTypeMarkdown } from '../../src/models/ckusroFile';
-import { buildDependencyTable } from '../../src/models/dependencyTable';
+import {
+  buildDependency,
+  buildDependencyTable,
+} from '../../src/models/dependencyTable';
+import { buildFile } from '../__fixtures__';
 
 describe(buildDependencyTable, () => {
   it('returns FileTypeDirectory when statType is StatTypeDirectory', () => {
@@ -56,5 +60,44 @@ describe(buildDependencyTable, () => {
         strongDependencies: ['1'],
       },
     });
+  });
+});
+
+describe(buildDependency, () => {
+  it('returns RefTuple', () => {
+    const dep = buildFile();
+    const file = buildFile({
+      weakDependencies: [dep.id],
+      strongDependencies: [dep.id],
+    });
+    const files = [file, dep];
+    const actual = buildDependency(dep.id, files);
+    const expected = [dep.id, [file.id], [file.id]];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('returns weak dependencies', () => {
+    const weakDep = buildFile();
+    const file = buildFile({
+      weakDependencies: [weakDep.id],
+    });
+    const files = [file, weakDep];
+    const actual = buildDependency(weakDep.id, files);
+    const expected = [weakDep.id, [file.id], []];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('returns strong dependencies', () => {
+    const strongDep = buildFile();
+    const file = buildFile({
+      strongDependencies: [strongDep.id],
+    });
+    const files = [file, strongDep];
+    const actual = buildDependency(strongDep.id, files);
+    const expected = [strongDep.id, [], [file.id]];
+
+    expect(actual).toEqual(expected);
   });
 });
