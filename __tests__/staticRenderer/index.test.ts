@@ -1,5 +1,6 @@
 import { CkusroConfig } from '../../src/models/ckusroConfig';
 import { CkusroFile, FileTypeDirectory } from '../../src/models/ckusroFile';
+import newGlobalState, { GlobalState } from '../../src/models/globalState';
 import staticRenderer, {
   buildProps,
   buildWriteInfo,
@@ -39,7 +40,8 @@ describe(staticRenderer, () => {
       ],
       outputDirectory: '/out',
     });
-    const actual = await staticRenderer(conf);
+    const globalState = (await newGlobalState(conf)) as GlobalState;
+    const actual = await staticRenderer(globalState);
 
     expect(actual).toEqual([true]);
   });

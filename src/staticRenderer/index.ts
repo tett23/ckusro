@@ -1,26 +1,20 @@
 import { join as joinPath } from 'path';
 import { curry } from 'ramda';
-import { CkusroConfig } from '../models/ckusroConfig';
 import {
   CkusroFile,
   CkusroId,
   isWritableFileType,
   replaceExt,
 } from '../models/ckusroFile';
-import newGlobalState, { GlobalState } from '../models/globalState';
+import { GlobalState } from '../models/globalState';
 import { OutputContext } from '../models/outputContext';
 import { Props } from './assets/components';
 import writeFile from './io';
 import render from './render';
 
 export default async function staticRenderer(
-  config: CkusroConfig,
+  globalState: GlobalState,
 ): Promise<boolean[] | Error> {
-  const globalState = await newGlobalState(config);
-  if (globalState instanceof Error) {
-    return globalState;
-  }
-
   const curried = curry(renderEachNamesace)(globalState);
   const ps = globalState.outputContexts.map(curried);
 
