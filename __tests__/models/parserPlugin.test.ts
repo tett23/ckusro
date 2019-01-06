@@ -24,10 +24,11 @@ describe(isParserPlugins, () => {
   it('judges type', () => {
     const data: Array<[any, boolean]> = [
       [[], true],
-      [{ name: 'test', plugin: () => {} }, true], // tslint:disable-line no-empty
+      [[{ name: 'test', plugin: () => {} }], true], // tslint:disable-line no-empty
       [[{ name: 'test', plugin: (_: any) => {} }], true], // tslint:disable-line no-empty
       [[{ name: 'test', plugin: (_: any, __: any) => {} }], false], // tslint:disable-line no-empty
       [{}, false],
+      [{ name: 'test', plugin: () => {} }, false], // tslint:disable-line no-empty
       [null, false],
       [undefined, false],
       [1, false],
