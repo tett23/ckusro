@@ -32,8 +32,18 @@ describe(buildNamespaceTree, () => {
 });
 
 describe(buildTree, () => {
-  function _findId(items: CkusroFile[], path: string): string {
-    return (items.find((item) => item.path === path) || { id: null }).id || '';
+  function _findId(
+    items: CkusroFile[],
+    namespace: string,
+    path: string,
+  ): string {
+    return (
+      (
+        items.find(
+          (item) => item.namespace === namespace && item.path === path,
+        ) || { id: null }
+      ).id || ''
+    );
   }
 
   it('returns children items', () => {
@@ -58,19 +68,37 @@ describe(buildTree, () => {
         fileType: FileTypeMarkdown,
         path: '/foo/bar/baz.md',
       }),
+      buildFile({
+        namespace: 'ns_2',
+        fileType: FileTypeDirectory,
+        path: '/',
+      }),
+      buildFile({
+        namespace: 'ns_2',
+        fileType: FileTypeMarkdown,
+        path: '/hoge.md',
+      }),
     ];
-    const findId = (path: string) => _findId(files, path);
+    const findId = (fullPath: string) => {
+      const [namespace, path] = fullPath.split(':');
+
+      return _findId(files, namespace, path);
+    };
 
     const actual = buildTree('/', files);
     const expected: TreeViewItem[] = [
       {
-        id: findId('/foo'),
+        id: findId('ns_1:/foo'),
         children: [
           {
-            id: findId('/foo/bar'),
-            children: [{ id: findId('/foo/bar/baz.md'), children: [] }],
+            id: findId('ns_1:/foo/bar'),
+            children: [{ id: findId('ns_1:/foo/bar/baz.md'), children: [] }],
           },
         ],
+      },
+      {
+        id: findId('ns_2:/hoge.md'),
+        children: [],
       },
     ];
 
