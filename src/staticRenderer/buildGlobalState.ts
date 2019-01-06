@@ -1,13 +1,10 @@
-import {
-  build,
-  buildDependencyTable,
-  DependencyTable,
-  load,
-  loadContent,
-  loadDependencies,
-} from '../loader';
+import { build, load, loadContent, loadDependencies } from '../loader';
 import { CkusroConfig } from '../models/ckusroConfig';
 import { CkusroFile } from '../models/ckusroFile';
+import {
+  buildDependencyTable,
+  DependencyTable,
+} from '../models/dependencyTable';
 import { LoaderContext } from '../models/loaderContext';
 import { newOutputContext, OutputContext } from '../models/outputContext';
 
