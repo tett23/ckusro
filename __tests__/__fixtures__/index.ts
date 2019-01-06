@@ -6,6 +6,7 @@ import {
   FileTypeMarkdown,
   newCkusroFile,
 } from '../../src/models/ckusroFile';
+import { buildDependencyTable, invert } from '../../src/models/dependencyTable';
 import { LoaderContext } from '../../src/models/loaderContext';
 import { OutputContext } from '../../src/models/outputContext';
 import { GlobalState } from '../../src/staticRenderer/buildGlobalState';
@@ -43,7 +44,11 @@ export function buildGlobalState(
     invertedDependencyTable: {},
   };
 
-  return merge(globalState, overrides);
+  const ret = merge(globalState, overrides);
+  ret.dependencyTable = buildDependencyTable(ret.files);
+  ret.invertedDependencyTable = invert(ret.dependencyTable);
+
+  return ret;
 }
 
 export function buildCkusroConfig(

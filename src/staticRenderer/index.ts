@@ -84,17 +84,11 @@ export function buildWriteInfo(
 }
 
 export function buildProps(globalState: GlobalState, file: CkusroFile): Props {
-  const strongDeps = file.strongDependencies.flatMap((id) => {
-    const f = globalState.files.find((item) => id === item.id);
-
-    return f != null ? [f] : [];
-  });
-  const weakDeps = file.weakDependencies.flatMap((id) => {
-    const f = globalState.files.find((item) => id === item.id);
-
-    return f != null ? [f] : [];
-  });
-  const deps = [file].concat(strongDeps).concat(weakDeps);
+  const { weakDependencies, strongDependencies } = globalState.dependencyTable[
+    file.id
+  ];
+  const ids = [file.id].concat(weakDependencies).concat(strongDependencies);
+  const deps = globalState.files.filter((f) => ids.includes(f.id));
 
   return {
     globalState,
