@@ -2,6 +2,7 @@ import jsyaml from 'js-yaml';
 import cli, { loadConfigFile } from '../../src/config/cli';
 import { PrimitiveCkusroConfig } from '../../src/config/toCkusroConfig';
 import { CkusroConfig } from '../../src/models/ckusroConfig';
+import { buildCkusroConfig } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 function jsonReplacer(_: string, value: any) {
@@ -13,7 +14,7 @@ function jsonReplacer(_: string, value: any) {
 }
 
 describe(cli, () => {
-  const conf: CkusroConfig = {
+  const conf: CkusroConfig = buildCkusroConfig({
     outputDirectory: '/out',
     targetDirectories: [
       {
@@ -22,10 +23,7 @@ describe(cli, () => {
         innerPath: '.',
       },
     ],
-    loaderConfig: {
-      extensions: /.md/,
-    },
-  };
+  });
 
   beforeEach(() => {
     const json = JSON.stringify(conf, jsonReplacer);

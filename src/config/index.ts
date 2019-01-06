@@ -2,10 +2,14 @@ import merge from 'lodash.merge';
 import { normalize, resolve as resolvePath } from 'path';
 import { CkusroConfig, isCkusroConfig } from '../models/ckusroConfig';
 
-const defaultConfig: DeepPartial<CkusroConfig> = {
+const defaultConfig: Omit<CkusroConfig, 'outputDirectory'> = {
   targetDirectories: [],
   loaderConfig: {
     extensions: /\.(md|txt)$/,
+  },
+  plugins: {
+    parsers: [],
+    components: [],
   },
 };
 

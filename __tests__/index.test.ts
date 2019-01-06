@@ -1,5 +1,6 @@
 import main from '../src/index';
 import { CkusroConfig } from '../src/models/ckusroConfig';
+import { buildCkusroConfig } from './__fixtures__';
 import { mockFileSystem, restoreFileSystem } from './__helpers__/fs';
 
 function jsonReplacer(_: string, value: any) {
@@ -31,7 +32,7 @@ describe(main, () => {
   }
 
   it('returns GlobalState', async () => {
-    const conf: CkusroConfig = {
+    const conf: CkusroConfig = buildCkusroConfig({
       targetDirectories: [
         {
           path: '/test',
@@ -39,11 +40,7 @@ describe(main, () => {
           innerPath: './',
         },
       ],
-      outputDirectory: '/out',
-      loaderConfig: {
-        extensions: /\.(md|txt)$/,
-      },
-    };
+    });
     mock(conf);
     const actual = await main('node hoge -c /conf.json'.split(' '));
 
@@ -51,7 +48,7 @@ describe(main, () => {
   });
 
   it('returns Error when directory does not exist', async () => {
-    const conf: CkusroConfig = {
+    const conf: CkusroConfig = buildCkusroConfig({
       targetDirectories: [
         {
           path: '/does_not_exist',
@@ -59,11 +56,7 @@ describe(main, () => {
           innerPath: './',
         },
       ],
-      outputDirectory: '/out',
-      loaderConfig: {
-        extensions: /\.(md|txt)$/,
-      },
-    };
+    });
     mock(conf);
     const actual = await main('-c /conf.json'.split(' '));
 

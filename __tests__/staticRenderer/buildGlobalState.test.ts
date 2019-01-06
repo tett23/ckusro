@@ -2,6 +2,7 @@ import { CkusroConfig } from '../../src/models/ckusroConfig';
 import buildGlobalState, {
   GlobalState,
 } from '../../src/staticRenderer/buildGlobalState';
+import { buildCkusroConfig } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(buildGlobalState, () => {
@@ -24,7 +25,7 @@ describe(buildGlobalState, () => {
   }
 
   it('returns GlobalState', async () => {
-    const conf: CkusroConfig = {
+    const conf: CkusroConfig = buildCkusroConfig({
       targetDirectories: [
         {
           path: '/test',
@@ -32,18 +33,14 @@ describe(buildGlobalState, () => {
           innerPath: './',
         },
       ],
-      outputDirectory: '/out',
-      loaderConfig: {
-        extensions: /\.(md|txt)$/,
-      },
-    };
+    });
     const actual = await buildGlobalState(conf);
 
     expect(isGlobalState(actual)).toBeTruthy();
   });
 
   it('returns Error when directory does not exist', async () => {
-    const conf: CkusroConfig = {
+    const conf: CkusroConfig = buildCkusroConfig({
       targetDirectories: [
         {
           path: '/does_not_exist',
@@ -51,11 +48,7 @@ describe(buildGlobalState, () => {
           innerPath: './',
         },
       ],
-      outputDirectory: '/out',
-      loaderConfig: {
-        extensions: /\.(md|txt)$/,
-      },
-    };
+    });
     const actual = await buildGlobalState(conf);
 
     expect(actual).toBeInstanceOf(Error);

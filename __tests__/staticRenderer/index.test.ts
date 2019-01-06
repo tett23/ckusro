@@ -10,6 +10,7 @@ import staticRenderer, {
   renderEachNamesace,
 } from '../../src/staticRenderer';
 import {
+  buildCkusroConfig,
   buildFile,
   buildGlobalState,
   buildLoaderContext,
@@ -28,7 +29,7 @@ describe(staticRenderer, () => {
   });
 
   it('returns boolean array', async () => {
-    const conf: CkusroConfig = {
+    const conf: CkusroConfig = buildCkusroConfig({
       targetDirectories: [
         {
           path: '/test',
@@ -37,10 +38,7 @@ describe(staticRenderer, () => {
         },
       ],
       outputDirectory: '/out',
-      loaderConfig: {
-        extensions: /\.(md|txt)$/,
-      },
-    };
+    });
     const actual = await staticRenderer(conf);
 
     expect(actual).toEqual([true]);

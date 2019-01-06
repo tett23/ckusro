@@ -56,6 +56,10 @@ export function buildCkusroConfig(
     loaderConfig: {
       extensions: /\.(md|txt)$/,
     },
+    plugins: {
+      parsers: [],
+      components: [],
+    },
   };
 
   return merge(config, overrides);

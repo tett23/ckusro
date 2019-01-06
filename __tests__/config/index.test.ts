@@ -1,6 +1,7 @@
 import { normalize, resolve as resolvePath } from 'path';
 import { mergeConfig } from '../../src/config';
 import { CkusroConfig } from '../../src/models/ckusroConfig';
+import { buildCkusroConfig } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(mergeConfig, () => {
@@ -22,7 +23,7 @@ describe(mergeConfig, () => {
       ],
       outputDirectory: '/out',
     });
-    const expected: CkusroConfig = {
+    const expected: CkusroConfig = buildCkusroConfig({
       targetDirectories: [
         {
           path: '/test',
@@ -31,10 +32,7 @@ describe(mergeConfig, () => {
         },
       ],
       outputDirectory: '/out',
-      loaderConfig: {
-        extensions: /\.(md|txt)$/,
-      },
-    };
+    });
 
     expect(actual).toMatchObject(expected);
   });
@@ -50,7 +48,7 @@ describe(mergeConfig, () => {
       ],
       outputDirectory: 'out',
     });
-    const expected: CkusroConfig = {
+    const expected: CkusroConfig = buildCkusroConfig({
       targetDirectories: [
         {
           path: resolvePath('/test'),
@@ -59,10 +57,7 @@ describe(mergeConfig, () => {
         },
       ],
       outputDirectory: resolvePath('out'),
-      loaderConfig: {
-        extensions: /\.(md|txt)$/,
-      },
-    };
+    });
 
     expect(actual).toMatchObject(expected);
   });
