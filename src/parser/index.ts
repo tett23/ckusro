@@ -4,8 +4,8 @@ import remarkParse from 'remark-parse';
 import unified from 'unified';
 import { LoaderContext } from '../loader';
 import { CkusroFile, newDoesNotExistFile } from '../models/ckusroFile';
+import wikiLink from '../plugins/ckusro-plugin-parser-WikiLink';
 import parseLinkText, { determineLinkFile } from './parseLinkText';
-import wikiLink from './wikiLink';
 
 export function buildAst(content: string): Root {
   try {

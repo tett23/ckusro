@@ -1,7 +1,10 @@
 import remarkParse from 'remark-parse';
 import remarkStringify from 'remark-stringify';
 import unified from 'unified';
-import wikiLink, { locator, Options } from '../../src/parser/wikiLink';
+import wikiLink, {
+  locator,
+  Options,
+} from '../../../src/plugins/ckusro-plugin-parser-WikiLink';
 
 function jsxCompiler() {
   // @ts-ignore
