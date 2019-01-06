@@ -9,6 +9,7 @@ import {
   FileTypeMarkdown,
   FileTypeRaw,
   FileTypeText,
+  newCkusroFile,
 } from '../models/ckusroFile';
 import { LoaderContext } from '../models/loaderContext';
 import { buildAst, determineDependency } from '../parser';
@@ -69,8 +70,7 @@ export function detectType(statType: StatType, name: string): FileType {
   }
 }
 function transform(context: LoaderContext, node: CkusroObject): CkusroFile {
-  return {
-    id: `${context.name}:${node.path}`,
+  return newCkusroFile({
     namespace: context.name,
     name: node.name,
     path: node.path,
@@ -80,7 +80,7 @@ function transform(context: LoaderContext, node: CkusroObject): CkusroFile {
     weakDependencies: [],
     strongDependencies: [],
     variables: [],
-  };
+  });
 }
 
 export function build(

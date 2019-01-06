@@ -1,8 +1,11 @@
 import merge from 'lodash.merge';
-import uuid from 'uuid/v4';
 import { defaultConfig } from '../../src/config';
 import { CkusroConfig, isCkusroConfig } from '../../src/models/ckusroConfig';
-import { CkusroFile, FileTypeMarkdown } from '../../src/models/ckusroFile';
+import {
+  CkusroFile,
+  FileTypeMarkdown,
+  newCkusroFile,
+} from '../../src/models/ckusroFile';
 import { LoaderContext } from '../../src/models/loaderContext';
 import { OutputContext } from '../../src/models/outputContext';
 import { GlobalState } from '../../src/staticRenderer/buildGlobalState';
@@ -68,8 +71,7 @@ export function buildCkusroConfig(
 }
 
 export function buildFile(overrides: Partial<CkusroFile> = {}): CkusroFile {
-  const template = {
-    id: uuid(),
+  const template = newCkusroFile({
     namespace: 'test',
     name: 'foo.md',
     path: '/foo.md',
@@ -79,7 +81,7 @@ export function buildFile(overrides: Partial<CkusroFile> = {}): CkusroFile {
     weakDependencies: ['test:/bar.md'],
     strongDependencies: ['test:/bar.md'],
     variables: [],
-  };
+  });
 
   return { ...template, ...overrides };
 }

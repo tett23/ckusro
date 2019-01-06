@@ -1,4 +1,5 @@
 import { basename, extname, join } from 'path';
+import uuid from 'uuid/v4';
 
 export const FileTypeDirectory: 'directory' = 'directory';
 export const FileTypeMarkdown: 'markdown' = 'markdown';
@@ -25,6 +26,14 @@ export type CkusroFile = {
   strongDependencies: CkusroId[];
   variables: any[];
 };
+
+export function newCkusroId(): CkusroId {
+  return uuid();
+}
+
+export function newCkusroFile(item: Omit<CkusroFile, 'id'>): CkusroFile {
+  return { ...item, id: newCkusroId() };
+}
 
 export function replaceExt({ fileType, path }: CkusroFile): string {
   const newExt = convertExt(fileType);

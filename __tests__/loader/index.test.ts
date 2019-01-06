@@ -22,6 +22,7 @@ import {
   isWritableFileType,
 } from '../../src/models/ckusroFile';
 import { LoaderContext } from '../../src/models/loaderContext';
+import { buildFile } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(load.name, () => {
@@ -109,7 +110,7 @@ describe(detectType.name, () => {
   });
 });
 
-describe(build.name, () => {
+describe(build, () => {
   it('load items', async () => {
     const tree: CkusroObject = {
       name: 'foo',
@@ -134,8 +135,8 @@ describe(build.name, () => {
     const context: LoaderContext = { name: 'foo', path: '/foo' };
     const actual = build(context, tree);
     const expected: CkusroFile[] = [
-      {
-        id: 'foo:/foo',
+      buildFile({
+        id: actual[0].id,
         namespace: 'foo',
         name: 'foo',
         path: '/foo',
@@ -144,10 +145,9 @@ describe(build.name, () => {
         content: null,
         weakDependencies: [],
         strongDependencies: [],
-        variables: [],
-      },
-      {
-        id: 'foo:/foo/bar',
+      }),
+      buildFile({
+        id: actual[1].id,
         namespace: 'foo',
         name: 'bar',
         path: '/foo/bar',
@@ -156,10 +156,9 @@ describe(build.name, () => {
         content: null,
         weakDependencies: [],
         strongDependencies: [],
-        variables: [],
-      },
-      {
-        id: 'foo:/foo/bar/baz.md',
+      }),
+      buildFile({
+        id: actual[2].id,
         namespace: 'foo',
         name: 'baz.md',
         path: '/foo/bar/baz.md',
@@ -168,8 +167,7 @@ describe(build.name, () => {
         content: null,
         weakDependencies: [],
         strongDependencies: [],
-        variables: [],
-      },
+      }),
     ];
 
     expect(actual).toEqual(expected);
@@ -191,31 +189,18 @@ describe(loadContent, () => {
       name: 'foo',
       path: '/foo',
     };
-    const file: CkusroFile = {
-      id: '/foo/bar/baz.md',
+    const file: CkusroFile = buildFile({
       namespace: 'foo',
       name: 'baz.md',
       path: '/bar/baz.md',
       fileType: FileTypeMarkdown,
-      isLoaded: false,
-      content: null,
-      weakDependencies: [],
-      strongDependencies: [],
-      variables: [],
-    };
+    });
 
     const actual = await loadContent(context, file);
     const expected: CkusroFile = {
-      id: '/foo/bar/baz.md',
-      namespace: 'foo',
-      name: 'baz.md',
-      path: '/bar/baz.md',
-      fileType: FileTypeMarkdown,
+      ...file,
       isLoaded: true,
       content: '# test file',
-      weakDependencies: [],
-      strongDependencies: [],
-      variables: [],
     };
 
     expect(actual).toEqual(expected);
@@ -226,31 +211,18 @@ describe(loadContent, () => {
       name: 'foo',
       path: '/foo',
     };
-    const file: CkusroFile = {
-      id: '/bar',
+    const file: CkusroFile = buildFile({
       namespace: 'foo',
       name: 'bar',
       path: '/bar',
       fileType: FileTypeDirectory,
-      isLoaded: false,
-      content: null,
-      weakDependencies: [],
-      strongDependencies: [],
-      variables: [],
-    };
+    });
 
     const actual = await loadContent(context, file);
     const expected: CkusroFile = {
-      id: '/bar',
-      namespace: 'foo',
-      name: 'bar',
-      path: '/bar',
-      fileType: FileTypeDirectory,
+      ...file,
       isLoaded: true,
       content: null,
-      weakDependencies: [],
-      strongDependencies: [],
-      variables: [],
     };
 
     expect(actual).toEqual(expected);
@@ -261,32 +233,21 @@ describe(loadContent, () => {
       name: 'foo',
       path: '/foo',
     };
-    const file: CkusroFile = {
-      id: '/does_not_exist.md',
+    const file: CkusroFile = buildFile({
       namespace: 'foo',
       name: 'does_not_exist.md',
       path: '/does_not_exist.md',
       fileType: FileTypeMarkdown,
       isLoaded: false,
       content: null,
-      weakDependencies: [],
-      strongDependencies: [],
-      variables: [],
-    };
+    });
 
     const actual = await loadContent(context, file);
-    const expected: CkusroFile = {
-      id: '/does_not_exist.md',
-      namespace: 'foo',
-      name: 'does_not_exist.md',
-      path: '/does_not_exist.md',
-      fileType: FileTypeMarkdown,
+    const expected: CkusroFile = buildFile({
+      ...file,
       isLoaded: true,
       content: null,
-      weakDependencies: [],
-      strongDependencies: [],
-      variables: [],
-    };
+    });
 
     expect(actual).toEqual(expected);
   });
@@ -298,8 +259,7 @@ describe(loadDependencies, () => {
     path: '/test',
   };
   it('assigns dependencies', () => {
-    const file: CkusroFile = {
-      id: 'test:/foo.md',
+    const file: CkusroFile = buildFile({
       namespace: 'test',
       name: 'foo.md',
       path: '/foo.md',
@@ -309,55 +269,38 @@ describe(loadDependencies, () => {
       weakDependencies: [],
       strongDependencies: [],
       variables: [],
-    };
-    const files: CkusroFile[] = [
-      {
-        id: 'test:/bar.md',
-        namespace: 'test',
-        name: 'bar.md',
-        path: '/bar.md',
-        fileType: FileTypeMarkdown,
-        isLoaded: true,
-        content: '',
-        weakDependencies: [],
-        strongDependencies: [],
-        variables: [],
-      },
-    ];
-    const actual = loadDependencies(context, file, files);
-    const expected: CkusroFile = {
-      id: 'test:/foo.md',
+    });
+    const dep = buildFile({
       namespace: 'test',
-      name: 'foo.md',
-      path: '/foo.md',
+      name: 'bar.md',
+      path: '/bar.md',
       fileType: FileTypeMarkdown,
       isLoaded: true,
-      content: '[[bar.md]]',
-      weakDependencies: ['test:/bar.md'],
-      strongDependencies: ['test:/bar.md'],
+      content: '',
+    });
+    const files: CkusroFile[] = [file, dep];
+    const actual = loadDependencies(context, file, files);
+    const expected: CkusroFile = buildFile({
+      ...file,
+      weakDependencies: [dep.id],
+      strongDependencies: [dep.id],
       variables: [],
-    };
+    });
 
     expect(actual).toEqual(expected);
   });
 
   it('returns same object when isLoaded is false', () => {
-    const file: CkusroFile = {
-      id: 'test:/foo.md',
+    const file: CkusroFile = buildFile({
       namespace: 'test',
       name: 'foo.md',
       path: '/foo.md',
       fileType: FileTypeMarkdown,
-      isLoaded: false,
-      content: null,
-      weakDependencies: [],
-      strongDependencies: [],
-      variables: [],
-    };
+    });
     const files: CkusroFile[] = [];
     const actual = loadDependencies(context, file, files);
 
-    expect(actual).toBe(file);
+    expect(actual).toEqual(file);
   });
 });
 
@@ -375,7 +318,7 @@ describe(isWritableFileType, () => {
       const [value, expected] = item;
       const actual = isWritableFileType(value);
 
-      expect(actual).toBe(expected);
+      expect(actual).toEqual(expected);
     });
   });
 });
