@@ -96,6 +96,10 @@ describe(isCkusroConfig, () => {
       loaderConfig: {
         extensions: /.md/,
       },
+      plugins: {
+        parsers: [],
+        components: [],
+      },
     };
     const data: Array<[any, boolean]> = [
       [validData, true],

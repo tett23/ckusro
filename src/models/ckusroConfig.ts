@@ -1,4 +1,5 @@
 import { isNonNullObject } from '../utils/types';
+import { isPlugins, Plugins } from './plugins';
 
 export type TargetDirectory = {
   path: string;
@@ -14,6 +15,7 @@ export type CkusroConfig = {
   outputDirectory: string;
   targetDirectories: TargetDirectory[];
   loaderConfig: LoaderConfig;
+  plugins: Plugins;
 };
 
 export function isTargetDirectory(obj: any): obj is TargetDirectory {
@@ -65,24 +67,19 @@ export function isCkusroConfig(obj: any): obj is CkusroConfig {
     return false;
   }
 
-  if (!('outputDirectory' in obj)) {
-    return false;
-  }
   if (typeof obj.outputDirectory !== 'string') {
     return false;
   }
 
-  if (!('targetDirectories' in obj)) {
-    return false;
-  }
   if (!isTargetDirectories(obj.targetDirectories)) {
     return false;
   }
 
-  if (!('loaderConfig' in obj)) {
+  if (!isLoaderConfig(obj.loaderConfig)) {
     return false;
   }
-  if (!isLoaderConfig(obj.loaderConfig)) {
+
+  if (!isPlugins(obj.plugins)) {
     return false;
   }
 
