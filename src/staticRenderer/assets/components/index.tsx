@@ -1,6 +1,6 @@
 import React from 'react';
 import { CkusroFile } from '../../../models/ckusroFile';
-import { GlobalState } from '../../../staticRenderer/buildGlobalState';
+import { GlobalState } from '../../../models/globalState';
 import Breadcrumbs from './Breadcrumbs';
 import { Markdown } from './Markdown';
 import TreeView from './TreeView';

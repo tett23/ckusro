@@ -1,13 +1,13 @@
 import { build, load, loadContent, loadDependencies } from '../loader';
-import { CkusroConfig } from '../models/ckusroConfig';
-import { CkusroFile } from '../models/ckusroFile';
+import { CkusroConfig } from './ckusroConfig';
+import { CkusroFile } from './ckusroFile';
 import {
   buildDependencyTable,
   DependencyTable,
   invert,
-} from '../models/dependencyTable';
-import { LoaderContext } from '../models/loaderContext';
-import { newOutputContext, OutputContext } from '../models/outputContext';
+} from './dependencyTable';
+import { LoaderContext } from './loaderContext';
+import { newOutputContext, OutputContext } from './outputContext';
 
 export type GlobalState = {
   loaderContexts: LoaderContext[];

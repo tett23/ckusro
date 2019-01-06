@@ -7,9 +7,9 @@ import {
   newCkusroFile,
 } from '../../src/models/ckusroFile';
 import { buildDependencyTable, invert } from '../../src/models/dependencyTable';
+import { GlobalState } from '../../src/models/globalState';
 import { LoaderContext } from '../../src/models/loaderContext';
 import { OutputContext } from '../../src/models/outputContext';
-import { GlobalState } from '../../src/staticRenderer/buildGlobalState';
 
 export function buildLoaderContext(
   overrides: Partial<LoaderContext> = {},

@@ -7,9 +7,9 @@ import {
   isWritableFileType,
   replaceExt,
 } from '../models/ckusroFile';
+import buildGlobalState, { GlobalState } from '../models/globalState';
 import { OutputContext } from '../models/outputContext';
 import { Props } from './assets/components';
-import buildGlobalState, { GlobalState } from './buildGlobalState';
 import writeFile from './io';
 import render from './render';
 

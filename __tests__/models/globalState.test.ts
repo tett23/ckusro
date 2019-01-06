@@ -1,7 +1,5 @@
 import { CkusroConfig } from '../../src/models/ckusroConfig';
-import buildGlobalState, {
-  GlobalState,
-} from '../../src/staticRenderer/buildGlobalState';
+import buildGlobalState, { GlobalState } from '../../src/models/globalState';
 import { buildCkusroConfig } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
