@@ -17,7 +17,7 @@ export type GlobalState = {
   invertedDependencyTable: DependencyTable;
 };
 
-export default async function buildGlobalState(
+export default async function newGlobalState(
   config: CkusroConfig,
 ): Promise<GlobalState | Error> {
   const results = await load(

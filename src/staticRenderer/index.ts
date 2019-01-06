@@ -7,7 +7,7 @@ import {
   isWritableFileType,
   replaceExt,
 } from '../models/ckusroFile';
-import buildGlobalState, { GlobalState } from '../models/globalState';
+import newGlobalState, { GlobalState } from '../models/globalState';
 import { OutputContext } from '../models/outputContext';
 import { Props } from './assets/components';
 import writeFile from './io';
@@ -16,7 +16,7 @@ import render from './render';
 export default async function staticRenderer(
   config: CkusroConfig,
 ): Promise<boolean[] | Error> {
-  const globalState = await buildGlobalState(config);
+  const globalState = await newGlobalState(config);
   if (globalState instanceof Error) {
     return globalState;
   }

@@ -1,9 +1,9 @@
 import { CkusroConfig } from '../../src/models/ckusroConfig';
-import buildGlobalState, { GlobalState } from '../../src/models/globalState';
+import newGlobalState, { GlobalState } from '../../src/models/globalState';
 import { buildCkusroConfig } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
-describe(buildGlobalState, () => {
+describe(newGlobalState, () => {
   beforeEach(() => {
     mockFileSystem({
       '/test/foo/bar/baz.md': '# test file',
@@ -33,7 +33,7 @@ describe(buildGlobalState, () => {
         },
       ],
     });
-    const actual = await buildGlobalState(conf);
+    const actual = await newGlobalState(conf);
 
     expect(isGlobalState(actual)).toBe(true);
   });
@@ -48,7 +48,7 @@ describe(buildGlobalState, () => {
         },
       ],
     });
-    const actual = await buildGlobalState(conf);
+    const actual = await newGlobalState(conf);
 
     expect(actual).toBeInstanceOf(Error);
   });
