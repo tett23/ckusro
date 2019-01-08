@@ -3,17 +3,13 @@ import { join as joinPath } from 'path';
 import { promisify } from 'util';
 import {
   CkusroFile,
-  FileType,
   FileTypeDirectory,
-  FileTypeMarkdown,
-  FileTypeRaw,
-  FileTypeText,
   newCkusroFile,
 } from '../models/ckusroFile';
 import { LoaderContext } from '../models/loaderContext';
 import { buildAst, determineDependency } from '../parser';
 import { buildObjectTree } from './buildObjectTree';
-import { CkusroObject, StatType, StatTypeDirectory } from './ckusroObject';
+import { CkusroObject, detectType } from './ckusroObject';
 
 const readFile = promisify(fs.readFile);
 
@@ -47,23 +43,7 @@ export async function loadRootObjects(
   return ret;
 }
 
-export function detectType(statType: StatType, name: string): FileType {
-  if (statType === StatTypeDirectory) {
-    return FileTypeDirectory;
-  }
 
-  const tmp = name.split('.');
-  const ext = tmp[tmp.length - 1];
-
-  switch (ext) {
-    case 'md':
-      return FileTypeMarkdown;
-    case 'txt':
-      return FileTypeText;
-    default:
-      return FileTypeRaw;
-  }
-}
 function transform(context: LoaderContext, node: CkusroObject): CkusroFile {
   return newCkusroFile({
     namespace: context.name,
