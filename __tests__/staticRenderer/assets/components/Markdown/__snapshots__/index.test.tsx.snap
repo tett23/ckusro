@@ -25,6 +25,22 @@ ShallowWrapper {
         },
       ]
     }
+    plugins={
+      Object {
+        "components": Array [
+          Object {
+            "name": "WikiLink",
+            "plugin": [Function],
+          },
+        ],
+        "parsers": Array [
+          Object {
+            "name": "wikiLink",
+            "plugin": [Function],
+          },
+        ],
+      }
+    }
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],

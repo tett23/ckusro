@@ -4,32 +4,47 @@ import remarkBreaks from 'remark-breaks';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import unified from 'unified';
+import { ComponentPlugin } from '../models/componentPlugin';
+import { Plugins } from '../models/plugins';
 import transformWikiLink, {
   Options,
 } from '../plugins/ckusro-plugin-component-WikiLink';
-import wikiLink from '../plugins/ckusro-plugin-parser-WikiLink';
-import WikiLink from '../staticRenderer/assets/components/wiki/WikiLink';
 
-export default function parserInstance(){
+export default function parserInstance(plugins: Plugins) {
+  let parser = unified()
+    .use(remarkParse, { gfm: true })
+    .use(remarkBreaks);
+
+  plugins.parsers.forEach(({ plugin }) => {
+    parser = parser.use(plugin);
+  });
+
+  // @ts-ignore
+  parser = parser.use(remarkRehype, null, jsxHandlers(plugins.components));
+  parser = parser.use(rehypeReact, { createElement: React.createElement });
+
+  return parser;
+}
+
+function jsxHandlers(plugins: ComponentPlugin[]) {
+  const componentPlugins = plugins.reduce(
+    (acc, { plugin }) => {
+      acc[plugin.name || plugin.name] = plugin;
+
+      return acc;
+    },
+    {} as any,
+  );
   const remarkResolveJSXOptions: Options = {
-    components: {
-      WikiLink,
+    components: componentPlugins,
+  };
+  const handlers = {
+    jsx: (_: any, node: any) => {
+      return transformWikiLink(remarkResolveJSXOptions, node);
     },
   };
 
-  // @ts-ignore
-  const parser = unified()
-    .use(remarkParse, { gfm: true })
-    .use(remarkBreaks)
-    .use(wikiLink)
-    .use(rehypeReact, { createElement: React.createElement })
-    .use(remarkRehype, null, {
-      handlers: {
-        jsx: (_: any, node: any) => {
-          return transformWikiLink(remarkResolveJSXOptions, node);
-        },
-      },
-    })
-
-    return parser
+  return {
+    handlers,
+  };
 }

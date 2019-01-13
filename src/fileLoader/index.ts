@@ -7,6 +7,7 @@ import {
   newCkusroFile,
 } from '../models/ckusroFile';
 import { LoaderContext } from '../models/loaderContext';
+import { Plugins } from '../models/plugins';
 import { buildAst, determineDependency } from '../parser';
 import { buildObjectTree } from './buildObjectTree';
 import { CkusroObject, detectType } from './ckusroObject';
@@ -95,6 +96,7 @@ export async function loadContent(
 }
 
 export function loadDependencies(
+  plugins: Plugins,
   context: LoaderContext,
   file: CkusroFile,
   files: CkusroFile[],
@@ -103,7 +105,7 @@ export function loadDependencies(
     return file;
   }
 
-  const rootNode = buildAst(file.content || '');
+  const rootNode = buildAst(plugins, file.content || '');
   const dependencyFiles = determineDependency(context, rootNode, files);
 
   return Object.assign({}, file, {

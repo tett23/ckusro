@@ -26,7 +26,7 @@ export default function wikiLink(userOptions?: unknown) {
   inlineTokenizer.locator = locator;
 
   if (Compiler != null) {
-    Compiler.prototype.visitors.wikiLink = options.visitor;
+    Compiler.prototype.visitors.wikiLink = options.visitor || visitor;
   }
 
   function inlineTokenizer(eat: any, value: string): any {

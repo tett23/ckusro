@@ -4,7 +4,9 @@ export type DefaultPluginsConfig = {
   parsers: {
     enableWikiLink: boolean;
   };
-  components: {};
+  components: {
+    enableWikiLink: boolean;
+  };
 };
 
 export function defaultPluginsConfig(
@@ -14,7 +16,9 @@ export function defaultPluginsConfig(
     parsers: {
       enableWikiLink: true,
     },
-    components: {},
+    components: {
+      enableWikiLink: true,
+    },
   };
 
   return merge(data, overrides);

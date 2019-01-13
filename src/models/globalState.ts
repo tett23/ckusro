@@ -46,7 +46,9 @@ export default async function newGlobalState(
     );
     const items = await Promise.all(pps);
 
-    return items.map((item) => loadDependencies(loaderContext, item, items));
+    return items.map((item) =>
+      loadDependencies(config.plugins, loaderContext, item, items),
+    );
   });
 
   const files = (await Promise.all(ps)).flatMap((item) => item);

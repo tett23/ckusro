@@ -8,7 +8,7 @@ export type Props = {
 
 export type ComponentPlugin = {
   name: string;
-  plugin: (props: Props) => JSX.Element;
+  plugin: (props: any) => JSX.Element;
 };
 
 export function isComponentPlugins(obj: any): obj is ComponentPlugin[] {

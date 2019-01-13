@@ -3,27 +3,33 @@ import {
   FileTypeDirectory,
   FileTypeDoesNotExist,
 } from '../../src/models/ckusroFile';
+import { defaultPluginsConfig } from '../../src/models/pluginConfig';
+import defaultPlugins from '../../src/models/plugins/defaultPlugins';
 import { buildAst, determineDependency } from '../../src/parser';
 import { buildFile, buildLoaderContext } from '../__fixtures__';
 
 describe(buildAst, () => {
+  const plugins = defaultPlugins(defaultPluginsConfig());
+
   it('builds AST', () => {
-    const actual = buildAst('# hoge');
+    const actual = buildAst(plugins, '# hoge');
 
     expect(actual).toMatchSnapshot();
   });
 
   it('paeses wikiLink', () => {
-    const actual = buildAst('foo[[foo]]bar');
+    const actual = buildAst(plugins, 'foo[[foo]]bar');
 
     expect(actual).toMatchSnapshot();
   });
 });
 
 describe(determineDependency, () => {
+  const plugins = defaultPlugins(defaultPluginsConfig());
+
   it('returns CkusroIds', () => {
     const context = buildLoaderContext({ name: 'test', path: '/test' });
-    const rootNode = buildAst('[[test:foo]]');
+    const rootNode = buildAst(plugins, '[[test:foo]]');
     const files: CkusroFile[] = [
       buildFile({
         namespace: 'test',
@@ -43,7 +49,7 @@ describe(determineDependency, () => {
 
   it('returns empty array when file does not exist', () => {
     const context = buildLoaderContext({ name: 'test', path: '/test' });
-    const rootNode = buildAst('[[test:does_not_exist]]');
+    const rootNode = buildAst(plugins, '[[test:does_not_exist]]');
     const files: CkusroFile[] = [];
     const actual = determineDependency(context, rootNode, files);
 

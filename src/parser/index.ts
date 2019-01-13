@@ -1,14 +1,15 @@
 import { Content, Parent, Root } from 'mdast';
 import { CkusroFile, newDoesNotExistFile } from '../models/ckusroFile';
 import { LoaderContext } from '../models/loaderContext';
-import parseLinkText, { determineLinkFile } from './parseLinkText';
+import { Plugins } from '../models/plugins';
 import parserInstance from '../parserInstance';
+import parseLinkText, { determineLinkFile } from './parseLinkText';
 
-export function buildAst(content: string): Root {
-  const parser = parserInstance()
+export function buildAst(plugins: Plugins, content: string): Root {
+  const parser = parserInstance(plugins);
 
   try {
-    return parser.parse(content);
+    return parser.parse(content) as Root;
   } catch (e) {
     throw e;
   }

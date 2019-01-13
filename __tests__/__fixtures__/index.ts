@@ -10,7 +10,10 @@ import { buildDependencyTable, invert } from '../../src/models/dependencyTable';
 import { GlobalState } from '../../src/models/globalState';
 import { LoaderContext } from '../../src/models/loaderContext';
 import { OutputContext } from '../../src/models/outputContext';
-import { DefaultPluginsConfig } from '../../src/models/pluginConfig';
+import {
+  DefaultPluginsConfig,
+  defaultPluginsConfig,
+} from '../../src/models/pluginConfig';
 import defaultPlugins from '../../src/models/plugins/defaultPlugins';
 
 export function buildLoaderContext(
@@ -44,10 +47,7 @@ export function buildGlobalState(
     files: [],
     dependencyTable: {},
     invertedDependencyTable: {},
-    plugins: {
-      parsers: [],
-      components: [],
-    },
+    plugins: defaultPlugins(defaultPluginsConfig()),
   };
 
   const ret = merge(globalState, overrides);
@@ -60,12 +60,7 @@ export function buildGlobalState(
 export function buildDefaultPluginsConfig(
   overrides: DeepPartial<DefaultPluginsConfig> = {},
 ): DefaultPluginsConfig {
-  const data = {
-    parsers: {
-      enableWikiLink: true,
-    },
-    components: {},
-  };
+  const data = defaultPluginsConfig();
 
   return merge(data, overrides);
 }

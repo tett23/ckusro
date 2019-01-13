@@ -21,6 +21,8 @@ import {
   isWritableFileType,
 } from '../../src/models/ckusroFile';
 import { LoaderContext } from '../../src/models/loaderContext';
+import { defaultPluginsConfig } from '../../src/models/pluginConfig';
+import defaultPlugins from '../../src/models/plugins/defaultPlugins';
 import { buildFile, buildLoaderContext } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
@@ -229,6 +231,8 @@ describe(loadDependencies, () => {
     name: 'test',
     path: '/test',
   };
+  const plugins = defaultPlugins(defaultPluginsConfig());
+
   it('assigns dependencies', () => {
     const file: CkusroFile = buildFile({
       namespace: 'test',
@@ -250,7 +254,7 @@ describe(loadDependencies, () => {
       content: '',
     });
     const files: CkusroFile[] = [file, dep];
-    const actual = loadDependencies(context, file, files);
+    const actual = loadDependencies(plugins, context, file, files);
     const expected: CkusroFile = buildFile({
       ...file,
       weakDependencies: [dep.id],
@@ -269,7 +273,7 @@ describe(loadDependencies, () => {
       fileType: FileTypeMarkdown,
     });
     const files: CkusroFile[] = [];
-    const actual = loadDependencies(context, file, files);
+    const actual = loadDependencies(plugins, context, file, files);
 
     expect(actual).toEqual(file);
   });

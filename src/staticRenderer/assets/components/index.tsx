@@ -39,7 +39,7 @@ export default function App({ globalState, markdown }: Props) {
       <section>
         <h1>{file.name}</h1>
         <div>
-          <Markdown {...markdown} />
+          <Markdown plugins={globalState.plugins} {...markdown} />
         </div>
       </section>
     </main>

@@ -1,5 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
+import { defaultPluginsConfig } from '../../../../../src/models/pluginConfig';
+import defaultPlugins from '../../../../../src/models/plugins/defaultPlugins';
 import {
   buildJSX,
   Markdown,
@@ -7,10 +9,12 @@ import {
 import { buildFile } from '../../../../__fixtures__';
 
 describe(Markdown, () => {
+  const plugins = defaultPlugins(defaultPluginsConfig());
+
   it('renders correctly', () => {
     const files = [buildFile({ id: 'test1', content: '[[foo]]' })];
     const actual = shallow(
-      <Markdown currentFileId={files[0].id} files={files} />,
+      <Markdown plugins={plugins} currentFileId={files[0].id} files={files} />,
     );
 
     expect(actual).toMatchSnapshot();
@@ -18,15 +22,23 @@ describe(Markdown, () => {
 
   it('throw Error when file does not exist', () => {
     const actual = () =>
-      shallow(<Markdown currentFileId="does_not_exist" files={[]} />);
+      shallow(
+        <Markdown
+          plugins={plugins}
+          currentFileId="does_not_exist"
+          files={[]}
+        />,
+      );
 
     expect(actual).toThrowError();
   });
 });
 
 describe(buildJSX, () => {
+  const plugins = defaultPlugins(defaultPluginsConfig());
+
   it('renders correctly', () => {
-    const actual = buildJSX('[[foo]]');
+    const actual = buildJSX(plugins, '[[foo]]');
 
     expect(actual).toMatchSnapshot();
   });
