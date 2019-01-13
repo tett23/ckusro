@@ -1,7 +1,9 @@
 import yargs, { Argv } from 'yargs';
-import { loadConfigFile } from '../config/fromCLIOptions';
+import fromCLIOptions, { loadConfigFile } from '../config/fromCLIOptions';
 import { TargetDirectory } from '../models/ckusroConfig';
-import { CLICommandBuild } from './cliCommands';
+import newGlobalState, { GlobalState } from '../models/globalState';
+import { CLICommandBuild, CLICommands, isCLICommands } from './cliCommands';
+import { buildHandler } from './commandHandlers';
 
 export type CLIOptions = {
   command: string;
@@ -44,6 +46,25 @@ export function parser(): Argv<CLIOptions> {
     });
 }
 
-export default function cli(argv: string[]) {
-  return parser().parse(argv);
+export default async function cli(argv: string[]) {
+  const options = parser().parse(argv);
+  const command = options.command;
+  if (!isCLICommands(command)) {
+    throw new Error('Invalid command.');
+  }
+
+  const conf = fromCLIOptions(options);
+  const globalState = await newGlobalState(conf);
+  if (globalState instanceof Error) {
+    return globalState;
+  }
+
+  return run(command, globalState);
+}
+
+export async function run(command: CLICommands, globalState: GlobalState) {
+  switch (command) {
+    case CLICommandBuild:
+      return await buildHandler(globalState);
+  }
 }
