@@ -33,7 +33,7 @@ export default async function newGlobalState(
   );
 
   const results = await loadRootObjects(
-    config.targetDirectories,
+    loaderContexts,
     config.loaderConfig.extensions,
   );
   if (results instanceof Error) {
