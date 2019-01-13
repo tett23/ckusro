@@ -1,4 +1,10 @@
-import { FileTypeDirectory, FileType, FileTypeMarkdown, FileTypeText, FileTypeRaw } from "../models/ckusroFile";
+import {
+  FileType,
+  FileTypeDirectory,
+  FileTypeMarkdown,
+  FileTypeRaw,
+  FileTypeText,
+} from '../models/ckusroFile';
 
 export const StatTypeDirectory: 'directory' = 'directory';
 export const StatTypeFile: 'file' = 'file';
@@ -11,7 +17,7 @@ export type CkusroObject = {
   children: CkusroObject[];
 };
 
-export function detectType(statType: StatType, name: string): FileType{
+export function detectType(statType: StatType, name: string): FileType {
   if (statType === StatTypeDirectory) {
     return FileTypeDirectory;
   }

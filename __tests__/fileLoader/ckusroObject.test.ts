@@ -1,5 +1,14 @@
-import { detectType, StatTypeDirectory, StatTypeFile } from "../../src/fileLoader/ckusroObject";
-import { FileTypeDirectory, FileTypeMarkdown, FileTypeText, FileTypeRaw } from "../../src/models/ckusroFile";
+import {
+  detectType,
+  StatTypeDirectory,
+  StatTypeFile,
+} from '../../src/fileLoader/ckusroObject';
+import {
+  FileTypeDirectory,
+  FileTypeMarkdown,
+  FileTypeRaw,
+  FileTypeText,
+} from '../../src/models/ckusroFile';
 
 describe(detectType, () => {
   it('returns FileTypeDirectory when statType is StatTypeDirectory', () => {

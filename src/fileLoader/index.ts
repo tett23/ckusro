@@ -43,7 +43,6 @@ export async function loadRootObjects(
   return ret;
 }
 
-
 function transform(context: LoaderContext, node: CkusroObject): CkusroFile {
   return newCkusroFile({
     namespace: context.name,
