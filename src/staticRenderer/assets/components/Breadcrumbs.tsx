@@ -1,19 +1,36 @@
 import { join as pathJoin, normalize, sep } from 'path';
 import React from 'react';
+import styled from 'styled-components';
 
 export type Props = {
   namespace: string;
   path: string;
 };
 
+const ItemTypeNamespace: 'namespace' = 'namespace';
+const ItemTypeFile: 'file' = 'file';
+type ItemType = typeof ItemTypeNamespace | typeof ItemTypeFile;
+
 export default function Breadcrumbs({ namespace, path }: Props) {
   const items = pathItems(namespace, path).map(([text, itemPath]) => (
-    <BreadcrumbItem key={itemPath} text={text} path={itemPath} />
+    <BreadcrumbItem
+      key={itemPath}
+      type={ItemTypeFile}
+      text={text}
+      path={itemPath}
+    />
   ));
 
+  const Ul = styled.ul`
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  `;
   return (
     <nav>
-      <ul>{items}</ul>
+      <Ul>{items}</Ul>
     </nav>
   );
 }
@@ -47,14 +64,30 @@ function splitItems(namespace: string, path: string): string[] {
 }
 
 export type BreadcrumbItemProps = {
+  type: ItemType;
   text: string;
   path: string;
 };
 
-export function BreadcrumbItem({ text, path }: BreadcrumbItemProps) {
+export function BreadcrumbItem({ type, text, path }: BreadcrumbItemProps) {
+  const Li = styled.li`
+    :after {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      ${type === 'namespace' && "content: ':';"}
+      ${type === 'file' && "content: '/';"}
+    }
+
+    &:last-child {
+      :after {
+        content: '';
+      }
+    }
+  `;
+
   return (
-    <li>
+    <Li>
       <a href={path}>{text}</a>
-    </li>
+    </Li>
   );
 }
