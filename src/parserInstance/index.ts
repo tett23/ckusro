@@ -6,9 +6,7 @@ import remarkRehype from 'remark-rehype';
 import unified from 'unified';
 import { ComponentPlugin } from '../models/componentPlugin';
 import { Plugins } from '../models/plugins';
-import transformWikiLink, {
-  Options,
-} from '../plugins/ckusro-plugin-component-WikiLink';
+import JSXComponent, { Options } from './JSXComponent';
 
 export default function parserInstance(plugins: Plugins) {
   let parser = unified()
@@ -40,7 +38,7 @@ function jsxHandlers(plugins: ComponentPlugin[]) {
   };
   const handlers = {
     jsx: (_: any, node: any) => {
-      return transformWikiLink(remarkResolveJSXOptions, node);
+      return JSXComponent(remarkResolveJSXOptions, node);
     },
   };
 

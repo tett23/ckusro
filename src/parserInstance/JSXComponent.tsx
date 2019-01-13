@@ -21,7 +21,7 @@ type JSXNode = {
   };
 };
 
-export default function transform(
+export default function JSXComponent(
   options: DeepPartial<Options>,
   node: JSXNode,
 ) {
