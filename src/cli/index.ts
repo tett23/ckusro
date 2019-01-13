@@ -7,12 +7,10 @@ import {
   CLICommands,
   CLICommandWatch,
   isCLICommands,
-  validCLICommands,
 } from './cliCommands';
 import { buildHandler, watchHandler } from './commandHandlers';
 
 export type CLIOptions = {
-  command: string;
   config: any | undefined;
   outputDirectory: string | undefined;
   targetDirectories: TargetDirectory[] | undefined;
@@ -21,20 +19,8 @@ export type CLIOptions = {
 
 export function parser(): Argv<CLIOptions> {
   return yargs
-    .command('build', 'build HTML files.', {
-      command: {
-        default: CLICommandBuild,
-      },
-    })
-    .command('watch', 'watch and build HTML files.', {
-      command: {
-        default: CLICommandWatch,
-      },
-    })
-    .option('command', {
-      default: 'build',
-      choices: validCLICommands,
-    })
+    .command('build', 'build HTML files.')
+    .command('watch', 'watch and build HTML files.')
     .option('config', {
       alias: 'c',
       description: 'path to config file',
@@ -59,7 +45,7 @@ export function parser(): Argv<CLIOptions> {
 
 export default async function cli(argv: string[]) {
   const options = parser().parse(argv);
-  const command = options.command;
+  const command = options._[options._.length - 1];
   if (!isCLICommands(command)) {
     throw new Error('Invalid command.');
   }

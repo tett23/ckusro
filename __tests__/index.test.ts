@@ -42,7 +42,7 @@ describe(main, () => {
       ],
     });
     mock(conf);
-    const actual = await main('node hoge -c /conf.json'.split(' '));
+    const actual = await main('node hoge -c /conf.json build'.split(' '));
 
     expect(isBooleanArray(actual)).toEqual(true);
   });
@@ -58,7 +58,7 @@ describe(main, () => {
       ],
     });
     mock(conf);
-    const actual = await main('-c /conf.json'.split(' '));
+    const actual = await main('-c /conf.json build'.split(' '));
 
     expect(actual).toBeInstanceOf(Error);
   });
