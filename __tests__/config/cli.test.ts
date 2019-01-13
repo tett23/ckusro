@@ -2,7 +2,7 @@ import jsyaml from 'js-yaml';
 import cli, { loadConfigFile } from '../../src/config/cli';
 import { PrimitiveCkusroConfig } from '../../src/config/toCkusroConfig';
 import { CkusroConfig } from '../../src/models/ckusroConfig';
-import { buildCkusroConfig } from '../__fixtures__';
+import { buildCkusroConfig, buildCLIOptions } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 function jsonReplacer(_: string, value: any) {
@@ -36,24 +36,16 @@ describe(cli, () => {
   });
 
   it('parses config file', () => {
-    const args = '-c /config.json'.split(' ');
-    const actual = cli(args);
+    const options = buildCLIOptions({ config: '/config.json' });
+    const actual = cli(options);
     const expected: Partial<CkusroConfig> = conf;
 
     expect(actual).toEqual(expected);
   });
 
-  it('parses outputDirectory', () => {
-    const args = '-o /test'.split(' ');
-    const actual = cli(args);
-    const expected: Partial<CkusroConfig> = { outputDirectory: '/test' };
-
-    expect(actual).toMatchObject(expected);
-  });
-
   it('parses loaderConfig.extensions', () => {
-    const args = '--extensions /.md/'.split(' ');
-    const actual = cli(args);
+    const options = buildCLIOptions({ extensions: '/.md/' });
+    const actual = cli(options);
     const expected: Partial<CkusroConfig> = {
       loaderConfig: { extensions: /.md/ },
     };

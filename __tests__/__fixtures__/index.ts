@@ -1,4 +1,5 @@
 import merge from 'lodash.merge';
+import { CLICommandBuild, CLIOptions } from '../../src/cli';
 import { defaultConfig } from '../../src/config';
 import { CkusroConfig, isCkusroConfig } from '../../src/models/ckusroConfig';
 import {
@@ -105,4 +106,18 @@ export function buildFile(overrides: Partial<CkusroFile> = {}): CkusroFile {
   });
 
   return { ...template, ...overrides };
+}
+
+export function buildCLIOptions(
+  overrides: Partial<CLIOptions> = {},
+): CLIOptions {
+  const options = {
+    command: CLICommandBuild,
+    config: undefined,
+    outputDirectory: '/out',
+    targetDirectories: [],
+    extensions: '/.md/',
+  };
+
+  return { ...options, ...overrides };
 }

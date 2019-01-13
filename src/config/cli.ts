@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import jsyaml from 'js-yaml';
 import merge from 'lodash.merge';
 import { extname } from 'path';
-import { CLIOptions, parser } from '../cli';
+import { CLIOptions } from '../cli';
 import { CkusroConfig } from '../models/ckusroConfig';
 import { mergeConfig } from './index';
 import toCkusroConfig, {
@@ -12,8 +12,7 @@ import toCkusroConfig, {
 
 export type Options = {};
 
-export default function cli(args: string[]): CkusroConfig {
-  const options = parser().parse(args);
+export default function cli(options: CLIOptions): CkusroConfig {
   const merged = merge(options.config, overrides(options));
   const conf = toCkusroConfig(merged);
 

@@ -46,3 +46,7 @@ export function parser(): Argv<CLIOptions> {
       },
     });
 }
+
+export default function cli(argv: string[]) {
+  return parser().parse(argv);
+}
