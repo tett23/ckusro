@@ -2,8 +2,8 @@ import { readFileSync } from 'fs';
 import jsyaml from 'js-yaml';
 import merge from 'lodash.merge';
 import { extname } from 'path';
-import yargs, { Argv } from 'yargs';
-import { CkusroConfig, TargetDirectory } from '../models/ckusroConfig';
+import { CLIOptions, parser } from '../cli';
+import { CkusroConfig } from '../models/ckusroConfig';
 import { mergeConfig } from './index';
 import toCkusroConfig, {
   isPartializedPrimitiveCkusroConfig,
@@ -11,51 +11,6 @@ import toCkusroConfig, {
 } from './toCkusroConfig';
 
 export type Options = {};
-
-export type CLIOptions = {
-  command: string;
-  config: DeepPartial<PrimitiveCkusroConfig> | undefined;
-  outputDirectory: string | undefined;
-  targetDirectories: TargetDirectory[] | undefined;
-  extensions: string | undefined;
-};
-
-const CLICommandBuild: 'build' = 'build';
-
-export type CLICommands = typeof CLICommandBuild;
-
-export function parser(): Argv<CLIOptions> {
-  return yargs
-    .command('build', 'build HTML files.', {
-      command: {
-        default: CLICommandBuild,
-      },
-    })
-    .option('command', {
-      default: 'build',
-      choices: [CLICommandBuild],
-    })
-    .option('config', {
-      alias: 'c',
-      description: 'path to config file',
-      coerce: (v: string) => {
-        return loadConfigFile(v);
-      },
-    })
-    .option('outputDirectory', {
-      alias: 'o',
-      description: 'output directory',
-      type: 'string',
-    })
-    .option('extensions', {
-      type: 'string',
-    })
-    .option('targetDirectories', {
-      coerce: (): TargetDirectory[] => {
-        return [];
-      },
-    });
-}
 
 export default function cli(args: string[]): CkusroConfig {
   const options = parser().parse(args);
