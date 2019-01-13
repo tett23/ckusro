@@ -1,3 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`render renders correctly 1`] = `"<main data-reactroot=\\"\\"><nav><nav><ul><li><a href=\\"..\\">test</a></li><li><a href=\\"./\\">foo.md</a></li></ul></nav></nav><nav><ul></ul></nav><section><h1>foo.md</h1><div><p><span data-reactroot=\\"\\">bar.md</span></p></div></section><section><pre>[[bar.md]]</pre></section></main>"`;
+exports[`render renders correctly 1`] = `"<main data-reactroot=\\"\\"><nav><ul></ul></nav><div><nav><nav><ul><li><a href=\\"..\\">test</a></li><li><a href=\\"./\\">foo.md</a></li></ul></nav></nav><div><section><p><span data-reactroot=\\"\\">bar.md</span></p></section><section><pre>[[bar.md]]</pre></section></div></div></main>"`;
