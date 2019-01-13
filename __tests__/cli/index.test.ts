@@ -11,4 +11,11 @@ describe(cli, () => {
 
     expect(spy).toHaveBeenCalledTimes(1);
   });
+
+  it('calls watch command', async () => {
+    spy = jest.spyOn(commandHandlers, 'watchHandler');
+    await cli('-o /out watch'.split(' '));
+
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
 });

@@ -2,8 +2,14 @@ import yargs, { Argv } from 'yargs';
 import fromCLIOptions, { loadConfigFile } from '../config/fromCLIOptions';
 import { TargetDirectory } from '../models/ckusroConfig';
 import newGlobalState, { GlobalState } from '../models/globalState';
-import { CLICommandBuild, CLICommands, isCLICommands } from './cliCommands';
-import { buildHandler } from './commandHandlers';
+import {
+  CLICommandBuild,
+  CLICommands,
+  CLICommandWatch,
+  isCLICommands,
+  validCLICommands,
+} from './cliCommands';
+import { buildHandler, watchHandler } from './commandHandlers';
 
 export type CLIOptions = {
   command: string;
@@ -20,9 +26,14 @@ export function parser(): Argv<CLIOptions> {
         default: CLICommandBuild,
       },
     })
+    .command('watch', 'watch and build HTML files.', {
+      command: {
+        default: CLICommandWatch,
+      },
+    })
     .option('command', {
       default: 'build',
-      choices: [CLICommandBuild],
+      choices: validCLICommands,
     })
     .option('config', {
       alias: 'c',
@@ -66,5 +77,7 @@ export async function run(command: CLICommands, globalState: GlobalState) {
   switch (command) {
     case CLICommandBuild:
       return await buildHandler(globalState);
+    case CLICommandWatch:
+      return await watchHandler(globalState);
   }
 }
