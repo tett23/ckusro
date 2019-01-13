@@ -21,7 +21,7 @@ type JSXNode = {
   };
 };
 
-export default function JSXComponent(
+export default function renderJSXComponent(
   options: DeepPartial<Options>,
   node: JSXNode,
 ) {

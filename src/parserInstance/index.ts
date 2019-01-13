@@ -6,7 +6,7 @@ import remarkRehype from 'remark-rehype';
 import unified from 'unified';
 import { ComponentPlugin } from '../models/componentPlugin';
 import { Plugins } from '../models/plugins';
-import JSXComponent, { Options } from './JSXComponent';
+import renderJSXComponent, { Options } from './renderJSXComponent';
 
 export default function parserInstance(plugins: Plugins) {
   let parser = unified()
@@ -38,7 +38,7 @@ function jsxHandlers(plugins: ComponentPlugin[]) {
   };
   const handlers = {
     jsx: (_: any, node: any) => {
-      return JSXComponent(remarkResolveJSXOptions, node);
+      return renderJSXComponent(remarkResolveJSXOptions, node);
     },
   };
 
