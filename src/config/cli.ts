@@ -13,14 +13,28 @@ import toCkusroConfig, {
 export type Options = {};
 
 export type CLIOptions = {
+  command: string;
   config: DeepPartial<PrimitiveCkusroConfig> | undefined;
   outputDirectory: string | undefined;
   targetDirectories: TargetDirectory[] | undefined;
   extensions: string | undefined;
 };
 
+const CLICommandBuild: 'build' = 'build';
+
+export type CLICommands = typeof CLICommandBuild;
+
 export function parser(): Argv<CLIOptions> {
   return yargs
+    .command('build', 'build HTML files.', {
+      command: {
+        default: CLICommandBuild,
+      },
+    })
+    .option('command', {
+      default: 'build',
+      choices: [CLICommandBuild],
+    })
     .option('config', {
       alias: 'c',
       description: 'path to config file',
