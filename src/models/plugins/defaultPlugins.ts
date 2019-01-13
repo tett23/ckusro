@@ -1,5 +1,5 @@
 import { DefaultPluginsConfig } from '../../models/pluginConfig';
-import WikiLink from '../../plugins/ckusro-plugin-component-WikiLink/WikiLink';
+import WikiLink from '../../plugins/ckusro-plugin-component-WikiLink';
 import wikiLink from '../../plugins/ckusro-plugin-parser-WikiLink';
 import { Plugins } from './index';
 
