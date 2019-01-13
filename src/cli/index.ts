@@ -1,5 +1,5 @@
 import yargs, { Argv } from 'yargs';
-import { loadConfigFile } from '../config/cli';
+import { loadConfigFile } from '../config/fromCLIOptions';
 import { TargetDirectory } from '../models/ckusroConfig';
 import { CLICommandBuild } from './cliCommands';
 

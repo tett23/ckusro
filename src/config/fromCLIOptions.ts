@@ -12,7 +12,7 @@ import toCkusroConfig, {
 
 export type Options = {};
 
-export default function cli(options: CLIOptions): CkusroConfig {
+export default function fromCLIOptions(options: CLIOptions): CkusroConfig {
   const merged = merge(options.config, overrides(options));
   const conf = toCkusroConfig(merged);
 

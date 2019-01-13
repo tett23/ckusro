@@ -1,6 +1,6 @@
 import 'core-js/fn/array/flat-map';
 import cli from './cli/index';
-import fromCLIOptions from './config/cli';
+import fromCLIOptions from './config/fromCLIOptions';
 import newGlobalState from './models/globalState';
 import staticRenderer from './staticRenderer';
 
