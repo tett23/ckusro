@@ -10,6 +10,7 @@ import staticRenderer, {
   filterWritable,
   renderEachNamesace,
 } from '../../src/staticRenderer';
+import * as render from '../../src/staticRenderer/render';
 import {
   buildCkusroConfig,
   buildFile,
@@ -18,6 +19,13 @@ import {
   buildOutputContext,
 } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
+
+jest.mock('../../src/staticRenderer/render');
+// @ts-ignore
+render.default.mockResolvedValue({
+  html: '',
+  css: '',
+});
 
 describe(staticRenderer, () => {
   beforeEach(() => {

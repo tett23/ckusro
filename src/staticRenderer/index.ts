@@ -97,9 +97,16 @@ export function buildProps(globalState: GlobalState, id: CkusroId): Props {
 }
 
 export function buildHTML(props: Props) {
+  const { html, styles } = render(props);
+
   return `
 <html>
-  ${render(props)}
+  <head>
+    ${styles}
+  </head>
+  <body>
+    ${html}
+  </body>
 </html>
   `;
 }

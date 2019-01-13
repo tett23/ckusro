@@ -1,3 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`render renders correctly 1`] = `"<main data-reactroot=\\"\\"><nav><ul></ul></nav><div><nav><nav><ul><li><a href=\\"..\\">test</a></li><li><a href=\\"./\\">foo.md</a></li></ul></nav></nav><div><section><p><span data-reactroot=\\"\\">bar.md</span></p></section><section><pre>[[bar.md]]</pre></section></div></div></main>"`;
+exports[`render renders correctly 1`] = `
+Object {
+  "html": "<main class=\\"sc-bdVaJa fJfjlE\\"><nav class=\\"sc-bwzfXH gGWyaq\\"><ul></ul></nav><div class=\\"sc-htpNat kMroIY\\"><nav><nav><ul><li><a href=\\"..\\">test</a></li><li><a href=\\"./\\">foo.md</a></li></ul></nav></nav><div><section><p><span data-reactroot=\\"\\">bar.md</span></p></section><section><pre>[[bar.md]]</pre></section></div></div></main>",
+  "styles": "<style data-styled=\\"fJfjlE gGWyaq kMroIY\\" data-styled-version=\\"4.1.3\\">
+/* sc-component-id: sc-bdVaJa */
+.fJfjlE{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;}
+/* sc-component-id: sc-bwzfXH */
+.gGWyaq{-webkit-flex:1;-ms-flex:1;flex:1;}
+/* sc-component-id: sc-htpNat */
+.kMroIY{-webkit-flex:auto;-ms-flex:auto;flex:auto;}</style>",
+}
+`;
