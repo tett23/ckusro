@@ -1,20 +1,14 @@
 import { Content, Parent, Root } from 'mdast';
-import remarkBreaks from 'remark-breaks';
-import remarkParse from 'remark-parse';
-import unified from 'unified';
 import { CkusroFile, newDoesNotExistFile } from '../models/ckusroFile';
 import { LoaderContext } from '../models/loaderContext';
-import wikiLink from '../plugins/ckusro-plugin-parser-WikiLink';
 import parseLinkText, { determineLinkFile } from './parseLinkText';
+import parserInstance from '../parserInstance';
 
 export function buildAst(content: string): Root {
+  const parser = parserInstance()
+
   try {
-    // @ts-ignore
-    return unified()
-      .use(remarkParse, { gfm: true })
-      .use(remarkBreaks)
-      .use(wikiLink)
-      .parse(content);
+    return parser.parse(content);
   } catch (e) {
     throw e;
   }
