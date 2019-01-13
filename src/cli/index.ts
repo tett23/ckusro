@@ -1,6 +1,7 @@
 import yargs, { Argv } from 'yargs';
 import { loadConfigFile } from '../config/cli';
 import { TargetDirectory } from '../models/ckusroConfig';
+import { CLICommandBuild } from './cliCommands';
 
 export type CLIOptions = {
   command: string;
@@ -9,10 +10,6 @@ export type CLIOptions = {
   targetDirectories: TargetDirectory[] | undefined;
   extensions: string | undefined;
 };
-
-export const CLICommandBuild: 'build' = 'build';
-
-export type CLICommands = typeof CLICommandBuild;
 
 export function parser(): Argv<CLIOptions> {
   return yargs
