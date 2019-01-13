@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import { CkusroFile } from '../../../models/ckusroFile';
 import { GlobalState } from '../../../models/globalState';
 import { OutputContext } from '../../../models/outputContext';
@@ -19,14 +20,19 @@ export type Props = {
 };
 
 export default function App({ globalState, markdown }: Props) {
+  const Main = styled.main`
+    display: flex;
+    flex-direction: row;
+  `;
+
   return (
-    <main>
+    <Main>
       <TreeViewContainer
         outputContexts={globalState.outputContexts}
         files={globalState.files}
       />
       <MainContainer globalState={globalState} markdown={markdown} />
-    </main>
+    </Main>
   );
 }
 
@@ -36,10 +42,14 @@ type TreeViewContainerProps = {
 };
 
 function TreeViewContainer({ outputContexts, files }: TreeViewContainerProps) {
+  const Nav = styled.nav`
+    flex: 1;
+  `;
+
   return (
-    <nav>
+    <Nav>
       <TreeView contexts={outputContexts} files={files} />
-    </nav>
+    </Nav>
   );
 }
 
@@ -60,11 +70,15 @@ function MainContainer({ globalState, markdown }: MainContainerProps) {
     throw new Error('CkusroFile.content must be not empty.');
   }
 
+  const Div = styled.div`
+    flex: auto;
+  `;
+
   return (
-    <div>
+    <Div>
       <BreadcrumbsContainer file={file} />
       <MarkdownContainer plugins={globalState.plugins} markdown={markdown} />
-    </div>
+    </Div>
   );
 }
 
