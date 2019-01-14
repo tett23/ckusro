@@ -78,10 +78,7 @@ async function loadFiles(
   loaderConfig: LoaderConfig,
   plugins: Plugins,
 ): Promise<[CkusroFile[], DependencyTable, DependencyTable] | Error> {
-  const rootObjects = await loadRootObjects(
-    loaderContexts,
-    loaderConfig.extensions,
-  );
+  const rootObjects = await loadRootObjects(loaderContexts, loaderConfig);
   if (rootObjects instanceof Error) {
     return rootObjects;
   }

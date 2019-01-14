@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { basename, join } from 'path';
 import { promisify } from 'util';
+import { LoaderConfig } from '../models/ckusroConfig';
 import { CkusroObject, StatTypeDirectory, StatTypeFile } from './ckusroObject';
 
 const stat = promisify(fs.stat);
@@ -8,9 +9,14 @@ const readdir = promisify(fs.readdir);
 
 export async function buildObjectTree(
   path: string,
-  extensions: RegExp,
+  loaderConfig: LoaderConfig,
   basePath: string,
 ): Promise<CkusroObject | null> {
+  const isIgnoreItem = loaderConfig.ignore.some((re) => re.test(path));
+  if (isIgnoreItem) {
+    return null;
+  }
+
   const res = await stat(path).catch(() => null);
   if (res == null) {
     return null;
@@ -19,7 +25,7 @@ export async function buildObjectTree(
   const itemPath = join('/', path.slice(basePath.length));
 
   if (res.isFile()) {
-    if (!extensions.test(path)) {
+    if (!loaderConfig.extensions.test(path)) {
       return null;
     }
 
@@ -41,7 +47,7 @@ export async function buildObjectTree(
 
   const children = (await Promise.all(
     entries.map((item) =>
-      buildObjectTree(`${path}/${item}`, extensions, basePath),
+      buildObjectTree(`${path}/${item}`, loaderConfig, basePath),
     ),
   )).filter(Boolean) as CkusroObject[];
 
