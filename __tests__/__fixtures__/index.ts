@@ -3,7 +3,7 @@ import { CLIOptions } from '../../src/cli';
 import { CLICommandBuild } from '../../src/cli/cliCommands';
 import { defaultConfig } from '../../src/config';
 import { CkusroConfig, isCkusroConfig } from '../../src/models/ckusroConfig';
-import { LoaderConfig } from '../../src/models/ckusroConfig/LoaderConfig';
+import { defaultLoaderConfig } from '../../src/models/ckusroConfig/LoaderConfig';
 import {
   CkusroFile,
   FileTypeMarkdown,
@@ -50,7 +50,7 @@ export function buildGlobalState(
     files: [],
     dependencyTable: {},
     invertedDependencyTable: {},
-    loaderConfig: buildLoaderConfig(),
+    loaderConfig: defaultLoaderConfig(),
     plugins: defaultPlugins(defaultPluginsConfig()),
   };
 
@@ -81,7 +81,7 @@ export function buildCkusroConfig(
         innerPath: './',
       },
     ],
-    loaderConfig: buildLoaderConfig(),
+    loaderConfig: defaultLoaderConfig(),
     plugins: defaultPlugins(buildDefaultPluginsConfig()),
   };
 
@@ -91,17 +91,6 @@ export function buildCkusroConfig(
   }
 
   return ret;
-}
-
-export function buildLoaderConfig(
-  overrides: Partial<LoaderConfig> = {},
-): LoaderConfig {
-  const loaderConfig: LoaderConfig = {
-    extensions: /\.(md|txt)$/,
-    ignore: [/\.git/, /node_modules/],
-  };
-
-  return { ...loaderConfig, ...overrides };
 }
 
 export function buildFile(overrides: Partial<CkusroFile> = {}): CkusroFile {

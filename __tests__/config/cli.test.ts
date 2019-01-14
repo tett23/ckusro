@@ -4,6 +4,7 @@ import fromCLIOptions, {
 } from '../../src/config/fromCLIOptions';
 import { PrimitiveCkusroConfig } from '../../src/config/toCkusroConfig';
 import { CkusroConfig } from '../../src/models/ckusroConfig';
+import { defaultLoaderConfig } from '../../src/models/ckusroConfig/LoaderConfig';
 import { buildCkusroConfig, buildCLIOptions } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
@@ -49,10 +50,7 @@ describe(fromCLIOptions, () => {
     const options = buildCLIOptions({ extensions: '/.md/' });
     const actual = fromCLIOptions(options);
     const expected: Partial<CkusroConfig> = {
-      loaderConfig: {
-        extensions: /.md/,
-        ignore: [/\.git/, /node_modules/],
-      },
+      loaderConfig: defaultLoaderConfig(),
     };
 
     expect(actual).toMatchObject(expected);

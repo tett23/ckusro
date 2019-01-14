@@ -10,6 +10,7 @@ import {
   StatTypeFile,
 } from '../../src/fileLoader/ckusroObject';
 import { TargetDirectory } from '../../src/models/ckusroConfig';
+import { defaultLoaderConfig } from '../../src/models/ckusroConfig/LoaderConfig';
 import {
   CkusroFile,
   FileType,
@@ -23,11 +24,7 @@ import {
 import { LoaderContext } from '../../src/models/loaderContext';
 import { defaultPluginsConfig } from '../../src/models/pluginConfig';
 import defaultPlugins from '../../src/models/plugins/defaultPlugins';
-import {
-  buildFile,
-  buildLoaderConfig,
-  buildLoaderContext,
-} from '../__fixtures__';
+import { buildFile, buildLoaderContext } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(loadRootObjects.name, () => {
@@ -45,7 +42,7 @@ describe(loadRootObjects.name, () => {
     const loaderContext = buildLoaderContext({ path: '/foo', name: 'foo' });
     const results: any = await loadRootObjects(
       [loaderContext],
-      buildLoaderConfig(),
+      defaultLoaderConfig(),
     );
     const [context, node] = results[0];
 
@@ -86,7 +83,7 @@ describe(loadRootObjects.name, () => {
     };
     const actual = await loadRootObjects(
       [targetDirectory],
-      buildLoaderConfig(),
+      defaultLoaderConfig(),
     );
 
     expect(actual).toBeInstanceOf(Error);

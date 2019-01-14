@@ -20,3 +20,10 @@ export function isLoaderConfig(obj: any): obj is LoaderConfig {
 
   return true;
 }
+
+export function defaultLoaderConfig() {
+  return {
+    extensions: /.md/,
+    ignore: [/\.git/, /node_modules/],
+  };
+}

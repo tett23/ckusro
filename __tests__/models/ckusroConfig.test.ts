@@ -6,6 +6,7 @@ import {
   TargetDirectory,
 } from '../../src/models/ckusroConfig';
 import {
+  defaultLoaderConfig,
   isLoaderConfig,
   LoaderConfig,
 } from '../../src/models/ckusroConfig/LoaderConfig';
@@ -68,10 +69,7 @@ describe(isTargetDirectories, () => {
 
 describe(isLoaderConfig, () => {
   it('judges type', () => {
-    const validData: LoaderConfig = {
-      extensions: /.md/,
-      ignore: [/\.git/, /node_modules/],
-    };
+    const validData: LoaderConfig = defaultLoaderConfig();
     const data: Array<[any, boolean]> = [
       [validData, true],
       [{ extensions: null }, false],
@@ -96,10 +94,7 @@ describe(isCkusroConfig, () => {
     const validData: CkusroConfig = {
       outputDirectory: '/test',
       targetDirectories: [],
-      loaderConfig: {
-        extensions: /.md/,
-        ignore: [/\.git/, /node_modules/],
-      },
+      loaderConfig: defaultLoaderConfig(),
       plugins: {
         parsers: [],
         components: [],
