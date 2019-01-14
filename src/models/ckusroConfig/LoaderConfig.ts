@@ -18,6 +18,16 @@ export function isLoaderConfig(obj: any): obj is LoaderConfig {
     return false;
   }
 
+  if (!Array.isArray(obj.ignore)) {
+    return false;
+  }
+  const haveDoesNotRegExpItem = obj.ignore.some((item: any) => {
+    return !(item instanceof RegExp);
+  });
+  if (haveDoesNotRegExpItem) {
+    return false;
+  }
+
   return true;
 }
 
