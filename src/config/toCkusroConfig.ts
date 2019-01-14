@@ -3,7 +3,7 @@ import {
   CkusroConfig,
   isTargetDirectories,
   LoaderConfig,
-} from '../models/ckusroConfig';
+} from '../models/ckusroConfig/ckusroConfig';
 import { isNonNullObject } from '../utils/types';
 
 export type PrimitiveLoaderConfig = Omit<LoaderConfig, 'extensions'> & {

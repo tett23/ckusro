@@ -1,4 +1,4 @@
-import { TargetDirectory } from '../../src/models/ckusroConfig';
+import { TargetDirectory } from '../../src/models/ckusroConfig/ckusroConfig';
 import {
   LoaderContext,
   newLoaderContext,

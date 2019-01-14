@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { CkusroConfig } from '../models/ckusroConfig';
+import { CkusroConfig } from './ckusroConfig/ckusroConfig';
 import { LoaderContext } from './loaderContext';
 
 export type OutputContext = {

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { join as joinPath } from 'path';
 import { promisify } from 'util';
-import { LoaderConfig } from '../models/ckusroConfig';
+import { LoaderConfig } from '../models/ckusroConfig/ckusroConfig';
 import {
   CkusroFile,
   FileTypeDirectory,

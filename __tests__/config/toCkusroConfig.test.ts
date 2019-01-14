@@ -6,17 +6,21 @@ import toCkusroConfig, {
   toLoaderConfig,
   toRegExp,
 } from '../../src/config/toCkusroConfig';
-import { CkusroConfig, LoaderConfig } from '../../src/models/ckusroConfig';
+import {
+  CkusroConfig,
+  LoaderConfig,
+} from '../../src/models/ckusroConfig/ckusroConfig';
 
 describe(toCkusroConfig, () => {
   it('converts loaderConfig.extensions', () => {
     const conf: Partial<PrimitiveCkusroConfig> = {
-      loaderConfig: { extensions: '/test/' },
+      loaderConfig: { extensions: '/test/', ignore: [] },
     };
     const actual = toCkusroConfig(conf);
     const expected: DeepPartial<CkusroConfig> = {
       loaderConfig: {
         extensions: /test/,
+        ignore: [],
       },
     };
 
@@ -30,7 +34,7 @@ describe(isPartializedPrimitiveCkusroConfig, () => {
       {},
       { outputDirectory: '/test' },
       { targetDirectories: [] },
-      { loaderConfig: { extensions: '/.md/' } },
+      { loaderConfig: { extensions: '/.md/', ignore: [] } },
     ];
     data.forEach((value) => {
       const actual = isPartializedPrimitiveCkusroConfig(value);

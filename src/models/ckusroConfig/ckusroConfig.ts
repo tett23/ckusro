@@ -1,5 +1,5 @@
-import { isNonNullObject } from '../utils/types';
-import { isPlugins, Plugins } from './plugins';
+import { isNonNullObject } from '../../utils/types';
+import { isPlugins, Plugins } from '../plugins';
 
 export type TargetDirectory = {
   path: string;

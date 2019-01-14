@@ -9,7 +9,7 @@ import {
   StatTypeDirectory,
   StatTypeFile,
 } from '../../src/fileLoader/ckusroObject';
-import { TargetDirectory } from '../../src/models/ckusroConfig';
+import { TargetDirectory } from '../../src/models/ckusroConfig/ckusroConfig';
 import {
   CkusroFile,
   FileType,

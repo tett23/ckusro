@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { TargetDirectory } from './ckusroConfig';
+import { TargetDirectory } from './ckusroConfig/ckusroConfig';
 
 export type LoaderContext = {
   name: string;
