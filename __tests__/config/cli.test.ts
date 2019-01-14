@@ -49,7 +49,10 @@ describe(fromCLIOptions, () => {
     const options = buildCLIOptions({ extensions: '/.md/' });
     const actual = fromCLIOptions(options);
     const expected: Partial<CkusroConfig> = {
-      loaderConfig: { extensions: /.md/ },
+      loaderConfig: {
+        extensions: /.md/,
+        ignore: [/\.git/, /node_modules/],
+      },
     };
 
     expect(actual).toMatchObject(expected);

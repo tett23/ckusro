@@ -11,6 +11,7 @@ export const defaultConfig: Omit<
   targetDirectories: [],
   loaderConfig: {
     extensions: /\.(md|txt)$/,
+    ignore: [/\.git/, /node_modules/],
   },
 };
 

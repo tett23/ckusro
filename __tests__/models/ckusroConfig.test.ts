@@ -68,6 +68,7 @@ describe(isLoaderConfig, () => {
   it('judges type', () => {
     const validData: LoaderConfig = {
       extensions: /.md/,
+      ignore: [/\.git/, /node_modules/],
     };
     const data: Array<[any, boolean]> = [
       [validData, true],
@@ -95,6 +96,7 @@ describe(isCkusroConfig, () => {
       targetDirectories: [],
       loaderConfig: {
         extensions: /.md/,
+        ignore: [/\.git/, /node_modules/],
       },
       plugins: {
         parsers: [],

@@ -51,6 +51,7 @@ export function buildGlobalState(
     invertedDependencyTable: {},
     loaderConfig: {
       extensions: /\.(md|txt)$/,
+      ignore: [/\.git/, /node_modules/],
     },
     plugins: defaultPlugins(defaultPluginsConfig()),
   };

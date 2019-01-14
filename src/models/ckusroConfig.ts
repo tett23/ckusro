@@ -9,6 +9,7 @@ export type TargetDirectory = {
 
 export type LoaderConfig = {
   extensions: RegExp;
+  ignore: RegExp[];
 };
 
 export type CkusroConfig = {
