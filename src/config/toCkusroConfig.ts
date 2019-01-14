@@ -1,9 +1,6 @@
 import merge from 'lodash.merge';
-import {
-  CkusroConfig,
-  isTargetDirectories,
-  LoaderConfig,
-} from '../models/ckusroConfig';
+import { CkusroConfig, isTargetDirectories } from '../models/ckusroConfig';
+import { LoaderConfig } from '../models/ckusroConfig/LoaderConfig';
 import { isNonNullObject } from '../utils/types';
 
 export type PrimitiveLoaderConfig = Omit<LoaderConfig, 'extensions'> & {

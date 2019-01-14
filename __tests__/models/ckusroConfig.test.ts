@@ -1,12 +1,14 @@
 import {
   CkusroConfig,
   isCkusroConfig,
-  isLoaderConfig,
   isTargetDirectories,
   isTargetDirectory,
-  LoaderConfig,
   TargetDirectory,
 } from '../../src/models/ckusroConfig';
+import {
+  isLoaderConfig,
+  LoaderConfig,
+} from '../../src/models/ckusroConfig/LoaderConfig';
 
 describe(isTargetDirectory, () => {
   it('judges type', () => {

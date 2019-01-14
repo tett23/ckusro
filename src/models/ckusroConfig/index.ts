@@ -1,15 +1,11 @@
 import { isNonNullObject } from '../../utils/types';
 import { isPlugins, Plugins } from '../plugins';
+import { isLoaderConfig, LoaderConfig } from './LoaderConfig';
 
 export type TargetDirectory = {
   path: string;
   name: string;
   innerPath: string;
-};
-
-export type LoaderConfig = {
-  extensions: RegExp;
-  ignore: RegExp[];
 };
 
 export type CkusroConfig = {
@@ -45,22 +41,6 @@ export function isTargetDirectories(obj: any): obj is TargetDirectory[] {
   }
 
   return obj.every(isTargetDirectory);
-}
-
-export function isLoaderConfig(obj: any): obj is LoaderConfig {
-  if (!isNonNullObject(obj)) {
-    return false;
-  }
-
-  if (!('extensions' in obj)) {
-    return false;
-  }
-
-  if (!(obj.extensions instanceof RegExp)) {
-    return false;
-  }
-
-  return true;
 }
 
 export function isCkusroConfig(obj: any): obj is CkusroConfig {
