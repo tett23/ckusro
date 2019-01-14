@@ -4,7 +4,7 @@ import {
   loadDependencies,
   loadRootObjects,
 } from '../fileLoader';
-import { CkusroConfig, LoaderConfig } from './ckusroConfig/ckusroConfig';
+import { CkusroConfig, LoaderConfig } from './ckusroConfig';
 import { CkusroFile } from './ckusroFile';
 import {
   buildDependencyTable,

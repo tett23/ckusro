@@ -1,5 +1,5 @@
 import main from '../src/index';
-import { CkusroConfig } from '../src/models/ckusroConfig/ckusroConfig';
+import { CkusroConfig } from '../src/models/ckusroConfig';
 import { buildCkusroConfig } from './__fixtures__';
 import { mockFileSystem, restoreFileSystem } from './__helpers__/fs';
 

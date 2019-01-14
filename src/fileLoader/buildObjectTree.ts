@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { basename, join } from 'path';
 import { promisify } from 'util';
-import { LoaderConfig } from '../models/ckusroConfig/ckusroConfig';
+import { LoaderConfig } from '../models/ckusroConfig';
 import { CkusroObject, StatTypeDirectory, StatTypeFile } from './ckusroObject';
 
 const stat = promisify(fs.stat);

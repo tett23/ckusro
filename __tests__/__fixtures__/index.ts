@@ -6,7 +6,7 @@ import {
   CkusroConfig,
   isCkusroConfig,
   LoaderConfig,
-} from '../../src/models/ckusroConfig/ckusroConfig';
+} from '../../src/models/ckusroConfig';
 import {
   CkusroFile,
   FileTypeMarkdown,

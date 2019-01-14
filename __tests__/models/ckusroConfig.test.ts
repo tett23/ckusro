@@ -6,7 +6,7 @@ import {
   isTargetDirectory,
   LoaderConfig,
   TargetDirectory,
-} from '../../src/models/ckusroConfig/ckusroConfig';
+} from '../../src/models/ckusroConfig';
 
 describe(isTargetDirectory, () => {
   it('judges type', () => {

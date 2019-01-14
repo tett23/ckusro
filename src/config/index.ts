@@ -1,9 +1,6 @@
 import merge from 'lodash.merge';
 import { normalize, resolve as resolvePath } from 'path';
-import {
-  CkusroConfig,
-  isCkusroConfig,
-} from '../models/ckusroConfig/ckusroConfig';
+import { CkusroConfig, isCkusroConfig } from '../models/ckusroConfig';
 import { defaultPluginsConfig } from '../models/pluginConfig';
 import defaultPlugins from '../models/plugins/defaultPlugins';
 

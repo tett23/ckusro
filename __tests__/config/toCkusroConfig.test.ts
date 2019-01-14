@@ -6,10 +6,7 @@ import toCkusroConfig, {
   toLoaderConfig,
   toRegExp,
 } from '../../src/config/toCkusroConfig';
-import {
-  CkusroConfig,
-  LoaderConfig,
-} from '../../src/models/ckusroConfig/ckusroConfig';
+import { CkusroConfig, LoaderConfig } from '../../src/models/ckusroConfig';
 
 describe(toCkusroConfig, () => {
   it('converts loaderConfig.extensions', () => {

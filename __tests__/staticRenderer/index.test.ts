@@ -1,4 +1,4 @@
-import { CkusroConfig } from '../../src/models/ckusroConfig/ckusroConfig';
+import { CkusroConfig } from '../../src/models/ckusroConfig';
 import { CkusroFile, FileTypeDirectory } from '../../src/models/ckusroFile';
 import newGlobalState, { GlobalState } from '../../src/models/globalState';
 import staticRenderer, {

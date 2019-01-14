@@ -3,7 +3,7 @@ import fromCLIOptions, {
   loadConfigFile,
 } from '../../src/config/fromCLIOptions';
 import { PrimitiveCkusroConfig } from '../../src/config/toCkusroConfig';
-import { CkusroConfig } from '../../src/models/ckusroConfig/ckusroConfig';
+import { CkusroConfig } from '../../src/models/ckusroConfig';
 import { buildCkusroConfig, buildCLIOptions } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
