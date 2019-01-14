@@ -1,8 +1,8 @@
 import chokidar from 'chokidar';
 import { join } from 'path';
-import { GlobalState, reloadFiles } from '../models/globalState';
-import { LoaderContext } from '../models/loaderContext';
-import staticRenderer from '../staticRenderer';
+import { GlobalState, reloadFiles } from '../../models/globalState';
+import { LoaderContext } from '../../models/loaderContext';
+import staticRenderer from '../../staticRenderer';
 
 export async function buildHandler(globalState: GlobalState) {
   return await staticRenderer(globalState);
