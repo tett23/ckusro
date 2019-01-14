@@ -12,43 +12,48 @@ export async function watchHandler(globalState: GlobalState): Promise<boolean> {
   const paths = absolutePaths(globalState);
   const promise = new Promise((_, reject) => {
     const watcher = chokidar.watch(paths, {
-      ignored: '**/node_modules/**',
+      ignoreInitial: true,
+      disableGlobbing: true,
+      depth: 0,
     });
+    let isRunning = false;
 
     watcher
-      .on('raw', (event, path, details) => {
-        console.info('raw', event, path, details);
-      })
       .on('add', (path) => {
-        console.info('add', path);
-
-        handleChange(globalState, reject);
+        if (!isRunning) {
+          isRunning = true;
+          handleChange(globalState, reject).then(() => (isRunning = false));
+        }
 
         watcher.add(path);
       })
-      .on('change', (path) => {
-        console.info('change', path);
-
-        handleChange(globalState, reject);
+      .on('change', () => {
+        if (!isRunning) {
+          isRunning = true;
+          handleChange(globalState, reject).then(() => (isRunning = false));
+        }
       })
       .on('unlink', (path) => {
-        console.info('unlink', path);
-
-        handleChange(globalState, reject);
+        if (!isRunning) {
+          isRunning = true;
+          handleChange(globalState, reject).then(() => (isRunning = false));
+        }
 
         watcher.unwatch(path);
       })
       .on('addDir', (path) => {
-        console.info('addDir', path);
-
-        handleChange(globalState, reject);
+        if (!isRunning) {
+          isRunning = true;
+          handleChange(globalState, reject).then(() => (isRunning = false));
+        }
 
         watcher.add(path);
       })
       .on('unlinkDir', (path) => {
-        console.info('unlinkDir', path);
-
-        handleChange(globalState, reject);
+        if (!isRunning) {
+          isRunning = true;
+          handleChange(globalState, reject).then(() => (isRunning = false));
+        }
 
         watcher.unwatch(path);
       })
@@ -67,11 +72,15 @@ export async function watchHandler(globalState: GlobalState): Promise<boolean> {
 }
 
 function handleChange(globalState: GlobalState, reject: any) {
-  reload(globalState)
+  console.time('handleChange');
+
+  return reload(globalState)
     .then((res) => {
       if (res instanceof Error) {
         reject();
       }
+
+      console.timeEnd('handleChange');
     })
     .catch(() => reject());
 }
@@ -95,9 +104,14 @@ function absolutePaths(globalState: GlobalState): string[] {
     {} as { [key in string]: LoaderContext },
   );
 
-  return globalState.files.map(({ namespace, path }) => {
+  const paths = globalState.files.map(({ namespace, path }) => {
     const context = loaderContextMap[namespace];
 
     return join(context.path, path);
+  });
+
+  const outputPaths = globalState.outputContexts.map((item) => item.path);
+  return paths.filter((item) => {
+    return !outputPaths.some((outputPath) => item.includes(outputPath));
   });
 }
