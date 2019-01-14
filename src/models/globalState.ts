@@ -4,7 +4,7 @@ import {
   loadDependencies,
   loadRootObjects,
 } from '../fileLoader';
-import { CkusroConfig } from './ckusroConfig';
+import { CkusroConfig, LoaderConfig } from './ckusroConfig';
 import { CkusroFile } from './ckusroFile';
 import {
   buildDependencyTable,
@@ -21,6 +21,7 @@ export type GlobalState = {
   files: CkusroFile[];
   dependencyTable: DependencyTable;
   invertedDependencyTable: DependencyTable;
+  loaderConfig: LoaderConfig;
   plugins: Plugins;
 };
 
@@ -32,35 +33,74 @@ export default async function newGlobalState(
     newOutputContext(config, context),
   );
 
-  const results = await loadRootObjects(
+  const result = await loadFiles(
     loaderContexts,
-    config.loaderConfig.extensions,
+    config.loaderConfig,
+    config.plugins,
   );
-  if (results instanceof Error) {
-    return results;
+  if (result instanceof Error) {
+    return result;
   }
 
-  const ps = results.flatMap(async ([loaderContext, rootNode]) => {
+  const [files, dependencyTable, invertedDependencyTable] = result;
+
+  return {
+    loaderContexts,
+    outputContexts,
+    loaderConfig: config.loaderConfig,
+    files,
+    dependencyTable,
+    invertedDependencyTable,
+    plugins: config.plugins,
+  };
+}
+
+export async function reloadFiles(
+  globalState: GlobalState,
+): Promise<GlobalState | Error> {
+  const { loaderContexts, loaderConfig, plugins } = globalState;
+  const result = await loadFiles(loaderContexts, loaderConfig, plugins);
+  if (result instanceof Error) {
+    return result;
+  }
+
+  const [files, dependencyTable, invertedDependencyTable] = result;
+
+  return Object.assign({}, globalState, {
+    files,
+    dependencyTable,
+    invertedDependencyTable,
+  });
+}
+
+async function loadFiles(
+  loaderContexts: LoaderContext[],
+  loaderConfig: LoaderConfig,
+  plugins: Plugins,
+): Promise<[CkusroFile[], DependencyTable, DependencyTable] | Error> {
+  const rootObjects = await loadRootObjects(
+    loaderContexts,
+    loaderConfig.extensions,
+  );
+  if (rootObjects instanceof Error) {
+    return rootObjects;
+  }
+
+  const ps = rootObjects.flatMap(async ([loaderContext, rootNode]) => {
     const pps = build(loaderContext, rootNode).map(
       async (item) => await loadContent(loaderContext, item),
     );
     const items = await Promise.all(pps);
 
     return items.map((item) =>
-      loadDependencies(config.plugins, loaderContext, item, items),
+      loadDependencies(plugins, loaderContext, item, items),
     );
   });
 
   const files = (await Promise.all(ps)).flatMap((item) => item);
+
   const dependencyTable = buildDependencyTable(files);
   const invertedDependencyTable = invert(dependencyTable);
 
-  return {
-    loaderContexts,
-    outputContexts,
-    files,
-    dependencyTable,
-    invertedDependencyTable,
-    plugins: config.plugins,
-  };
+  return [files, dependencyTable, invertedDependencyTable];
 }

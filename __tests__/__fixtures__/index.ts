@@ -49,6 +49,9 @@ export function buildGlobalState(
     files: [],
     dependencyTable: {},
     invertedDependencyTable: {},
+    loaderConfig: {
+      extensions: /\.(md|txt)$/,
+    },
     plugins: defaultPlugins(defaultPluginsConfig()),
   };
 
