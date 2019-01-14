@@ -1,5 +1,6 @@
 import cli from '../../src/cli';
 import * as commandHandlers from '../../src/cli/commandHandlers';
+import * as watchHandler from '../../src/cli/commandHandlers/watchHandler';
 
 describe(cli, () => {
   let spy: any;
@@ -16,7 +17,7 @@ describe(cli, () => {
 
   it('calls watch command', async () => {
     spy = jest
-      .spyOn(commandHandlers, 'watchHandler')
+      .spyOn(watchHandler, 'default')
       .mockReturnValue(Promise.resolve(true));
     await cli('ckusro -o /out watch'.split(' '));
 

@@ -94,13 +94,28 @@ export default function toCkusroConfig(
 export function toLoaderConfig(
   conf: DeepPartial<PrimitiveLoaderConfig>,
 ): DeepPartial<LoaderConfig> {
-  const { extensions, ...omitExtensions } = conf;
+  const { extensions, ignore, ...omitExtensions } = conf;
   const ret: DeepPartial<LoaderConfig> = {
     ...omitExtensions,
   };
 
   if (isRegExpOrString(extensions)) {
     ret.extensions = toRegExp(extensions);
+  }
+
+  if (ignore != null) {
+    ret.ignore = (ignore || []).flatMap(
+      (item): [RegExp] | RegExp | [] => {
+        if (!isRegExpOrString(item)) {
+          return [];
+        }
+        if (item instanceof RegExp) {
+          return item;
+        }
+
+        return toRegExp(item);
+      },
+    );
   }
 
   return ret;

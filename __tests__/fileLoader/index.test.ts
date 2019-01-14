@@ -23,7 +23,11 @@ import {
 import { LoaderContext } from '../../src/models/loaderContext';
 import { defaultPluginsConfig } from '../../src/models/pluginConfig';
 import defaultPlugins from '../../src/models/plugins/defaultPlugins';
-import { buildFile, buildLoaderContext } from '../__fixtures__';
+import {
+  buildFile,
+  buildLoaderConfig,
+  buildLoaderContext,
+} from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(loadRootObjects.name, () => {
@@ -39,7 +43,10 @@ describe(loadRootObjects.name, () => {
 
   it('load items', async () => {
     const loaderContext = buildLoaderContext({ path: '/foo', name: 'foo' });
-    const results: any = await loadRootObjects([loaderContext], /\.(md|txt)$/);
+    const results: any = await loadRootObjects(
+      [loaderContext],
+      buildLoaderConfig(),
+    );
     const [context, node] = results[0];
 
     const expectedContext: LoaderContext = {
@@ -77,7 +84,10 @@ describe(loadRootObjects.name, () => {
       name: 'does_not_exist',
       innerPath: './',
     };
-    const actual = await loadRootObjects([targetDirectory], /\.(md|txt)$/);
+    const actual = await loadRootObjects(
+      [targetDirectory],
+      buildLoaderConfig(),
+    );
 
     expect(actual).toBeInstanceOf(Error);
   });

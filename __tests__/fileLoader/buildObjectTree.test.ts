@@ -4,6 +4,7 @@ import {
   StatTypeDirectory,
   StatTypeFile,
 } from '../../src/fileLoader/ckusroObject';
+import { buildLoaderConfig } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(buildObjectTree, () => {
@@ -19,8 +20,7 @@ describe(buildObjectTree, () => {
   });
 
   it('returns root CkusroObject', async () => {
-    const re = /.md/;
-    const actual = await buildObjectTree('/test', re, '/test');
+    const actual = await buildObjectTree('/test', buildLoaderConfig(), '/test');
     const expected: CkusroObject = {
       name: 'test',
       path: '/',

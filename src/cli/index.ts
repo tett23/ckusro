@@ -8,7 +8,8 @@ import {
   CLICommandWatch,
   isCLICommands,
 } from './cliCommands';
-import { buildHandler, watchHandler } from './commandHandlers';
+import { buildHandler } from './commandHandlers';
+import watchHandler from './commandHandlers/watchHandler';
 
 export type CLIOptions = {
   config: any | undefined;
