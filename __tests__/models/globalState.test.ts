@@ -1,6 +1,14 @@
 import { CkusroConfig } from '../../src/models/ckusroConfig';
-import newGlobalState, { GlobalState } from '../../src/models/globalState';
-import { buildCkusroConfig } from '../__fixtures__';
+import newGlobalState, {
+  assetsDirectory,
+  GlobalState,
+  outputDirectory,
+} from '../../src/models/globalState';
+import {
+  buildCkusroConfig,
+  buildGlobalState,
+  buildOutputContext,
+} from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(newGlobalState, () => {
@@ -51,5 +59,29 @@ describe(newGlobalState, () => {
     const actual = await newGlobalState(conf);
 
     expect(actual).toBeInstanceOf(Error);
+  });
+});
+
+describe(outputDirectory, () => {
+  it('returns output path', () => {
+    const globalState = buildGlobalState({
+      outputContexts: [buildOutputContext({ path: '/out/foo' })],
+    });
+    const actual = outputDirectory(globalState);
+    const expected = '/out';
+
+    expect(actual).toBe(expected);
+  });
+});
+
+describe(assetsDirectory, () => {
+  it('returns assets path', () => {
+    const globalState = buildGlobalState({
+      outputContexts: [buildOutputContext({ path: '/out/foo' })],
+    });
+    const actual = assetsDirectory(globalState);
+    const expected = '/out/assets';
+
+    expect(actual).toBe(expected);
   });
 });

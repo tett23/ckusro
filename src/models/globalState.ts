@@ -1,3 +1,4 @@
+import { dirname, join } from 'path';
 import {
   build,
   loadContent,
@@ -101,4 +102,12 @@ async function loadFiles(
   const invertedDependencyTable = invert(dependencyTable);
 
   return [files, dependencyTable, invertedDependencyTable];
+}
+
+export function outputDirectory(globalState: GlobalState): string {
+  return dirname(globalState.outputContexts[0].path);
+}
+
+export function assetsDirectory(globalState: GlobalState): string {
+  return join(outputDirectory(globalState), 'assets');
 }
