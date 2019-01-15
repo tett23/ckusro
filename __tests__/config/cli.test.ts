@@ -46,8 +46,8 @@ describe(fromCLIOptions, () => {
     expect(actual).toEqual(expected);
   });
 
-  it('parses loaderConfig.extensions', () => {
-    const options = buildCLIOptions({ extensions: '/.md/' });
+  it('parses loaderConfig.enable', () => {
+    const options = buildCLIOptions({ enable: '/.md/' });
     const actual = fromCLIOptions(options);
     const expected: Partial<CkusroConfig> = {
       loaderConfig: defaultLoaderConfig(),
@@ -67,9 +67,6 @@ describe(loadConfigFile, () => {
         innerPath: '.',
       },
     ],
-    loaderConfig: {
-      extensions: '/.md/',
-    },
   };
 
   beforeEach(() => {

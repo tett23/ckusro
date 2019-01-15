@@ -3,6 +3,7 @@ import toCkusroConfig, {
   isPartializedPrimitiveLoaderConfig,
   isRegExpOrString,
   PrimitiveCkusroConfig,
+  PrimitiveLoaderConfig,
   toLoaderConfig,
   toRegExp,
 } from '../../src/config/toCkusroConfig';
@@ -10,14 +11,14 @@ import { CkusroConfig } from '../../src/models/ckusroConfig';
 import { LoaderConfig } from '../../src/models/ckusroConfig/LoaderConfig';
 
 describe(toCkusroConfig, () => {
-  it('converts loaderConfig.extensions', () => {
+  it('converts loaderConfig.enable', () => {
     const conf: Partial<PrimitiveCkusroConfig> = {
-      loaderConfig: { extensions: '/test/', ignore: [] },
+      loaderConfig: { enable: '/test/', ignore: [] },
     };
     const actual = toCkusroConfig(conf);
     const expected: DeepPartial<CkusroConfig> = {
       loaderConfig: {
-        extensions: /test/,
+        enable: /test/,
         ignore: [],
       },
     };
@@ -32,7 +33,7 @@ describe(isPartializedPrimitiveCkusroConfig, () => {
       {},
       { outputDirectory: '/test' },
       { targetDirectories: [] },
-      { loaderConfig: { extensions: '/.md/', ignore: [] } },
+      { loaderConfig: { enable: '/.md/', ignore: [] } },
     ];
     data.forEach((value) => {
       const actual = isPartializedPrimitiveCkusroConfig(value);
@@ -59,7 +60,7 @@ describe(isPartializedPrimitiveCkusroConfig, () => {
 
 describe(isPartializedPrimitiveLoaderConfig, () => {
   it('returns true when argument is valid object', () => {
-    const data = [{ extensions: 'foo' }];
+    const data: Array<Partial<PrimitiveLoaderConfig>> = [{ enable: 'foo' }];
     data.forEach((value) => {
       const actual = isPartializedPrimitiveLoaderConfig(value);
 
@@ -68,7 +69,7 @@ describe(isPartializedPrimitiveLoaderConfig, () => {
   });
 
   it('returns false when argument is invalid object', () => {
-    const data = [null, undefined, 1, { extensions: null }];
+    const data = [null, undefined, 1, { enable: null }];
     data.forEach((value) => {
       const actual = isPartializedPrimitiveLoaderConfig(value);
 
@@ -78,9 +79,15 @@ describe(isPartializedPrimitiveLoaderConfig, () => {
 });
 
 describe(toLoaderConfig, () => {
-  it('converts extensions field', () => {
-    const actual = toLoaderConfig({ extensions: '/foo/' });
-    const expected: DeepPartial<LoaderConfig> = { extensions: /foo/ };
+  it('converts RegExp field', () => {
+    const actual = toLoaderConfig({
+      enable: '/foo/',
+      ignore: ['/\\.git/', 'node_modules'],
+    });
+    const expected: DeepPartial<LoaderConfig> = {
+      enable: /foo/,
+      ignore: [/\.git/, /node_modules/],
+    };
 
     expect(actual).toEqual(expected);
   });

@@ -15,7 +15,7 @@ export type CLIOptions = {
   config: any | undefined;
   outputDirectory: string | undefined;
   targetDirectories: TargetDirectory[] | undefined;
-  extensions: string | undefined;
+  enable: string | undefined;
 };
 
 export function parser(): Argv<CLIOptions> {
@@ -34,7 +34,7 @@ export function parser(): Argv<CLIOptions> {
       description: 'output directory',
       type: 'string',
     })
-    .option('extensions', {
+    .option('enable', {
       type: 'string',
     })
     .option('targetDirectories', {

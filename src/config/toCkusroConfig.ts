@@ -3,8 +3,9 @@ import { CkusroConfig, isTargetDirectories } from '../models/ckusroConfig';
 import { LoaderConfig } from '../models/ckusroConfig/LoaderConfig';
 import { isNonNullObject } from '../utils/types';
 
-export type PrimitiveLoaderConfig = Omit<LoaderConfig, 'extensions'> & {
-  extensions: string | RegExp;
+export type PrimitiveLoaderConfig = Omit<LoaderConfig, 'enable' | 'ignore'> & {
+  enable: string | RegExp;
+  ignore: Array<string | RegExp>;
 };
 export type PrimitiveCkusroConfig = Omit<CkusroConfig, 'loaderConfig'> & {
   loaderConfig: PrimitiveLoaderConfig;
@@ -63,14 +64,14 @@ export function isPartializedPrimitiveLoaderConfig(
     return false;
   }
 
-  if (!isValidExtensions(obj.extensions)) {
+  if (!isValidEnable(obj.enable)) {
     return false;
   }
 
   return true;
 }
 
-function isValidExtensions(value: any): boolean {
+function isValidEnable(value: any): boolean {
   if (value === undefined) {
     return true;
   }
@@ -91,23 +92,20 @@ export default function toCkusroConfig(
 export function toLoaderConfig(
   conf: DeepPartial<PrimitiveLoaderConfig>,
 ): DeepPartial<LoaderConfig> {
-  const { extensions, ignore, ...omitExtensions } = conf;
+  const { enable, ignore, ...rest } = conf;
   const ret: DeepPartial<LoaderConfig> = {
-    ...omitExtensions,
+    ...rest,
   };
 
-  if (isRegExpOrString(extensions)) {
-    ret.extensions = toRegExp(extensions);
+  if (isRegExpOrString(enable)) {
+    ret.enable = toRegExp(enable);
   }
 
   if (ignore != null) {
     ret.ignore = (ignore || []).flatMap(
-      (item): [RegExp] | RegExp | [] => {
+      (item: string | DeepPartial<RegExp>): [RegExp] | RegExp | [] => {
         if (!isRegExpOrString(item)) {
           return [];
-        }
-        if (item instanceof RegExp) {
-          return item;
         }
 
         return toRegExp(item);

@@ -72,9 +72,9 @@ describe(isLoaderConfig, () => {
     const validData: LoaderConfig = defaultLoaderConfig();
     const data: Array<[any, boolean]> = [
       [validData, true],
-      [{ extensions: null }, false],
-      [{ extensions: undefined }, false],
-      [{ extensions: 1 }, false],
+      [{ enable: null }, false],
+      [{ enable: undefined }, false],
+      [{ enable: 1 }, false],
       [{}, false],
       [undefined, false],
       [null, false],

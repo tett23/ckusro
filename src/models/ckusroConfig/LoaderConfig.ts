@@ -1,7 +1,7 @@
 import { isNonNullObject } from '../../utils/types';
 
 export type LoaderConfig = {
-  extensions: RegExp;
+  enable: RegExp;
   ignore: RegExp[];
 };
 
@@ -10,11 +10,11 @@ export function isLoaderConfig(obj: any): obj is LoaderConfig {
     return false;
   }
 
-  if (!('extensions' in obj)) {
+  if (!('enable' in obj)) {
     return false;
   }
 
-  if (!(obj.extensions instanceof RegExp)) {
+  if (!(obj.enable instanceof RegExp)) {
     return false;
   }
 
@@ -31,9 +31,9 @@ export function isLoaderConfig(obj: any): obj is LoaderConfig {
   return true;
 }
 
-export function defaultLoaderConfig() {
+export function defaultLoaderConfig(): LoaderConfig {
   return {
-    extensions: /.md/,
+    enable: /\.(md|txt)$/,
     ignore: [/\.git/, /node_modules/],
   };
 }

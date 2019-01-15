@@ -25,7 +25,7 @@ export async function buildObjectTree(
   const itemPath = join('/', path.slice(basePath.length));
 
   if (res.isFile()) {
-    if (!loaderConfig.extensions.test(path)) {
+    if (!loaderConfig.enable.test(path)) {
       return null;
     }
 

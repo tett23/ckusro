@@ -117,7 +117,7 @@ export function buildCLIOptions(
     config: undefined,
     outputDirectory: '/out',
     targetDirectories: [],
-    extensions: '/.md/',
+    enable: '/.md/',
   };
 
   return { ...options, ...overrides };

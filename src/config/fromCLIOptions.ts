@@ -60,9 +60,9 @@ function overrides(options: CLIOptions): DeepPartial<PrimitiveCkusroConfig> {
   if (options.targetDirectories != null) {
     ret.targetDirectories = options.targetDirectories;
   }
-  if (options.extensions != null) {
+  if (options.enable != null) {
     ret.loaderConfig = merge(ret.loaderConfig, {
-      extensions: options.extensions,
+      enable: options.enable,
     });
   }
 
