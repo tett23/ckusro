@@ -15,10 +15,16 @@ import render from './render';
 export default async function staticRenderer(
   globalState: GlobalState,
 ): Promise<boolean[] | Error> {
+  const ps = renderHTML(globalState);
+
+  return (await Promise.all(ps)).flatMap((items) => items);
+}
+
+function renderHTML(globalState: GlobalState): Array<Promise<boolean[]>> {
   const curried = curry(renderEachNamesace)(globalState);
   const ps = globalState.outputContexts.map(curried);
 
-  return (await Promise.all(ps)).flatMap((items) => items);
+  return ps;
 }
 
 export async function renderEachNamesace(
