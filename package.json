@@ -100,6 +100,7 @@
   "dependencies": {
     "@mdx-js/mdx": "^0.16.6",
     "chokidar": "^2.0.4",
+    "fast-glob": "^2.2.6",
     "js-yaml": "^3.12.0",
     "lodash.merge": "^4.6.1",
     "mkdirp": "^0.5.1",
