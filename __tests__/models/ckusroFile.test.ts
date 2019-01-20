@@ -12,6 +12,7 @@ import {
   FileTypeRaw,
   FileTypeText,
   FileTypeUnrendarableStatType,
+  isWritableFileType,
   newCkusroFile,
   newDoesNotExistFile,
   replaceExt,
@@ -148,5 +149,24 @@ describe(newDoesNotExistFile, () => {
     const actual = newDoesNotExistFile('test', 'does_not_exist');
 
     expect(actual).toEqual(expected);
+  });
+});
+
+describe(isWritableFileType, () => {
+  it('', () => {
+    const data: Array<[FileType, boolean]> = [
+      [FileTypeDirectory, false],
+      [FileTypeDoesNotExist, false],
+      [FileTypeMarkdown, true],
+      [FileTypeText, true],
+      [FileTypeRaw, true],
+    ];
+
+    data.forEach((item) => {
+      const [value, expected] = item;
+      const actual = isWritableFileType(value);
+
+      expect(actual).toEqual(expected);
+    });
   });
 });

@@ -5,13 +5,8 @@ import {
 } from '../../src/fileLoader';
 import {
   CkusroFile,
-  FileType,
   FileTypeDirectory,
-  FileTypeDoesNotExist,
   FileTypeMarkdown,
-  FileTypeRaw,
-  FileTypeText,
-  isWritableFileType,
 } from '../../src/models/ckusroFile';
 import { newCkusroFile } from '../../src/models/ckusroFile';
 import { LoaderContext } from '../../src/models/loaderContext';
@@ -239,24 +234,5 @@ describe(loadDependencies, () => {
     const actual = loadDependencies(plugins, context, file, files);
 
     expect(actual).toEqual(file);
-  });
-});
-
-describe(isWritableFileType, () => {
-  it('', () => {
-    const data: Array<[FileType, boolean]> = [
-      [FileTypeDirectory, false],
-      [FileTypeDoesNotExist, false],
-      [FileTypeMarkdown, true],
-      [FileTypeText, true],
-      [FileTypeRaw, true],
-    ];
-
-    data.forEach((item) => {
-      const [value, expected] = item;
-      const actual = isWritableFileType(value);
-
-      expect(actual).toEqual(expected);
-    });
   });
 });
