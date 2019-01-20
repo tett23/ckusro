@@ -1,4 +1,5 @@
-import fileLoader, {
+import {
+  buildFiles,
   loadContent,
   loadDependencies,
 } from '../../src/fileLoader';
@@ -27,7 +28,7 @@ import * as _ckusroFile from '../../src/models/ckusroFile';
 
 const { default: fetchEntries } = _fetchEntries;
 
-describe(fileLoader, () => {
+describe(buildFiles, () => {
   let fetchEntriesSpy: jest.SpyInstance;
   let newCkusroFileSpy: jest.SpyInstance;
   beforeEach(() => {
@@ -70,7 +71,7 @@ describe(fileLoader, () => {
     spyNewCkusroFile(async () => file);
 
     const config = buildLoaderConfig();
-    const actual = await fileLoader([context], config);
+    const actual = await buildFiles([context], config);
     const expected = [file];
 
     expect(actual).toMatchObject(expected);
@@ -85,7 +86,7 @@ describe(fileLoader, () => {
       name: 'ns',
     });
     const config = buildLoaderConfig();
-    const actual = await fileLoader([context], config);
+    const actual = await buildFiles([context], config);
     const expected = [err];
 
     expect(actual).toMatchObject(expected);
@@ -102,7 +103,7 @@ describe(fileLoader, () => {
     spyNewCkusroFile(async () => err);
 
     const config = buildLoaderConfig();
-    const actual = await fileLoader([context], config);
+    const actual = await buildFiles([context], config);
     const expected = [err];
 
     expect(actual).toMatchObject(expected);

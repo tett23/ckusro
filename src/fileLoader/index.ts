@@ -16,7 +16,7 @@ import fetchEntries from './fetchEntries';
 
 const readFile = promisify(fs.readFile);
 
-export default async function fileLoader(
+export async function buildFiles(
   contexts: LoaderContext[],
   loaderConfig: LoaderConfig,
 ): Promise<CkusroFile[] | Error[]> {
