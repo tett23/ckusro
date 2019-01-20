@@ -11,6 +11,7 @@ import {
   CkusroFile,
   FileTypeMarkdown,
   newCkusroFile,
+  newCkusroId,
 } from '../../src/models/ckusroFile';
 import { buildDependencyTable, invert } from '../../src/models/dependencyTable';
 import { GlobalState } from '../../src/models/globalState';
@@ -105,7 +106,8 @@ export function buildLoaderConfig(
 }
 
 export function buildFile(overrides: Partial<CkusroFile> = {}): CkusroFile {
-  const template = newCkusroFile({
+  const template: CkusroFile = {
+    id: newCkusroId(),
     namespace: 'test',
     name: 'foo.md',
     path: '/foo.md',
@@ -115,7 +117,7 @@ export function buildFile(overrides: Partial<CkusroFile> = {}): CkusroFile {
     weakDependencies: ['test:/bar.md'],
     strongDependencies: ['test:/bar.md'],
     variables: [],
-  });
+  };
 
   return { ...template, ...overrides };
 }
