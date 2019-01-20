@@ -12,5 +12,9 @@ export function isErrors(obj: unknown): obj is Error[] {
     return false;
   }
 
+  if (obj.length === 0) {
+    return false;
+  }
+
   return obj.every((item) => item instanceof Error);
 }

@@ -26,6 +26,7 @@ describe(isErrors, () => {
     const data: Array<[any, boolean]> = [
       [[new Error()], true],
       [[new Error(), new Error()], true],
+      [[], false],
       [[new Error(), 1], false],
       [[1, 1], false],
       [new Error(), false],
