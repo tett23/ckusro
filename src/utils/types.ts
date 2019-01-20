@@ -6,3 +6,11 @@ export function isNonNullObject(obj: any): obj is Object {
 
   return typeof obj === 'object';
 }
+
+export function isErrors(obj: unknown): obj is Error[] {
+  if (!Array.isArray(obj)) {
+    return false;
+  }
+
+  return obj.every((item) => item instanceof Error);
+}
