@@ -1,0 +1,66 @@
+import checkLoaderContexts, {
+  isValidLoaderContext,
+} from '../../src/fileLoader/checkLoaderContexts';
+import { isErrors } from '../../src/utils/types';
+import { buildLoaderContext } from '../__fixtures__';
+import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
+
+describe(checkLoaderContexts, () => {
+  beforeEach(() => {
+    mockFileSystem({
+      '/dir': {},
+      '/file': '# test file',
+    });
+  });
+  afterEach(() => {
+    restoreFileSystem();
+  });
+
+  it('returns true when context path is directory', async () => {
+    const context = buildLoaderContext({
+      path: '/dir',
+    });
+    const actual = await checkLoaderContexts([context]);
+
+    expect(isErrors(actual)).toBe(false);
+  });
+
+  it('returns false when context path is file', async () => {
+    const context = buildLoaderContext({
+      path: '/file',
+    });
+    const actual = await checkLoaderContexts([context]);
+
+    expect(isErrors(actual)).toBe(true);
+  });
+});
+
+describe(isValidLoaderContext, () => {
+  beforeEach(() => {
+    mockFileSystem({
+      '/dir': {},
+      '/file': '# test file',
+    });
+  });
+  afterEach(() => {
+    restoreFileSystem();
+  });
+
+  it('returns true when context path is directory', async () => {
+    const context = buildLoaderContext({
+      path: '/dir',
+    });
+    const actual = await isValidLoaderContext(context);
+
+    expect(actual).toBe(true);
+  });
+
+  it('returns true when context path is file', async () => {
+    const context = buildLoaderContext({
+      path: '/file',
+    });
+    const actual = await isValidLoaderContext(context);
+
+    expect(actual).toBe(false);
+  });
+});
