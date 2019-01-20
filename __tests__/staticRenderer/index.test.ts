@@ -1,6 +1,15 @@
-import { CkusroConfig } from '../../src/models/ckusroConfig';
-import { CkusroFile, FileTypeDirectory } from '../../src/models/ckusroFile';
-import newGlobalState, { GlobalState } from '../../src/models/globalState';
+jest.mock('fs');
+jest.mock('mkdirp');
+jest.mock('../../src/staticRenderer/render');
+jest.mock('../../src/staticRenderer/assets');
+
+import fs from 'fs';
+import * as mkdirp from 'mkdirp';
+import {
+  CkusroFile,
+  FileTypeDirectory,
+  FileTypeMarkdown,
+} from '../../src/models/ckusroFile';
 import staticRenderer, {
   buildProps,
   buildWriteInfo,
@@ -10,9 +19,9 @@ import staticRenderer, {
   filterWritable,
   renderEachNamesace,
 } from '../../src/staticRenderer';
+import * as assets from '../../src/staticRenderer/assets';
 import * as render from '../../src/staticRenderer/render';
 import {
-  buildCkusroConfig,
   buildFile,
   buildGlobalState,
   buildLoaderContext,
@@ -20,38 +29,64 @@ import {
 } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
-jest.mock('../../src/staticRenderer/render');
 // @ts-ignore
 render.default.mockResolvedValue({
   html: '',
   css: '',
 });
 
-describe(staticRenderer, () => {
-  beforeEach(() => {
-    mockFileSystem({
-      '/test/foo/bar/baz.md': '# test file',
-    });
-  });
-  afterEach(() => {
-    restoreFileSystem();
-  });
+// @ts-ignore
+mkdirp.default.mockImplementation((...args) => {
+  args[args.length - 1](null, true);
+});
 
-  it('returns boolean array', async () => {
-    const conf: CkusroConfig = buildCkusroConfig({
-      targetDirectories: [
+// @ts-ignore
+fs.writeFile.mockImplementation((...args) => {
+  args[args.length - 1](null, true);
+});
+
+// @ts-ignore
+assets.jsAssets.mockResolvedValue(true);
+
+describe(staticRenderer, () => {
+  // beforeEach(() => {
+  //   mockFileSystem({
+  //     '/test/foo/bar/baz.md': '# test file',
+  //   });
+  // });
+  // afterEach(() => {
+  //   restoreFileSystem();
+  // });
+
+  it('returns true array', async () => {
+    const globalState = await buildGlobalState({
+      loaderContexts: [
         {
-          path: '/test',
-          name: 'test',
-          innerPath: './',
+          path: '/test/ns',
+          name: 'ns',
         },
       ],
-      outputDirectory: '/out',
+      outputContexts: [
+        {
+          path: '/out',
+          name: 'ns',
+        },
+      ],
+      files: [
+        buildFile({
+          namespace: 'ns',
+          name: 'foo.md',
+          path: '/foo.md',
+          fileType: FileTypeMarkdown,
+          isLoaded: true,
+          content: 'test file',
+        }),
+      ],
     });
-    const globalState = (await newGlobalState(conf)) as GlobalState;
-    const actual = await staticRenderer(globalState);
+    const [actualResults, actualErrors] = await staticRenderer(globalState);
 
-    expect(actual).toEqual([true]);
+    expect(actualResults).toEqual([true]);
+    expect(actualErrors).toEqual([]);
   });
 });
 

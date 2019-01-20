@@ -8,6 +8,7 @@ import {
 } from '../models/ckusroFile';
 import { GlobalState } from '../models/globalState';
 import { OutputContext } from '../models/outputContext';
+import { separateErrors } from '../utils/errors';
 import { jsAssets } from './assets';
 import { Props } from './assets/components';
 import writeFile from './io';
@@ -15,33 +16,37 @@ import render from './render';
 
 export default async function staticRenderer(
   globalState: GlobalState,
-): Promise<boolean[] | Error[]> {
+): Promise<ReturnType<typeof separateErrors>> {
   const result = await jsAssets(globalState);
   if (result instanceof Error) {
-    return [result];
+    return [[], [result]];
   }
 
-  const ps = renderHTML(globalState);
+  const items = await renderHTML(globalState);
+  const results = items.flatMap((item) => item);
 
-  return (await Promise.all(ps)).flatMap((items) => items);
+  return separateErrors(results);
 }
 
-function renderHTML(globalState: GlobalState): Array<Promise<boolean[]>> {
+async function renderHTML(
+  globalState: GlobalState,
+): Promise<Array<true | Error>> {
   const curried = curry(renderEachNamesace)(globalState);
   const ps = globalState.outputContexts.map(curried);
+  const items = await Promise.all(ps);
 
-  return ps;
+  return items.flatMap((item) => item);
 }
 
 export async function renderEachNamesace(
   globalState: GlobalState,
   context: OutputContext,
-): Promise<boolean[]> {
+): Promise<Array<true | Error>> {
   const curriedFilterNamespace = curry(filterNamespace)(context.name);
   const curriedBuildWriteInfo = curry(buildWriteInfo)(context);
   const curriedBuildProps = curry(buildProps)(globalState);
 
-  const ps: Array<Promise<boolean>> = globalState.files
+  const ps = globalState.files
     .flatMap(curriedFilterNamespace)
     .flatMap(filterWritable)
     .map(curriedBuildWriteInfo)
@@ -51,7 +56,7 @@ export async function renderEachNamesace(
     .map(([path, props]) => ({ path, content: buildHTML(props) }))
     .map(writeFile);
 
-  return await Promise.all(ps);
+  return Promise.all(ps);
 }
 
 export function filterNamespace(
