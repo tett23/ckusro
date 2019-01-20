@@ -19,13 +19,13 @@ export type StatTypes =
   | typeof StatTypeSocket
   | typeof StatTypeSymbolicLink;
 
-const FileModeBlockDevice: 0o060000 = 0o060000; // S_IFBLK
-const FileModeCharacterDevice: 0o020000 = 0o020000; // S_IFCHR
-const FileModeDirectory: 0o040000 = 0o040000; // S_IFDIR
-const FileModeFIFO: 0o010000 = 0o010000; // S_IFIFO
-const FileModeFile: 0o100000 = 0o100000; // S_IFREG
-const FileModeSocket: 0o140000 = 0o140000; // S_IFSOCK
-const FileModeSymbolicLink: 0o120000 = 0o120000; // S_IFLNK
+export const FileModeBlockDevice: 0o060000 = 0o060000; // S_IFBLK
+export const FileModeCharacterDevice: 0o020000 = 0o020000; // S_IFCHR
+export const FileModeDirectory: 0o040000 = 0o040000; // S_IFDIR
+export const FileModeFIFO: 0o010000 = 0o010000; // S_IFIFO
+export const FileModeFile: 0o100000 = 0o100000; // S_IFREG
+export const FileModeSocket: 0o140000 = 0o140000; // S_IFSOCK
+export const FileModeSymbolicLink: 0o120000 = 0o120000; // S_IFLNK
 
 export type FileModes =
   | typeof FileModeBlockDevice

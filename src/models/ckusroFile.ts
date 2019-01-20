@@ -1,17 +1,27 @@
+import { lstat as _lstat, Stats } from 'fs';
 import { basename, extname, join } from 'path';
 import uuid from 'uuid/v4';
+import {
+  statType,
+  StatTypeDirectory,
+  StatTypeFile,
+  StatTypes,
+} from './statType';
 
 export const FileTypeDirectory: 'directory' = 'directory';
 export const FileTypeMarkdown: 'markdown' = 'markdown';
 export const FileTypeText: 'text' = 'text';
 export const FileTypeRaw: 'raw' = 'raw';
 export const FileTypeDoesNotExist: 'does_not_exist' = 'does_not_exist';
+export const FileTypeUnrendarableStatType: 'unrendarable_stat_type' =
+  'unrendarable_stat_type';
 export type FileType =
   | typeof FileTypeDirectory
   | typeof FileTypeMarkdown
   | typeof FileTypeText
   | typeof FileTypeRaw
-  | typeof FileTypeDoesNotExist;
+  | typeof FileTypeDoesNotExist
+  | typeof FileTypeUnrendarableStatType;
 export type CkusroId = string;
 
 export type CkusroFile = {
@@ -33,6 +43,28 @@ export function newCkusroId(): CkusroId {
 
 export function newCkusroFile(item: Omit<CkusroFile, 'id'>): CkusroFile {
   return { ...item, id: newCkusroId() };
+}
+
+const ValidStatTypes: StatTypes[] = [StatTypeFile, StatTypeDirectory];
+
+export function detectType(stats: Stats, name: string): FileType {
+  const type = statType(stats.mode);
+  if (!ValidStatTypes.includes(type)) {
+    return FileTypeUnrendarableStatType;
+  }
+
+  if (type === StatTypeDirectory) {
+    return FileTypeDirectory;
+  }
+
+  switch (extname(name)) {
+    case '.md':
+      return FileTypeMarkdown;
+    case '.txt':
+      return FileTypeText;
+    default:
+      return FileTypeRaw;
+  }
 }
 
 export function replaceExt({ fileType, path }: CkusroFile): string {
@@ -70,6 +102,8 @@ export function isWritableFileType(fileType: FileType): boolean {
       return true;
     case FileTypeRaw:
       return true;
+    case FileTypeUnrendarableStatType:
+      return false;
   }
 }
 

@@ -1,14 +1,43 @@
 import {
   CkusroFile,
   convertExt,
+  detectType,
+  FileType,
   FileTypeDirectory,
   FileTypeDoesNotExist,
   FileTypeMarkdown,
+  FileTypeRaw,
   FileTypeText,
+  FileTypeUnrendarableStatType,
   newDoesNotExistFile,
   replaceExt,
 } from '../../src/models/ckusroFile';
+import {
+  FileModeBlockDevice,
+  FileModeDirectory,
+  FileModeFile,
+  FileModes,
+} from '../../src/models/statType';
 import { buildFile } from '../__fixtures__';
+
+describe(detectType, () => {
+  it('returns FileType', () => {
+    const data: Array<[{ mode: FileModes }, string, FileType]> = [
+      [{ mode: FileModeBlockDevice }, 'foo', FileTypeUnrendarableStatType],
+      [{ mode: FileModeDirectory }, 'foo', FileTypeDirectory],
+      [{ mode: FileModeFile }, 'foo', FileTypeRaw],
+      [{ mode: FileModeFile }, 'foo.md', FileTypeMarkdown],
+      [{ mode: FileModeFile }, 'foo.txt', FileTypeText],
+      [{ mode: FileModeFile }, 'foo.unexpected_ext', FileTypeRaw],
+    ];
+
+    data.forEach(([stat, name, expected]) => {
+      const actual = detectType(stat as any, name);
+
+      expect(actual).toBe(expected);
+    });
+  });
+});
 
 describe(replaceExt, () => {
   it('replaces path', () => {
