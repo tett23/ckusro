@@ -12,6 +12,7 @@ import { Plugins } from '../models/plugins';
 import { buildAst, determineDependency } from '../parser';
 import { separateErrors } from '../utils/errors';
 import { isErrors } from '../utils/types';
+import checkLoaderContexts from './checkLoaderContexts';
 import fetchEntries from './fetchEntries';
 
 const readFile = promisify(fs.readFile);
@@ -21,6 +22,11 @@ export default async function fileLoader(
   loaderConfig: LoaderConfig,
   plugins: Plugins,
 ): Promise<CkusroFile[] | Error[]> {
+  const contextErrors = await checkLoaderContexts(contexts);
+  if (isErrors(contextErrors)) {
+    return contextErrors;
+  }
+
   const files = await buildFiles(contexts, loaderConfig);
   if (isErrors(files)) {
     return files;

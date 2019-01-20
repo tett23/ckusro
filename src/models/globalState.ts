@@ -1,10 +1,6 @@
 import { dirname, join } from 'path';
-import {
-  build,
-  loadContent,
-  loadDependencies,
-  loadRootObjects,
-} from '../fileLoader';
+import fileLoader from '../fileLoader';
+import { isErrors, isNonNullObject } from '../utils/types';
 import { CkusroConfig } from './ckusroConfig';
 import { LoaderConfig } from './ckusroConfig/LoaderConfig';
 import { CkusroFile } from './ckusroFile';
@@ -29,7 +25,7 @@ export type GlobalState = {
 
 export default async function newGlobalState(
   config: CkusroConfig,
-): Promise<GlobalState | Error> {
+): Promise<GlobalState | Error[]> {
   const loaderContexts = newLoaderContexts(config.targetDirectories);
   const outputContexts = loaderContexts.map((context) =>
     newOutputContext(config, context),
@@ -40,7 +36,7 @@ export default async function newGlobalState(
     config.loaderConfig,
     config.plugins,
   );
-  if (result instanceof Error) {
+  if (isErrors(result)) {
     return result;
   }
 
@@ -79,24 +75,11 @@ async function loadFiles(
   loaderContexts: LoaderContext[],
   loaderConfig: LoaderConfig,
   plugins: Plugins,
-): Promise<[CkusroFile[], DependencyTable, DependencyTable] | Error> {
-  const rootObjects = await loadRootObjects(loaderContexts, loaderConfig);
-  if (rootObjects instanceof Error) {
-    return rootObjects;
+): Promise<[CkusroFile[], DependencyTable, DependencyTable] | Error[]> {
+  const files = await fileLoader(loaderContexts, loaderConfig, plugins);
+  if (isErrors(files)) {
+    return files;
   }
-
-  const ps = rootObjects.flatMap(async ([loaderContext, rootNode]) => {
-    const pps = build(loaderContext, rootNode).map(
-      async (item) => await loadContent(loaderContext, item),
-    );
-    const items = await Promise.all(pps);
-
-    return items.map((item) =>
-      loadDependencies(plugins, loaderContext, item, items),
-    );
-  });
-
-  const files = (await Promise.all(ps)).flatMap((item) => item);
 
   const dependencyTable = buildDependencyTable(files);
   const invertedDependencyTable = invert(dependencyTable);
@@ -110,4 +93,20 @@ export function outputDirectory(globalState: GlobalState): string {
 
 export function assetsDirectory(globalState: GlobalState): string {
   return join(outputDirectory(globalState), 'assets');
+}
+
+export function isGlobalState(obj: unknown): obj is GlobalState {
+  if (!isNonNullObject(obj)) {
+    return false;
+  }
+
+  return (
+    'loaderContexts' in obj &&
+    'outputContexts' in obj &&
+    'files' in obj &&
+    'dependencyTable' in obj &&
+    'invertedDependencyTable' in obj &&
+    'loaderConfig' in obj &&
+    'plugins' in obj
+  );
 }

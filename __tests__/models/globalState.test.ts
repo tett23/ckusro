@@ -1,9 +1,10 @@
 import { CkusroConfig } from '../../src/models/ckusroConfig';
 import newGlobalState, {
   assetsDirectory,
-  GlobalState,
+  isGlobalState,
   outputDirectory,
 } from '../../src/models/globalState';
+import { isErrors } from '../../src/utils/types';
 import {
   buildCkusroConfig,
   buildGlobalState,
@@ -20,16 +21,6 @@ describe(newGlobalState, () => {
   afterEach(() => {
     restoreFileSystem();
   });
-
-  function isGlobalState(obj: any): obj is GlobalState {
-    return (
-      'loaderContexts' in obj &&
-      'outputContexts' in obj &&
-      'files' in obj &&
-      'dependencyTable' in obj &&
-      'invertedDependencyTable' in obj
-    );
-  }
 
   it('returns GlobalState', async () => {
     const conf: CkusroConfig = buildCkusroConfig({
@@ -58,7 +49,7 @@ describe(newGlobalState, () => {
     });
     const actual = await newGlobalState(conf);
 
-    expect(actual).toBeInstanceOf(Error);
+    expect(isErrors(actual)).toBe(true);
   });
 });
 
@@ -83,5 +74,26 @@ describe(assetsDirectory, () => {
     const expected = '/out/assets';
 
     expect(actual).toBe(expected);
+  });
+});
+
+describe(isGlobalState, () => {
+  it('judges type', () => {
+    const data: Array<[any, boolean]> = [
+      [buildGlobalState(), true],
+      [undefined, false],
+      [null, false],
+      [true, false],
+      [1, false],
+      [[], false],
+      [{}, false],
+      [() => {}, false], // tslint:disable-line no-empty
+    ];
+
+    data.forEach(([value, expected]) => {
+      const actual = isGlobalState(value);
+
+      expect(actual).toBe(expected);
+    });
   });
 });
