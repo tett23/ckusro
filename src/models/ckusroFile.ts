@@ -1,6 +1,8 @@
 import { lstat as _lstat, Stats } from 'fs';
 import { basename, extname, join } from 'path';
+import { promisify } from 'util';
 import uuid from 'uuid/v4';
+import { LoaderContext } from './loaderContext';
 import {
   statType,
   StatTypeDirectory,
@@ -41,8 +43,32 @@ export function newCkusroId(): CkusroId {
   return uuid();
 }
 
-export function newCkusroFile(item: Omit<CkusroFile, 'id'>): CkusroFile {
-  return { ...item, id: newCkusroId() };
+const lstat = promisify(_lstat);
+
+export async function newCkusroFile(
+  context: LoaderContext,
+  absolutePath: string,
+): Promise<CkusroFile | Error> {
+  const stats = await lstat(absolutePath).catch((err: Error) => err);
+  if (stats instanceof Error) {
+    return stats;
+  }
+
+  const name = basename(absolutePath);
+  const file: CkusroFile = {
+    id: newCkusroId(),
+    namespace: context.name,
+    name,
+    path: absolutePath.slice(context.path.length),
+    fileType: detectType(stats, name),
+    isLoaded: false,
+    content: null,
+    weakDependencies: [],
+    strongDependencies: [],
+    variables: [],
+  };
+
+  return file;
 }
 
 const ValidStatTypes: StatTypes[] = [StatTypeFile, StatTypeDirectory];

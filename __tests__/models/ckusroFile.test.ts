@@ -1,3 +1,6 @@
+jest.mock('fs');
+
+import fs from 'fs';
 import {
   CkusroFile,
   convertExt,
@@ -9,6 +12,7 @@ import {
   FileTypeRaw,
   FileTypeText,
   FileTypeUnrendarableStatType,
+  newCkusroFile,
   newDoesNotExistFile,
   replaceExt,
 } from '../../src/models/ckusroFile';
@@ -18,7 +22,52 @@ import {
   FileModeFile,
   FileModes,
 } from '../../src/models/statType';
-import { buildFile } from '../__fixtures__';
+import { buildFile, buildLoaderContext } from '../__fixtures__';
+
+describe(newCkusroFile, () => {
+  it('return CkusroFile', async () => {
+    // @ts-ignore
+    fs.lstat.mockImplementation((path, callback) => {
+      callback(null, {
+        mode: FileModeFile,
+      });
+    });
+
+    const context = buildLoaderContext({
+      path: '/test/ns',
+      name: 'ns',
+    });
+    const actual = await newCkusroFile(context, '/test/ns/foo.md');
+    const expected: Omit<
+      CkusroFile,
+      'id' | 'weakDependencies' | 'strongDependencies' | 'variables'
+    > = {
+      namespace: 'ns',
+      name: 'foo.md',
+      path: '/foo.md',
+      fileType: FileTypeMarkdown,
+      isLoaded: false,
+      content: null,
+    };
+
+    expect(actual).toMatchObject(expected);
+  });
+
+  it('return Error when lstat raises Error', async () => {
+    // @ts-ignore
+    fs.lstat.mockImplementation((path, callback) => {
+      callback(new Error(''));
+    });
+
+    const context = buildLoaderContext({
+      path: '/test/ns',
+      name: 'ns',
+    });
+    const actual = await newCkusroFile(context, '/test/ns/foo.md');
+
+    expect(actual).toBeInstanceOf(Error);
+  });
+});
 
 describe(detectType, () => {
   it('returns FileType', () => {
