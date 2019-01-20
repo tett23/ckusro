@@ -59,7 +59,7 @@ export async function newCkusroFile(
     id: newCkusroId(),
     namespace: context.name,
     name,
-    path: absolutePath.slice(context.path.length),
+    path: toPath(context.path, absolutePath),
     fileType: detectType(stats, name),
     isLoaded: false,
     content: null,
@@ -69,6 +69,17 @@ export async function newCkusroFile(
   };
 
   return file;
+}
+
+export function toPath(contextPath: string, absolutePath: string): string {
+  const ret = absolutePath
+    .replace(/\/$/, '')
+    .slice(contextPath.replace(/\/$/, '').length);
+  if (ret.length === 0) {
+    return '/';
+  }
+
+  return ret;
 }
 
 const ValidStatTypes: StatTypes[] = [StatTypeFile, StatTypeDirectory];

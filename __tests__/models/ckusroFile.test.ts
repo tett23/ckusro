@@ -16,6 +16,7 @@ import {
   newCkusroFile,
   newDoesNotExistFile,
   replaceExt,
+  toPath,
 } from '../../src/models/ckusroFile';
 import {
   FileModeBlockDevice,
@@ -67,6 +68,22 @@ describe(newCkusroFile, () => {
     const actual = await newCkusroFile(context, '/test/ns/foo.md');
 
     expect(actual).toBeInstanceOf(Error);
+  });
+});
+
+describe(toPath, () => {
+  const data: Array<[string, string, string]> = [
+    ['/foo', '/foo', '/'],
+    ['/foo/', '/foo/', '/'],
+    ['/foo', '/foo/bar', '/bar'],
+    ['/foo/', '/foo/bar', '/bar'],
+    ['/foo', '/foo/bar/', '/bar'],
+  ];
+
+  data.forEach(([contextPath, absolutePath, expected]) => {
+    const actual = toPath(contextPath, absolutePath);
+
+    expect(actual).toBe(expected);
   });
 });
 
