@@ -1,3 +1,4 @@
+import * as _fileLoader from '../../src/fileLoader';
 import {
   buildFiles,
   loadContent,
@@ -22,6 +23,104 @@ import * as _fetchEntries from '../../src/fileLoader/fetchEntries';
 import * as _ckusroFile from '../../src/models/ckusroFile';
 
 const { default: fetchEntries } = _fetchEntries;
+
+describe.skip(_fileLoader.default, () => {
+  let buildFilesSpy: jest.SpyInstance;
+  let loadContentSpy: jest.SpyInstance;
+  let loadDependenciesSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    buildFilesSpy = jest.spyOn(_fileLoader, 'buildFiles');
+    loadContentSpy = jest.spyOn(_fileLoader, 'loadContent');
+    loadDependenciesSpy = jest.spyOn(_fileLoader, 'loadDependencies');
+  });
+
+  afterEach(() => {
+    buildFilesSpy.mockRestore();
+    loadContentSpy.mockRestore();
+    loadDependenciesSpy.mockRestore();
+  });
+
+  function spyBuildFiles(mock: typeof buildFiles) {
+    buildFilesSpy.mockImplementationOnce(mock);
+  }
+
+  function spyLoadContent(mock: typeof loadContent) {
+    loadContentSpy.mockImplementationOnce(mock);
+  }
+
+  function spyLoadDependencies(mock: typeof loadDependencies) {
+    loadDependenciesSpy.mockImplementationOnce(mock);
+  }
+
+  it('returns CkusroFile', async () => {
+    const context = buildLoaderContext({
+      path: '/test/ns',
+      name: 'ns',
+    });
+
+    const file: CkusroFile = buildFile({
+      namespace: 'ns',
+      name: 'foo.md',
+      path: '/foo.md',
+      fileType: FileTypeMarkdown,
+    });
+
+    const dep = buildFile({
+      namespace: 'ns',
+      name: 'bar.md',
+      path: '/bar.md',
+      fileType: FileTypeMarkdown,
+    });
+
+    const contentLoaded: CkusroFile = {
+      ...file,
+      isLoaded: true,
+      content: '[[bar.md]]',
+    };
+    const depContentLoaded: CkusroFile = {
+      ...dep,
+      isLoaded: true,
+      content: '',
+    };
+
+    const dependenciesLoaded: CkusroFile = {
+      ...contentLoaded,
+      weakDependencies: [dep.id],
+      strongDependencies: [dep.id],
+      variables: [],
+    };
+
+    spyBuildFiles(async () => {
+      return [file, dep];
+    });
+    spyLoadContent(async () => contentLoaded);
+    spyLoadContent(async () => depContentLoaded);
+    spyLoadDependencies(() => dependenciesLoaded);
+    spyLoadDependencies(() => depContentLoaded);
+
+    const config = buildLoaderConfig();
+    const plugins = buildPlugins();
+    const actual = await _fileLoader.default([context], config, plugins);
+    const expected = [dependenciesLoaded, depContentLoaded];
+
+    expect(actual).toEqual(expected);
+    expect(buildFilesSpy).toHaveReturnedTimes(1);
+    expect(buildFilesSpy).toHaveBeenLastCalledWith([context], config);
+    expect(loadContentSpy).toHaveReturnedTimes(2);
+    expect(loadContentSpy).toHaveBeenNthCalledWith(1, [context, file]);
+    expect(loadContentSpy).toHaveBeenNthCalledWith(2, [context, dep]);
+    expect(loadDependencies).toHaveReturnedTimes(2);
+    expect(loadDependencies).toHaveBeenNthCalledWith(1, [
+      context,
+      dependenciesLoaded,
+    ]);
+    expect(loadDependencies).toHaveBeenNthCalledWith(2, [
+      contentLoaded,
+      depContentLoaded,
+    ]);
+  });
+});
 
 describe(buildFiles, () => {
   let fetchEntriesSpy: jest.SpyInstance;

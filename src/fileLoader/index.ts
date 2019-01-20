@@ -7,7 +7,7 @@ import {
   FileTypeDirectory,
   newCkusroFile,
 } from '../models/ckusroFile';
-import { LoaderContext } from '../models/loaderContext';
+import { LoaderContext, loaderContextMap } from '../models/loaderContext';
 import { Plugins } from '../models/plugins';
 import { buildAst, determineDependency } from '../parser';
 import { separateErrors } from '../utils/errors';
@@ -15,6 +15,37 @@ import { isErrors } from '../utils/types';
 import fetchEntries from './fetchEntries';
 
 const readFile = promisify(fs.readFile);
+
+export default async function fileLoader(
+  contexts: LoaderContext[],
+  loaderConfig: LoaderConfig,
+  plugins: Plugins,
+): Promise<CkusroFile[] | Error[]> {
+  const files = await buildFiles(contexts, loaderConfig);
+  if (isErrors(files)) {
+    return files;
+  }
+
+  const contextMap = loaderContextMap(contexts);
+  const ps = files
+    .map(
+      (file): [LoaderContext, CkusroFile] => {
+        return [contextMap[file.namespace], file];
+      },
+    )
+    .map((args) => loadContent(...args));
+
+  const contentLoaded = await Promise.all(ps);
+  return contentLoaded
+    .map(
+      (file): [LoaderContext, CkusroFile] => {
+        return [contextMap[file.namespace], file];
+      },
+    )
+    .map(([context, file]) =>
+      loadDependencies(plugins, context, file, contentLoaded),
+    );
+}
 
 export async function buildFiles(
   contexts: LoaderContext[],
