@@ -10,62 +10,28 @@ import {
 import { LoaderContext } from '../models/loaderContext';
 import { Plugins } from '../models/plugins';
 import { buildAst, determineDependency } from '../parser';
-import { buildObjectTree } from './buildObjectTree';
-import { CkusroObject, detectType } from './ckusroObject';
+import { separateErrors } from '../utils/errors';
+import { isErrors } from '../utils/types';
+import fetchEntries from './fetchEntries';
 
 const readFile = promisify(fs.readFile);
 
-export async function loadRootObjects(
+export default async function fileLoader(
   contexts: LoaderContext[],
   loaderConfig: LoaderConfig,
-): Promise<Array<[LoaderContext, CkusroObject]> | Error> {
-  const ps = contexts.map(
-    async (context): Promise<[LoaderContext, CkusroObject] | Error> => {
-      const node = await buildObjectTree(
-        context.path,
-        loaderConfig,
-        context.path,
-      );
-      if (node == null) {
-        return new Error('');
-      }
-
-      return [context, node];
-    },
-  );
-  const items = await Promise.all(ps);
-
-  const err = items.flatMap((item) => (item instanceof Error ? [item] : []));
-  if (err.length >= 1) {
-    return err[0];
+): Promise<CkusroFile[] | Error[]> {
+  const entries = await fetchEntries(contexts, loaderConfig);
+  if (isErrors(entries)) {
+    return entries;
   }
 
-  const ret = items.flatMap((item) => (item instanceof Error ? [] : [item]));
+  const ps = entries.map(([context, path]) => newCkusroFile(context, path));
+  const [ret, errors] = separateErrors(await Promise.all(ps));
+  if (isErrors(errors)) {
+    return errors;
+  }
 
   return ret;
-}
-
-function transform(context: LoaderContext, node: CkusroObject): CkusroFile {
-  return newCkusroFile({
-    namespace: context.name,
-    name: node.name,
-    path: node.path,
-    fileType: detectType(node.fileType, node.name),
-    isLoaded: false,
-    content: null,
-    weakDependencies: [],
-    strongDependencies: [],
-    variables: [],
-  });
-}
-
-export function build(
-  context: LoaderContext,
-  node: CkusroObject,
-): CkusroFile[] {
-  return [transform(context, node)].concat(
-    node.children.flatMap((item) => build(context, item)),
-  );
 }
 
 export async function loadContent(

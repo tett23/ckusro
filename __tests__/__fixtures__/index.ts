@@ -10,7 +10,6 @@ import {
 import {
   CkusroFile,
   FileTypeMarkdown,
-  newCkusroFile,
   newCkusroId,
 } from '../../src/models/ckusroFile';
 import { buildDependencyTable, invert } from '../../src/models/dependencyTable';
@@ -21,6 +20,7 @@ import {
   DefaultPluginsConfig,
   defaultPluginsConfig,
 } from '../../src/models/pluginConfig';
+import { Plugins } from '../../src/models/plugins';
 import defaultPlugins from '../../src/models/plugins/defaultPlugins';
 
 export function buildLoaderContext(
@@ -95,6 +95,15 @@ export function buildCkusroConfig(
   }
 
   return ret;
+}
+
+export function buildPlugins(overrides: Partial<Plugins> = {}): Plugins {
+  const plugins: Plugins = defaultPlugins(defaultPluginsConfig());
+
+  return {
+    parsers: overrides.parsers || plugins.parsers,
+    components: overrides.components || plugins.components,
+  };
 }
 
 export function buildLoaderConfig(

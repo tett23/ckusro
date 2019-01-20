@@ -1,14 +1,7 @@
-import {
-  build,
+import fileLoader, {
   loadContent,
   loadDependencies,
-  loadRootObjects,
 } from '../../src/fileLoader';
-import {
-  CkusroObject,
-  StatTypeDirectory,
-  StatTypeFile,
-} from '../../src/fileLoader/ckusroObject';
 import {
   CkusroFile,
   FileType,
@@ -19,111 +12,100 @@ import {
   FileTypeText,
   isWritableFileType,
 } from '../../src/models/ckusroFile';
+import { newCkusroFile } from '../../src/models/ckusroFile';
 import { LoaderContext } from '../../src/models/loaderContext';
-import { defaultPluginsConfig } from '../../src/models/pluginConfig';
-import defaultPlugins from '../../src/models/plugins/defaultPlugins';
 import {
   buildFile,
   buildLoaderConfig,
   buildLoaderContext,
+  buildPlugins,
 } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
-describe.skip(loadRootObjects.name, () => {
+import * as _fetchEntries from '../../src/fileLoader/fetchEntries';
+import * as _ckusroFile from '../../src/models/ckusroFile';
+
+const { default: fetchEntries } = _fetchEntries;
+
+describe(fileLoader, () => {
+  let fetchEntriesSpy: jest.SpyInstance;
+  let newCkusroFileSpy: jest.SpyInstance;
   beforeEach(() => {
-    mockFileSystem({
-      '/foo/bar/baz.md': '# test file',
-    });
+    fetchEntriesSpy = jest.spyOn(_fetchEntries, 'default');
+    newCkusroFileSpy = jest.spyOn(_ckusroFile, 'newCkusroFile');
   });
+
   afterEach(() => {
-    restoreFileSystem();
+    fetchEntriesSpy.mockRestore();
+    newCkusroFileSpy.mockRestore();
   });
 
-  it('load items', async () => {
-    const loaderContext = buildLoaderContext({ path: '/foo', name: 'foo' });
-    const loaderConfig = buildLoaderConfig();
-    const results: any = await loadRootObjects([loaderContext], loaderConfig);
-    const expectedContext: LoaderContext = {
-      name: 'foo',
-      path: '/foo',
-    };
+  function spyFetchEntries(mock: typeof fetchEntries) {
+    fetchEntriesSpy = jest.spyOn(_fetchEntries, 'default');
 
-    expect(results).toEqual([[expectedContext, '/foo/bar/baz.md']]);
-  });
+    fetchEntriesSpy.mockImplementation(mock);
+  }
 
-  it('returns Error when directory does not exist', async () => {
-    const loaderContext = buildLoaderContext({
-      path: '/does_not_exist',
-      name: 'does_not_exist',
+  function spyNewCkusroFile(mock: typeof newCkusroFile) {
+    newCkusroFileSpy = jest.spyOn(_ckusroFile, 'newCkusroFile');
+
+    newCkusroFileSpy.mockImplementation(mock);
+  }
+
+  it('returns CkusroFile[]', async () => {
+    const context = buildLoaderContext({
+      path: '/test/ns',
+      name: 'ns',
     });
-    const loaderConfig = buildLoaderConfig();
-    const actual = await loadRootObjects([loaderContext], loaderConfig);
+    spyFetchEntries(async () => [[context, '/test/ns/foo.md']]);
 
-    expect(actual).toBeInstanceOf(Error);
+    const file = buildFile({
+      namespace: 'ns',
+      name: 'foo.md',
+      path: '/foo.md',
+      fileType: FileTypeMarkdown,
+      isLoaded: false,
+      content: null,
+    });
+    spyNewCkusroFile(async () => file);
+
+    const config = buildLoaderConfig();
+    const actual = await fileLoader([context], config);
+    const expected = [file];
+
+    expect(actual).toMatchObject(expected);
   });
-});
 
-describe(build, () => {
-  it('load items', async () => {
-    const tree: CkusroObject = {
-      name: 'foo',
-      path: '/foo',
-      fileType: StatTypeDirectory,
-      children: [
-        {
-          name: 'bar',
-          path: '/foo/bar',
-          fileType: StatTypeDirectory,
-          children: [
-            {
-              name: 'baz.md',
-              path: '/foo/bar/baz.md',
-              fileType: StatTypeFile,
-              children: [],
-            },
-          ],
-        },
-      ],
-    };
-    const context: LoaderContext = { name: 'foo', path: '/foo' };
-    const actual = build(context, tree);
-    const expected: CkusroFile[] = [
-      buildFile({
-        id: actual[0].id,
-        namespace: 'foo',
-        name: 'foo',
-        path: '/foo',
-        fileType: FileTypeDirectory,
-        isLoaded: false,
-        content: null,
-        weakDependencies: [],
-        strongDependencies: [],
-      }),
-      buildFile({
-        id: actual[1].id,
-        namespace: 'foo',
-        name: 'bar',
-        path: '/foo/bar',
-        fileType: FileTypeDirectory,
-        isLoaded: false,
-        content: null,
-        weakDependencies: [],
-        strongDependencies: [],
-      }),
-      buildFile({
-        id: actual[2].id,
-        namespace: 'foo',
-        name: 'baz.md',
-        path: '/foo/bar/baz.md',
-        fileType: FileTypeMarkdown,
-        isLoaded: false,
-        content: null,
-        weakDependencies: [],
-        strongDependencies: [],
-      }),
-    ];
+  it('returns Error[] when fetchEntries returns Error', async () => {
+    const err = new Error();
+    spyFetchEntries(async () => [err]);
 
-    expect(actual).toEqual(expected);
+    const context = buildLoaderContext({
+      path: '/test/ns',
+      name: 'ns',
+    });
+    const config = buildLoaderConfig();
+    const actual = await fileLoader([context], config);
+    const expected = [err];
+
+    expect(actual).toMatchObject(expected);
+  });
+
+  it('returns Error[] when fetchEntries returns Error', async () => {
+    const context = buildLoaderContext({
+      path: '/test/ns',
+      name: 'ns',
+    });
+    spyFetchEntries(async () => [[context, '/test/ns/foo.md']]);
+
+    const err = new Error();
+    spyNewCkusroFile(async () => err);
+
+    const config = buildLoaderConfig();
+    const actual = await fileLoader([context], config);
+    const expected = [err];
+
+    expect(actual).toMatchObject(expected);
   });
 });
 
@@ -138,10 +120,10 @@ describe(loadContent, () => {
   });
 
   it('returns file content', async () => {
-    const context: LoaderContext = {
+    const context: LoaderContext = buildLoaderContext({
       name: 'foo',
       path: '/foo',
-    };
+    });
     const file: CkusroFile = buildFile({
       namespace: 'foo',
       name: 'baz.md',
@@ -160,10 +142,10 @@ describe(loadContent, () => {
   });
 
   it('returns null content when fileType is directory', async () => {
-    const context: LoaderContext = {
+    const context: LoaderContext = buildLoaderContext({
       name: 'foo',
       path: '/foo',
-    };
+    });
     const file: CkusroFile = buildFile({
       namespace: 'foo',
       name: 'bar',
@@ -207,11 +189,11 @@ describe(loadContent, () => {
 });
 
 describe(loadDependencies, () => {
-  const context: LoaderContext = {
+  const context: LoaderContext = buildLoaderContext({
     name: 'test',
     path: '/test',
-  };
-  const plugins = defaultPlugins(defaultPluginsConfig());
+  });
+  const plugins = buildPlugins();
 
   it('assigns dependencies', () => {
     const file: CkusroFile = buildFile({
