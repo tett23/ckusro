@@ -1,7 +1,7 @@
 jest.mock('fast-glob');
 
 import fastGlob from 'fast-glob';
-import enablePaths from '../../src/fileLoader/enablePaths';
+import enablePaths, { filterPaths } from '../../src/fileLoader/enablePaths';
 import { buildLoaderConfig, buildLoaderContext } from '../__fixtures__';
 
 describe(enablePaths, () => {
@@ -33,5 +33,31 @@ describe(enablePaths, () => {
     const actual = await enablePaths(loaderContext, loaderConfig);
 
     expect(actual).toEqual(err);
+  });
+});
+
+describe(filterPaths, () => {
+  it('filter enable', () => {
+    const paths = ['/foo.md', '/bar.js'];
+    const loaderConfig = buildLoaderConfig({
+      enable: /\.md/,
+      ignore: [],
+    });
+    const actual = filterPaths(paths, loaderConfig);
+    const expected = ['/foo.md'];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('filter ignore', () => {
+    const paths = ['/foo.md', '/bar.js'];
+    const loaderConfig = buildLoaderConfig({
+      enable: /.+/,
+      ignore: [/\.js/],
+    });
+    const actual = filterPaths(paths, loaderConfig);
+    const expected = ['/foo.md'];
+
+    expect(actual).toEqual(expected);
   });
 });
