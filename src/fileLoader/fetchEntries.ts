@@ -1,5 +1,6 @@
 import { LoaderConfig } from '../models/ckusroConfig/LoaderConfig';
 import { LoaderContext } from '../models/loaderContext';
+import { separateErrors } from '../utils/errors';
 import enablePaths from './enablePaths';
 
 export default async function fetchEntries(
@@ -9,20 +10,12 @@ export default async function fetchEntries(
   const ps = contexts.map((context) =>
     fetchEntriesInContext(context, loaderConfig),
   );
-  const items = await Promise.all(ps);
-
-  const errors = items
-    .flatMap((item) => {
-      return !(item instanceof Error) ? [] : [item];
-    })
-    .flatMap((item) => item);
+  const [items, errors] = separateErrors(await Promise.all(ps));
   if (errors.length > 0) {
     return errors;
   }
 
-  const ret = items.flatMap((item) => (item instanceof Error ? [] : item));
-
-  return ret;
+  return items.flatMap((item) => item);
 }
 
 export async function fetchEntriesInContext(
