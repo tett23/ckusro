@@ -2,6 +2,7 @@ import yargs, { Argv } from 'yargs';
 import fromCLIOptions, { loadConfigFile } from '../config/fromCLIOptions';
 import { TargetDirectory } from '../models/ckusroConfig';
 import newGlobalState, { GlobalState } from '../models/globalState';
+import { isErrors } from '../utils/types';
 import {
   CLICommandBuild,
   CLICommands,
@@ -53,7 +54,7 @@ export default async function cli(argv: string[]) {
 
   const conf = fromCLIOptions(options);
   const globalState = await newGlobalState(conf);
-  if (globalState instanceof Error) {
+  if (isErrors(globalState)) {
     return globalState;
   }
 

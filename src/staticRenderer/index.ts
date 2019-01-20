@@ -8,13 +8,19 @@ import {
 } from '../models/ckusroFile';
 import { GlobalState } from '../models/globalState';
 import { OutputContext } from '../models/outputContext';
+import { jsAssets } from './assets';
 import { Props } from './assets/components';
 import writeFile from './io';
 import render from './render';
 
 export default async function staticRenderer(
   globalState: GlobalState,
-): Promise<boolean[] | Error> {
+): Promise<boolean[] | Error[]> {
+  const result = await jsAssets(globalState);
+  if (result instanceof Error) {
+    return [result];
+  }
+
   const ps = renderHTML(globalState);
 
   return (await Promise.all(ps)).flatMap((items) => items);
