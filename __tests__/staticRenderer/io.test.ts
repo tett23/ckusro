@@ -1,23 +1,56 @@
+jest.mock('fs');
+jest.mock('mkdirp');
+
+import fs from 'fs';
+import * as mkdirp from 'mkdirp';
 import writeFile, { WriteInfo } from '../../src/staticRenderer/io';
-import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(writeFile, () => {
-  beforeEach(() => {
-    mockFileSystem({
-      '/test/foo/bar/baz.md': '# test file',
-    });
-  });
-  afterEach(() => {
-    restoreFileSystem();
-  });
+  const writeInfo: WriteInfo = {
+    path: '/test/out/baz.html',
+    content: 'test content',
+  };
 
-  it('writes file', async () => {
-    const writeInfo: WriteInfo = {
-      path: '/test/out/baz.md',
-      content: 'test content',
-    };
+  it('returns true', async () => {
+    // @ts-ignore
+    mkdirp.default.mockImplementationOnce((...args) => {
+      args[args.length - 1](null, true);
+    });
+
+    // @ts-ignore
+    fs.writeFile.mockImplementationOnce((...args) => {
+      args[args.length - 1](null, true);
+    });
+
     const actual = await writeFile(writeInfo);
 
     expect(actual).toBe(true);
+  });
+
+  it('returns Error when mkdirp failed', async () => {
+    // @ts-ignore
+    mkdirp.default.mockImplementationOnce((...args) => {
+      args[args.length - 1](new Error());
+    });
+
+    const actual = await writeFile(writeInfo);
+
+    expect(actual).toBeInstanceOf(Error);
+  });
+
+  it('returns Error when fs.writeFile failed', async () => {
+    // @ts-ignore
+    mkdirp.default.mockImplementationOnce((...args) => {
+      args[args.length - 1](null, true);
+    });
+
+    // @ts-ignore
+    fs.writeFile.mockImplementationOnce((...args) => {
+      args[args.length - 1](new Error());
+    });
+
+    const actual = await writeFile(writeInfo);
+
+    expect(actual).toBeInstanceOf(Error);
   });
 });

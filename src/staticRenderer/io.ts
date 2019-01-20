@@ -14,15 +14,15 @@ export type WriteInfo = {
 export default async function writeFile({
   path,
   content,
-}: WriteInfo): Promise<boolean> {
+}: WriteInfo): Promise<true | Error> {
   const mkdirResult = await asyncMkdirP(dirname(path))
     .then(() => true)
-    .catch(() => false);
-  if (!mkdirResult) {
-    return false;
+    .catch((err: Error) => err);
+  if (mkdirResult instanceof Error) {
+    return mkdirResult;
   }
 
-  return await asyncWriteFile(path, content)
-    .then(() => true)
-    .catch(() => false);
+  return asyncWriteFile(path, content)
+    .then((): true => true)
+    .catch((err: Error) => err);
 }
