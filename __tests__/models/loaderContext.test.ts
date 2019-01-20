@@ -1,9 +1,11 @@
 import { TargetDirectory } from '../../src/models/ckusroConfig';
 import {
   LoaderContext,
+  loaderContextMap,
   newLoaderContext,
   newLoaderContexts,
 } from '../../src/models/loaderContext';
+import { buildLoaderContext } from '../__fixtures__';
 
 describe(newLoaderContext, () => {
   it('returns LoaderContext', () => {
@@ -38,6 +40,24 @@ describe(newLoaderContexts, () => {
         name: 'test',
       },
     ];
+
+    expect(actual).toEqual(expected);
+  });
+});
+
+describe(loaderContextMap, () => {
+  it('returns LoaderContextMap', () => {
+    const contexts = [
+      buildLoaderContext({ name: 'ns1' }),
+      buildLoaderContext({ name: 'ns2' }),
+      buildLoaderContext({ name: 'ns3' }),
+    ];
+    const actual = loaderContextMap(contexts);
+    const expected = {
+      ns1: contexts[0],
+      ns2: contexts[1],
+      ns3: contexts[2],
+    };
 
     expect(actual).toEqual(expected);
   });

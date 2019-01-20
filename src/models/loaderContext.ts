@@ -20,3 +20,17 @@ export function newLoaderContext({
 export function newLoaderContexts(targets: TargetDirectory[]): LoaderContext[] {
   return targets.map(newLoaderContext);
 }
+
+type LoaderContextMap = { [key in string]: LoaderContext };
+
+export function loaderContextMap(
+  loaderContexts: LoaderContext[],
+): LoaderContextMap {
+  return loaderContexts.reduce(
+    (acc, ns) => {
+      acc[ns.name] = ns;
+      return acc;
+    },
+    {} as LoaderContextMap,
+  );
+}
