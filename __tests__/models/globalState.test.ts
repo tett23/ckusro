@@ -1,10 +1,10 @@
+import { isErrors } from '../../src/core/utils/types';
 import { CkusroConfig } from '../../src/models/ckusroConfig';
 import newGlobalState, {
   assetsDirectory,
   isGlobalState,
   outputDirectory,
 } from '../../src/models/globalState';
-import { isErrors } from '../../src/utils/types';
 import {
   buildCkusroConfig,
   buildGlobalState,

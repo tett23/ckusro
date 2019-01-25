@@ -1,4 +1,4 @@
-import { separateErrors } from '../../src/utils/errors';
+import { separateErrors } from '../../../src/core/utils/errors';
 
 describe(separateErrors, () => {
   it('judges type', () => {

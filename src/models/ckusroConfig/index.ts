@@ -1,4 +1,4 @@
-import { isNonNullObject } from '../../utils/types';
+import { isNonNullObject } from '../../core/utils/types';
 import { isPlugins, Plugins } from '../plugins';
 import { isLoaderConfig, LoaderConfig } from './LoaderConfig';
 

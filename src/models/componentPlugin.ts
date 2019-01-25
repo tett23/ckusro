@@ -1,4 +1,4 @@
-import { isNonNullObject } from '../utils/types';
+import { isNonNullObject } from '../core/utils/types';
 import { CkusroFile } from './ckusroFile';
 
 export type Props = {

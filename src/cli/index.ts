@@ -1,8 +1,8 @@
 import yargs, { Argv } from 'yargs';
 import fromCLIOptions, { loadConfigFile } from '../cli/config/fromCLIOptions';
+import { isErrors } from '../core/utils/types';
 import { TargetDirectory } from '../models/ckusroConfig';
 import newGlobalState, { GlobalState } from '../models/globalState';
-import { isErrors } from '../utils/types';
 import {
   CLICommandBuild,
   CLICommands,

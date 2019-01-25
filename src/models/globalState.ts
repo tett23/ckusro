@@ -1,6 +1,6 @@
 import { dirname, join } from 'path';
+import { isErrors, isNonNullObject } from '../core/utils/types';
 import fileLoader from '../fileLoader';
-import { isErrors, isNonNullObject } from '../utils/types';
 import { CkusroConfig } from './ckusroConfig';
 import { LoaderConfig } from './ckusroConfig/LoaderConfig';
 import { CkusroFile } from './ckusroFile';

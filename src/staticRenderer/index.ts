@@ -1,5 +1,6 @@
 import { join as joinPath } from 'path';
 import { curry } from 'ramda';
+import { separateErrors } from '../core/utils/errors';
 import {
   CkusroFile,
   CkusroId,
@@ -8,7 +9,6 @@ import {
 } from '../models/ckusroFile';
 import { GlobalState } from '../models/globalState';
 import { OutputContext } from '../models/outputContext';
-import { separateErrors } from '../utils/errors';
 import { jsAssets } from './assets';
 import { Props } from './assets/components';
 import writeFile from './io';

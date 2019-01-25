@@ -1,4 +1,4 @@
-import { isErrors, isNonNullObject } from '../../src/utils/types';
+import { isErrors, isNonNullObject } from '../../../src/core/utils/types';
 
 describe(isNonNullObject, () => {
   it('retuns true when argument is Object', () => {

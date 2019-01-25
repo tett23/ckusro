@@ -1,7 +1,7 @@
+import { isErrors } from '../../src/core/utils/types';
 import checkLoaderContexts, {
   isValidLoaderContext,
 } from '../../src/fileLoader/checkLoaderContexts';
-import { isErrors } from '../../src/utils/types';
 import { buildLoaderContext } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 

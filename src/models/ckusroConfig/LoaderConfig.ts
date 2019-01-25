@@ -1,4 +1,4 @@
-import { isNonNullObject } from '../../utils/types';
+import { isNonNullObject } from '../../core/utils/types';
 
 export type LoaderConfig = {
   enable: RegExp;

@@ -1,6 +1,6 @@
+import { separateErrors } from '../core/utils/errors';
 import { LoaderConfig } from '../models/ckusroConfig/LoaderConfig';
 import { LoaderContext } from '../models/loaderContext';
-import { separateErrors } from '../utils/errors';
 import enablePaths from './enablePaths';
 
 export default async function fetchEntries(
