@@ -1,8 +1,8 @@
 import { normalize, resolve as resolvePath } from 'path';
-import { mergeConfig } from '../../src/config';
-import { CkusroConfig } from '../../src/models/ckusroConfig';
-import { buildCkusroConfig } from '../__fixtures__';
-import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
+import { mergeConfig } from '../../../src/cli/config';
+import { CkusroConfig } from '../../../src/models/ckusroConfig';
+import { buildCkusroConfig } from '../../__fixtures__';
+import { mockFileSystem, restoreFileSystem } from '../../__helpers__/fs';
 
 describe(mergeConfig, () => {
   beforeEach(() => {

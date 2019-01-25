@@ -1,7 +1,7 @@
 import merge from 'lodash.merge';
 import { CLIOptions } from '../../src/cli';
 import { CLICommandBuild } from '../../src/cli/cliCommands';
-import { defaultConfig } from '../../src/config';
+import { defaultConfig } from '../../src/cli/config';
 import { CkusroConfig, isCkusroConfig } from '../../src/models/ckusroConfig';
 import {
   defaultLoaderConfig,

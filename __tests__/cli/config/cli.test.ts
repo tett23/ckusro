@@ -1,12 +1,12 @@
 import jsyaml from 'js-yaml';
 import fromCLIOptions, {
   loadConfigFile,
-} from '../../src/config/fromCLIOptions';
-import { PrimitiveCkusroConfig } from '../../src/config/toCkusroConfig';
-import { CkusroConfig } from '../../src/models/ckusroConfig';
-import { defaultLoaderConfig } from '../../src/models/ckusroConfig/LoaderConfig';
-import { buildCkusroConfig, buildCLIOptions } from '../__fixtures__';
-import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
+} from '../../../src/cli/config/fromCLIOptions';
+import { PrimitiveCkusroConfig } from '../../../src/cli/config/toCkusroConfig';
+import { CkusroConfig } from '../../../src/models/ckusroConfig';
+import { defaultLoaderConfig } from '../../../src/models/ckusroConfig/LoaderConfig';
+import { buildCkusroConfig, buildCLIOptions } from '../../__fixtures__';
+import { mockFileSystem, restoreFileSystem } from '../../__helpers__/fs';
 
 function jsonReplacer(_: string, value: any) {
   if (value instanceof RegExp) {

@@ -2,8 +2,8 @@ import { readFileSync } from 'fs';
 import jsyaml from 'js-yaml';
 import merge from 'lodash.merge';
 import { extname } from 'path';
-import { CLIOptions } from '../cli';
-import { CkusroConfig } from '../models/ckusroConfig';
+import { CLIOptions } from '..';
+import { CkusroConfig } from '../../models/ckusroConfig';
 import { mergeConfig } from './index';
 import toCkusroConfig, {
   isPartializedPrimitiveCkusroConfig,

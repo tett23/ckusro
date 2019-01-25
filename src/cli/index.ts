@@ -1,5 +1,5 @@
 import yargs, { Argv } from 'yargs';
-import fromCLIOptions, { loadConfigFile } from '../config/fromCLIOptions';
+import fromCLIOptions, { loadConfigFile } from '../cli/config/fromCLIOptions';
 import { TargetDirectory } from '../models/ckusroConfig';
 import newGlobalState, { GlobalState } from '../models/globalState';
 import { isErrors } from '../utils/types';
