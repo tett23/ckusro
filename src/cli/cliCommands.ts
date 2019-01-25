@@ -1,5 +1,7 @@
 export const CLICommandBuild: 'build' = 'build';
 export const CLICommandWatch: 'watch' = 'watch';
+// TODO: build-assets
+// TODO: build-all
 
 export type CLICommands = typeof CLICommandBuild | typeof CLICommandWatch;
 

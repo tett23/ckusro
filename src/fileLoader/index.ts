@@ -16,6 +16,7 @@ import checkLoaderContexts from './checkLoaderContexts';
 import fetchEntries from './fetchEntries';
 
 const readFile = promisify(fs.readFile);
+const lstat = promisify(fs.lstat);
 
 export default async function fileLoader(
   contexts: LoaderContext[],
@@ -62,7 +63,9 @@ export async function buildFiles(
     return entries;
   }
 
-  const ps = entries.map(([context, path]) => newCkusroFile(context, path));
+  const ps = entries.map(([context, path]) =>
+    newCkusroFile(lstat, context, path),
+  );
   const [ret, errors] = separateErrors(await Promise.all(ps));
   if (isErrors(errors)) {
     return errors;

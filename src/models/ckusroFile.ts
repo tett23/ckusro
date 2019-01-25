@@ -1,6 +1,5 @@
-import { lstat as _lstat, Stats } from 'fs';
+import { Stats } from 'fs';
 import { basename, extname, join } from 'path';
-import { promisify } from 'util';
 import uuid from 'uuid/v4';
 import { LoaderContext } from './loaderContext';
 import {
@@ -43,9 +42,8 @@ export function newCkusroId(): CkusroId {
   return uuid();
 }
 
-const lstat = promisify(_lstat);
-
 export async function newCkusroFile(
+  lstat: (path: string, options?: any) => Promise<Stats>,
   context: LoaderContext,
   absolutePath: string,
 ): Promise<CkusroFile | Error> {

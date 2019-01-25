@@ -1,6 +1,3 @@
-jest.mock('fs');
-
-import fs from 'fs';
 import {
   CkusroFile,
   convertExt,
@@ -28,18 +25,12 @@ import { buildFile, buildLoaderContext } from '../__fixtures__';
 
 describe(newCkusroFile, () => {
   it('return CkusroFile', async () => {
-    // @ts-ignore
-    fs.lstat.mockImplementation((path, callback) => {
-      callback(null, {
-        mode: FileModeFile,
-      });
-    });
-
+    const lstat = jest.fn().mockResolvedValue({ mode: FileModeFile });
     const context = buildLoaderContext({
       path: '/test/ns',
       name: 'ns',
     });
-    const actual = await newCkusroFile(context, '/test/ns/foo.md');
+    const actual = await newCkusroFile(lstat, context, '/test/ns/foo.md');
     const expected: Omit<
       CkusroFile,
       'id' | 'weakDependencies' | 'strongDependencies' | 'variables'
@@ -56,16 +47,12 @@ describe(newCkusroFile, () => {
   });
 
   it('return Error when lstat raises Error', async () => {
-    // @ts-ignore
-    fs.lstat.mockImplementation((path, callback) => {
-      callback(new Error(''));
-    });
-
+    const lstat = jest.fn().mockRejectedValue(new Error());
     const context = buildLoaderContext({
       path: '/test/ns',
       name: 'ns',
     });
-    const actual = await newCkusroFile(context, '/test/ns/foo.md');
+    const actual = await newCkusroFile(lstat, context, '/test/ns/foo.md');
 
     expect(actual).toBeInstanceOf(Error);
   });
