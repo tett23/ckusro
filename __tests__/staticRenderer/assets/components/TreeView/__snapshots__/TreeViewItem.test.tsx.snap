@@ -6,6 +6,13 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <TreeViewItem
     context={
       Object {
+        "loaderConfig": Object {
+          "enable": /\\\\\\.\\(md\\|txt\\)\\$/,
+          "ignore": Array [
+            /\\\\\\.git/,
+            /node_modules/,
+          ],
+        },
         "name": "test_namespace",
         "path": "/test",
       }
@@ -181,6 +188,13 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <TreeViewItem
     context={
       Object {
+        "loaderConfig": Object {
+          "enable": /\\\\\\.\\(md\\|txt\\)\\$/,
+          "ignore": Array [
+            /\\\\\\.git/,
+            /node_modules/,
+          ],
+        },
         "name": "test_namespace",
         "path": "/test",
       }
@@ -207,6 +221,13 @@ ShallowWrapper {
     <TreeViewItem
       context={
         Object {
+          "loaderConfig": Object {
+            "enable": /\\\\\\.\\(md\\|txt\\)\\$/,
+            "ignore": Array [
+              /\\\\\\.git/,
+              /node_modules/,
+            ],
+          },
           "name": "test_namespace",
           "path": "/test",
         }
@@ -257,6 +278,13 @@ ShallowWrapper {
             <TreeViewItem
               context={
                 Object {
+                  "loaderConfig": Object {
+                    "enable": /\\\\\\.\\(md\\|txt\\)\\$/,
+                    "ignore": Array [
+                      /\\\\\\.git/,
+                      /node_modules/,
+                    ],
+                  },
                   "name": "test_namespace",
                   "path": "/test",
                 }
@@ -320,6 +348,13 @@ ShallowWrapper {
           "items": <TreeViewItem
             context={
               Object {
+                "loaderConfig": Object {
+                  "enable": /\\\\\\.\\(md\\|txt\\)\\$/,
+                  "ignore": Array [
+                    /\\\\\\.git/,
+                    /node_modules/,
+                  ],
+                },
                 "name": "test_namespace",
                 "path": "/test",
               }
@@ -370,6 +405,13 @@ ShallowWrapper {
               <TreeViewItem
                 context={
                   Object {
+                    "loaderConfig": Object {
+                      "enable": /\\\\\\.\\(md\\|txt\\)\\$/,
+                      "ignore": Array [
+                        /\\\\\\.git/,
+                        /node_modules/,
+                      ],
+                    },
                     "name": "test_namespace",
                     "path": "/test",
                   }
@@ -433,6 +475,13 @@ ShallowWrapper {
             "items": <TreeViewItem
               context={
                 Object {
+                  "loaderConfig": Object {
+                    "enable": /\\\\\\.\\(md\\|txt\\)\\$/,
+                    "ignore": Array [
+                      /\\\\\\.git/,
+                      /node_modules/,
+                    ],
+                  },
                   "name": "test_namespace",
                   "path": "/test",
                 }

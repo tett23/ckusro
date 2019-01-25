@@ -29,6 +29,7 @@ export function buildLoaderContext(
   const loaderContext: LoaderContext = {
     path: '/test',
     name: 'test_namespace',
+    loaderConfig: defaultLoaderConfig(),
   };
 
   return merge(loaderContext, overrides);
@@ -36,7 +37,7 @@ export function buildLoaderContext(
 
 export function buildOutputContext(
   overrides: Partial<OutputContext> = {},
-): LoaderContext {
+): OutputContext {
   const loaderContext: OutputContext = {
     path: '/out/test_namespace',
     name: 'test_namespace',

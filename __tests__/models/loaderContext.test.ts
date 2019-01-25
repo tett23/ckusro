@@ -1,4 +1,5 @@
 import { TargetDirectory } from '../../src/models/ckusroConfig';
+import { defaultLoaderConfig } from '../../src/models/ckusroConfig/LoaderConfig';
 import {
   LoaderContext,
   loaderContextMap,
@@ -18,6 +19,7 @@ describe(newLoaderContext, () => {
     const expected: LoaderContext = {
       path: '/test/foo',
       name: 'test',
+      loaderConfig: defaultLoaderConfig(),
     };
 
     expect(actual).toEqual(expected);
@@ -38,6 +40,7 @@ describe(newLoaderContexts, () => {
       {
         path: '/test/foo',
         name: 'test',
+        loaderConfig: defaultLoaderConfig(),
       },
     ];
 

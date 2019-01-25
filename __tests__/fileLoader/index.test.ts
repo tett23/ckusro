@@ -20,6 +20,7 @@ import {
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 import * as _fetchEntries from '../../src/fileLoader/fetchEntries';
+import { defaultLoaderConfig } from '../../src/models/ckusroConfig/LoaderConfig';
 import * as _ckusroFile from '../../src/models/ckusroFile';
 
 const { default: fetchEntries } = _fetchEntries;
@@ -262,6 +263,7 @@ describe(loadContent, () => {
     const context: LoaderContext = {
       name: 'foo',
       path: '/foo',
+      loaderConfig: defaultLoaderConfig(),
     };
     const file: CkusroFile = buildFile({
       namespace: 'foo',

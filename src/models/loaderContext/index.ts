@@ -1,6 +1,9 @@
 import { join } from 'path';
-import { TargetDirectory } from './ckusroConfig';
-import { defaultLoaderConfig, LoaderConfig } from './ckusroConfig/LoaderConfig';
+import { TargetDirectory } from '../ckusroConfig';
+import {
+  defaultLoaderConfig,
+  LoaderConfig,
+} from '../ckusroConfig/LoaderConfig';
 
 export type LoaderContext = {
   name: string;
