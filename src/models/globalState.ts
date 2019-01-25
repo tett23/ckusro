@@ -26,7 +26,10 @@ export type GlobalState = {
 export default async function newGlobalState(
   config: CkusroConfig,
 ): Promise<GlobalState | Error[]> {
-  const loaderContexts = newLoaderContexts(config.targetDirectories);
+  const loaderContexts = newLoaderContexts(
+    config.targetDirectories,
+    config.loaderConfig,
+  );
   const outputContexts = loaderContexts.map((context) =>
     newOutputContext(config, context),
   );

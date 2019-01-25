@@ -4,11 +4,11 @@ import enablePaths from '../../src/fileLoader/enablePaths';
 import fetchEntries, {
   fetchEntriesInContext,
 } from '../../src/fileLoader/fetchEntries';
-import { buildLoaderConfig, buildLoaderContext } from '../__fixtures__';
+import { buildLoaderConfig, buildLocalLoaderContext } from '../__fixtures__';
 
 describe(fetchEntries, () => {
   it('returns LoaderContext-string tuples', async () => {
-    const loaderContext = buildLoaderContext();
+    const loaderContext = buildLocalLoaderContext();
     const loaderConfig = buildLoaderConfig();
 
     // @ts-ignore
@@ -24,7 +24,7 @@ describe(fetchEntries, () => {
     // @ts-ignore
     enablePaths.mockImplementation(async () => err);
 
-    const loaderContext = buildLoaderContext();
+    const loaderContext = buildLocalLoaderContext();
     const loaderConfig = buildLoaderConfig();
     const actual = await fetchEntries([loaderContext], loaderConfig);
 
@@ -35,7 +35,7 @@ describe(fetchEntries, () => {
 
 describe(fetchEntriesInContext, () => {
   it('returns LoaderContext-string tuples', async () => {
-    const loaderContext = buildLoaderContext();
+    const loaderContext = buildLocalLoaderContext();
     const loaderConfig = buildLoaderConfig();
 
     // @ts-ignore
@@ -53,7 +53,7 @@ describe(fetchEntriesInContext, () => {
       throw err;
     });
 
-    const loaderContext = buildLoaderContext();
+    const loaderContext = buildLocalLoaderContext();
     const loaderConfig = buildLoaderConfig();
     const actual = await fetchEntriesInContext(loaderContext, loaderConfig);
 

@@ -14,7 +14,7 @@ import {
 } from '../../src/models/ckusroFile';
 import { buildDependencyTable, invert } from '../../src/models/dependencyTable';
 import { GlobalState } from '../../src/models/globalState';
-import { LoaderContext } from '../../src/models/loaderContext';
+import { LocalLoaderContext } from '../../src/models/loaderContext/localLoaderContext';
 import { OutputContext } from '../../src/models/outputContext';
 import {
   DefaultPluginsConfig,
@@ -23,10 +23,11 @@ import {
 import { Plugins } from '../../src/models/plugins';
 import defaultPlugins from '../../src/models/plugins/defaultPlugins';
 
-export function buildLoaderContext(
-  overrides: Partial<LoaderContext> = {},
-): LoaderContext {
-  const loaderContext: LoaderContext = {
+export function buildLocalLoaderContext(
+  overrides: Partial<LocalLoaderContext> = {},
+): LocalLoaderContext {
+  const loaderContext: LocalLoaderContext = {
+    type: 'LocalLoaderContext',
     path: '/test',
     name: 'test_namespace',
     loaderConfig: defaultLoaderConfig(),
@@ -50,7 +51,7 @@ export function buildGlobalState(
   overrides: Partial<GlobalState> = {},
 ): GlobalState {
   const globalState: GlobalState = {
-    loaderContexts: [buildLoaderContext()],
+    loaderContexts: [buildLocalLoaderContext()],
     outputContexts: [buildOutputContext()],
     files: [],
     dependencyTable: {},

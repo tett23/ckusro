@@ -1,30 +1,18 @@
-import { join } from 'path';
 import { TargetDirectory } from '../ckusroConfig';
+import { LoaderConfig } from '../ckusroConfig/LoaderConfig';
+import { GitLoaderContext } from './gitLoaderContext';
 import {
-  defaultLoaderConfig,
-  LoaderConfig,
-} from '../ckusroConfig/LoaderConfig';
+  LocalLoaderContext,
+  newLocalLoaderContext,
+} from './localLoaderContext';
 
-export type LoaderContext = {
-  name: string;
-  path: string;
-  loaderConfig: LoaderConfig;
-};
+export type LoaderContext = LocalLoaderContext | GitLoaderContext;
 
-export function newLoaderContext({
-  name,
-  path,
-  innerPath,
-}: TargetDirectory): LoaderContext {
-  return {
-    name,
-    path: join(path, innerPath),
-    loaderConfig: defaultLoaderConfig(),
-  };
-}
-
-export function newLoaderContexts(targets: TargetDirectory[]): LoaderContext[] {
-  return targets.map(newLoaderContext);
+export function newLoaderContexts(
+  targets: TargetDirectory[],
+  loaderConfig: LoaderConfig,
+): LoaderContext[] {
+  return targets.map((item) => newLocalLoaderContext(item, loaderConfig));
 }
 
 type LoaderContextMap = { [key in string]: LoaderContext };

@@ -21,12 +21,12 @@ import {
   FileModeFile,
   FileModes,
 } from '../../src/models/statType';
-import { buildFile, buildLoaderContext } from '../__fixtures__';
+import { buildFile, buildLocalLoaderContext } from '../__fixtures__';
 
 describe(newCkusroFile, () => {
   it('return CkusroFile', async () => {
     const lstat = jest.fn().mockResolvedValue({ mode: FileModeFile });
-    const context = buildLoaderContext({
+    const context = buildLocalLoaderContext({
       path: '/test/ns',
       name: 'ns',
     });
@@ -48,7 +48,7 @@ describe(newCkusroFile, () => {
 
   it('return Error when lstat raises Error', async () => {
     const lstat = jest.fn().mockRejectedValue(new Error());
-    const context = buildLoaderContext({
+    const context = buildLocalLoaderContext({
       path: '/test/ns',
       name: 'ns',
     });

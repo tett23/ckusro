@@ -15,6 +15,7 @@ ShallowWrapper {
         },
         "name": "test_namespace",
         "path": "/test",
+        "type": "LocalLoaderContext",
       }
     }
     file={
@@ -197,6 +198,7 @@ ShallowWrapper {
         },
         "name": "test_namespace",
         "path": "/test",
+        "type": "LocalLoaderContext",
       }
     }
     file={
@@ -230,6 +232,7 @@ ShallowWrapper {
           },
           "name": "test_namespace",
           "path": "/test",
+          "type": "LocalLoaderContext",
         }
       }
       file={
@@ -287,6 +290,7 @@ ShallowWrapper {
                   },
                   "name": "test_namespace",
                   "path": "/test",
+                  "type": "LocalLoaderContext",
                 }
               }
               file={
@@ -357,6 +361,7 @@ ShallowWrapper {
                 },
                 "name": "test_namespace",
                 "path": "/test",
+                "type": "LocalLoaderContext",
               }
             }
             file={
@@ -414,6 +419,7 @@ ShallowWrapper {
                     },
                     "name": "test_namespace",
                     "path": "/test",
+                    "type": "LocalLoaderContext",
                   }
                 }
                 file={
@@ -484,6 +490,7 @@ ShallowWrapper {
                   },
                   "name": "test_namespace",
                   "path": "/test",
+                  "type": "LocalLoaderContext",
                 }
               }
               file={

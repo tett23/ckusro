@@ -2,7 +2,7 @@ import { isErrors } from '../../src/core/utils/types';
 import checkLoaderContexts, {
   isValidLoaderContext,
 } from '../../src/fileLoader/checkLoaderContexts';
-import { buildLoaderContext } from '../__fixtures__';
+import { buildLocalLoaderContext } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 
 describe(checkLoaderContexts, () => {
@@ -17,7 +17,7 @@ describe(checkLoaderContexts, () => {
   });
 
   it('returns true when context path is directory', async () => {
-    const context = buildLoaderContext({
+    const context = buildLocalLoaderContext({
       path: '/dir',
     });
     const actual = await checkLoaderContexts([context]);
@@ -26,7 +26,7 @@ describe(checkLoaderContexts, () => {
   });
 
   it('returns false when context path is file', async () => {
-    const context = buildLoaderContext({
+    const context = buildLocalLoaderContext({
       path: '/file',
     });
     const actual = await checkLoaderContexts([context]);
@@ -47,7 +47,7 @@ describe(isValidLoaderContext, () => {
   });
 
   it('returns true when context path is directory', async () => {
-    const context = buildLoaderContext({
+    const context = buildLocalLoaderContext({
       path: '/dir',
     });
     const actual = await isValidLoaderContext(context);
@@ -56,7 +56,7 @@ describe(isValidLoaderContext, () => {
   });
 
   it('returns true when context path is file', async () => {
-    const context = buildLoaderContext({
+    const context = buildLocalLoaderContext({
       path: '/file',
     });
     const actual = await isValidLoaderContext(context);

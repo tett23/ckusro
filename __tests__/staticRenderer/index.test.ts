@@ -5,6 +5,7 @@ jest.mock('../../src/staticRenderer/assets');
 
 import fs from 'fs';
 import * as mkdirp from 'mkdirp';
+import { defaultLoaderConfig } from '../../src/models/ckusroConfig/LoaderConfig';
 import {
   CkusroFile,
   FileTypeDirectory,
@@ -24,7 +25,7 @@ import * as render from '../../src/staticRenderer/render';
 import {
   buildFile,
   buildGlobalState,
-  buildLoaderContext,
+  buildLocalLoaderContext,
   buildOutputContext,
 } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
@@ -62,8 +63,10 @@ describe(staticRenderer, () => {
     const globalState = await buildGlobalState({
       loaderContexts: [
         {
+          type: 'LocalLoaderContext',
           path: '/test/ns',
           name: 'ns',
+          loaderConfig: defaultLoaderConfig(),
         },
       ],
       outputContexts: [
@@ -102,7 +105,10 @@ describe(renderEachNamesace, () => {
 
   it('returns boolean array', async () => {
     const outputContext = buildOutputContext({ name: 'ns', path: '/out' });
-    const loaderContext = buildLoaderContext({ name: 'ns', path: '/test/ns' });
+    const loaderContext = buildLocalLoaderContext({
+      name: 'ns',
+      path: '/test/ns',
+    });
     const files = [buildFile({ namespace: outputContext.name })];
     const globalState = buildGlobalState({
       loaderContexts: [loaderContext],

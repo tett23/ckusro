@@ -10,11 +10,10 @@ import {
   FileTypeMarkdown,
 } from '../../src/models/ckusroFile';
 import { newCkusroFile } from '../../src/models/ckusroFile';
-import { LoaderContext } from '../../src/models/loaderContext';
 import {
   buildFile,
   buildLoaderConfig,
-  buildLoaderContext,
+  buildLocalLoaderContext,
   buildPlugins,
 } from '../__fixtures__';
 import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
@@ -22,6 +21,7 @@ import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
 import * as _fetchEntries from '../../src/fileLoader/fetchEntries';
 import { defaultLoaderConfig } from '../../src/models/ckusroConfig/LoaderConfig';
 import * as _ckusroFile from '../../src/models/ckusroFile';
+import { LocalLoaderContext } from '../../src/models/loaderContext/localLoaderContext';
 
 const { default: fetchEntries } = _fetchEntries;
 
@@ -55,7 +55,7 @@ describe.skip(_fileLoader.default, () => {
   }
 
   it('returns CkusroFile', async () => {
-    const context = buildLoaderContext({
+    const context = buildLocalLoaderContext({
       path: '/test/ns',
       name: 'ns',
     });
@@ -149,7 +149,7 @@ describe(buildFiles, () => {
   }
 
   it('returns CkusroFile[]', async () => {
-    const context = buildLoaderContext({
+    const context = buildLocalLoaderContext({
       path: '/test/ns',
       name: 'ns',
     });
@@ -176,7 +176,7 @@ describe(buildFiles, () => {
     const err = new Error();
     spyFetchEntries(async () => [err]);
 
-    const context = buildLoaderContext({
+    const context = buildLocalLoaderContext({
       path: '/test/ns',
       name: 'ns',
     });
@@ -188,7 +188,7 @@ describe(buildFiles, () => {
   });
 
   it('returns Error[] when fetchEntries returns Error', async () => {
-    const context = buildLoaderContext({
+    const context = buildLocalLoaderContext({
       path: '/test/ns',
       name: 'ns',
     });
@@ -216,7 +216,7 @@ describe(loadContent, () => {
   });
 
   it('returns file content', async () => {
-    const context: LoaderContext = buildLoaderContext({
+    const context: LocalLoaderContext = buildLocalLoaderContext({
       name: 'foo',
       path: '/foo',
     });
@@ -238,7 +238,7 @@ describe(loadContent, () => {
   });
 
   it('returns null content when fileType is directory', async () => {
-    const context: LoaderContext = buildLoaderContext({
+    const context: LocalLoaderContext = buildLocalLoaderContext({
       name: 'foo',
       path: '/foo',
     });
@@ -260,7 +260,8 @@ describe(loadContent, () => {
   });
 
   it('returns null content when file does not exist', async () => {
-    const context: LoaderContext = {
+    const context: LocalLoaderContext = {
+      type: 'LocalLoaderContext',
       name: 'foo',
       path: '/foo',
       loaderConfig: defaultLoaderConfig(),
@@ -286,7 +287,7 @@ describe(loadContent, () => {
 });
 
 describe(loadDependencies, () => {
-  const context: LoaderContext = buildLoaderContext({
+  const context: LocalLoaderContext = buildLocalLoaderContext({
     name: 'test',
     path: '/test',
   });
