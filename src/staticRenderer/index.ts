@@ -7,7 +7,7 @@ import {
   isWritableFileType,
   replaceExt,
 } from '../models/ckusroFile';
-import { GlobalState } from '../models/globalState';
+import { GlobalState } from '../models/oldGlobalState';
 import { OutputContext } from '../models/outputContext';
 import { jsAssets } from './assets';
 import { Props } from './assets/components';

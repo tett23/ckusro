@@ -1,5 +1,5 @@
 import webpack from 'webpack';
-import { assetsDirectory, GlobalState } from '../models/globalState';
+import { assetsDirectory, GlobalState } from '../models/oldGlobalState';
 import webpackConfig from './webpack.config';
 
 export function jsAssets(globalState: GlobalState): Promise<true | Error> {

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { CkusroFile } from '../../../models/ckusroFile';
-import { GlobalState } from '../../../models/globalState';
+import { GlobalState } from '../../../models/oldGlobalState';
 import { OutputContext } from '../../../models/outputContext';
 import { Plugins } from '../../../models/plugins';
 import Breadcrumbs from './Breadcrumbs';

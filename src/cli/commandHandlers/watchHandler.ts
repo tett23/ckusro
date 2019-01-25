@@ -1,11 +1,11 @@
 import chokidar from 'chokidar';
 import { join } from 'path';
+import { loaderContextMap } from '../../models/loaderContext';
 import {
   GlobalState,
   outputDirectory,
   reloadFiles,
-} from '../../models/globalState';
-import { loaderContextMap } from '../../models/loaderContext';
+} from '../../models/oldGlobalState';
 import staticRenderer from '../../staticRenderer';
 
 export default async function watchHandler(

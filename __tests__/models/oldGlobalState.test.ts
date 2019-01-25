@@ -4,7 +4,7 @@ import newGlobalState, {
   assetsDirectory,
   isGlobalState,
   outputDirectory,
-} from '../../src/models/globalState';
+} from '../../src/models/oldGlobalState';
 import {
   buildCkusroConfig,
   buildGlobalState,

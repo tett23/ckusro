@@ -13,8 +13,8 @@ import {
   newCkusroId,
 } from '../../src/models/ckusroFile';
 import { buildDependencyTable, invert } from '../../src/models/dependencyTable';
-import { GlobalState } from '../../src/models/globalState';
 import { LocalLoaderContext } from '../../src/models/loaderContext/localLoaderContext';
+import { GlobalState } from '../../src/models/oldGlobalState';
 import { OutputContext } from '../../src/models/outputContext';
 import {
   DefaultPluginsConfig,
