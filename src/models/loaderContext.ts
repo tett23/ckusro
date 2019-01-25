@@ -1,9 +1,11 @@
 import { join } from 'path';
 import { TargetDirectory } from './ckusroConfig';
+import { defaultLoaderConfig, LoaderConfig } from './ckusroConfig/LoaderConfig';
 
 export type LoaderContext = {
   name: string;
   path: string;
+  loaderConfig: LoaderConfig;
 };
 
 export function newLoaderContext({
@@ -14,6 +16,7 @@ export function newLoaderContext({
   return {
     name,
     path: join(path, innerPath),
+    loaderConfig: defaultLoaderConfig(),
   };
 }
 
