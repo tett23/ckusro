@@ -1,11 +1,38 @@
 import { TargetDirectory } from '../../../src/models/ckusroConfig';
 import { defaultLoaderConfig } from '../../../src/models/ckusroConfig/LoaderConfig';
 import {
+  isLoaderContext,
   LoaderContext,
   loaderContextMap,
   newLoaderContexts,
 } from '../../../src/models/loaderContext';
-import { buildLocalLoaderContext } from '../../__fixtures__';
+import {
+  buildGitLoaderContext,
+  buildLocalLoaderContext,
+} from '../../__fixtures__';
+
+describe(isLoaderContext, () => {
+  it('judges type', () => {
+    const validData: LoaderContext[] = [
+      buildLocalLoaderContext(),
+      buildGitLoaderContext(),
+    ];
+    const data: Array<[any, boolean]> = [
+      ...validData.map((item): [LoaderContext, true] => [item, true]),
+      [{}, false],
+      [[], false],
+      [null, false],
+      [undefined, false],
+      [true, false],
+      [() => {}, false], // tslint:disable-line no-empty
+    ];
+    data.forEach(([value, expected]) => {
+      const actual = isLoaderContext(value);
+
+      expect(actual).toBe(expected);
+    });
+  });
+});
 
 describe(newLoaderContexts, () => {
   it('returns LoaderContext[]', () => {

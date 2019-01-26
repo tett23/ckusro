@@ -1,12 +1,22 @@
 import { TargetDirectory } from '../ckusroConfig';
 import { LoaderConfig } from '../ckusroConfig/LoaderConfig';
-import { GitLoaderContext } from './gitLoaderContext';
+import { GitLoaderContextType, isGitLoaderContext } from './gitLoaderContext';
 import {
-  LocalLoaderContext,
+  isLocalLoaderContext,
+  LocalLoaderContextType,
   newLocalLoaderContext,
 } from './localLoaderContext';
 
-export type LoaderContext = LocalLoaderContext | GitLoaderContext;
+export type ContextTypes =
+  | typeof LocalLoaderContextType
+  | typeof GitLoaderContextType;
+
+export type LoaderContext = {
+  type: ContextTypes;
+  name: string;
+  path: string;
+  loaderConfig: LoaderConfig;
+};
 
 export function newLoaderContexts(
   targets: TargetDirectory[],
@@ -27,4 +37,8 @@ export function loaderContextMap(
     },
     {} as LoaderContextMap,
   );
+}
+
+export function isLoaderContext(value: unknown): value is LoaderContext {
+  return isLocalLoaderContext(value) || isGitLoaderContext(value);
 }

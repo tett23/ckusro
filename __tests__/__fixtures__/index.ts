@@ -13,7 +13,15 @@ import {
   newCkusroId,
 } from '../../src/models/ckusroFile';
 import { buildDependencyTable, invert } from '../../src/models/dependencyTable';
-import { LocalLoaderContext } from '../../src/models/loaderContext/localLoaderContext';
+import {
+  GitLoaderContext,
+  GitLoaderContextType,
+} from '../../src/models/loaderContext/gitLoaderContext';
+import {
+  LocalLoaderContext,
+  LocalLoaderContextType,
+} from '../../src/models/loaderContext/localLoaderContext';
+import { Namespace } from '../../src/models/namespace';
 import { GlobalState } from '../../src/models/oldGlobalState';
 import { OutputContext } from '../../src/models/outputContext';
 import {
@@ -27,7 +35,20 @@ export function buildLocalLoaderContext(
   overrides: Partial<LocalLoaderContext> = {},
 ): LocalLoaderContext {
   const loaderContext: LocalLoaderContext = {
-    type: 'LocalLoaderContext',
+    type: LocalLoaderContextType,
+    path: '/test',
+    name: 'test_namespace',
+    loaderConfig: defaultLoaderConfig(),
+  };
+
+  return merge(loaderContext, overrides);
+}
+
+export function buildGitLoaderContext(
+  overrides: Partial<GitLoaderContext> = {},
+): GitLoaderContext {
+  const loaderContext: GitLoaderContext = {
+    type: GitLoaderContextType,
     path: '/test',
     name: 'test_namespace',
     loaderConfig: defaultLoaderConfig(),
@@ -145,4 +166,14 @@ export function buildCLIOptions(
   };
 
   return { ...options, ...overrides };
+}
+
+export function buildNamespace(overrides: Partial<Namespace> = {}): Namespace {
+  const namespace: Namespace = {
+    name: 'test_namespace',
+    loaderContext: buildLocalLoaderContext(),
+    outputContext: buildOutputContext(),
+  };
+
+  return { ...namespace, ...overrides };
 }
