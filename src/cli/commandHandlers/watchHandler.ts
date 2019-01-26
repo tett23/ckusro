@@ -2,14 +2,14 @@ import chokidar from 'chokidar';
 import { join } from 'path';
 import { loaderContextMap } from '../../models/loaderContext';
 import {
-  GlobalState,
+  OldGlobalState,
   outputDirectory,
   reloadFiles,
 } from '../../models/OldGlobalState';
 import staticRenderer from '../../staticRenderer';
 
 export default async function watchHandler(
-  globalState: GlobalState,
+  globalState: OldGlobalState,
 ): Promise<boolean> {
   const paths = absolutePaths(globalState);
   const promise = new Promise((_, reject) => {
@@ -69,7 +69,7 @@ export default async function watchHandler(
   return await promise;
 }
 
-function handleChange(globalState: GlobalState, reject: any) {
+function handleChange(globalState: OldGlobalState, reject: any) {
   console.time('handleChange');
   return reload(globalState)
     .then((res) => {
@@ -81,7 +81,7 @@ function handleChange(globalState: GlobalState, reject: any) {
     .catch(() => reject());
 }
 
-async function reload(state: GlobalState) {
+async function reload(state: OldGlobalState) {
   const newState = await reloadFiles(state);
   if (newState instanceof Error) {
     return newState;
@@ -89,7 +89,7 @@ async function reload(state: GlobalState) {
   return await staticRenderer(newState);
 }
 
-function absolutePaths(globalState: GlobalState): string[] {
+function absolutePaths(globalState: OldGlobalState): string[] {
   const contextMap = loaderContextMap(globalState.loaderContexts);
   const paths = globalState.files.map(({ namespace, path }) => {
     const context = contextMap[namespace];

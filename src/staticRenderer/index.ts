@@ -7,7 +7,7 @@ import {
   isWritableFileType,
   replaceExt,
 } from '../models/CkusroFile';
-import { GlobalState } from '../models/OldGlobalState';
+import { OldGlobalState } from '../models/OldGlobalState';
 import { OutputContext } from '../models/OutputContext';
 import { jsAssets } from './assets';
 import { Props } from './assets/components';
@@ -15,7 +15,7 @@ import writeFile from './io';
 import render from './render';
 
 export default async function staticRenderer(
-  globalState: GlobalState,
+  globalState: OldGlobalState,
 ): Promise<ReturnType<typeof separateErrors>> {
   const result = await jsAssets(globalState);
   if (result instanceof Error) {
@@ -29,7 +29,7 @@ export default async function staticRenderer(
 }
 
 async function renderHTML(
-  globalState: GlobalState,
+  globalState: OldGlobalState,
 ): Promise<Array<true | Error>> {
   const curried = curry(renderEachNamesace)(globalState);
   const ps = globalState.outputContexts.map(curried);
@@ -39,7 +39,7 @@ async function renderHTML(
 }
 
 export async function renderEachNamesace(
-  globalState: GlobalState,
+  globalState: OldGlobalState,
   context: OutputContext,
 ): Promise<Array<true | Error>> {
   const curriedFilterNamespace = curry(filterNamespace)(context.name);
@@ -97,7 +97,7 @@ export function buildWriteInfo(
   };
 }
 
-export function buildProps(globalState: GlobalState, id: CkusroId): Props {
+export function buildProps(globalState: OldGlobalState, id: CkusroId): Props {
   const { weakDependencies, strongDependencies } = globalState.dependencyTable[
     id
   ];

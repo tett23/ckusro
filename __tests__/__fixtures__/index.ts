@@ -26,7 +26,7 @@ import {
   LocalLoaderContextType,
 } from '../../src/models/loaderContext/LocalLoaderContext';
 import { Namespace } from '../../src/models/Namespace';
-import { GlobalState } from '../../src/models/OldGlobalState';
+import { OldGlobalState } from '../../src/models/OldGlobalState';
 import { OutputContext } from '../../src/models/OutputContext';
 import { Plugins } from '../../src/models/plugins';
 import defaultPlugins from '../../src/models/plugins/defaultPlugins';
@@ -69,9 +69,9 @@ export function buildOutputContext(
 }
 
 export function buildGlobalState(
-  overrides: Partial<GlobalState> = {},
-): GlobalState {
-  const globalState: GlobalState = {
+  overrides: Partial<OldGlobalState> = {},
+): OldGlobalState {
+  const globalState: OldGlobalState = {
     loaderContexts: [buildLocalLoaderContext()],
     outputContexts: [buildOutputContext()],
     files: [],

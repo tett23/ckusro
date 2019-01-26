@@ -13,7 +13,7 @@ import { LoaderContext, newLoaderContexts } from './loaderContext';
 import { newOutputContext, OutputContext } from './OutputContext';
 import { Plugins } from './plugins';
 
-export type GlobalState = {
+export type OldGlobalState = {
   loaderContexts: LoaderContext[];
   outputContexts: OutputContext[];
   files: CkusroFile[];
@@ -23,9 +23,9 @@ export type GlobalState = {
   plugins: Plugins;
 };
 
-export default async function newGlobalState(
+export default async function newOldGlobalState(
   config: CkusroConfig,
-): Promise<GlobalState | Error[]> {
+): Promise<OldGlobalState | Error[]> {
   const loaderContexts = newLoaderContexts(
     config.targetDirectories,
     config.loaderConfig,
@@ -57,8 +57,8 @@ export default async function newGlobalState(
 }
 
 export async function reloadFiles(
-  globalState: GlobalState,
-): Promise<GlobalState | Error> {
+  globalState: OldGlobalState,
+): Promise<OldGlobalState | Error> {
   const { loaderContexts, loaderConfig, plugins } = globalState;
   const result = await loadFiles(loaderContexts, loaderConfig, plugins);
   if (result instanceof Error) {
@@ -90,15 +90,15 @@ async function loadFiles(
   return [files, dependencyTable, invertedDependencyTable];
 }
 
-export function outputDirectory(globalState: GlobalState): string {
+export function outputDirectory(globalState: OldGlobalState): string {
   return dirname(globalState.outputContexts[0].path);
 }
 
-export function assetsDirectory(globalState: GlobalState): string {
+export function assetsDirectory(globalState: OldGlobalState): string {
   return join(outputDirectory(globalState), 'assets');
 }
 
-export function isGlobalState(obj: unknown): obj is GlobalState {
+export function isGlobalState(obj: unknown): obj is OldGlobalState {
   if (!isNonNullObject(obj)) {
     return false;
   }

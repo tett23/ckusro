@@ -1,6 +1,6 @@
 import { isErrors } from '../../src/core/utils/types';
 import { CkusroConfig } from '../../src/models/ckusroConfig';
-import newGlobalState, {
+import newOldGlobalState, {
   assetsDirectory,
   isGlobalState,
   outputDirectory,
@@ -15,7 +15,7 @@ import {
   restoreFileSystem,
 } from '../__helpers__/mockFileSystem';
 
-describe(newGlobalState, () => {
+describe(newOldGlobalState, () => {
   beforeEach(() => {
     mockFileSystem({
       '/test/foo/bar/baz.md': '# test file',
@@ -35,7 +35,7 @@ describe(newGlobalState, () => {
         },
       ],
     });
-    const actual = await newGlobalState(conf);
+    const actual = await newOldGlobalState(conf);
 
     expect(isGlobalState(actual)).toBe(true);
   });
@@ -50,7 +50,7 @@ describe(newGlobalState, () => {
         },
       ],
     });
-    const actual = await newGlobalState(conf);
+    const actual = await newOldGlobalState(conf);
 
     expect(isErrors(actual)).toBe(true);
   });

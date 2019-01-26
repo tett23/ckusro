@@ -1,6 +1,6 @@
-import { GlobalState } from '../../models/OldGlobalState';
+import { OldGlobalState } from '../../models/OldGlobalState';
 import staticRenderer from '../../staticRenderer';
 
-export async function buildHandler(globalState: GlobalState) {
+export async function buildHandler(globalState: OldGlobalState) {
   return await staticRenderer(globalState);
 }
