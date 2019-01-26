@@ -107,7 +107,7 @@ export function testFS(overrides: Partial<FS> = {}): FS {
         }),
   };
 
-  return { ...fs, ...overrides };
+  return { ...fs, ...overrides } as any;
 }
 
 export function promisifiedTestFS(
@@ -117,5 +117,5 @@ export function promisifiedTestFS(
     lstat: jest.fn().mockResolvedValue(statsFixture(StatTypeFile)),
   };
 
-  return { ...fs, ...overrides };
+  return { ...fs, ...overrides } as any;
 }

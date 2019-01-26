@@ -26,24 +26,84 @@ export interface Stats {
   isSocket(): boolean;
 }
 
-export type FSCallback<T> = (err: Error, ret: T) => void;
+export interface Dirent {
+  name: string;
+  isFile(): boolean;
+  isDirectory(): boolean;
+  isBlockDevice(): boolean;
+  isCharacterDevice(): boolean;
+  isSymbolicLink(): boolean;
+  isFIFO(): boolean;
+  isSocket(): boolean;
+}
 
+export type FSCallback<T> = (err: Error, ret: T) => void;
 export type PathLike = string | Buffer | URL;
 
 export interface FS {
-  lstat: (path: PathLike, callback: FSCallback<Stats>) => void;
+  lstat(path: PathLike, callback: FSCallback<Stats>): void;
+
+  readdir(
+    path: PathLike,
+    options:
+      | { encoding: BufferEncoding | null; withFileTypes?: false }
+      | BufferEncoding
+      | undefined
+      | null,
+    callback: (err: NodeJS.ErrnoException, files: string[]) => void,
+  ): void;
+  readdir(
+    path: PathLike,
+    options: { encoding: 'buffer'; withFileTypes?: false } | 'buffer',
+    callback: (err: NodeJS.ErrnoException, files: Buffer[]) => void,
+  ): void;
+  readdir(
+    path: PathLike,
+    options:
+      | { encoding?: string | null; withFileTypes?: false }
+      | string
+      | undefined
+      | null,
+    callback: (err: NodeJS.ErrnoException, files: string[] | Buffer[]) => void,
+  ): void;
+  readdir(
+    path: PathLike,
+    callback: (err: NodeJS.ErrnoException, files: string[]) => void,
+  ): void;
+  readdir(
+    path: PathLike,
+    options: { withFileTypes: true },
+    callback: (err: NodeJS.ErrnoException, files: Dirent[]) => void,
+  ): void;
 }
 
 export interface PromisifiedFS {
   lstat: Promisify<FS['lstat']>;
-}
 
-type AnyFunction = (...args: any[]) => any;
+  readdir(path: PathLike): Promise<string[] | Error>;
+  readdir(
+    path: PathLike,
+    options: {
+      encoding?: string;
+      withFiletypes?: boolean;
+    },
+    callback: FSCallback<string>,
+  ): Promise<string[] | Error>;
+  readdir(
+    path: PathLike,
+    options: {
+      encoding?: string;
+      withFiletypes: true;
+    },
+  ): Promise<Dirent[] | Error>;
+}
 
 export type Promisify<F extends AnyFunction> = ArrayToFunction<
   OmitLastArgument<F>,
   Promise<CallbackReturnType<F>>
 >;
+
+type AnyFunction = (...args: any[]) => any;
 
 type OmitLastArgument<F extends AnyFunction> = OmitLast<Parameters<F>>;
 
