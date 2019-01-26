@@ -1,20 +1,15 @@
 import isValidLoaderContext from '../../../../src/core/LoaderInfoBuilder/NodeFS/isValidLoaderContext';
-import { FSCallback, PathLike, Stats } from '../../../../src/core/types';
 import {
   StatTypeDirectory,
   StatTypeFile,
 } from '../../../../src/models/statType';
 import { buildLocalLoaderContext } from '../../../__fixtures__';
-import { statsFixture, testFS } from '../../../__fixtures__/testFS';
+import { promisifiedTestFS, statsFixture } from '../../../__fixtures__/testFS';
 
 describe(isValidLoaderContext, () => {
   it('returns true when context path is directory', async () => {
-    const fs = testFS({
-      lstat: jest
-        .fn()
-        .mockImplementation((_: PathLike, callback: FSCallback<Stats>) => {
-          callback(null as any, statsFixture(StatTypeDirectory));
-        }),
+    const fs = promisifiedTestFS({
+      lstat: jest.fn().mockResolvedValue(statsFixture(StatTypeDirectory)),
     });
     const context = buildLocalLoaderContext({
       path: '/dir',
@@ -25,12 +20,8 @@ describe(isValidLoaderContext, () => {
   });
 
   it('returns true when context path is file', async () => {
-    const fs = testFS({
-      lstat: jest
-        .fn()
-        .mockImplementation((_: PathLike, callback: FSCallback<Stats>) => {
-          callback(null as any, statsFixture(StatTypeFile));
-        }),
+    const fs = promisifiedTestFS({
+      lstat: jest.fn().mockResolvedValue(statsFixture(StatTypeFile)),
     });
     const context = buildLocalLoaderContext({
       path: '/file.md',
@@ -40,13 +31,9 @@ describe(isValidLoaderContext, () => {
     expect(actual).toBe(false);
   });
 
-  it('returns false when lstat threw Error', async () => {
-    const fs = testFS({
-      lstat: jest
-        .fn()
-        .mockImplementation((_: PathLike, callback: FSCallback<Stats>) => {
-          callback(new Error(), null as any);
-        }),
+  it('returns false when rejected lstat', async () => {
+    const fs = promisifiedTestFS({
+      lstat: jest.fn().mockRejectedValue(new Error()),
     });
     const context = buildLocalLoaderContext({
       path: '/dir',

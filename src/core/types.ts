@@ -33,3 +33,7 @@ export type PathLike = string | Buffer | URL;
 export interface FS {
   lstat: (path: PathLike, callback: FSCallback<Stats>) => void;
 }
+
+export interface PromisifiedFS {
+  lstat: (path: PathLike) => Promise<Stats | Error>;
+}

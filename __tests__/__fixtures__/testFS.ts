@@ -1,4 +1,10 @@
-import { FS, FSCallback, PathLike, Stats } from '../../src/core/types';
+import {
+  FS,
+  FSCallback,
+  PathLike,
+  PromisifiedFS,
+  Stats,
+} from '../../src/core/types';
 import {
   FileModeBlockDevice,
   FileModeCharacterDevice,
@@ -99,6 +105,16 @@ export function testFS(overrides: Partial<FS> = {}): FS {
         .mockImplementation((_: PathLike, callback: FSCallback<Stats>) => {
           callback(null as any, statsFixture(StatTypeFile));
         }),
+  };
+
+  return { ...fs, ...overrides };
+}
+
+export function promisifiedTestFS(
+  overrides: Partial<PromisifiedFS> = {},
+): PromisifiedFS {
+  const fs = {
+    lstat: jest.fn().mockResolvedValue(statsFixture(StatTypeFile)),
   };
 
   return { ...fs, ...overrides };
