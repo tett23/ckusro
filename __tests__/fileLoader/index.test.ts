@@ -16,7 +16,10 @@ import {
   buildLocalLoaderContext,
   buildPlugins,
 } from '../__fixtures__';
-import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
+import {
+  mockFileSystem,
+  restoreFileSystem,
+} from '../__helpers__/mockFileSystem';
 
 import * as _fetchEntries from '../../src/fileLoader/fetchEntries';
 import { defaultLoaderConfig } from '../../src/models/ckusroConfig/LoaderConfig';

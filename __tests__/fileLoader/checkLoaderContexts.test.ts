@@ -3,7 +3,10 @@ import checkLoaderContexts, {
   isValidLoaderContext,
 } from '../../src/fileLoader/checkLoaderContexts';
 import { buildLocalLoaderContext } from '../__fixtures__';
-import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
+import {
+  mockFileSystem,
+  restoreFileSystem,
+} from '../__helpers__/mockFileSystem';
 
 describe(checkLoaderContexts, () => {
   beforeEach(() => {

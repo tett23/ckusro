@@ -17,6 +17,7 @@ describe(isGlobalState, () => {
       [null, false],
       [undefined, false],
       [1, false],
+      [true, false],
       [() => {}, false], // tslint:disable-line no-empty
     ];
     data.forEach(([value, expected]) => {

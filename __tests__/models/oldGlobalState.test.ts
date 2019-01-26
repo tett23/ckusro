@@ -10,7 +10,10 @@ import {
   buildGlobalState,
   buildOutputContext,
 } from '../__fixtures__';
-import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
+import {
+  mockFileSystem,
+  restoreFileSystem,
+} from '../__helpers__/mockFileSystem';
 
 describe(newGlobalState, () => {
   beforeEach(() => {

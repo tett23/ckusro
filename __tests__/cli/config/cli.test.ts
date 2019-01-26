@@ -6,7 +6,10 @@ import { PrimitiveCkusroConfig } from '../../../src/cli/config/toCkusroConfig';
 import { CkusroConfig } from '../../../src/models/ckusroConfig';
 import { defaultLoaderConfig } from '../../../src/models/ckusroConfig/LoaderConfig';
 import { buildCkusroConfig, buildCLIOptions } from '../../__fixtures__';
-import { mockFileSystem, restoreFileSystem } from '../../__helpers__/fs';
+import {
+  mockFileSystem,
+  restoreFileSystem,
+} from '../../__helpers__/mockFileSystem';
 
 function jsonReplacer(_: string, value: any) {
   if (value instanceof RegExp) {

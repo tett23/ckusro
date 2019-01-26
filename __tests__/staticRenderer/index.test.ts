@@ -28,7 +28,10 @@ import {
   buildLocalLoaderContext,
   buildOutputContext,
 } from '../__fixtures__';
-import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
+import {
+  mockFileSystem,
+  restoreFileSystem,
+} from '../__helpers__/mockFileSystem';
 
 // @ts-ignore
 render.default.mockResolvedValue({

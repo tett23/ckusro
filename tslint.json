@@ -8,7 +8,8 @@
     "object-literal-sort-keys": false,
     "no-console": [true, "log"],
     "max-classes-per-file": false,
-    "prettier": [true, ".prettierrc.json"] 
+    "match-default-export-name": true,
+    "prettier": [true, ".prettierrc.json"]
   },
   "rulesDirectory": ["tslint-plugin-prettier"]
 }
