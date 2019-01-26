@@ -1,12 +1,12 @@
 import { detectType, FileTypeDirectory } from '../../../models/CkusroFile';
 import { LoaderContext } from '../../../models/loaderContext';
-import { PromisifiedFS } from '../../types';
+import { FS, Promisify } from '../../types';
 
 export default async function isValidLoaderContext(
-  fs: PromisifiedFS,
+  lstat: Promisify<FS['lstat']>,
   context: LoaderContext,
 ): Promise<boolean> {
-  const stats = await fs.lstat(context.path).catch((err: Error) => err);
+  const stats = await lstat(context.path).catch((err: Error) => err);
   if (stats instanceof Error) {
     return false;
   }
