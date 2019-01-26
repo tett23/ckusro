@@ -1,4 +1,4 @@
-import { isParserPlugin, isParserPlugins } from '../../src/models/parserPlugin';
+import { isParserPlugin, isParserPlugins } from '../../src/models/ParserPlugin';
 
 describe(isParserPlugin, () => {
   it('judges type', () => {

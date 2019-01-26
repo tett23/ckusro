@@ -1,6 +1,6 @@
 import { isNonNullObject } from '../core/utils/types';
 import { isLoaderContext, LoaderContext } from './loaderContext';
-import { isOutputContext, OutputContext } from './outputContext';
+import { isOutputContext, OutputContext } from './OutputContext';
 
 export type Namespace = {
   name: string;

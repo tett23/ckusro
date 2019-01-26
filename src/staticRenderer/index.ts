@@ -6,9 +6,9 @@ import {
   CkusroId,
   isWritableFileType,
   replaceExt,
-} from '../models/ckusroFile';
-import { GlobalState } from '../models/oldGlobalState';
-import { OutputContext } from '../models/outputContext';
+} from '../models/CkusroFile';
+import { GlobalState } from '../models/OldGlobalState';
+import { OutputContext } from '../models/OutputContext';
 import { jsAssets } from './assets';
 import { Props } from './assets/components';
 import writeFile from './io';

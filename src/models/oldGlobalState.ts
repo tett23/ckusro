@@ -3,14 +3,14 @@ import { isErrors, isNonNullObject } from '../core/utils/types';
 import fileLoader from '../fileLoader';
 import { CkusroConfig } from './ckusroConfig';
 import { LoaderConfig } from './ckusroConfig/LoaderConfig';
-import { CkusroFile } from './ckusroFile';
+import { CkusroFile } from './CkusroFile';
 import {
   buildDependencyTable,
   DependencyTable,
   invert,
-} from './dependencyTable';
+} from './DependencyTable';
 import { LoaderContext, newLoaderContexts } from './loaderContext';
-import { newOutputContext, OutputContext } from './outputContext';
+import { newOutputContext, OutputContext } from './OutputContext';
 import { Plugins } from './plugins';
 
 export type GlobalState = {

@@ -1,5 +1,5 @@
 import { Content, Parent, Root } from 'mdast';
-import { CkusroFile, newDoesNotExistFile } from '../models/ckusroFile';
+import { CkusroFile, newDoesNotExistFile } from '../models/CkusroFile';
 import { LoaderContext } from '../models/loaderContext';
 import { Plugins } from '../models/plugins';
 import parserInstance from '../parserInstance';

@@ -1,13 +1,17 @@
-import { CkusroFile, FileTypeDirectory } from '../../src/models/ckusroFile';
+import { CkusroFile, FileTypeDirectory } from '../../src/models/CkusroFile';
 import parseLinkText, {
   determineLinkFile,
   IncompletenessLink,
   Link,
 } from '../../src/parser/parseLinkText';
+import { buildLocalLoaderContext } from '../__fixtures__';
 
 describe(parseLinkText, () => {
   it('parses page', () => {
-    const actual = parseLinkText({ name: 'test', path: '/test' }, '/foo');
+    const actual = parseLinkText(
+      buildLocalLoaderContext({ name: 'test', path: '/test' }),
+      '/foo',
+    );
     const expected: IncompletenessLink = {
       namespace: 'test',
       name: '/foo',
@@ -18,7 +22,10 @@ describe(parseLinkText, () => {
   });
 
   it('parses namespace', () => {
-    const actual = parseLinkText({ name: 'test', path: '/test' }, 'foo:/bar');
+    const actual = parseLinkText(
+      buildLocalLoaderContext({ name: 'test', path: '/test' }),
+      'foo:/bar',
+    );
     const expected: IncompletenessLink = {
       namespace: 'foo',
       name: '/bar',
@@ -30,7 +37,7 @@ describe(parseLinkText, () => {
 
   it('parses anchor', () => {
     const actual = parseLinkText(
-      { name: 'test', path: '/test' },
+      buildLocalLoaderContext({ name: 'test', path: '/test' }),
       'foo:/bar#baz',
     );
     const expected: IncompletenessLink = {

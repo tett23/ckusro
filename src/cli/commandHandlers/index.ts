@@ -1,4 +1,4 @@
-import { GlobalState } from '../../models/oldGlobalState';
+import { GlobalState } from '../../models/OldGlobalState';
 import staticRenderer from '../../staticRenderer';
 
 export async function buildHandler(globalState: GlobalState) {

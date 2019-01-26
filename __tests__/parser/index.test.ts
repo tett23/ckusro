@@ -2,8 +2,8 @@ import {
   CkusroFile,
   FileTypeDirectory,
   FileTypeDoesNotExist,
-} from '../../src/models/ckusroFile';
-import { defaultPluginsConfig } from '../../src/models/pluginConfig';
+} from '../../src/models/CkusroFile';
+import { defaultPluginsConfig } from '../../src/models/DefaultPluginConfig';
 import defaultPlugins from '../../src/models/plugins/defaultPlugins';
 import { buildAst, determineDependency } from '../../src/parser';
 import { buildFile, buildLocalLoaderContext } from '../__fixtures__';

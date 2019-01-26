@@ -4,7 +4,7 @@ import remarkBreaks from 'remark-breaks';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import unified from 'unified';
-import { ComponentPlugin } from '../models/componentPlugin';
+import { ComponentPlugin } from '../models/ComponentPlugin';
 import { Plugins } from '../models/plugins';
 import renderJSXComponent, { Options } from './renderJSXComponent';
 

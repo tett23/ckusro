@@ -1,4 +1,4 @@
-import { isNamespace, Namespace } from '../../src/models/namespace';
+import { isNamespace, Namespace } from '../../src/models/Namespace';
 import { buildLocalLoaderContext, buildOutputContext } from '../__fixtures__';
 
 describe(isNamespace, () => {

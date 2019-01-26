@@ -3,7 +3,7 @@ import {
   isComponentPlugin,
   isComponentPlugins,
   Props,
-} from '../../src/models/componentPlugin';
+} from '../../src/models/ComponentPlugin';
 
 describe(isComponentPlugin, () => {
   it('judges type', () => {

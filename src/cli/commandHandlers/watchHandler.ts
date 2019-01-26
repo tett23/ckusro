@@ -5,7 +5,7 @@ import {
   GlobalState,
   outputDirectory,
   reloadFiles,
-} from '../../models/oldGlobalState';
+} from '../../models/OldGlobalState';
 import staticRenderer from '../../staticRenderer';
 
 export default async function watchHandler(

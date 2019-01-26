@@ -8,8 +8,8 @@ import {
   CkusroFile,
   FileTypeDirectory,
   FileTypeMarkdown,
-} from '../../src/models/ckusroFile';
-import { newCkusroFile } from '../../src/models/ckusroFile';
+} from '../../src/models/CkusroFile';
+import { newCkusroFile } from '../../src/models/CkusroFile';
 import {
   buildFile,
   buildLoaderConfig,
@@ -23,8 +23,8 @@ import {
 
 import * as _fetchEntries from '../../src/fileLoader/fetchEntries';
 import { defaultLoaderConfig } from '../../src/models/ckusroConfig/LoaderConfig';
-import * as _ckusroFile from '../../src/models/ckusroFile';
-import { LocalLoaderContext } from '../../src/models/loaderContext/localLoaderContext';
+import * as _ckusroFile from '../../src/models/CkusroFile';
+import { LocalLoaderContext } from '../../src/models/loaderContext/LocalLoaderContext';
 
 const { default: fetchEntries } = _fetchEntries;
 

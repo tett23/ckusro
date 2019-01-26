@@ -10,7 +10,7 @@ import {
   CkusroFile,
   FileTypeDirectory,
   FileTypeMarkdown,
-} from '../../src/models/ckusroFile';
+} from '../../src/models/CkusroFile';
 import staticRenderer, {
   buildProps,
   buildWriteInfo,

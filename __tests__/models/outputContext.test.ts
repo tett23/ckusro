@@ -2,7 +2,7 @@ import {
   isOutputContext,
   newOutputContext,
   OutputContext,
-} from '../../src/models/outputContext';
+} from '../../src/models/OutputContext';
 import { buildCkusroConfig, buildLocalLoaderContext } from '../__fixtures__';
 
 describe(newOutputContext, () => {

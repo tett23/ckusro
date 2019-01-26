@@ -1,6 +1,6 @@
-import { DefaultPluginsConfig } from '../../models/pluginConfig';
 import WikiLink from '../../plugins/ckusro-plugin-component-WikiLink';
 import wikiLink from '../../plugins/ckusro-plugin-parser-WikiLink';
+import { DefaultPluginsConfig } from '../DefaultPluginConfig';
 import { Plugins } from './index';
 
 export default function defaultPlugins(config: DefaultPluginsConfig): Plugins {

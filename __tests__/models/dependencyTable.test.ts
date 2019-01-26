@@ -1,9 +1,9 @@
-import { FileTypeMarkdown } from '../../src/models/ckusroFile';
+import { FileTypeMarkdown } from '../../src/models/CkusroFile';
 import {
   buildDependencyTable,
   DependencyTable,
   invert,
-} from '../../src/models/dependencyTable';
+} from '../../src/models/DependencyTable';
 
 describe(buildDependencyTable, () => {
   it('returns FileTypeDirectory when statType is StatTypeDirectory', () => {

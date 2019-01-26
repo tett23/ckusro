@@ -5,7 +5,7 @@ import {
   LocalLoaderContext,
   LocalLoaderContextType,
   newLocalLoaderContext,
-} from '../../../src/models/loaderContext/localLoaderContext';
+} from '../../../src/models/loaderContext/LocalLoaderContext';
 import { buildGitLoaderContext } from '../../__fixtures__';
 
 describe(isLocalLoaderContext, () => {

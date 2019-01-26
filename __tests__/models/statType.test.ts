@@ -8,7 +8,7 @@ import {
   StatTypes,
   StatTypeSocket,
   StatTypeSymbolicLink,
-} from '../../src/models/statType';
+} from '../../src/models/StatType';
 
 describe(statType, () => {
   it('returns StatType', () => {

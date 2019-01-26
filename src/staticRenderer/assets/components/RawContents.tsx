@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { CkusroFile } from '../../../models/ckusroFile';
+import { CkusroFile } from '../../../models/CkusroFile';
 
 export type Props = {
   files: CkusroFile[];

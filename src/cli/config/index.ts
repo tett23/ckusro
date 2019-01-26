@@ -2,7 +2,7 @@ import merge from 'lodash.merge';
 import { normalize, resolve as resolvePath } from 'path';
 import { CkusroConfig, isCkusroConfig } from '../../models/ckusroConfig';
 import { defaultLoaderConfig } from '../../models/ckusroConfig/LoaderConfig';
-import { defaultPluginsConfig } from '../../models/pluginConfig';
+import { defaultPluginsConfig } from '../../models/DefaultPluginConfig';
 import defaultPlugins from '../../models/plugins/defaultPlugins';
 
 export const defaultConfig: Omit<

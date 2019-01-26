@@ -1,6 +1,6 @@
 import React from 'react';
-import { CkusroFile } from '../../../../models/ckusroFile';
-import { OutputContext } from '../../../../models/outputContext';
+import { CkusroFile } from '../../../../models/CkusroFile';
+import { OutputContext } from '../../../../models/OutputContext';
 import buildNamespaceTree, {
   TreeViewItem as TreeViewItemModel,
 } from './buildTree';

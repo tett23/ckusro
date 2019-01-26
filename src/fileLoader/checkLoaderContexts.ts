@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { promisify } from 'util';
-import { detectType, FileTypeDirectory } from '../models/ckusroFile';
+import { detectType, FileTypeDirectory } from '../models/CkusroFile';
 import { LoaderContext } from '../models/loaderContext';
 
 const lstat = promisify(fs.lstat);

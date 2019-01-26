@@ -11,23 +11,23 @@ import {
   CkusroFile,
   FileTypeMarkdown,
   newCkusroId,
-} from '../../src/models/ckusroFile';
-import { buildDependencyTable, invert } from '../../src/models/dependencyTable';
-import {
-  GitLoaderContext,
-  GitLoaderContextType,
-} from '../../src/models/loaderContext/gitLoaderContext';
-import {
-  LocalLoaderContext,
-  LocalLoaderContextType,
-} from '../../src/models/loaderContext/localLoaderContext';
-import { Namespace } from '../../src/models/namespace';
-import { GlobalState } from '../../src/models/oldGlobalState';
-import { OutputContext } from '../../src/models/outputContext';
+} from '../../src/models/CkusroFile';
 import {
   DefaultPluginsConfig,
   defaultPluginsConfig,
-} from '../../src/models/pluginConfig';
+} from '../../src/models/DefaultPluginConfig';
+import { buildDependencyTable, invert } from '../../src/models/DependencyTable';
+import {
+  GitLoaderContext,
+  GitLoaderContextType,
+} from '../../src/models/loaderContext/GitLoaderContext';
+import {
+  LocalLoaderContext,
+  LocalLoaderContextType,
+} from '../../src/models/loaderContext/LocalLoaderContext';
+import { Namespace } from '../../src/models/Namespace';
+import { GlobalState } from '../../src/models/OldGlobalState';
+import { OutputContext } from '../../src/models/OutputContext';
 import { Plugins } from '../../src/models/plugins';
 import defaultPlugins from '../../src/models/plugins/defaultPlugins';
 

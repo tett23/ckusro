@@ -7,7 +7,7 @@ import {
   StatTypeDirectory,
   StatTypeFile,
   StatTypes,
-} from './statType';
+} from './StatType';
 
 export const FileTypeDirectory: 'directory' = 'directory';
 export const FileTypeMarkdown: 'markdown' = 'markdown';

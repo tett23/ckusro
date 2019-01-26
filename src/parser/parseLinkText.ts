@@ -1,5 +1,5 @@
 import { join as joinPath } from 'path';
-import { CkusroFile } from '../models/ckusroFile';
+import { CkusroFile } from '../models/CkusroFile';
 import { LoaderContext } from '../models/loaderContext';
 
 export type IncompletenessLink = {

@@ -8,7 +8,7 @@ import {
   CkusroFile,
   FileTypeDirectory,
   newCkusroFile,
-} from '../models/ckusroFile';
+} from '../models/CkusroFile';
 import { LoaderContext, loaderContextMap } from '../models/loaderContext';
 import { Plugins } from '../models/plugins';
 import { buildAst, determineDependency } from '../parser';

@@ -1,6 +1,6 @@
 import { isNonNullObject } from '../../core/utils/types';
-import { ComponentPlugin } from '../componentPlugin';
-import { ParserPlugin } from '../parserPlugin';
+import { ComponentPlugin } from '../ComponentPlugin';
+import { ParserPlugin } from '../ParserPlugin';
 
 export type Plugins = {
   parsers: ParserPlugin[];

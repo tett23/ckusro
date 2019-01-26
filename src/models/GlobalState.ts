@@ -1,5 +1,5 @@
 import { isNonNullObject } from '../core/utils/types';
-import { isNamespace, Namespace } from './namespace';
+import { isNamespace, Namespace } from './Namespace';
 import { isPlugins, Plugins } from './plugins';
 
 export type GlobalState = {

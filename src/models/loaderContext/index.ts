@@ -1,11 +1,11 @@
 import { TargetDirectory } from '../ckusroConfig';
 import { LoaderConfig } from '../ckusroConfig/LoaderConfig';
-import { GitLoaderContextType, isGitLoaderContext } from './gitLoaderContext';
+import { GitLoaderContextType, isGitLoaderContext } from './GitLoaderContext';
 import {
   isLocalLoaderContext,
   LocalLoaderContextType,
   newLocalLoaderContext,
-} from './localLoaderContext';
+} from './LocalLoaderContext';
 
 export type ContextTypes =
   | typeof LocalLoaderContextType

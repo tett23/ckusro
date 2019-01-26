@@ -14,13 +14,13 @@ import {
   newDoesNotExistFile,
   replaceExt,
   toPath,
-} from '../../src/models/ckusroFile';
+} from '../../src/models/CkusroFile';
 import {
   FileModeBlockDevice,
   FileModeDirectory,
   FileModeFile,
   FileModes,
-} from '../../src/models/statType';
+} from '../../src/models/StatType';
 import { buildFile, buildLocalLoaderContext } from '../__fixtures__';
 
 describe(newCkusroFile, () => {
