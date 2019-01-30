@@ -75,6 +75,30 @@ export interface FS {
     options: { withFileTypes: true },
     callback: (err: NodeJS.ErrnoException, files: Dirent[]) => void,
   ): void;
+
+  readFile(
+    path: PathLike | number,
+    options: { encoding?: null; flag?: string } | undefined | null,
+    callback: (err: NodeJS.ErrnoException, data: Buffer) => void,
+  ): void;
+  readFile(
+    path: PathLike | number,
+    options: { encoding: string; flag?: string } | string,
+    callback: (err: NodeJS.ErrnoException, data: string) => void,
+  ): void;
+  readFile(
+    path: PathLike | number,
+    options:
+      | { encoding?: string | null; flag?: string }
+      | string
+      | undefined
+      | null,
+    callback: (err: NodeJS.ErrnoException, data: string | Buffer) => void,
+  ): void;
+  readFile(
+    path: PathLike | number,
+    callback: (err: NodeJS.ErrnoException, data: Buffer) => void,
+  ): void;
 }
 
 export interface PromisifiedFS {
@@ -82,30 +106,36 @@ export interface PromisifiedFS {
 
   readdir(
     path: PathLike,
-    // tslint:disable-next-line unified-signatures
-    options:
+    options?:
       | { encoding: BufferEncoding | null; withFileTypes?: false }
       | BufferEncoding
-      | undefined
       | null,
-  ): Promise<Error | string[]>;
+  ): Promise<string[]>;
   readdir(
     path: PathLike,
-    options: { encoding: 'buffer'; withFileTypes?: false } | 'buffer',
-  ): Promise<Error | Buffer[]>;
+    options: 'buffer' | { encoding: 'buffer'; withFileTypes?: false },
+  ): Promise<Buffer[]>;
   readdir(
     path: PathLike,
-    options:
-      | { encoding?: BufferEncoding | null; withFileTypes?: false }
-      | BufferEncoding
-      | undefined
+    options?:
+      | { encoding?: string | null; withFileTypes?: false }
+      | string
       | null,
-  ): Promise<Error | string[] | Buffer[]>;
-  readdir(path: PathLike): Promise<Error | string[]>;
-  readdir(
-    path: PathLike,
-    options: { withFileTypes: true },
-  ): Promise<Error | Dirent[]>;
+  ): Promise<string[] | Buffer[]>;
+  readdir(path: PathLike, options: { withFileTypes: true }): Promise<Dirent[]>;
+
+  readFile(
+    path: PathLike | number,
+    options?: { encoding?: null; flag?: string } | null,
+  ): Promise<Buffer>;
+  readFile(
+    path: PathLike | number,
+    options: { encoding: string; flag?: string } | string,
+  ): Promise<string>;
+  readFile(
+    path: PathLike | number,
+    options?: { encoding?: string | null; flag?: string } | string | null,
+  ): Promise<string | Buffer>;
 }
 
 export type Promisify<F extends AnyFunction> = ArrayToFunction<
