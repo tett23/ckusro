@@ -30,6 +30,8 @@ import { OldGlobalState } from '../../src/models/OldGlobalState';
 import { OutputContext } from '../../src/models/OutputContext';
 import { Plugins } from '../../src/models/plugins';
 import defaultPlugins from '../../src/models/plugins/defaultPlugins';
+import { FileModeFile } from '../../src/models/StatType';
+import { UnloadedFile } from '../../src/models/UnloadedFile';
 
 export function buildLocalLoaderContext(
   overrides: Partial<LocalLoaderContext> = {},
@@ -176,4 +178,16 @@ export function buildNamespace(overrides: Partial<Namespace> = {}): Namespace {
   };
 
   return { ...namespace, ...overrides };
+}
+
+export function buildUnloadedFile(
+  overrides: Partial<UnloadedFile> = {},
+): UnloadedFile {
+  const unloadedFile: UnloadedFile = {
+    namespace: buildNamespace(),
+    absolutePath: '/test/foo.md',
+    mode: FileModeFile,
+  };
+
+  return { ...unloadedFile, ...overrides };
 }
