@@ -80,22 +80,32 @@ export interface FS {
 export interface PromisifiedFS {
   lstat: Promisify<FS['lstat']>;
 
-  readdir(path: PathLike): Promise<string[] | Error>;
   readdir(
     path: PathLike,
-    options: {
-      encoding?: string;
-      withFiletypes?: boolean;
-    },
-    callback: FSCallback<string>,
-  ): Promise<string[] | Error>;
+    // tslint:disable-next-line unified-signatures
+    options:
+      | { encoding: BufferEncoding | null; withFileTypes?: false }
+      | BufferEncoding
+      | undefined
+      | null,
+  ): Promise<Error | string[]>;
   readdir(
     path: PathLike,
-    options: {
-      encoding?: string;
-      withFiletypes: true;
-    },
-  ): Promise<Dirent[] | Error>;
+    options: { encoding: 'buffer'; withFileTypes?: false } | 'buffer',
+  ): Promise<Error | Buffer[]>;
+  readdir(
+    path: PathLike,
+    options:
+      | { encoding?: BufferEncoding | null; withFileTypes?: false }
+      | BufferEncoding
+      | undefined
+      | null,
+  ): Promise<Error | string[] | Buffer[]>;
+  readdir(path: PathLike): Promise<Error | string[]>;
+  readdir(
+    path: PathLike,
+    options: { withFileTypes: true },
+  ): Promise<Error | Dirent[]>;
 }
 
 export type Promisify<F extends AnyFunction> = ArrayToFunction<
