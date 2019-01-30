@@ -11,24 +11,47 @@ import {
   CkusroFile,
   FileTypeMarkdown,
   newCkusroId,
-} from '../../src/models/ckusroFile';
-import { buildDependencyTable, invert } from '../../src/models/dependencyTable';
-import { GlobalState } from '../../src/models/globalState';
-import { LoaderContext } from '../../src/models/loaderContext';
-import { OutputContext } from '../../src/models/outputContext';
+} from '../../src/models/CkusroFile';
 import {
   DefaultPluginsConfig,
   defaultPluginsConfig,
-} from '../../src/models/pluginConfig';
+} from '../../src/models/DefaultPluginConfig';
+import { buildDependencyTable, invert } from '../../src/models/DependencyTable';
+import {
+  GitLoaderContext,
+  GitLoaderContextType,
+} from '../../src/models/loaderContext/GitLoaderContext';
+import {
+  LocalLoaderContext,
+  LocalLoaderContextType,
+} from '../../src/models/loaderContext/LocalLoaderContext';
+import { Namespace } from '../../src/models/Namespace';
+import { OldGlobalState } from '../../src/models/OldGlobalState';
+import { OutputContext } from '../../src/models/OutputContext';
 import { Plugins } from '../../src/models/plugins';
 import defaultPlugins from '../../src/models/plugins/defaultPlugins';
 
-export function buildLoaderContext(
-  overrides: Partial<LoaderContext> = {},
-): LoaderContext {
-  const loaderContext: LoaderContext = {
+export function buildLocalLoaderContext(
+  overrides: Partial<LocalLoaderContext> = {},
+): LocalLoaderContext {
+  const loaderContext: LocalLoaderContext = {
+    type: LocalLoaderContextType,
     path: '/test',
     name: 'test_namespace',
+    loaderConfig: defaultLoaderConfig(),
+  };
+
+  return merge(loaderContext, overrides);
+}
+
+export function buildGitLoaderContext(
+  overrides: Partial<GitLoaderContext> = {},
+): GitLoaderContext {
+  const loaderContext: GitLoaderContext = {
+    type: GitLoaderContextType,
+    path: '/test',
+    name: 'test_namespace',
+    loaderConfig: defaultLoaderConfig(),
   };
 
   return merge(loaderContext, overrides);
@@ -36,7 +59,7 @@ export function buildLoaderContext(
 
 export function buildOutputContext(
   overrides: Partial<OutputContext> = {},
-): LoaderContext {
+): OutputContext {
   const loaderContext: OutputContext = {
     path: '/out/test_namespace',
     name: 'test_namespace',
@@ -46,10 +69,10 @@ export function buildOutputContext(
 }
 
 export function buildGlobalState(
-  overrides: Partial<GlobalState> = {},
-): GlobalState {
-  const globalState: GlobalState = {
-    loaderContexts: [buildLoaderContext()],
+  overrides: Partial<OldGlobalState> = {},
+): OldGlobalState {
+  const globalState: OldGlobalState = {
+    loaderContexts: [buildLocalLoaderContext()],
     outputContexts: [buildOutputContext()],
     files: [],
     dependencyTable: {},
@@ -143,4 +166,14 @@ export function buildCLIOptions(
   };
 
   return { ...options, ...overrides };
+}
+
+export function buildNamespace(overrides: Partial<Namespace> = {}): Namespace {
+  const namespace: Namespace = {
+    name: 'test_namespace',
+    loaderContext: buildLocalLoaderContext(),
+    outputContext: buildOutputContext(),
+  };
+
+  return { ...namespace, ...overrides };
 }

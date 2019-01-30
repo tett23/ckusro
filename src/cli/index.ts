@@ -2,7 +2,7 @@ import yargs, { Argv } from 'yargs';
 import fromCLIOptions, { loadConfigFile } from '../cli/config/fromCLIOptions';
 import { isErrors } from '../core/utils/types';
 import { TargetDirectory } from '../models/ckusroConfig';
-import newGlobalState, { GlobalState } from '../models/globalState';
+import newOldGlobalState, { OldGlobalState } from '../models/OldGlobalState';
 import {
   CLICommandBuild,
   CLICommands,
@@ -53,7 +53,7 @@ export default async function cli(argv: string[]) {
   }
 
   const conf = fromCLIOptions(options);
-  const globalState = await newGlobalState(conf);
+  const globalState = await newOldGlobalState(conf);
   if (isErrors(globalState)) {
     return globalState;
   }
@@ -61,7 +61,7 @@ export default async function cli(argv: string[]) {
   return run(command, globalState);
 }
 
-export async function run(command: CLICommands, globalState: GlobalState) {
+export async function run(command: CLICommands, globalState: OldGlobalState) {
   switch (command) {
     case CLICommandBuild:
       return await buildHandler(globalState);

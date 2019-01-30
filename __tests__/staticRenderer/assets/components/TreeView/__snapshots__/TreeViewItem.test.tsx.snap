@@ -6,8 +6,16 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <TreeViewItem
     context={
       Object {
+        "loaderConfig": Object {
+          "enable": /\\\\\\.\\(md\\|txt\\)\\$/,
+          "ignore": Array [
+            /\\\\\\.git/,
+            /node_modules/,
+          ],
+        },
         "name": "test_namespace",
         "path": "/test",
+        "type": "LocalLoaderContext",
       }
     }
     file={
@@ -181,8 +189,16 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <TreeViewItem
     context={
       Object {
+        "loaderConfig": Object {
+          "enable": /\\\\\\.\\(md\\|txt\\)\\$/,
+          "ignore": Array [
+            /\\\\\\.git/,
+            /node_modules/,
+          ],
+        },
         "name": "test_namespace",
         "path": "/test",
+        "type": "LocalLoaderContext",
       }
     }
     file={
@@ -207,8 +223,16 @@ ShallowWrapper {
     <TreeViewItem
       context={
         Object {
+          "loaderConfig": Object {
+            "enable": /\\\\\\.\\(md\\|txt\\)\\$/,
+            "ignore": Array [
+              /\\\\\\.git/,
+              /node_modules/,
+            ],
+          },
           "name": "test_namespace",
           "path": "/test",
+          "type": "LocalLoaderContext",
         }
       }
       file={
@@ -257,8 +281,16 @@ ShallowWrapper {
             <TreeViewItem
               context={
                 Object {
+                  "loaderConfig": Object {
+                    "enable": /\\\\\\.\\(md\\|txt\\)\\$/,
+                    "ignore": Array [
+                      /\\\\\\.git/,
+                      /node_modules/,
+                    ],
+                  },
                   "name": "test_namespace",
                   "path": "/test",
+                  "type": "LocalLoaderContext",
                 }
               }
               file={
@@ -320,8 +352,16 @@ ShallowWrapper {
           "items": <TreeViewItem
             context={
               Object {
+                "loaderConfig": Object {
+                  "enable": /\\\\\\.\\(md\\|txt\\)\\$/,
+                  "ignore": Array [
+                    /\\\\\\.git/,
+                    /node_modules/,
+                  ],
+                },
                 "name": "test_namespace",
                 "path": "/test",
+                "type": "LocalLoaderContext",
               }
             }
             file={
@@ -370,8 +410,16 @@ ShallowWrapper {
               <TreeViewItem
                 context={
                   Object {
+                    "loaderConfig": Object {
+                      "enable": /\\\\\\.\\(md\\|txt\\)\\$/,
+                      "ignore": Array [
+                        /\\\\\\.git/,
+                        /node_modules/,
+                      ],
+                    },
                     "name": "test_namespace",
                     "path": "/test",
+                    "type": "LocalLoaderContext",
                   }
                 }
                 file={
@@ -433,8 +481,16 @@ ShallowWrapper {
             "items": <TreeViewItem
               context={
                 Object {
+                  "loaderConfig": Object {
+                    "enable": /\\\\\\.\\(md\\|txt\\)\\$/,
+                    "ignore": Array [
+                      /\\\\\\.git/,
+                      /node_modules/,
+                    ],
+                  },
                   "name": "test_namespace",
                   "path": "/test",
+                  "type": "LocalLoaderContext",
                 }
               }
               file={

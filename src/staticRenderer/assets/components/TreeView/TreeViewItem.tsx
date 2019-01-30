@@ -1,11 +1,11 @@
 import { join } from 'path';
 import React, { ReactNode } from 'react';
-import { CkusroFile, replaceExt } from '../../../../models/ckusroFile';
-import { LoaderContext } from '../../../../models/loaderContext';
+import { CkusroFile, replaceExt } from '../../../../models/CkusroFile';
+import { OutputContext } from '../../../../models/OutputContext';
 
 export type Props = {
   file: CkusroFile;
-  context: LoaderContext;
+  context: OutputContext;
   children?: ReactNode;
 };
 

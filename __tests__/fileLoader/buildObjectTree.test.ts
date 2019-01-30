@@ -5,7 +5,10 @@ import {
   StatTypeFile,
 } from '../../src/fileLoader/ckusroObject';
 import { defaultLoaderConfig } from '../../src/models/ckusroConfig/LoaderConfig';
-import { mockFileSystem, restoreFileSystem } from '../__helpers__/fs';
+import {
+  mockFileSystem,
+  restoreFileSystem,
+} from '../__helpers__/mockFileSystem';
 
 describe(buildObjectTree, () => {
   beforeEach(() => {

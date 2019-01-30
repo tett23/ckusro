@@ -1,11 +1,11 @@
 import webpack from 'webpack';
-import { assetsDirectory, GlobalState } from '../models/globalState';
-import webpackConfig from './webpack.config';
+import { assetsDirectory, OldGlobalState } from '../models/OldGlobalState';
+import config from './webpack.config';
 
-export function jsAssets(globalState: GlobalState): Promise<true | Error> {
+export function jsAssets(globalState: OldGlobalState): Promise<true | Error> {
   const promise: Promise<true | Error> = new Promise((resolve) => {
     const compiler = webpack({
-      ...webpackConfig,
+      ...config,
       mode: 'production',
       output: {
         path: assetsDirectory(globalState),

@@ -1,4 +1,4 @@
-import fastGlob from 'fast-glob';
+import FastGlob from 'fast-glob';
 import { join } from 'path';
 import { LoaderConfig } from '../models/ckusroConfig/LoaderConfig';
 import { LoaderContext } from '../models/loaderContext';
@@ -8,7 +8,7 @@ export default async function enablePaths(
   loaderConfig: LoaderConfig,
 ): Promise<Array<[LoaderContext, string]> | Error> {
   const pattern = join(loaderContext.path, '**/*');
-  const paths: string[] | Error = await fastGlob(pattern, {
+  const paths: string[] | Error = await FastGlob(pattern, {
     absolute: true,
   }).catch((err) => err);
   if (paths instanceof Error) {

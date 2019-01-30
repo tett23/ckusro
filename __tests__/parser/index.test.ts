@@ -2,11 +2,11 @@ import {
   CkusroFile,
   FileTypeDirectory,
   FileTypeDoesNotExist,
-} from '../../src/models/ckusroFile';
-import { defaultPluginsConfig } from '../../src/models/pluginConfig';
+} from '../../src/models/CkusroFile';
+import { defaultPluginsConfig } from '../../src/models/DefaultPluginConfig';
 import defaultPlugins from '../../src/models/plugins/defaultPlugins';
 import { buildAst, determineDependency } from '../../src/parser';
-import { buildFile, buildLoaderContext } from '../__fixtures__';
+import { buildFile, buildLocalLoaderContext } from '../__fixtures__';
 
 describe(buildAst, () => {
   const plugins = defaultPlugins(defaultPluginsConfig());
@@ -28,7 +28,7 @@ describe(determineDependency, () => {
   const plugins = defaultPlugins(defaultPluginsConfig());
 
   it('returns CkusroIds', () => {
-    const context = buildLoaderContext({ name: 'test', path: '/test' });
+    const context = buildLocalLoaderContext({ name: 'test', path: '/test' });
     const rootNode = buildAst(plugins, '[[test:foo]]');
     const files: CkusroFile[] = [
       buildFile({
@@ -48,7 +48,7 @@ describe(determineDependency, () => {
   });
 
   it('returns empty array when file does not exist', () => {
-    const context = buildLoaderContext({ name: 'test', path: '/test' });
+    const context = buildLocalLoaderContext({ name: 'test', path: '/test' });
     const rootNode = buildAst(plugins, '[[test:does_not_exist]]');
     const files: CkusroFile[] = [];
     const actual = determineDependency(context, rootNode, files);

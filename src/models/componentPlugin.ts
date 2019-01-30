@@ -1,5 +1,5 @@
 import { isNonNullObject } from '../core/utils/types';
-import { CkusroFile } from './ckusroFile';
+import { CkusroFile } from './CkusroFile';
 
 export type Props = {
   currentFileId: string;

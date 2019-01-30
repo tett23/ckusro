@@ -3,7 +3,7 @@ import React from 'react';
 import {
   CkusroFile,
   FileTypeMarkdown,
-} from '../../../../src/models/ckusroFile';
+} from '../../../../src/models/CkusroFile';
 import RawContents from '../../../../src/staticRenderer/assets/components/RawContents';
 import { buildFile } from '../../../__fixtures__';
 

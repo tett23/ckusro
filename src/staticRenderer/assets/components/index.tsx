@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { CkusroFile } from '../../../models/ckusroFile';
-import { GlobalState } from '../../../models/globalState';
-import { OutputContext } from '../../../models/outputContext';
+import { CkusroFile } from '../../../models/CkusroFile';
+import { OldGlobalState } from '../../../models/OldGlobalState';
+import { OutputContext } from '../../../models/OutputContext';
 import { Plugins } from '../../../models/plugins';
 import Breadcrumbs from './Breadcrumbs';
 import { Markdown } from './Markdown';
@@ -15,7 +15,7 @@ type MarkdownProps = {
 };
 
 export type Props = {
-  globalState: GlobalState;
+  globalState: OldGlobalState;
   markdown: MarkdownProps;
 };
 
@@ -54,7 +54,7 @@ function TreeViewContainer({ outputContexts, files }: TreeViewContainerProps) {
 }
 
 export type MainContainerProps = {
-  globalState: GlobalState;
+  globalState: OldGlobalState;
   markdown: MarkdownProps;
 };
 

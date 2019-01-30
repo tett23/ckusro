@@ -1,13 +1,13 @@
 import { Stats } from 'fs';
 import { basename, extname, join } from 'path';
-import uuid from 'uuid/v4';
+import uuid from 'uuid/v4'; // tslint:disable-line match-default-export-name
 import { LoaderContext } from './loaderContext';
 import {
   statType,
   StatTypeDirectory,
   StatTypeFile,
   StatTypes,
-} from './statType';
+} from './StatType';
 
 export const FileTypeDirectory: 'directory' = 'directory';
 export const FileTypeMarkdown: 'markdown' = 'markdown';

@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import { defaultPluginsConfig } from '../../../../../src/models/pluginConfig';
+import { defaultPluginsConfig } from '../../../../../src/models/DefaultPluginConfig';
 import defaultPlugins from '../../../../../src/models/plugins/defaultPlugins';
 import {
   buildJSX,

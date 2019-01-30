@@ -1,19 +1,22 @@
 jest.mock('fast-glob');
 
-import fastGlob from 'fast-glob';
+import FastGlob from 'fast-glob';
 import enablePaths, { filterPaths } from '../../src/fileLoader/enablePaths';
-import { buildLoaderConfig, buildLoaderContext } from '../__fixtures__';
+import { buildLoaderConfig, buildLocalLoaderContext } from '../__fixtures__';
 
 describe(enablePaths, () => {
   it('returns LoaderContext-string tuples', async () => {
     // @ts-ignore
-    fastGlob.mockImplementation(async () => [
+    FastGlob.mockImplementation(async () => [
       '/test/foo.md',
       '/test/bar.js',
       '/test/node_modules/hoge/index.js',
     ]);
 
-    const loaderContext = buildLoaderContext({ path: '/test', name: 'test' });
+    const loaderContext = buildLocalLoaderContext({
+      path: '/test',
+      name: 'test',
+    });
     const loaderConfig = buildLoaderConfig({
       enable: /\.md/,
       ignore: [/node_modules/],
@@ -26,9 +29,9 @@ describe(enablePaths, () => {
   it('returns Error when fast-glob returns Error', async () => {
     const err = new Error('');
     // @ts-ignore
-    fastGlob.mockImplementation(async () => err);
+    FastGlob.mockImplementation(async () => err);
 
-    const loaderContext = buildLoaderContext();
+    const loaderContext = buildLocalLoaderContext();
     const loaderConfig = buildLoaderConfig();
     const actual = await enablePaths(loaderContext, loaderConfig);
 

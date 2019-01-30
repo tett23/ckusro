@@ -1,8 +1,10 @@
 import React from 'react';
-import { CkusroFile } from '../../../../models/ckusroFile';
-import { OutputContext } from '../../../../models/outputContext';
-import buildNamespaceTree, { TreeViewItem } from './buildTree';
-import TreeViewItemComponent from './TreeViewItem';
+import { CkusroFile } from '../../../../models/CkusroFile';
+import { OutputContext } from '../../../../models/OutputContext';
+import buildNamespaceTree, {
+  TreeViewItem as TreeViewItemModel,
+} from './buildTree';
+import TreeViewItem from './TreeViewItem';
 
 export type Props = {
   contexts: OutputContext[];
@@ -34,15 +36,15 @@ export default function TreeView({ contexts, files }: Props) {
   return <ul>{items}</ul>;
 }
 
-function gen(table: Table, context: OutputContext, tvi: TreeViewItem) {
+function gen(table: Table, context: OutputContext, tvi: TreeViewItemModel) {
   const file = table[tvi.id];
   if (file == null) {
     throw new Error('');
   }
 
   return (
-    <TreeViewItemComponent key={file.id} context={context} file={file}>
+    <TreeViewItem key={file.id} context={context} file={file}>
       {tvi.children.map((item) => gen(table, context, item))}
-    </TreeViewItemComponent>
+    </TreeViewItem>
   );
 }

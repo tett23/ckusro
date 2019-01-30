@@ -1,4 +1,4 @@
-import { CkusroFile } from '../../../../models/ckusroFile';
+import { CkusroFile } from '../../../../models/CkusroFile';
 import { Plugins } from '../../../../models/plugins';
 import parserInstance from '../../../../parserInstance';
 

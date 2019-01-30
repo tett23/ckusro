@@ -1,5 +1,5 @@
 import React from 'react';
-import { Props } from '../../src/models/componentPlugin';
+import { Props } from '../../src/models/ComponentPlugin';
 import { isPlugins, Plugins } from '../../src/models/plugins';
 
 describe(isPlugins, () => {

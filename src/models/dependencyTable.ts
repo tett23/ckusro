@@ -1,4 +1,4 @@
-import { CkusroFile, CkusroId } from './ckusroFile';
+import { CkusroFile, CkusroId } from './CkusroFile';
 
 export type DependencyTable = {
   [key: string]: {

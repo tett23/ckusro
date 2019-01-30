@@ -8,7 +8,7 @@ import {
   FileTypeMarkdown,
   FileTypeRaw,
   FileTypeText,
-} from '../../src/models/ckusroFile';
+} from '../../src/models/CkusroFile';
 
 describe(detectType, () => {
   it('returns FileTypeDirectory when statType is StatTypeDirectory', () => {

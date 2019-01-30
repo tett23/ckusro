@@ -1,4 +1,4 @@
-import mockFs, { Config } from 'mock-fs';
+import mock, { Config } from 'mock-fs';
 
 let logsTemp: any[] = [];
 let logMock: any;
@@ -8,12 +8,12 @@ export function mockFileSystem(config: Config) {
     logsTemp.push(args);
   });
 
-  mockFs(config);
+  mock(config);
 }
 
 export function restoreFileSystem() {
   logMock.mockRestore();
-  mockFs.restore();
+  mock.restore();
   logsTemp.map((el) => console.info(...el));
   logsTemp = [];
 }

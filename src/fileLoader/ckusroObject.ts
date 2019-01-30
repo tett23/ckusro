@@ -4,7 +4,7 @@ import {
   FileTypeMarkdown,
   FileTypeRaw,
   FileTypeText,
-} from '../models/ckusroFile';
+} from '../models/CkusroFile';
 
 export const StatTypeDirectory: 'directory' = 'directory';
 export const StatTypeFile: 'file' = 'file';
