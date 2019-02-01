@@ -3,6 +3,8 @@ import { LocalLoaderContextType } from '../../models/loaderContext/localLoaderCo
 import { Plugins } from '../../models/plugins';
 import { FS } from '../types';
 import promisifyFS from '../utils/promisifyFS';
+import { isErrors } from '../utils/types';
+import fetchEntries from './NodeFS/fetchEntries';
 import isValidLoaderContext from './NodeFS/isValidLoaderContext';
 
 export default async function LoaderInfoBuilder(
@@ -29,5 +31,14 @@ async function node(fs: FS, context: LoaderContext, plugins: Plugins) {
   }
   if (!isValid) {
     return new Error(`LocalLoaderContext: ${context.path} not found.`);
+  }
+
+  const entries = await fetchEntries(
+    promisifiedFs.readdir,
+    promisifiedFs.lstat,
+    context,
+  );
+  if (isErrors(entries)) {
+    return entries;
   }
 }

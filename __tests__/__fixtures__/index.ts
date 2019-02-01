@@ -184,7 +184,7 @@ export function buildUnloadedFile(
   overrides: Partial<UnloadedFile> = {},
 ): UnloadedFile {
   const unloadedFile: UnloadedFile = {
-    namespace: buildNamespace(),
+    loaderContext: buildLocalLoaderContext(),
     absolutePath: '/test/foo.md',
     mode: FileModeFile,
   };

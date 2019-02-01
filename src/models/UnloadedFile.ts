@@ -1,9 +1,9 @@
 import { PromisifiedFS } from '../core/types';
-import { Namespace } from './Namespace';
+import { LoaderContext } from './loaderContext';
 import { FileModeFile, FileModes } from './StatType';
 
 export type UnloadedFile = {
-  namespace: Namespace;
+  loaderContext: LoaderContext;
   absolutePath: string;
   mode: FileModes;
 };

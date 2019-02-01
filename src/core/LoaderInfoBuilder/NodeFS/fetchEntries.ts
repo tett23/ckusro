@@ -2,10 +2,11 @@ import { join } from 'path';
 import { separateErrors } from '../../../core/utils/errors';
 import { LoaderConfig } from '../../../models/ckusroConfig/LoaderConfig';
 import { LoaderContext } from '../../../models/loaderContext';
+import { FileModes } from '../../../models/StatType';
 import { PromisifiedFS } from '../../types';
 import { isErrors } from '../../utils/types';
 
-export type FileInfo = [string, number];
+export type FileInfo = [string, FileModes];
 
 export default async function fetchEntries(
   readdir: PromisifiedFS['readdir'],
@@ -72,7 +73,7 @@ export async function bindStat(
     return await lstat(item)
       .then(
         (stat): FileInfo | Error =>
-          stat instanceof Error ? stat : [item, stat.mode],
+          stat instanceof Error ? stat : [item, stat.mode as FileModes],
       )
       .catch((err: Error) => err);
   });
