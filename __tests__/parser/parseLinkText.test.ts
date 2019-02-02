@@ -1,17 +1,14 @@
-import { CkusroFile, FileTypeDirectory } from '../../src/models/CkusroFile';
+import { FileBuffer, FileTypeDirectory } from '../../src/models/FileBuffer';
 import parseLinkText, {
   determineLinkFile,
   IncompletenessLink,
   Link,
 } from '../../src/parser/parseLinkText';
-import { buildLocalLoaderContext } from '../__fixtures__';
+import { buildFileBuffer } from '../__fixtures__';
 
 describe(parseLinkText, () => {
   it('parses page', () => {
-    const actual = parseLinkText(
-      buildLocalLoaderContext({ name: 'test', path: '/test' }),
-      '/foo',
-    );
+    const actual = parseLinkText('test', '/foo');
     const expected: IncompletenessLink = {
       namespace: 'test',
       name: '/foo',
@@ -22,10 +19,7 @@ describe(parseLinkText, () => {
   });
 
   it('parses namespace', () => {
-    const actual = parseLinkText(
-      buildLocalLoaderContext({ name: 'test', path: '/test' }),
-      'foo:/bar',
-    );
+    const actual = parseLinkText('test', 'foo:/bar');
     const expected: IncompletenessLink = {
       namespace: 'foo',
       name: '/bar',
@@ -36,10 +30,7 @@ describe(parseLinkText, () => {
   });
 
   it('parses anchor', () => {
-    const actual = parseLinkText(
-      buildLocalLoaderContext({ name: 'test', path: '/test' }),
-      'foo:/bar#baz',
-    );
+    const actual = parseLinkText('test', 'foo:/bar#baz');
     const expected: IncompletenessLink = {
       namespace: 'foo',
       name: '/bar',
@@ -52,19 +43,14 @@ describe(parseLinkText, () => {
 
 describe(determineLinkFile, () => {
   it('returns true when page is absolute path', () => {
-    const files: CkusroFile[] = [
-      {
+    const files: FileBuffer[] = [
+      buildFileBuffer({
         id: '/foo',
         namespace: 'test',
-        name: 'foo',
         path: '/foo',
         fileType: FileTypeDirectory,
-        isLoaded: false,
         content: null,
-        weakDependencies: [],
-        strongDependencies: [],
-        variables: [],
-      },
+      }),
     ];
     const link: IncompletenessLink = {
       namespace: 'test',
@@ -83,19 +69,14 @@ describe(determineLinkFile, () => {
   });
 
   it('returns true when page is name', () => {
-    const files: CkusroFile[] = [
-      {
+    const files: FileBuffer[] = [
+      buildFileBuffer({
         id: '/foo',
         namespace: 'test',
-        name: 'foo',
         path: '/foo',
         fileType: FileTypeDirectory,
-        isLoaded: false,
         content: null,
-        weakDependencies: [],
-        strongDependencies: [],
-        variables: [],
-      },
+      }),
     ];
     const link: IncompletenessLink = {
       namespace: 'test',
@@ -114,19 +95,14 @@ describe(determineLinkFile, () => {
   });
 
   it('returns null when page does not exist', () => {
-    const files: CkusroFile[] = [
-      {
+    const files: FileBuffer[] = [
+      buildFileBuffer({
         id: '/foo',
         namespace: 'test',
-        name: 'foo',
         path: '/foo',
         fileType: FileTypeDirectory,
-        isLoaded: false,
         content: null,
-        weakDependencies: [],
-        strongDependencies: [],
-        variables: [],
-      },
+      }),
     ];
     const link: IncompletenessLink = {
       namespace: 'test',

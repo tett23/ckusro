@@ -1,6 +1,5 @@
 import { Content, Parent, Root } from 'mdast';
-import { CkusroFile, newDoesNotExistFile } from '../models/CkusroFile';
-import { LoaderContext } from '../models/loaderContext';
+import { FileBuffer, newDoesNotExistFile } from '../models/FileBuffer';
 import { Plugins } from '../models/plugins';
 import parserInstance from '../parserInstance';
 import parseLinkText, { determineLinkFile } from './parseLinkText';
@@ -34,12 +33,12 @@ function visit(node: Parent | Content): string[] {
 }
 
 export function determineDependency(
-  context: LoaderContext,
+  namespace: string,
   rootNode: Root,
-  files: CkusroFile[],
-): CkusroFile[] {
+  files: FileBuffer[],
+): FileBuffer[] {
   return visit(rootNode)
-    .map((item) => parseLinkText(context, item))
+    .map((item) => parseLinkText(namespace, item))
     .map((item) => determineLinkFile(item, files))
     .map(
       ({ namespace: ln, path: lp }) =>

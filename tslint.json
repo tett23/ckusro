@@ -9,6 +9,7 @@
     "no-console": [true, "log"],
     "max-classes-per-file": false,
     "match-default-export-name": true,
+    "no-parameter-reassignment": true,
     "prettier": [true, ".prettierrc.json"]
   },
   "rulesDirectory": ["tslint-plugin-prettier"]

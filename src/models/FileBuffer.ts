@@ -1,4 +1,4 @@
-import { basename, extname } from 'path';
+import { basename, extname, join } from 'path';
 import uuid from 'uuid/v4'; // tslint:disable-line match-default-export-name
 import {
   isArrayOf,
@@ -186,4 +186,28 @@ export function detectType(fileMode: FileModes, name: string): FileTypes {
     default:
       return FileTypeRaw;
   }
+}
+
+export function newDoesNotExistFile(
+  namespace: string,
+  path: string,
+): FileBuffer {
+  const absolutePath = join('/', path);
+
+  return {
+    id: `${namespace}:${absolutePath}`,
+    namespace,
+    path: absolutePath,
+    fileType: FileTypeDoesNotExist,
+    content: null,
+    dependencies: {
+      name: [],
+      content: [],
+    },
+    variables: [],
+  };
+}
+
+export function fileBufferName(fileBuffer: FileBuffer): string {
+  return basename(fileBuffer.path);
 }

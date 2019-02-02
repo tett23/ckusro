@@ -18,6 +18,11 @@ import {
 } from '../../src/models/DefaultPluginConfig';
 import { buildDependencyTable, invert } from '../../src/models/DependencyTable';
 import {
+  FileBuffer,
+  FileBufferDependency,
+  newFileBufferId,
+} from '../../src/models/FileBuffer';
+import {
   GitLoaderContext,
   GitLoaderContextType,
 } from '../../src/models/loaderContext/GitLoaderContext';
@@ -154,6 +159,33 @@ export function buildFile(overrides: Partial<CkusroFile> = {}): CkusroFile {
   };
 
   return { ...template, ...overrides };
+}
+
+export function buildFileBuffer(
+  overrides: Partial<FileBuffer> = {},
+): FileBuffer {
+  const template: FileBuffer = {
+    id: newFileBufferId(),
+    namespace: 'test',
+    path: '/foo.md',
+    fileType: FileTypeMarkdown,
+    content: '[[bar.md]]',
+    dependencies: buildFileBufferDependency(),
+    variables: [],
+  };
+
+  return { ...template, ...overrides };
+}
+
+export function buildFileBufferDependency(
+  overrides: Partial<FileBufferDependency> = {},
+): FileBufferDependency {
+  const dependency: FileBufferDependency = {
+    name: ['test:/bar.md'],
+    content: ['test:/bar.md'],
+  };
+
+  return { ...dependency, ...overrides };
 }
 
 export function buildCLIOptions(

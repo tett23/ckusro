@@ -1,6 +1,5 @@
 import { join as joinPath } from 'path';
-import { CkusroFile } from '../models/CkusroFile';
-import { LoaderContext } from '../models/loaderContext';
+import { FileBuffer, fileBufferName } from '../models/FileBuffer';
 
 export type IncompletenessLink = {
   namespace: string;
@@ -16,13 +15,12 @@ export type Link = {
 };
 
 export default function parseLinkText(
-  context: LoaderContext,
+  namespace: string,
   text: string,
 ): IncompletenessLink {
-  let namespace;
   let tmp;
   if (text.includes(':')) {
-    [namespace, tmp] = text.split(':', 2);
+    [, tmp] = text.split(':', 2);
   } else {
     tmp = text;
   }
@@ -36,7 +34,7 @@ export default function parseLinkText(
   }
 
   return {
-    namespace: namespace || context.name,
+    namespace,
     name,
     anchor,
   };
@@ -48,7 +46,7 @@ type LinkTypes = typeof LinkTypeAbsolute | typeof LinkTypeName;
 
 export function determineLinkFile(
   link: IncompletenessLink,
-  files: CkusroFile[],
+  files: FileBuffer[],
 ): Link {
   const namespaceItems = files.flatMap((f) =>
     link.namespace === f.namespace ? [f] : [],
@@ -75,7 +73,7 @@ function linkType(name: string): LinkTypes {
 
 function determineAbsoluteLink(
   link: IncompletenessLink,
-  files: CkusroFile[],
+  files: FileBuffer[],
 ): Link {
   const ret = {
     namespace: link.namespace,
@@ -93,14 +91,16 @@ function determineAbsoluteLink(
 
 function determineNameLink(
   link: IncompletenessLink,
-  files: CkusroFile[],
+  files: FileBuffer[],
 ): Link {
   const ret = {
     namespace: link.namespace,
     anchor: link.anchor,
     isExist: false,
   };
-  const file = files.find(({ name }) => name === link.name) || null;
+  const file =
+    files.find((fileBuffer) => fileBufferName(fileBuffer) === link.name) ||
+    null;
   if (file == null) {
     return Object.assign(ret, { path: joinPath('/', link.name) });
   }

@@ -1,12 +1,12 @@
+import { defaultPluginsConfig } from '../../src/models/DefaultPluginConfig';
 import {
-  CkusroFile,
+  FileBuffer,
   FileTypeDirectory,
   FileTypeDoesNotExist,
-} from '../../src/models/CkusroFile';
-import { defaultPluginsConfig } from '../../src/models/DefaultPluginConfig';
+} from '../../src/models/FileBuffer';
 import defaultPlugins from '../../src/models/plugins/defaultPlugins';
 import { buildAst, determineDependency } from '../../src/parser';
-import { buildFile, buildLocalLoaderContext } from '../__fixtures__';
+import { buildFileBuffer } from '../__fixtures__';
 
 describe(buildAst, () => {
   const plugins = defaultPlugins(defaultPluginsConfig());
@@ -27,45 +27,39 @@ describe(buildAst, () => {
 describe(determineDependency, () => {
   const plugins = defaultPlugins(defaultPluginsConfig());
 
-  it('returns CkusroIds', () => {
-    const context = buildLocalLoaderContext({ name: 'test', path: '/test' });
+  it('returns FileBufferId', () => {
     const rootNode = buildAst(plugins, '[[test:foo]]');
-    const files: CkusroFile[] = [
-      buildFile({
+    const files: FileBuffer[] = [
+      buildFileBuffer({
         namespace: 'test',
-        name: 'foo',
         path: '/foo',
         fileType: FileTypeDirectory,
-        isLoaded: false,
         content: null,
-        weakDependencies: [],
-        strongDependencies: [],
       }),
     ];
-    const actual = determineDependency(context, rootNode, files);
+    const actual = determineDependency('test', rootNode, files);
 
     expect(actual).toEqual([files[0]]);
   });
 
   it('returns empty array when file does not exist', () => {
-    const context = buildLocalLoaderContext({ name: 'test', path: '/test' });
     const rootNode = buildAst(plugins, '[[test:does_not_exist]]');
-    const files: CkusroFile[] = [];
-    const actual = determineDependency(context, rootNode, files);
-
-    expect(actual).toMatchObject([
+    const actual = determineDependency('test', rootNode, []);
+    const expected: FileBuffer[] = [
       {
         id: 'test:/does_not_exist',
         namespace: 'test',
-        name: 'does_not_exist',
         path: '/does_not_exist',
         fileType: FileTypeDoesNotExist,
-        isLoaded: false,
         content: null,
-        weakDependencies: [],
-        strongDependencies: [],
+        dependencies: {
+          name: [],
+          content: [],
+        },
         variables: [],
       },
-    ]);
+    ];
+
+    expect(actual).toMatchObject(expected);
   });
 });

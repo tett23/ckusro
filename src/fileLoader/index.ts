@@ -9,6 +9,7 @@ import {
   FileTypeDirectory,
   newCkusroFile,
 } from '../models/CkusroFile';
+import { FileBuffer } from '../models/FileBuffer';
 import { LoaderContext, loaderContextMap } from '../models/loaderContext';
 import { Plugins } from '../models/plugins';
 import { buildAst, determineDependency } from '../parser';
@@ -113,7 +114,11 @@ export function loadDependencies(
   }
 
   const rootNode = buildAst(plugins, file.content || '');
-  const dependencyFiles = determineDependency(context, rootNode, files);
+  const dependencyFiles = determineDependency(
+    context.name,
+    rootNode,
+    (files as any) as FileBuffer[],
+  );
 
   return Object.assign({}, file, {
     weakDependencies: dependencyFiles.map(({ id }) => id),

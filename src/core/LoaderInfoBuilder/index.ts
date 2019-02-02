@@ -1,50 +1,62 @@
+import { FileBuffer, newFileBuffer } from '../../models/FileBuffer';
 import { LoaderContext } from '../../models/loaderContext';
-import { LocalLoaderContextType } from '../../models/loaderContext/localLoaderContext';
+import { Namespace } from '../../models/Namespace';
 import { Plugins } from '../../models/plugins';
-import { FS } from '../types';
+import { UnloadedFile } from '../../models/UnloadedFile';
+import { FS, PromisifiedFS } from '../types';
+import { separateErrors } from '../utils/errors';
 import promisifyFS from '../utils/promisifyFS';
 import { isErrors } from '../utils/types';
 import fetchEntries from './NodeFS/fetchEntries';
 import isValidLoaderContext from './NodeFS/isValidLoaderContext';
 import loadContents from './NodeFS/loadContents';
+import loadDependencies from './NodeFS/loadDependencies';
 
 export default async function LoaderInfoBuilder(
   fs: FS,
-  context: LoaderContext,
+  namespace: Namespace,
   plugins: Plugins,
 ) {
-  switch (context.type) {
-    case LocalLoaderContextType:
-      return node(fs, context, plugins);
-    default:
-      return new Error();
-  }
-}
-
-async function node(fs: FS, context: LoaderContext, plugins: Plugins) {
+  const { loaderContext } = namespace;
   const promisifiedFs = promisifyFS(fs);
   const isValid = await isValidLoaderContext(
     promisifiedFs.lstat,
-    context,
+    loaderContext,
   ).catch((err: Error) => err);
   if (isValid instanceof Error) {
     return isValid;
   }
   if (!isValid) {
-    return new Error(`LocalLoaderContext: ${context.path} not found.`);
+    return new Error(`LocalLoaderContext: ${loaderContext.path} not found.`);
   }
 
-  const entries = await fetchEntries(
-    promisifiedFs.readdir,
-    promisifiedFs.lstat,
-    context,
+  const result = await build(promisifiedFs, namespace.loaderContext);
+  const [contents, errors] = separateErrors(result);
+  if (isErrors(errors)) {
+    return contents;
+  }
+
+  const fileBuffers: FileBuffer[] = contents.map(([unloadedFile, content]) => {
+    return newFileBuffer(
+      namespace,
+      [unloadedFile.absolutePath, unloadedFile.mode],
+      content,
+    );
+  });
+
+  return fileBuffers.map((file) =>
+    loadDependencies(plugins, file, fileBuffers),
   );
+}
+
+async function build(
+  fs: PromisifiedFS,
+  loaderContext: LoaderContext,
+): Promise<Array<[UnloadedFile, string | Buffer | null] | Error>> {
+  const entries = await fetchEntries(fs.readdir, fs.lstat, loaderContext);
   if (isErrors(entries)) {
     return entries;
   }
 
-  const contents = await loadContents(promisifiedFs.readFile, context, entries);
-  if (isErrors(contents)) {
-    return contents;
-  }
+  return await loadContents(fs.readFile, loaderContext, entries);
 }
