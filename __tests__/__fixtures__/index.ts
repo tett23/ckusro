@@ -8,11 +8,6 @@ import {
   LoaderConfig,
 } from '../../src/models/ckusroConfig/LoaderConfig';
 import {
-  CkusroFile,
-  FileTypeMarkdown,
-  newCkusroId,
-} from '../../src/models/CkusroFile';
-import {
   DefaultPluginsConfig,
   defaultPluginsConfig,
 } from '../../src/models/DefaultPluginConfig';
@@ -20,8 +15,11 @@ import { buildDependencyTable, invert } from '../../src/models/DependencyTable';
 import {
   FileBuffer,
   FileBufferDependency,
+  FileTypeMarkdown,
   newFileBufferId,
 } from '../../src/models/FileBuffer';
+import { FileBuffersState } from '../../src/models/FileBuffersState';
+import { GlobalState } from '../../src/models/GlobalState';
 import {
   GitLoaderContext,
   GitLoaderContextType,
@@ -31,7 +29,6 @@ import {
   LocalLoaderContextType,
 } from '../../src/models/loaderContext/LocalLoaderContext';
 import { Namespace } from '../../src/models/Namespace';
-import { OldGlobalState } from '../../src/models/OldGlobalState';
 import { OutputContext } from '../../src/models/OutputContext';
 import { Plugins } from '../../src/models/plugins';
 import defaultPlugins from '../../src/models/plugins/defaultPlugins';
@@ -76,23 +73,14 @@ export function buildOutputContext(
 }
 
 export function buildGlobalState(
-  overrides: Partial<OldGlobalState> = {},
-): OldGlobalState {
-  const globalState: OldGlobalState = {
-    loaderContexts: [buildLocalLoaderContext()],
-    outputContexts: [buildOutputContext()],
-    files: [],
-    dependencyTable: {},
-    invertedDependencyTable: {},
-    loaderConfig: buildLoaderConfig(),
+  overrides: Partial<GlobalState> = {},
+): GlobalState {
+  const globalState: GlobalState = {
+    namespaces: [buildNamespace()],
     plugins: defaultPlugins(defaultPluginsConfig()),
   };
 
-  const ret = merge(globalState, overrides);
-  ret.dependencyTable = buildDependencyTable(ret.files);
-  ret.invertedDependencyTable = invert(ret.dependencyTable);
-
-  return ret;
+  return { ...globalState, ...overrides };
 }
 
 export function buildDefaultPluginsConfig(
@@ -142,23 +130,6 @@ export function buildLoaderConfig(
   const loaderConfig = defaultLoaderConfig();
 
   return { ...loaderConfig, ...overrides };
-}
-
-export function buildFile(overrides: Partial<CkusroFile> = {}): CkusroFile {
-  const template: CkusroFile = {
-    id: newCkusroId(),
-    namespace: 'test',
-    name: 'foo.md',
-    path: '/foo.md',
-    fileType: FileTypeMarkdown,
-    isLoaded: true,
-    content: '[[bar.md]]',
-    weakDependencies: ['test:/bar.md'],
-    strongDependencies: ['test:/bar.md'],
-    variables: [],
-  };
-
-  return { ...template, ...overrides };
 }
 
 export function buildFileBuffer(
@@ -222,4 +193,18 @@ export function buildUnloadedFile(
   };
 
   return { ...unloadedFile, ...overrides };
+}
+
+export function buildFileBufferState(
+  overrides: Partial<FileBuffersState> = {},
+): FileBuffersState {
+  const fileBuffers = [buildFileBuffer()];
+  const dependencyTable = buildDependencyTable(fileBuffers);
+  const fbs: FileBuffersState = {
+    fileBuffers,
+    dependencyTable,
+    invertedDependencyTable: invert(dependencyTable),
+  };
+
+  return { ...fbs, ...overrides };
 }
