@@ -1,3 +1,5 @@
+import { FileTypes } from '../../models/FileBuffer';
+
 // tslint:disable-next-line ban-types
 export function isNonNullObject(obj: any): obj is Object {
   if (obj === null) {
@@ -35,11 +37,6 @@ export type TypeNames =
 
 export type Validator<T> = (value: unknown) => value is T;
 
-export type AnyObject = {
-  [key: string]: AnyValue;
-};
-export type AnyArray = any[];
-
 export type AnyValue =
   | string
   | number
@@ -47,8 +44,8 @@ export type AnyValue =
   | null
   | undefined
   | Function // tslint:disable-line ban-types
-  | AnyArray
-  | AnyObject;
+  | any[]
+  | {};
 
 export function isArrayOf<T>(
   obj: unknown,
@@ -64,7 +61,7 @@ export function isArrayOf<T>(
 export function isPropertyValidTypeOf<O, P extends keyof O>(
   obj: O,
   property: P,
-  validator: Validator<O[P]>,
+  validator: TypeNames | Validator<O[P]>,
 ): obj is O & Record<P, O[P]> {
   if (!isNonNullObject(obj)) {
     return false;
@@ -73,26 +70,39 @@ export function isPropertyValidTypeOf<O, P extends keyof O>(
     return false;
   }
 
+  if (isFileTypes(validator)) {
+    return isTypeOf(obj, validator);
+  }
+
   return isValidTypeOf(obj[property], validator);
+}
+
+export function isFileTypes(v: unknown): v is TypeNames {
+  if (typeof v !== 'string') {
+    return false;
+  }
+
+  return [
+    'string',
+    'number',
+    'boolean',
+    'null',
+    'undefiend',
+    'array',
+    'object',
+    'function',
+  ].includes(v);
 }
 
 export function isValidTypeOf<T>(
   value: unknown,
-  validator: (arg: unknown) => arg is T,
+  validator: FileTypes | Validator<T>,
 ): value is T {
-  return validator(value);
-}
-
-export function isPropertyTypeOf<O, P extends keyof O>(
-  obj: O,
-  property: P,
-  type: TypeNames,
-): obj is O & Record<P, O[P]> {
-  if (!hasProperty(obj, property)) {
-    return false;
+  if (isFileTypes(validator)) {
+    return isTypeOf<T>(value, validator);
   }
 
-  return isTypeOf(obj[property], type);
+  return (validator as Validator<T>)(value);
 }
 
 export function isTypeOf<T>(value: unknown, type: TypeNames): value is T {
@@ -119,7 +129,7 @@ export function isTypeOf<T>(value: unknown, type: TypeNames): value is T {
 export function hasProperty<O, P extends keyof O>(
   obj: O,
   property: P,
-): obj is O & Record<P, AnyValue> {
+): obj is O & Record<P, O[P]> {
   if (!isNonNullObject(obj)) {
     return false;
   }

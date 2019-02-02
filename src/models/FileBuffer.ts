@@ -3,7 +3,6 @@ import uuid from 'uuid/v4'; // tslint:disable-line match-default-export-name
 import {
   isArrayOf,
   isNonNullObject,
-  isPropertyTypeOf,
   isPropertyValidTypeOf,
 } from '../core/utils/types';
 import { Namespace } from './Namespace';
@@ -94,33 +93,29 @@ export function isFileBufferIds(obj: unknown): obj is FileBufferId[] {
   return isArrayOf(obj, (v: unknown): v is string => typeof v === 'string');
 }
 
-export function isFileBuffer(obj: unknown): obj is FileBuffer {
-  if (!isNonNullObject(obj)) {
+export function isFileBuffer(value: unknown): value is FileBuffer {
+  if (!isNonNullObject(value)) {
     return false;
   }
 
-  if (!isPropertyTypeOf(obj as FileBuffer, 'id', 'string')) {
+  const obj = value as FileBuffer;
+
+  if (!isPropertyValidTypeOf(obj, 'id', 'string')) {
     return false;
   }
-  if (!isPropertyTypeOf(obj as FileBuffer, 'namespace', 'string')) {
+  if (!isPropertyValidTypeOf(obj, 'namespace', 'string')) {
     return false;
   }
-  if (!isPropertyTypeOf(obj as FileBuffer, 'path', 'string')) {
+  if (!isPropertyValidTypeOf(obj, 'path', 'string')) {
     return false;
   }
-  if (!isPropertyValidTypeOf(obj as FileBuffer, 'fileType', isValidFileType)) {
+  if (!isPropertyValidTypeOf(obj, 'fileType', isValidFileType)) {
     return false;
   }
-  if (
-    !isPropertyValidTypeOf(
-      obj as FileBuffer,
-      'dependencies',
-      isFileBufferDependency,
-    )
-  ) {
+  if (!isPropertyValidTypeOf(obj, 'dependencies', isFileBufferDependency)) {
     return false;
   }
-  if (!isPropertyTypeOf(obj as FileBuffer, 'variables', 'array')) {
+  if (!isPropertyValidTypeOf(obj, 'variables', 'array')) {
     return false;
   }
 

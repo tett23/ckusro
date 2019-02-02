@@ -3,7 +3,6 @@ import {
   isArrayOf,
   isErrors,
   isNonNullObject,
-  isPropertyTypeOf,
   isPropertyValidTypeOf,
   isTypeOf,
   isValidTypeOf,
@@ -94,23 +93,6 @@ describe(isValidTypeOf, () => {
       [[null, validator], false],
       [[() => {}, validator], false], // tslint:disable-line no-empty
     ]).toValidatePair(isValidTypeOf);
-  });
-});
-
-describe(isPropertyTypeOf, () => {
-  it('judges types', () => {
-    expect([
-      [[{ exists: 1 }, 'exists', 'number'], true],
-      [[{ exists: true }, 'exists', 'number'], false],
-      [[{ exists: undefined }, 'exists', 'number'], false],
-      [[{ exists: 1 }, 'does_not_exists', 'number'], false],
-      [[{}, 'does_not_exists', 'number'], false],
-      [[1, 'does_not_exists', 'number'], false],
-      [[true, 'does_not_exists', 'number'], false],
-      [[undefined, 'does_not_exists', 'number'], false],
-      [[null, 'does_not_exists', 'number'], false],
-      [[() => {}, 'does_not_exists', 'number'], false], // tslint:disable-line no-empty
-    ]).toValidatePair(isPropertyTypeOf);
   });
 });
 

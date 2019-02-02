@@ -21,7 +21,7 @@ describe(parseLinkText, () => {
   it('parses namespace', () => {
     const actual = parseLinkText('test', 'foo:/bar');
     const expected: IncompletenessLink = {
-      namespace: 'foo',
+      namespace: 'test',
       name: '/bar',
       anchor: null,
     };
@@ -32,7 +32,7 @@ describe(parseLinkText, () => {
   it('parses anchor', () => {
     const actual = parseLinkText('test', 'foo:/bar#baz');
     const expected: IncompletenessLink = {
-      namespace: 'foo',
+      namespace: 'test',
       name: '/bar',
       anchor: 'baz',
     };
