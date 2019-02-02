@@ -61,7 +61,7 @@ export function isArrayOf<T>(
   return obj.every((item) => validator(item));
 }
 
-export function isPropertyValidTypeOf<O extends object, P extends string, T>(
+export function isPropertyValidTypeOf<O extends object, P extends keyof O, T>(
   obj: O,
   property: P,
   validator: Validator<T>,
@@ -80,7 +80,7 @@ export function isValidTypeOf<T>(
   return validator(value);
 }
 
-export function isPropertyTypeOf<O extends object, P extends string, T>(
+export function isPropertyTypeOf<O extends object, P extends keyof O, T>(
   obj: O,
   property: P,
   type: TypeNames,
@@ -113,7 +113,7 @@ export function isTypeOf<T>(value: unknown, type: TypeNames): value is T {
   }
 }
 
-export function hasProperty<O extends object, P extends string>(
+export function hasProperty<O extends object, P extends keyof O>(
   obj: O,
   property: P,
 ): obj is O & Record<P, AnyValue> {
