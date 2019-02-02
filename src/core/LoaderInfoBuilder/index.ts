@@ -6,6 +6,7 @@ import promisifyFS from '../utils/promisifyFS';
 import { isErrors } from '../utils/types';
 import fetchEntries from './NodeFS/fetchEntries';
 import isValidLoaderContext from './NodeFS/isValidLoaderContext';
+import loadContents from './NodeFS/loadContents';
 
 export default async function LoaderInfoBuilder(
   fs: FS,
@@ -40,5 +41,10 @@ async function node(fs: FS, context: LoaderContext, plugins: Plugins) {
   );
   if (isErrors(entries)) {
     return entries;
+  }
+
+  const contents = await loadContents(promisifiedFs.readFile, context, entries);
+  if (isErrors(contents)) {
+    return contents;
   }
 }

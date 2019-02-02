@@ -54,19 +54,22 @@ export function isArrayOf<T>(
   obj: unknown,
   validator: Validator<T>,
 ): obj is T[] {
-  if (!isTypeOf<T[]>(obj, 'array')) {
+  if (!isTypeOf<any[]>(obj, 'array')) {
     return false;
   }
 
   return obj.every((item) => validator(item));
 }
 
-export function isPropertyValidTypeOf<O extends object, P extends keyof O, T>(
+export function isPropertyValidTypeOf<O, P extends keyof O>(
   obj: O,
   property: P,
-  validator: Validator<T>,
-): obj is O & Record<P, T> {
-  if (!hasProperty(obj, property)) {
+  validator: Validator<O[P]>,
+): obj is O & Record<P, O[P]> {
+  if (!isNonNullObject(obj)) {
+    return false;
+  }
+  if (!hasProperty<O, P>(obj, property)) {
     return false;
   }
 
@@ -80,11 +83,11 @@ export function isValidTypeOf<T>(
   return validator(value);
 }
 
-export function isPropertyTypeOf<O extends object, P extends keyof O, T>(
+export function isPropertyTypeOf<O, P extends keyof O>(
   obj: O,
   property: P,
   type: TypeNames,
-): obj is O & Record<P, T> {
+): obj is O & Record<P, O[P]> {
   if (!hasProperty(obj, property)) {
     return false;
   }
@@ -113,7 +116,7 @@ export function isTypeOf<T>(value: unknown, type: TypeNames): value is T {
   }
 }
 
-export function hasProperty<O extends object, P extends keyof O>(
+export function hasProperty<O, P extends keyof O>(
   obj: O,
   property: P,
 ): obj is O & Record<P, AnyValue> {

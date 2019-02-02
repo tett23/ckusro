@@ -1,12 +1,14 @@
-import { FileTypeDirectory } from '../../src/models/CkusroFile';
 import {
   detectType,
+  FileTypeDirectory,
   FileTypeMarkdown,
   FileTypeRaw,
   FileTypes,
   FileTypeText,
   FileTypeUnrendarableStatType,
+  isFileBuffer,
   isFileBufferDependency,
+  isFileBufferIds,
   toPath,
 } from '../../src/models/FileBuffer';
 import {
@@ -21,10 +23,63 @@ describe(isFileBufferDependency, () => {
   it('judges types', () => {
     expect([
       [[{ name: [], content: [] }], true],
-      [[{}], false],
       [[{ name: [] }], false],
       [[{ content: [] }], false],
+      [[{}], false],
+      [[undefined], false],
+      [[null], false],
+      [[true], false],
+      [[1], false],
+      [[[]], false],
+      [[() => {}], false], // tslint:disable-line no-empty
     ]).toValidatePair(isFileBufferDependency);
+  });
+});
+
+describe(isFileBufferIds, () => {
+  it('judges types', () => {
+    expect([
+      [[[]], true],
+      [[['test']], true],
+      [[[1]], false],
+      [[['test', 1]], false],
+      [[{}], false],
+      [[undefined], false],
+      [[null], false],
+      [[true], false],
+      [[1], false],
+      [[() => {}], false], // tslint:disable-line no-empty
+    ]).toValidatePair(isFileBufferIds);
+  });
+});
+
+describe(isFileBuffer, () => {
+  it('judges types', () => {
+    expect([
+      [
+        [
+          {
+            id: '',
+            namespace: '',
+            path: '',
+            fileType: FileTypeDirectory,
+            content: '',
+            dependencies: {
+              name: [],
+              content: [],
+            },
+            variables: [],
+          },
+        ],
+        true,
+      ],
+      [[{}], false],
+      [[undefined], false],
+      [[null], false],
+      [[true], false],
+      [[1], false],
+      [[() => {}], false], // tslint:disable-line no-empty
+    ]).toValidatePair(isFileBuffer);
   });
 });
 

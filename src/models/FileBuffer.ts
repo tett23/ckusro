@@ -1,5 +1,11 @@
 import { basename, extname } from 'path';
 import uuid from 'uuid/v4'; // tslint:disable-line match-default-export-name
+import {
+  isArrayOf,
+  isNonNullObject,
+  isPropertyTypeOf,
+  isPropertyValidTypeOf,
+} from '../core/utils/types';
 import { Namespace } from './Namespace';
 import {
   FileModes,
@@ -23,6 +29,25 @@ export type FileTypes =
   | typeof FileTypeRaw
   | typeof FileTypeDoesNotExist
   | typeof FileTypeUnrendarableStatType;
+
+export function isValidFileType(obj: unknown): obj is FileTypes {
+  if (typeof obj !== 'string') {
+    return false;
+  }
+
+  switch (obj) {
+    case FileTypeDirectory:
+    case FileTypeMarkdown:
+    case FileTypeText:
+    case FileTypeRaw:
+    case FileTypeDoesNotExist:
+    case FileTypeUnrendarableStatType:
+      return true;
+    default:
+      return false;
+  }
+}
+
 export type FileBufferId = string;
 
 export type FileBuffer = {
@@ -31,14 +56,76 @@ export type FileBuffer = {
   path: string;
   fileType: FileTypes;
   content: string | Buffer | null;
-  dependencies: {
-    name: FileBufferId[];
-    content: FileBufferId[];
-  };
+  dependencies: FileBufferDependency;
   variables: any[];
 };
 
-// export function isFileBuffer(obj: unknown): obj is FileBuffer {}
+export type FileBufferDependency = {
+  name: FileBufferId[];
+  content: FileBufferId[];
+};
+
+export function isFileBufferDependency(
+  obj: unknown,
+): obj is FileBufferDependency {
+  if (!isNonNullObject(obj)) {
+    return false;
+  }
+
+  if (
+    !isPropertyValidTypeOf(obj as FileBufferDependency, 'name', isFileBufferIds)
+  ) {
+    return false;
+  }
+  if (
+    !isPropertyValidTypeOf(
+      obj as FileBufferDependency,
+      'content',
+      isFileBufferIds,
+    )
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+export function isFileBufferIds(obj: unknown): obj is FileBufferId[] {
+  return isArrayOf(obj, (v: unknown): v is string => typeof v === 'string');
+}
+
+export function isFileBuffer(obj: unknown): obj is FileBuffer {
+  if (!isNonNullObject(obj)) {
+    return false;
+  }
+
+  if (!isPropertyTypeOf(obj as FileBuffer, 'id', 'string')) {
+    return false;
+  }
+  if (!isPropertyTypeOf(obj as FileBuffer, 'namespace', 'string')) {
+    return false;
+  }
+  if (!isPropertyTypeOf(obj as FileBuffer, 'path', 'string')) {
+    return false;
+  }
+  if (!isPropertyValidTypeOf(obj as FileBuffer, 'fileType', isValidFileType)) {
+    return false;
+  }
+  if (
+    !isPropertyValidTypeOf(
+      obj as FileBuffer,
+      'dependencies',
+      isFileBufferDependency,
+    )
+  ) {
+    return false;
+  }
+  if (!isPropertyTypeOf(obj as FileBuffer, 'variables', 'array')) {
+    return false;
+  }
+
+  return true;
+}
 
 export function newFileBufferId(): FileBufferId {
   return uuid();
