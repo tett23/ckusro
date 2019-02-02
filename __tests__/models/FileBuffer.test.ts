@@ -6,6 +6,7 @@ import {
   FileTypes,
   FileTypeText,
   FileTypeUnrendarableStatType,
+  isFileBufferDependency,
   toPath,
 } from '../../src/models/FileBuffer';
 import {
@@ -14,6 +15,18 @@ import {
   FileModeFile,
   FileModes,
 } from '../../src/models/StatType';
+import '../__matchers__/toValidTypes';
+
+describe(isFileBufferDependency, () => {
+  it('judges types', () => {
+    expect([
+      [[{ name: [], content: [] }], true],
+      [[{}], false],
+      [[{ name: [] }], false],
+      [[{ content: [] }], false],
+    ]).toValidatePair(isFileBufferDependency);
+  });
+});
 
 describe(toPath, () => {
   it('returns string', () => {

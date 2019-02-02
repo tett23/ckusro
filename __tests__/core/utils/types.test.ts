@@ -8,11 +8,11 @@ import {
   isTypeOf,
   isValidTypeOf,
 } from '../../../src/core/utils/types';
-import validateType from '../../__helpers__/validateType';
+import '../../__matchers__/toValidTypes';
 
 describe(isNonNullObject, () => {
   it('judges types', () => {
-    validateType(isNonNullObject, [
+    expect([
       [[{}], true],
       [[{ a: 1 }], true],
       [[null], false],
@@ -21,13 +21,13 @@ describe(isNonNullObject, () => {
       [[true], false],
       [[1], false],
       [[() => {}], false], // tslint:disable-line no-empty
-    ]);
+    ]).toValidatePair(isNonNullObject);
   });
 });
 
 describe(isErrors, () => {
   it('judges types', () => {
-    validateType(isErrors, [
+    expect([
       [[[new Error()]], true],
       [[[new Error(), new Error()]], true],
       [[[]], false],
@@ -41,7 +41,7 @@ describe(isErrors, () => {
       [[[]], false],
       [[{}], false],
       [[() => {}], false], // tslint:disable-line no-empty
-    ]);
+    ]).toValidatePair(isErrors);
   });
 });
 
@@ -49,7 +49,7 @@ describe(isArrayOf, () => {
   it('judges types', () => {
     const validator = (obj: unknown): obj is number => typeof obj === 'number';
 
-    validateType(isArrayOf, [
+    expect([
       [[[], validator], true],
       [[[1], validator], true],
       [[[1, true], validator], false],
@@ -59,7 +59,7 @@ describe(isArrayOf, () => {
       [[1, validator], false],
       [[{}, validator], false],
       [[() => {}, validator], false], // tslint:disable-line no-empty
-    ]);
+    ]).toValidatePair(isArrayOf);
   });
 });
 
@@ -67,7 +67,7 @@ describe(isPropertyValidTypeOf, () => {
   it('judges types', () => {
     const validator = (obj: unknown): obj is number => typeof obj === 'number';
 
-    validateType(isPropertyValidTypeOf, [
+    expect([
       [[{ exists: 1 }, 'exists', validator], true],
       [[{ exists: true }, 'exists', validator], false],
       [[{ exists: undefined }, 'exists', validator], false],
@@ -78,7 +78,7 @@ describe(isPropertyValidTypeOf, () => {
       [[undefined, 'does_not_exists', validator], false],
       [[null, 'does_not_exists', validator], false],
       [[() => {}, 'does_not_exists', validator], false], // tslint:disable-line no-empty
-    ]);
+    ]).toValidatePair(isPropertyValidTypeOf);
   });
 });
 
@@ -86,20 +86,20 @@ describe(isValidTypeOf, () => {
   it('judges types', () => {
     const validator = (obj: unknown): obj is number => typeof obj === 'number';
 
-    validateType(isValidTypeOf, [
+    expect([
       [[1, validator], true],
       [[{}, validator], false],
       [[true, validator], false],
       [[undefined, validator], false],
       [[null, validator], false],
       [[() => {}, validator], false], // tslint:disable-line no-empty
-    ]);
+    ]).toValidatePair(isValidTypeOf);
   });
 });
 
 describe(isPropertyTypeOf, () => {
   it('judges types', () => {
-    validateType(isPropertyTypeOf, [
+    expect([
       [[{ exists: 1 }, 'exists', 'number'], true],
       [[{ exists: true }, 'exists', 'number'], false],
       [[{ exists: undefined }, 'exists', 'number'], false],
@@ -110,13 +110,13 @@ describe(isPropertyTypeOf, () => {
       [[undefined, 'does_not_exists', 'number'], false],
       [[null, 'does_not_exists', 'number'], false],
       [[() => {}, 'does_not_exists', 'number'], false], // tslint:disable-line no-empty
-    ]);
+    ]).toValidatePair(isPropertyTypeOf);
   });
 });
 
 describe(isTypeOf, () => {
   it('judges types', () => {
-    validateType(isTypeOf, [
+    expect([
       [['', 'string'], true],
       [[true, 'string'], false],
       [[1, 'number'], true],
@@ -143,13 +143,13 @@ describe(isTypeOf, () => {
       [[null, 'function'], false],
       [[undefined, 'function'], false],
       [[true, 'function'], false],
-    ]);
+    ]).toValidatePair(isTypeOf);
   });
 });
 
 describe(hasProperty, () => {
   it('judges types', () => {
-    validateType(hasProperty, [
+    expect([
       [[{ exists: 1 }, 'exists'], true],
       [[{ exists: 1 }, 'does_not_exists'], false],
       [[{}, 'does_not_exists'], false],
@@ -158,6 +158,6 @@ describe(hasProperty, () => {
       [[undefined, 'does_not_exists'], false],
       [[null, 'does_not_exists'], false],
       [[() => {}, 'does_not_exists'], false], // tslint:disable-line no-empty
-    ]);
+    ]).toValidatePair(hasProperty);
   });
 });
