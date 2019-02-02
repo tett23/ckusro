@@ -1,22 +1,22 @@
 import { isErrors, isNonNullObject } from '../../../src/core/utils/types';
 
 describe(isNonNullObject, () => {
-  it('retuns true when argument is Object', () => {
-    const data = [{}, { a: 1 }];
-    data.forEach((value) => {
+  it('judges types', () => {
+    const data: Array<[any, boolean]> = [
+      [{}, true],
+      [{ a: 1 }, true],
+      [null, false],
+      [[], false],
+      [undefined, false],
+      [true, false],
+      [1, false],
+      [() => {}, false], // tslint:disable-line no-empty
+    ];
+
+    data.forEach(([value, expected]) => {
       const actual = isNonNullObject(value);
 
-      expect(actual).toBe(true);
-    });
-  });
-
-  it('retuns false when argument is null or other types', () => {
-    // tslint:disable-next-line no-empty
-    const data = [null, undefined, true, 1, () => {}];
-    data.forEach((value) => {
-      const actual = isNonNullObject(value);
-
-      expect(actual).toBe(false);
+      expect(actual).toBe(expected);
     });
   });
 });

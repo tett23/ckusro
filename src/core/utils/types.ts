@@ -3,12 +3,16 @@ export function isNonNullObject(obj: any): obj is Object {
   if (obj === null) {
     return false;
   }
+  if (Array.isArray(obj)) {
+    return false;
+  }
 
   return typeof obj === 'object';
 }
 
 export function isErrors(obj: unknown): obj is Error[] {
-  if (!Array.isArray(obj)) {
+  const validator = (item: unknown): item is Error => item instanceof Error;
+  if (!isArrayOf(obj, validator)) {
     return false;
   }
 
