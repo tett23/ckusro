@@ -183,6 +183,46 @@ export function detectType(fileMode: FileModes, name: string): FileTypes {
   }
 }
 
+export function replaceExt({ fileType, path }: FileBuffer): string {
+  const newExt = convertExt(fileType);
+  if (newExt instanceof Error) {
+    return path;
+  }
+
+  const ext = extname(path);
+  const replaced = path.replace(ext, newExt);
+
+  return replaced;
+}
+
+export function convertExt(fileType: FileTypes): string | Error {
+  switch (fileType) {
+    case FileTypeMarkdown:
+      return '.html';
+    case FileTypeText:
+      return '.html';
+    default:
+      return new Error('');
+  }
+}
+
+export function isWritableFileType(fileType: FileTypes): boolean {
+  switch (fileType) {
+    case FileTypeDirectory:
+      return false;
+    case FileTypeDoesNotExist:
+      return false;
+    case FileTypeMarkdown:
+      return true;
+    case FileTypeText:
+      return true;
+    case FileTypeRaw:
+      return true;
+    case FileTypeUnrendarableStatType:
+      return false;
+  }
+}
+
 export function newDoesNotExistFile(
   namespace: string,
   path: string,

@@ -1,6 +1,9 @@
 import {
+  convertExt,
   detectType,
+  FileBuffer,
   FileTypeDirectory,
+  FileTypeDoesNotExist,
   FileTypeMarkdown,
   FileTypeRaw,
   FileTypes,
@@ -9,6 +12,9 @@ import {
   isFileBuffer,
   isFileBufferDependency,
   isFileBufferIds,
+  isWritableFileType,
+  newDoesNotExistFile,
+  replaceExt,
   toPath,
 } from '../../src/models/FileBuffer';
 import {
@@ -17,6 +23,7 @@ import {
   FileModeFile,
   FileModes,
 } from '../../src/models/StatType';
+import { buildFileBuffer } from '../__fixtures__';
 import '../__matchers__/toValidTypes';
 
 describe(isFileBufferDependency, () => {
@@ -117,5 +124,96 @@ describe(detectType, () => {
 
       expect(actual).toBe(expected);
     });
+  });
+});
+
+describe(replaceExt, () => {
+  it('replaces path', () => {
+    const file = buildFileBuffer({
+      path: '/test.md',
+      fileType: FileTypeMarkdown,
+    });
+    const actual = replaceExt(file);
+
+    expect(actual).toBe('/test.html');
+  });
+
+  it('do nothing when fileType is not markdown or txt', () => {
+    const data: Array<[FileBuffer, string]> = [
+      [
+        buildFileBuffer({ fileType: FileTypeMarkdown, path: '/foo.md' }),
+        '/foo.html',
+      ],
+      [
+        buildFileBuffer({ fileType: FileTypeText, path: '/foo.txt' }),
+        '/foo.html',
+      ],
+      [buildFileBuffer({ fileType: FileTypeDirectory, path: '/foo' }), '/foo'],
+    ];
+    data.forEach(([file, expected]) => {
+      const actual = replaceExt(file);
+
+      expect(actual).toBe(expected);
+    });
+  });
+});
+
+describe(convertExt, () => {
+  it('returns string when FileType is valid', () => {
+    const actual = convertExt(FileTypeMarkdown);
+
+    expect(actual).toBe('.html');
+  });
+
+  it('returns Error when FileType is invalid', () => {
+    const actual = convertExt(FileTypeDirectory);
+
+    expect(actual).toBeInstanceOf(Error);
+  });
+});
+
+describe(isWritableFileType, () => {
+  it('', () => {
+    const data: Array<[FileTypes, boolean]> = [
+      [FileTypeDirectory, false],
+      [FileTypeDoesNotExist, false],
+      [FileTypeMarkdown, true],
+      [FileTypeText, true],
+      [FileTypeRaw, true],
+    ];
+
+    data.forEach((item) => {
+      const [value, expected] = item;
+      const actual = isWritableFileType(value);
+
+      expect(actual).toEqual(expected);
+    });
+  });
+});
+
+describe(newDoesNotExistFile, () => {
+  const expected: FileBuffer = {
+    id: 'test:/does_not_exist',
+    namespace: 'test',
+    path: '/does_not_exist',
+    fileType: FileTypeDoesNotExist,
+    content: null,
+    dependencies: {
+      name: [],
+      content: [],
+    },
+    variables: [],
+  };
+
+  it('returns FileTypeDoesNotExist object', () => {
+    const actual = newDoesNotExistFile('test', '/does_not_exist');
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('transforms path into absolute path', () => {
+    const actual = newDoesNotExistFile('test', 'does_not_exist');
+
+    expect(actual).toEqual(expected);
   });
 });
