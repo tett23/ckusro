@@ -62,8 +62,11 @@ describe(isArrayOf, () => {
   });
 });
 
-type ValidateData = Array<[any[], boolean]>;
-function validate(func: (...args: any[]) => boolean, data: ValidateData) {
+type AnyFunction = (...args: any[]) => any;
+type ValidateData<F extends AnyFunction> = Array<
+  [Parameters<F>, ReturnType<F>]
+>;
+function validate<F extends AnyFunction>(func: F, data: ValidateData<F>) {
   data.forEach(([args, expected]) => {
     const actual = func(...args);
 
@@ -158,14 +161,14 @@ describe(isTypeOf, () => {
 describe(hasProperty, () => {
   it('judges types', () => {
     validate(hasProperty, [
-      [[{ exists: 1 }, 'exists', 'number'], true],
-      [[{ exists: 1 }, 'does_not_exists', 'number'], false],
-      [[{}, 'does_not_exists', 'number'], false],
-      [[1, 'does_not_exists', 'number'], false],
-      [[true, 'does_not_exists', 'number'], false],
-      [[undefined, 'does_not_exists', 'number'], false],
-      [[null, 'does_not_exists', 'number'], false],
-      [[() => {}, 'does_not_exists', 'number'], false], // tslint:disable-line no-empty
+      [[{ exists: 1 }, 'exists'], true],
+      [[{ exists: 1 }, 'does_not_exists'], false],
+      [[{}, 'does_not_exists'], false],
+      [[1, 'does_not_exists'], false],
+      [[true, 'does_not_exists'], false],
+      [[undefined, 'does_not_exists'], false],
+      [[null, 'does_not_exists'], false],
+      [[() => {}, 'does_not_exists'], false], // tslint:disable-line no-empty
     ]);
   });
 });
