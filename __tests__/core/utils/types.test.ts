@@ -8,10 +8,11 @@ import {
   isTypeOf,
   isValidTypeOf,
 } from '../../../src/core/utils/types';
+import validateType from '../../__helpers__/validateType';
 
 describe(isNonNullObject, () => {
   it('judges types', () => {
-    validate(isNonNullObject, [
+    validateType(isNonNullObject, [
       [[{}], true],
       [[{ a: 1 }], true],
       [[null], false],
@@ -26,7 +27,7 @@ describe(isNonNullObject, () => {
 
 describe(isErrors, () => {
   it('judges types', () => {
-    validate(isErrors, [
+    validateType(isErrors, [
       [[[new Error()]], true],
       [[[new Error(), new Error()]], true],
       [[[]], false],
@@ -48,7 +49,7 @@ describe(isArrayOf, () => {
   it('judges types', () => {
     const validator = (obj: unknown): obj is number => typeof obj === 'number';
 
-    validate(isArrayOf, [
+    validateType(isArrayOf, [
       [[[], validator], true],
       [[[1], validator], true],
       [[[1, true], validator], false],
@@ -62,23 +63,11 @@ describe(isArrayOf, () => {
   });
 });
 
-type AnyFunction = (...args: any[]) => any;
-type ValidateData<F extends AnyFunction> = Array<
-  [Parameters<F>, ReturnType<F>]
->;
-function validate<F extends AnyFunction>(func: F, data: ValidateData<F>) {
-  data.forEach(([args, expected]) => {
-    const actual = func(...args);
-
-    expect(actual).toBe(expected);
-  });
-}
-
 describe(isPropertyValidTypeOf, () => {
   it('judges types', () => {
     const validator = (obj: unknown): obj is number => typeof obj === 'number';
 
-    validate(isPropertyValidTypeOf, [
+    validateType(isPropertyValidTypeOf, [
       [[{ exists: 1 }, 'exists', validator], true],
       [[{ exists: true }, 'exists', validator], false],
       [[{ exists: undefined }, 'exists', validator], false],
@@ -97,7 +86,7 @@ describe(isValidTypeOf, () => {
   it('judges types', () => {
     const validator = (obj: unknown): obj is number => typeof obj === 'number';
 
-    validate(isValidTypeOf, [
+    validateType(isValidTypeOf, [
       [[1, validator], true],
       [[{}, validator], false],
       [[true, validator], false],
@@ -110,7 +99,7 @@ describe(isValidTypeOf, () => {
 
 describe(isPropertyTypeOf, () => {
   it('judges types', () => {
-    validate(isPropertyTypeOf, [
+    validateType(isPropertyTypeOf, [
       [[{ exists: 1 }, 'exists', 'number'], true],
       [[{ exists: true }, 'exists', 'number'], false],
       [[{ exists: undefined }, 'exists', 'number'], false],
@@ -127,7 +116,7 @@ describe(isPropertyTypeOf, () => {
 
 describe(isTypeOf, () => {
   it('judges types', () => {
-    validate(isTypeOf, [
+    validateType(isTypeOf, [
       [['', 'string'], true],
       [[true, 'string'], false],
       [[1, 'number'], true],
@@ -160,7 +149,7 @@ describe(isTypeOf, () => {
 
 describe(hasProperty, () => {
   it('judges types', () => {
-    validate(hasProperty, [
+    validateType(hasProperty, [
       [[{ exists: 1 }, 'exists'], true],
       [[{ exists: 1 }, 'does_not_exists'], false],
       [[{}, 'does_not_exists'], false],
