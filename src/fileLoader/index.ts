@@ -10,6 +10,7 @@ import {
   newCkusroFile,
 } from '../models/CkusroFile';
 import { FileBuffer } from '../models/FileBuffer';
+import { newFileBuffersState } from '../models/FileBuffersState';
 import { LoaderContext, loaderContextMap } from '../models/loaderContext';
 import { Plugins } from '../models/plugins';
 import { buildAst, determineDependency } from '../parser';
@@ -44,7 +45,7 @@ export default async function fileLoader(
     .map((args) => loadContent(...args));
 
   const contentLoaded = await Promise.all(ps);
-  return contentLoaded
+  const fileBuffers = contentLoaded
     .map(
       (file): [LoaderContext, CkusroFile] => {
         return [contextMap[file.namespace], file];
@@ -53,6 +54,8 @@ export default async function fileLoader(
     .map(([context, file]) =>
       loadDependencies(plugins, context, file, contentLoaded),
     );
+
+  return newFileBuffersState(fileBuffers);
 }
 
 export async function buildFiles(

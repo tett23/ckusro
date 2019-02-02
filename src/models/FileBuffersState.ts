@@ -3,7 +3,12 @@ import {
   isNonNullObject,
   isPropertyValidTypeOf,
 } from '../core/utils/types';
-import { DependencyTable, isDependencyTable } from './DependencyTable';
+import {
+  buildDependencyTable,
+  DependencyTable,
+  invert,
+  isDependencyTable,
+} from './DependencyTable';
 import { FileBuffer, isFileBuffer } from './FileBuffer';
 
 export type FileBuffersState = {
@@ -27,4 +32,16 @@ export function isFileBufferState(value: unknown): value is FileBuffersState {
     isPropertyValidTypeOf(obj, 'dependencyTable', isDependencyTable) &&
     isPropertyValidTypeOf(obj, 'invertedDependencyTable', isDependencyTable)
   );
+}
+
+export function newFileBuffersState(
+  fileBuffers: FileBuffer[],
+): FileBuffersState {
+  const dependencyTable = buildDependencyTable(fileBuffers);
+
+  return {
+    fileBuffers,
+    dependencyTable,
+    invertedDependencyTable: invert(dependencyTable),
+  };
 }

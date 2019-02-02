@@ -1,4 +1,8 @@
 import { FileBuffer, newFileBuffer } from '../../models/FileBuffer';
+import {
+  FileBuffersState,
+  newFileBuffersState,
+} from '../../models/FileBuffersState';
 import { LoaderContext } from '../../models/loaderContext';
 import { Namespace } from '../../models/Namespace';
 import { Plugins } from '../../models/plugins';
@@ -16,7 +20,7 @@ export default async function LoaderInfoBuilder(
   fs: FS,
   namespace: Namespace,
   plugins: Plugins,
-) {
+): Promise<FileBuffersState | Error[]> {
   const { loaderContext } = namespace;
   const promisifiedFs = promisifyFS(fs);
   const isValid = await isValidLoaderContext(
@@ -24,29 +28,29 @@ export default async function LoaderInfoBuilder(
     loaderContext,
   ).catch((err: Error) => err);
   if (isValid instanceof Error) {
-    return isValid;
+    return [isValid];
   }
   if (!isValid) {
-    return new Error(`LocalLoaderContext: ${loaderContext.path} not found.`);
+    return [new Error(`LocalLoaderContext: ${loaderContext.path} not found.`)];
   }
 
   const result = await build(promisifiedFs, namespace.loaderContext);
   const [contents, errors] = separateErrors(result);
   if (isErrors(errors)) {
-    return contents;
+    return errors;
   }
 
-  const fileBuffers: FileBuffer[] = contents.map(([unloadedFile, content]) => {
-    return newFileBuffer(
-      namespace,
-      [unloadedFile.absolutePath, unloadedFile.mode],
-      content,
-    );
-  });
+  const fileBuffers: FileBuffer[] = contents
+    .map(([unloadedFile, content]) => {
+      return newFileBuffer(
+        namespace,
+        [unloadedFile.absolutePath, unloadedFile.mode],
+        content,
+      );
+    })
+    .map((file) => loadDependencies(plugins, file, fileBuffers));
 
-  return fileBuffers.map((file) =>
-    loadDependencies(plugins, file, fileBuffers),
-  );
+  return newFileBuffersState(fileBuffers);
 }
 
 async function build(
