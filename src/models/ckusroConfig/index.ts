@@ -1,8 +1,10 @@
-import { isNonNullObject } from '../../core/utils/types';
+import { isNonNullObject, isPropertyValidTypeOf } from '../../core/utils/types';
+import { ContextTypes, isValidContextType } from '../loaderContext';
 import { isPlugins, Plugins } from '../plugins';
 import { isLoaderConfig, LoaderConfig } from './LoaderConfig';
 
 export type TargetDirectory = {
+  type: ContextTypes;
   path: string;
   name: string;
   innerPath: string;
@@ -15,27 +17,22 @@ export type CkusroConfig = {
   plugins: Plugins;
 };
 
-export function isTargetDirectory(obj: any): obj is TargetDirectory {
+export function isTargetDirectory(obj: unknown): obj is TargetDirectory {
   if (!isNonNullObject(obj)) {
     return false;
   }
 
-  if (typeof obj.path !== 'string') {
-    return false;
-  }
+  const cast = obj as TargetDirectory;
 
-  if (typeof obj.name !== 'string') {
-    return false;
-  }
-
-  if (typeof obj.innerPath !== 'string') {
-    return false;
-  }
-
-  return true;
+  return (
+    isPropertyValidTypeOf(cast, 'type', isValidContextType) &&
+    isPropertyValidTypeOf(cast, 'path', 'string') &&
+    isPropertyValidTypeOf(cast, 'name', 'string') &&
+    isPropertyValidTypeOf(cast, 'innerPath', 'string')
+  );
 }
 
-export function isTargetDirectories(obj: any): obj is TargetDirectory[] {
+export function isTargetDirectories(obj: unknown): obj is TargetDirectory[] {
   if (!Array.isArray(obj)) {
     return false;
   }
@@ -43,26 +40,17 @@ export function isTargetDirectories(obj: any): obj is TargetDirectory[] {
   return obj.every(isTargetDirectory);
 }
 
-export function isCkusroConfig(obj: any): obj is CkusroConfig {
+export function isCkusroConfig(obj: unknown): obj is CkusroConfig {
   if (!isNonNullObject(obj)) {
     return false;
   }
 
-  if (typeof obj.outputDirectory !== 'string') {
-    return false;
-  }
+  const cast = obj as CkusroConfig;
 
-  if (!isTargetDirectories(obj.targetDirectories)) {
-    return false;
-  }
-
-  if (!isLoaderConfig(obj.loaderConfig)) {
-    return false;
-  }
-
-  if (!isPlugins(obj.plugins)) {
-    return false;
-  }
-
-  return true;
+  return (
+    isPropertyValidTypeOf(cast, 'outputDirectory', 'string') &&
+    isPropertyValidTypeOf(cast, 'targetDirectories', isTargetDirectories) &&
+    isPropertyValidTypeOf(cast, 'loaderConfig', isLoaderConfig) &&
+    isPropertyValidTypeOf(cast, 'plugins', isPlugins)
+  );
 }

@@ -1,8 +1,13 @@
 import yargs, { Argv } from 'yargs';
-import fromCLIOptions, { loadConfigFile } from '../cli/config/fromCLIOptions';
+import fromCLIOptions from '../cli/config/fromCLIOptions';
 import { isErrors } from '../core/utils/types';
 import { TargetDirectory } from '../models/ckusroConfig';
-import newOldGlobalState, { OldGlobalState } from '../models/OldGlobalState';
+import { FileBuffersState } from '../models/FileBuffersState';
+import {
+  GlobalState,
+  newGlobalState,
+  reloadFiles,
+} from '../models/GlobalState';
 import {
   CLICommandBuild,
   CLICommands,
@@ -26,9 +31,7 @@ export function parser(): Argv<CLIOptions> {
     .option('config', {
       alias: 'c',
       description: 'path to config file',
-      coerce: (v: string) => {
-        return loadConfigFile(v);
-      },
+      type: 'string',
     })
     .option('outputDirectory', {
       alias: 'o',
@@ -45,27 +48,35 @@ export function parser(): Argv<CLIOptions> {
     });
 }
 
-export default async function cli(argv: string[]) {
+export default async function cli(argv: string[]): Promise<Error[] | void> {
   const options = parser().parse(argv);
   const command = options._[options._.length - 1];
   if (!isCLICommands(command)) {
-    throw new Error('Invalid command.');
+    return [new Error('Invalid command.')];
   }
 
   const conf = fromCLIOptions(options);
-  const globalState = await newOldGlobalState(conf);
-  if (isErrors(globalState)) {
-    return globalState;
+  if (conf instanceof Error) {
+    return [conf];
+  }
+  const globalState = await newGlobalState(conf);
+  const fileBuffersState = await reloadFiles(globalState);
+  if (isErrors(fileBuffersState)) {
+    return fileBuffersState;
   }
 
-  return run(command, globalState);
+  return run(command, globalState, fileBuffersState);
 }
 
-export async function run(command: CLICommands, globalState: OldGlobalState) {
+export async function run(
+  command: CLICommands,
+  globalState: GlobalState,
+  fileBuffersState: FileBuffersState,
+) {
   switch (command) {
     case CLICommandBuild:
-      return await buildHandler(globalState);
+      return await buildHandler(globalState, fileBuffersState);
     case CLICommandWatch:
-      return await watchHandler(globalState);
+      return await watchHandler(globalState, fileBuffersState);
   }
 }

@@ -1,7 +1,8 @@
 import { normalize, resolve as resolvePath } from 'path';
 import { mergeConfig } from '../../../src/cli/config';
 import { CkusroConfig } from '../../../src/models/ckusroConfig';
-import { buildCkusroConfig } from '../../__fixtures__';
+import { LocalLoaderContextType } from '../../../src/models/loaderContext/LocalLoaderContext';
+import { buildCkusroConfig, buildTargetDirectory } from '../../__fixtures__';
 import {
   mockFileSystem,
   restoreFileSystem,
@@ -18,21 +19,23 @@ describe(mergeConfig, () => {
   it('override properties', () => {
     const actual = mergeConfig({
       targetDirectories: [
-        {
+        buildTargetDirectory({
+          type: LocalLoaderContextType,
           path: '/test',
           name: 'test',
           innerPath: './',
-        },
+        }),
       ],
       outputDirectory: '/out',
     });
     const expected: CkusroConfig = buildCkusroConfig({
       targetDirectories: [
-        {
+        buildTargetDirectory({
+          type: LocalLoaderContextType,
           path: '/test',
           name: 'test',
           innerPath: './',
-        },
+        }),
       ],
       outputDirectory: '/out',
     });
@@ -43,21 +46,23 @@ describe(mergeConfig, () => {
   it('resolve paths', () => {
     const actual = mergeConfig({
       targetDirectories: [
-        {
+        buildTargetDirectory({
+          type: LocalLoaderContextType,
           path: '/test',
           name: 'test',
           innerPath: './',
-        },
+        }),
       ],
       outputDirectory: 'out',
     });
     const expected: CkusroConfig = buildCkusroConfig({
       targetDirectories: [
-        {
+        buildTargetDirectory({
+          type: LocalLoaderContextType,
           path: resolvePath('/test'),
           name: 'test',
           innerPath: normalize('./'),
-        },
+        }),
       ],
       outputDirectory: resolvePath('out'),
     });

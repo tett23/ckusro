@@ -1,5 +1,13 @@
-import { isNamespace, Namespace } from '../../src/models/Namespace';
-import { buildLocalLoaderContext, buildOutputContext } from '../__fixtures__';
+import {
+  isNamespace,
+  Namespace,
+  namespaceMap,
+} from '../../src/models/Namespace';
+import {
+  buildLocalLoaderContext,
+  buildNamespace,
+  buildOutputContext,
+} from '../__fixtures__';
 
 describe(isNamespace, () => {
   it('judges type', () => {
@@ -24,5 +32,23 @@ describe(isNamespace, () => {
 
       expect(actual).toBe(expected);
     });
+  });
+});
+
+describe(namespaceMap, () => {
+  it('returns NamespaceMap', () => {
+    const contexts = [
+      buildNamespace({ name: 'ns1' }),
+      buildNamespace({ name: 'ns2' }),
+      buildNamespace({ name: 'ns3' }),
+    ];
+    const actual = namespaceMap(contexts);
+    const expected = {
+      ns1: contexts[0],
+      ns2: contexts[1],
+      ns3: contexts[2],
+    };
+
+    expect(actual).toEqual(expected);
   });
 });

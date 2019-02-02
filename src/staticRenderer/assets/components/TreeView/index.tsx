@@ -1,5 +1,5 @@
 import React from 'react';
-import { CkusroFile } from '../../../../models/CkusroFile';
+import { FileBuffer, fileBufferName } from '../../../../models/FileBuffer';
 import { OutputContext } from '../../../../models/OutputContext';
 import buildNamespaceTree, {
   TreeViewItem as TreeViewItemModel,
@@ -8,10 +8,10 @@ import TreeViewItem from './TreeViewItem';
 
 export type Props = {
   contexts: OutputContext[];
-  files: CkusroFile[];
+  files: FileBuffer[];
 };
 
-type Table = { [key in string]: CkusroFile };
+type Table = { [key in string]: FileBuffer };
 
 export default function TreeView({ contexts, files }: Props) {
   const tv = buildNamespaceTree(files);
@@ -27,7 +27,9 @@ export default function TreeView({ contexts, files }: Props) {
       (item) => item.name === table[tvi.id].namespace,
     );
     if (context == null) {
-      throw new Error(`Context not found. name=${table[tvi.id].name}`);
+      throw new Error(
+        `Context not found. name=${fileBufferName(table[tvi.id])}`,
+      );
     }
 
     return gen(table, context, tvi);

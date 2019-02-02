@@ -1,10 +1,10 @@
-import { CkusroFile } from '../../../../models/CkusroFile';
+import { FileBuffer } from '../../../../models/FileBuffer';
 import { Plugins } from '../../../../models/plugins';
 import parserInstance from '../../../../parserInstance';
 
 export type Props = {
   currentFileId: string;
-  files: CkusroFile[];
+  files: FileBuffer[];
   plugins: Plugins;
 };
 
@@ -17,7 +17,7 @@ export function Markdown({ plugins, currentFileId, files }: Props) {
   return buildJSX(plugins, file.content || '');
 }
 
-export function buildJSX(plugins: Plugins, content: string) {
+export function buildJSX(plugins: Plugins, content: string | Buffer) {
   const jsx: JSX.Element = parserInstance(plugins).processSync(content)
     .contents as any;
 

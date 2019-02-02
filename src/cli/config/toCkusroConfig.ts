@@ -18,15 +18,21 @@ export function isPartializedPrimitiveCkusroConfig(
     return false;
   }
 
-  if (!isValidLoaderConfig(obj.loaderConfig)) {
+  if (obj.loaderConfig != null && !isValidLoaderConfig(obj.loaderConfig)) {
     return false;
   }
 
-  if (!isValidTargetDirectories(obj.targetDirectories)) {
+  if (
+    obj.targetDirectories != null &&
+    !isValidTargetDirectories(obj.targetDirectories)
+  ) {
     return false;
   }
 
-  if (!isValidOutputDirectory(obj.outputDirectory)) {
+  if (
+    obj.outputDirectory != null &&
+    !isValidOutputDirectory(obj.outputDirectory)
+  ) {
     return false;
   }
 

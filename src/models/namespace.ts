@@ -1,4 +1,4 @@
-import { isNonNullObject } from '../core/utils/types';
+import { isNonNullObject, isPropertyValidTypeOf } from '../core/utils/types';
 import { isLoaderContext, LoaderContext } from './loaderContext';
 import { isOutputContext, OutputContext } from './OutputContext';
 
@@ -13,17 +13,23 @@ export function isNamespace(value: unknown): value is Namespace {
     return false;
   }
 
-  if (typeof (value as Namespace).name !== 'string') {
-    return false;
-  }
+  const cast = value as Namespace;
 
-  if (!isLoaderContext((value as Namespace).loaderContext)) {
-    return false;
-  }
+  return (
+    isPropertyValidTypeOf(cast, 'name', 'string') &&
+    isPropertyValidTypeOf(cast, 'loaderContext', isLoaderContext) &&
+    isPropertyValidTypeOf(cast, 'outputContext', isOutputContext)
+  );
+}
 
-  if (!isOutputContext((value as Namespace).outputContext)) {
-    return false;
-  }
+export type NamespaceMap = { [key in string]: Namespace };
 
-  return true;
+export function namespaceMap(namespaces: Namespace[]): NamespaceMap {
+  return namespaces.reduce(
+    (acc, ns) => {
+      acc[ns.name] = ns;
+      return acc;
+    },
+    {} as NamespaceMap,
+  );
 }

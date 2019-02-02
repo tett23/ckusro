@@ -40,15 +40,19 @@ export default async function LoaderInfoBuilder(
     return errors;
   }
 
-  const fileBuffers: FileBuffer[] = contents
-    .map(([unloadedFile, content]) => {
+  const dependencyUnloaded: FileBuffer[] = contents.map(
+    ([unloadedFile, content]) => {
       return newFileBuffer(
         namespace,
         [unloadedFile.absolutePath, unloadedFile.mode],
         content,
       );
-    })
-    .map((file) => loadDependencies(plugins, file, fileBuffers));
+    },
+  );
+
+  const fileBuffers = dependencyUnloaded.map((file) =>
+    loadDependencies(plugins, file, dependencyUnloaded),
+  );
 
   return newFileBuffersState(fileBuffers);
 }

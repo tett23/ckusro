@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { CkusroFile } from '../../../models/CkusroFile';
-import { OldGlobalState } from '../../../models/OldGlobalState';
+import { FileBuffer } from '../../../models/FileBuffer';
+import { GlobalState } from '../../../models/GlobalState';
 import { OutputContext } from '../../../models/OutputContext';
 import { Plugins } from '../../../models/plugins';
 import Breadcrumbs from './Breadcrumbs';
@@ -11,15 +11,16 @@ import TreeView from './TreeView';
 
 type MarkdownProps = {
   currentFileId: string;
-  files: CkusroFile[];
+  files: FileBuffer[];
 };
 
 export type Props = {
-  globalState: OldGlobalState;
+  globalState: GlobalState;
+  fileBuffers: FileBuffer[];
   markdown: MarkdownProps;
 };
 
-export default function App({ globalState, markdown }: Props) {
+export default function App({ globalState, fileBuffers, markdown }: Props) {
   const Main = styled.main`
     display: flex;
     flex-direction: row;
@@ -28,17 +29,23 @@ export default function App({ globalState, markdown }: Props) {
   return (
     <Main>
       <TreeViewContainer
-        outputContexts={globalState.outputContexts}
-        files={globalState.files}
+        outputContexts={globalState.namespaces.map(
+          (item) => item.outputContext,
+        )}
+        files={fileBuffers}
       />
-      <MainContainer globalState={globalState} markdown={markdown} />
+      <MainContainer
+        fileBuffers={fileBuffers}
+        plugins={globalState.plugins}
+        markdown={markdown}
+      />
     </Main>
   );
 }
 
 type TreeViewContainerProps = {
   outputContexts: OutputContext[];
-  files: CkusroFile[];
+  files: FileBuffer[];
 };
 
 function TreeViewContainer({ outputContexts, files }: TreeViewContainerProps) {
@@ -54,14 +61,13 @@ function TreeViewContainer({ outputContexts, files }: TreeViewContainerProps) {
 }
 
 export type MainContainerProps = {
-  globalState: OldGlobalState;
+  fileBuffers: FileBuffer[];
+  plugins: Plugins;
   markdown: MarkdownProps;
 };
 
-function MainContainer({ globalState, markdown }: MainContainerProps) {
-  const file = globalState.files.find(
-    ({ id }) => markdown.currentFileId === id,
-  );
+function MainContainer({ plugins, fileBuffers, markdown }: MainContainerProps) {
+  const file = fileBuffers.find(({ id }) => markdown.currentFileId === id);
   if (file == null) {
     throw new Error('File not found.');
   }
@@ -77,13 +83,13 @@ function MainContainer({ globalState, markdown }: MainContainerProps) {
   return (
     <Div>
       <BreadcrumbsContainer file={file} />
-      <MarkdownContainer plugins={globalState.plugins} markdown={markdown} />
+      <MarkdownContainer plugins={plugins} markdown={markdown} />
     </Div>
   );
 }
 
 type BreadcrumbsContainerProps = {
-  file: CkusroFile;
+  file: FileBuffer;
 };
 
 function BreadcrumbsContainer({ file }: BreadcrumbsContainerProps) {

@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { isNonNullObject } from '../../core/utils/types';
+import { isNonNullObject, isPropertyValidTypeOf } from '../../core/utils/types';
 import { TargetDirectory } from '../ckusroConfig';
 import { isLoaderConfig, LoaderConfig } from '../ckusroConfig/LoaderConfig';
 
@@ -32,21 +32,13 @@ export function isLocalLoaderContext(
     return false;
   }
 
-  if ((value as LocalLoaderContext).type !== LocalLoaderContextType) {
-    return false;
-  }
+  const cast = value as LocalLoaderContext;
 
-  if (typeof (value as LocalLoaderContext).name !== 'string') {
-    return false;
-  }
-
-  if (typeof (value as LocalLoaderContext).path !== 'string') {
-    return false;
-  }
-
-  if (!isLoaderConfig((value as LocalLoaderContext).loaderConfig)) {
-    return false;
-  }
-
-  return true;
+  return (
+    isPropertyValidTypeOf(cast, 'type', 'string') &&
+    cast.type === LocalLoaderContextType &&
+    isPropertyValidTypeOf(cast, 'name', 'string') &&
+    isPropertyValidTypeOf(cast, 'path', 'string') &&
+    isPropertyValidTypeOf(cast, 'loaderConfig', isLoaderConfig)
+  );
 }

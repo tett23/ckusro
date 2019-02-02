@@ -10,10 +10,13 @@ import {
   isLoaderConfig,
   LoaderConfig,
 } from '../../src/models/ckusroConfig/LoaderConfig';
+import { LocalLoaderContextType } from '../../src/models/loaderContext/LocalLoaderContext';
+import { buildPlugins, buildTargetDirectory } from '../__fixtures__';
 
 describe(isTargetDirectory, () => {
   it('judges type', () => {
     const validData: TargetDirectory = {
+      type: LocalLoaderContextType,
       path: '/foo',
       name: 'foo',
       innerPath: '.',
@@ -40,6 +43,7 @@ describe(isTargetDirectories, () => {
   it('judges type', () => {
     const validData: TargetDirectory[] = [
       {
+        type: LocalLoaderContextType,
         path: '/foo',
         name: 'foo',
         innerPath: '.',
@@ -93,12 +97,9 @@ describe(isCkusroConfig, () => {
   it('judges type', () => {
     const validData: CkusroConfig = {
       outputDirectory: '/test',
-      targetDirectories: [],
+      targetDirectories: [buildTargetDirectory()],
       loaderConfig: defaultLoaderConfig(),
-      plugins: {
-        parsers: [],
-        components: [],
-      },
+      plugins: buildPlugins(),
     };
     const data: Array<[any, boolean]> = [
       [validData, true],

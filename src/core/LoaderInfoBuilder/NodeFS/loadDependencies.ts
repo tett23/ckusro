@@ -1,4 +1,5 @@
-import { FileBuffer, FileBufferDependency } from '../../../models/FileBuffer';
+import { Dependency } from '../../../models/DependencyTable';
+import { FileBuffer } from '../../../models/FileBuffer';
 import { Plugins } from '../../../models/plugins';
 import { buildAst, determineDependency } from '../../../parser';
 
@@ -14,7 +15,7 @@ export default function loadDependencies(
   const rootNode = buildAst(plugins, file.content || '');
   const dependencyFiles = determineDependency(file.namespace, rootNode, files);
 
-  const dependencies: FileBufferDependency = {
+  const dependencies: Dependency = {
     name: dependencyFiles.map(({ id }) => id),
     content: dependencyFiles.map(({ id }) => id),
   };

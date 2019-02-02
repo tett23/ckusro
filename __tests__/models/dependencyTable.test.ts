@@ -1,9 +1,30 @@
 import { FileTypeMarkdown } from '../../src/models/CkusroFile';
 import {
+  allDepdendencies,
   buildDependencyTable,
   DependencyTable,
   invert,
+  isDependency,
 } from '../../src/models/DependencyTable';
+import { buildDependency } from '../__fixtures__';
+import '../__matchers__/toValidTypes';
+
+describe(isDependency, () => {
+  it('judges types', () => {
+    expect([
+      [[{ name: [], content: [] }], true],
+      [[{ name: [] }], false],
+      [[{ content: [] }], false],
+      [[{}], false],
+      [[undefined], false],
+      [[null], false],
+      [[true], false],
+      [[1], false],
+      [[[]], false],
+      [[() => {}], false], // tslint:disable-line no-empty
+    ]).toValidatePair(isDependency);
+  });
+});
 
 describe(buildDependencyTable, () => {
   it('returns FileTypeDirectory when statType is StatTypeDirectory', () => {
@@ -11,55 +32,56 @@ describe(buildDependencyTable, () => {
       {
         id: '1',
         namespace: 'foo',
-        name: 'foo.md',
         path: '/foo.md',
         fileType: FileTypeMarkdown,
-        isLoaded: true,
         content: null,
-        weakDependencies: ['2'],
-        strongDependencies: ['3'],
+        dependencies: {
+          name: ['2'],
+          content: ['3'],
+        },
         variables: [],
       },
       {
         id: '2',
         namespace: 'foo',
-        name: 'foo.md',
         path: '/foo.md',
         fileType: FileTypeMarkdown,
-        isLoaded: true,
         content: null,
-        weakDependencies: [],
-        strongDependencies: [],
+        dependencies: {
+          name: [],
+          content: [],
+        },
         variables: [],
       },
       {
         id: '3',
         namespace: 'foo',
-        name: 'foo.md',
         path: '/foo.md',
         fileType: FileTypeMarkdown,
-        isLoaded: true,
         content: null,
-        weakDependencies: [],
-        strongDependencies: [],
+        dependencies: {
+          name: [],
+          content: [],
+        },
         variables: [],
       },
     ]);
-
-    expect(actual).toEqual({
+    const expected: DependencyTable = {
       '1': {
-        weakDependencies: ['2'],
-        strongDependencies: ['3'],
+        name: ['2'],
+        content: ['3'],
       },
       '2': {
-        weakDependencies: [],
-        strongDependencies: [],
+        name: [],
+        content: [],
       },
       '3': {
-        weakDependencies: [],
-        strongDependencies: [],
+        name: [],
+        content: [],
       },
-    });
+    };
+
+    expect(actual).toEqual(expected);
   });
 });
 
@@ -67,33 +89,43 @@ describe(invert, () => {
   it('returns inverted DepencencyTable', () => {
     const table: DependencyTable = {
       '1': {
-        weakDependencies: ['2'],
-        strongDependencies: ['3'],
+        name: ['2'],
+        content: ['3'],
       },
       '2': {
-        weakDependencies: [],
-        strongDependencies: [],
+        name: [],
+        content: [],
       },
       '3': {
-        weakDependencies: [],
-        strongDependencies: [],
+        name: [],
+        content: [],
       },
     };
     const actual = invert(table);
     const expected: DependencyTable = {
       '1': {
-        weakDependencies: [],
-        strongDependencies: [],
+        name: [],
+        content: [],
       },
       '2': {
-        weakDependencies: ['1'],
-        strongDependencies: [],
+        name: ['1'],
+        content: [],
       },
       '3': {
-        weakDependencies: [],
-        strongDependencies: ['1'],
+        name: [],
+        content: ['1'],
       },
     };
+
+    expect(actual).toEqual(expected);
+  });
+});
+
+describe(allDepdendencies, () => {
+  it('concat all dependencies', () => {
+    const dependency = buildDependency({ name: ['1'], content: ['2'] });
+    const actual = allDepdendencies(dependency);
+    const expected = ['1', '2'];
 
     expect(actual).toEqual(expected);
   });

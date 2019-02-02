@@ -2,7 +2,11 @@ import merge from 'lodash.merge';
 import { CLIOptions } from '../../src/cli';
 import { CLICommandBuild } from '../../src/cli/cliCommands';
 import { defaultConfig } from '../../src/cli/config';
-import { CkusroConfig, isCkusroConfig } from '../../src/models/ckusroConfig';
+import {
+  CkusroConfig,
+  isCkusroConfig,
+  TargetDirectory,
+} from '../../src/models/ckusroConfig';
 import {
   defaultLoaderConfig,
   LoaderConfig,
@@ -11,10 +15,13 @@ import {
   DefaultPluginsConfig,
   defaultPluginsConfig,
 } from '../../src/models/DefaultPluginConfig';
-import { buildDependencyTable, invert } from '../../src/models/DependencyTable';
+import {
+  buildDependencyTable,
+  Dependency,
+  invert,
+} from '../../src/models/DependencyTable';
 import {
   FileBuffer,
-  FileBufferDependency,
   FileTypeMarkdown,
   newFileBufferId,
 } from '../../src/models/FileBuffer';
@@ -94,14 +101,15 @@ export function buildDefaultPluginsConfig(
 export function buildCkusroConfig(
   overrides: DeepPartial<CkusroConfig> = {},
 ): CkusroConfig {
-  const config: DeepPartial<CkusroConfig> = {
+  const config: Partial<CkusroConfig> = {
     outputDirectory: '/out',
     targetDirectories: [
-      {
+      buildTargetDirectory({
+        type: LocalLoaderContextType,
         path: '/test/test_ns',
         name: 'test_ns',
         innerPath: './',
-      },
+      }),
     ],
     loaderConfig: buildLoaderConfig(),
     plugins: defaultPlugins(buildDefaultPluginsConfig()),
@@ -141,22 +149,11 @@ export function buildFileBuffer(
     path: '/foo.md',
     fileType: FileTypeMarkdown,
     content: '[[bar.md]]',
-    dependencies: buildFileBufferDependency(),
+    dependencies: buildDependency(),
     variables: [],
   };
 
   return { ...template, ...overrides };
-}
-
-export function buildFileBufferDependency(
-  overrides: Partial<FileBufferDependency> = {},
-): FileBufferDependency {
-  const dependency: FileBufferDependency = {
-    name: ['test:/bar.md'],
-    content: ['test:/bar.md'],
-  };
-
-  return { ...dependency, ...overrides };
 }
 
 export function buildCLIOptions(
@@ -206,5 +203,33 @@ export function buildFileBufferState(
     invertedDependencyTable: invert(dependencyTable),
   };
 
-  return { ...fbs, ...overrides };
+  const ret = { ...fbs, ...overrides };
+  ret.dependencyTable = buildDependencyTable(ret.fileBuffers);
+  ret.invertedDependencyTable = invert(ret.dependencyTable);
+
+  return ret;
+}
+
+export function buildDependency(
+  overrides: Partial<Dependency> = {},
+): Dependency {
+  const dep: Dependency = {
+    name: [],
+    content: [],
+  };
+
+  return { ...dep, ...overrides };
+}
+
+export function buildTargetDirectory(
+  overrides: Partial<TargetDirectory> = {},
+): TargetDirectory {
+  const data = {
+    type: LocalLoaderContextType,
+    path: '/test',
+    name: 'test',
+    innerPath: '.',
+  };
+
+  return { ...data, ...overrides };
 }

@@ -11,6 +11,16 @@ export type ContextTypes =
   | typeof LocalLoaderContextType
   | typeof GitLoaderContextType;
 
+export function isValidContextType(v: unknown): v is ContextTypes {
+  if (typeof v !== 'string') {
+    return false;
+  }
+
+  return [LocalLoaderContextType, GitLoaderContextType].includes(
+    v as ContextTypes,
+  );
+}
+
 export type LoaderContext = {
   type: ContextTypes;
   name: string;

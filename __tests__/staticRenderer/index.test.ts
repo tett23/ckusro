@@ -7,10 +7,9 @@ import fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import { defaultLoaderConfig } from '../../src/models/ckusroConfig/LoaderConfig';
 import {
-  CkusroFile,
   FileTypeDirectory,
   FileTypeMarkdown,
-} from '../../src/models/CkusroFile';
+} from '../../src/models/FileBuffer';
 import staticRenderer, {
   buildProps,
   buildWriteInfo,
@@ -23,9 +22,12 @@ import staticRenderer, {
 import * as assets from '../../src/staticRenderer/assets';
 import * as render from '../../src/staticRenderer/render';
 import {
-  buildFile,
+  buildDependency,
+  buildFileBuffer,
+  buildFileBufferState,
   buildGlobalState,
   buildLocalLoaderContext,
+  buildNamespace,
   buildOutputContext,
 } from '../__fixtures__';
 import {
@@ -63,36 +65,39 @@ describe(staticRenderer, () => {
   // });
 
   it('returns true array', async () => {
-    const globalState = await buildGlobalState({
-      loaderContexts: [
-        {
-          type: 'LocalLoaderContext',
-          path: '/test/ns',
-          name: 'ns',
-          loaderConfig: defaultLoaderConfig(),
-        },
+    const globalState = buildGlobalState({
+      namespaces: [
+        buildNamespace({
+          loaderContext: buildLocalLoaderContext({
+            type: 'LocalLoaderContext',
+            path: '/test/ns',
+            name: 'ns',
+            loaderConfig: defaultLoaderConfig(),
+          }),
+          outputContext: buildOutputContext({
+            path: '/out',
+            name: 'ns',
+          }),
+        }),
       ],
-      outputContexts: [
-        {
-          path: '/out',
-          name: 'ns',
-        },
-      ],
-      files: [
-        buildFile({
+    });
+    const fileBuffersState = buildFileBufferState({
+      fileBuffers: [
+        buildFileBuffer({
           namespace: 'ns',
-          name: 'foo.md',
           path: '/foo.md',
           fileType: FileTypeMarkdown,
-          isLoaded: true,
           content: 'test file',
         }),
       ],
     });
-    const [actualResults, actualErrors] = await staticRenderer(globalState);
+    const [actualResults, actualErrors] = await staticRenderer(
+      globalState,
+      fileBuffersState,
+    );
 
-    expect(actualResults).toEqual([true]);
-    expect(actualErrors).toEqual([]);
+    expect(actualResults).toEqual(true);
+    expect(actualErrors).toEqual(undefined);
   });
 });
 
@@ -112,13 +117,21 @@ describe(renderEachNamesace, () => {
       name: 'ns',
       path: '/test/ns',
     });
-    const files = [buildFile({ namespace: outputContext.name })];
+    const files = [buildFileBuffer({ namespace: outputContext.name })];
     const globalState = buildGlobalState({
-      loaderContexts: [loaderContext],
-      outputContexts: [outputContext],
-      files,
+      namespaces: [
+        buildNamespace({
+          loaderContext,
+          outputContext,
+        }),
+      ],
     });
-    const actual = await renderEachNamesace(globalState, outputContext);
+    const fileBuffersState = buildFileBufferState({ fileBuffers: files });
+    const actual = await renderEachNamesace(
+      globalState,
+      fileBuffersState,
+      outputContext,
+    );
 
     expect(actual).toEqual([true]);
   });
@@ -126,14 +139,14 @@ describe(renderEachNamesace, () => {
 
 describe(filterNamespace, () => {
   it('returns 1-tuple when match namespace', () => {
-    const file = buildFile({ namespace: 'ns1' });
+    const file = buildFileBuffer({ namespace: 'ns1' });
     const actual = filterNamespace('ns1', file);
 
     expect(actual).toEqual([file]);
   });
 
   it('returns 0-tuple when does not match namespace', () => {
-    const file = buildFile({ namespace: 'ns2' });
+    const file = buildFileBuffer({ namespace: 'ns2' });
     const actual = filterNamespace('ns1', file);
 
     expect(actual).toEqual([]);
@@ -142,28 +155,21 @@ describe(filterNamespace, () => {
 
 describe(filterWritable, () => {
   it('returns Object 1-tuple', () => {
-    const file: CkusroFile = buildFile({});
+    const file = buildFileBuffer({});
     const actual = filterWritable(file);
 
     expect(actual).toEqual([file]);
   });
 
   it('returns 0-tuple when fileType is not writable type', () => {
-    const file: CkusroFile = buildFile({ fileType: FileTypeDirectory });
+    const file = buildFileBuffer({ fileType: FileTypeDirectory });
     const actual = filterWritable(file);
 
     expect(actual).toEqual([]);
   });
 
-  it('returns 0-tuple when isLoaded is false', () => {
-    const file: CkusroFile = buildFile({ isLoaded: false });
-    const actual = filterWritable(file);
-
-    expect(actual).toEqual([]);
-  });
-
-  it('returns 0-tuple when isLoaded is false', () => {
-    const file: CkusroFile = buildFile({ content: null });
+  it('returns 0-tuple when content is null', () => {
+    const file = buildFileBuffer({ content: null });
     const actual = filterWritable(file);
 
     expect(actual).toEqual([]);
@@ -172,7 +178,7 @@ describe(filterWritable, () => {
 
 describe(buildWriteInfo, () => {
   it('returns WriteInfo', () => {
-    const file = buildFile({});
+    const file = buildFileBuffer({});
     const context = buildOutputContext({ path: '/out/ns', name: 'ns' });
     const actual = buildWriteInfo(context, file);
     const expected: FileInfo = {
@@ -183,16 +189,8 @@ describe(buildWriteInfo, () => {
     expect(actual).toEqual(expected);
   });
 
-  it('throws Error when isLoaded is false', () => {
-    const file = buildFile({ isLoaded: false });
-    const context = buildOutputContext({ path: '/out', name: 'ns' });
-    const actual = () => buildWriteInfo(context, file);
-
-    expect(actual).toThrowError();
-  });
-
   it('throws Error when content is null', () => {
-    const file = buildFile({ content: null });
+    const file = buildFileBuffer({ content: null });
     const context = buildOutputContext({ path: '/out', name: 'ns' });
     const actual = () => buildWriteInfo(context, file);
 
@@ -222,15 +220,18 @@ describe(determineAbsolutePath, () => {
 
 describe(buildProps, () => {
   it('', () => {
-    const unreferenced = [buildFile()];
-    const referenced = [buildFile(), buildFile()];
-    const file = buildFile({
-      strongDependencies: [referenced[0].id],
-      weakDependencies: [referenced[1].id],
+    const unreferenced = [buildFileBuffer()];
+    const referenced = [buildFileBuffer(), buildFileBuffer()];
+    const file = buildFileBuffer({
+      dependencies: buildDependency({
+        name: [referenced[0].id],
+        content: [referenced[1].id],
+      }),
     });
     const files = [file].concat(unreferenced).concat(referenced);
-    const globalState = buildGlobalState({ files });
-    const actual = buildProps(globalState, file.id);
+    const globalState = buildGlobalState();
+    const fileBuffersState = buildFileBufferState({ fileBuffers: files });
+    const actual = buildProps(globalState, fileBuffersState, file.id);
     const expected = [file].concat(referenced).map(({ id }) => id);
 
     expect(actual.globalState).toEqual(globalState);

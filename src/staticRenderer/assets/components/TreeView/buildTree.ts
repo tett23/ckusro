@@ -1,5 +1,5 @@
 import { sep } from 'path';
-import { CkusroFile } from '../../../../models/CkusroFile';
+import { FileBuffer } from '../../../../models/FileBuffer';
 
 export type TreeViewItem = {
   id: string;
@@ -7,7 +7,7 @@ export type TreeViewItem = {
 };
 
 export default function buildNamespaceTree(
-  files: CkusroFile[],
+  files: FileBuffer[],
 ): TreeViewItem[] {
   const rootItems = files.filter((item) => item.path === '/');
 
@@ -26,7 +26,7 @@ export default function buildNamespaceTree(
 
 export function buildTree(
   parentPath: string,
-  files: CkusroFile[],
+  files: FileBuffer[],
 ): TreeViewItem[] {
   const scope = files.filter(({ path }) => {
     if (!path.startsWith(parentPath)) {

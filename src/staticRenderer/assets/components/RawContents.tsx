@@ -1,14 +1,14 @@
 import React, { Fragment } from 'react';
-import { CkusroFile } from '../../../models/CkusroFile';
+import { FileBuffer } from '../../../models/FileBuffer';
 
 export type Props = {
-  files: CkusroFile[];
+  files: FileBuffer[];
 };
 
 export default function RawContents({ files }: Props) {
   const items = files
     .map((file) => {
-      if (!file.isLoaded || file.content == null) {
+      if (file.content == null) {
         return <EmptyContent key={file.id} />;
       }
 
@@ -21,7 +21,7 @@ export default function RawContents({ files }: Props) {
 }
 
 export type RawContentProps = {
-  file: CkusroFile;
+  file: FileBuffer;
 };
 
 export function RawContent({ file }: RawContentProps) {

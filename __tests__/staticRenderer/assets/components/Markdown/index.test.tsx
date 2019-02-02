@@ -6,13 +6,13 @@ import {
   buildJSX,
   Markdown,
 } from '../../../../../src/staticRenderer/assets/components/Markdown';
-import { buildFile } from '../../../../__fixtures__';
+import { buildFileBuffer } from '../../../../__fixtures__';
 
 describe(Markdown, () => {
   const plugins = defaultPlugins(defaultPluginsConfig());
 
   it('renders correctly', () => {
-    const files = [buildFile({ id: 'test1', content: '[[foo]]' })];
+    const files = [buildFileBuffer({ id: 'test1', content: '[[foo]]' })];
     const actual = shallow(
       <Markdown plugins={plugins} currentFileId={files[0].id} files={files} />,
     );

@@ -10,7 +10,6 @@ import {
   FileTypeText,
   FileTypeUnrendarableStatType,
   isFileBuffer,
-  isFileBufferDependency,
   isFileBufferIds,
   isWritableFileType,
   newDoesNotExistFile,
@@ -25,23 +24,6 @@ import {
 } from '../../src/models/StatType';
 import { buildFileBuffer } from '../__fixtures__';
 import '../__matchers__/toValidTypes';
-
-describe(isFileBufferDependency, () => {
-  it('judges types', () => {
-    expect([
-      [[{ name: [], content: [] }], true],
-      [[{ name: [] }], false],
-      [[{ content: [] }], false],
-      [[{}], false],
-      [[undefined], false],
-      [[null], false],
-      [[true], false],
-      [[1], false],
-      [[[]], false],
-      [[() => {}], false], // tslint:disable-line no-empty
-    ]).toValidatePair(isFileBufferDependency);
-  });
-});
 
 describe(isFileBufferIds, () => {
   it('judges types', () => {
@@ -63,23 +45,7 @@ describe(isFileBufferIds, () => {
 describe(isFileBuffer, () => {
   it('judges types', () => {
     expect([
-      [
-        [
-          {
-            id: '',
-            namespace: '',
-            path: '',
-            fileType: FileTypeDirectory,
-            content: '',
-            dependencies: {
-              name: [],
-              content: [],
-            },
-            variables: [],
-          },
-        ],
-        true,
-      ],
+      [[buildFileBuffer()], true],
       [[{}], false],
       [[undefined], false],
       [[null], false],

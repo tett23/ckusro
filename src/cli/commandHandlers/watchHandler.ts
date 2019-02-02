@@ -1,17 +1,21 @@
 import chokidar from 'chokidar';
 import { join } from 'path';
-import { loaderContextMap } from '../../models/loaderContext';
+import { isErrors } from '../../core/utils/types';
+import { FileBuffer } from '../../models/FileBuffer';
+import { FileBuffersState } from '../../models/FileBuffersState';
 import {
-  OldGlobalState,
+  GlobalState,
   outputDirectory,
   reloadFiles,
-} from '../../models/OldGlobalState';
+} from '../../models/GlobalState';
+import { namespaceMap } from '../../models/Namespace';
 import staticRenderer from '../../staticRenderer';
 
 export default async function watchHandler(
-  globalState: OldGlobalState,
-): Promise<boolean> {
-  const paths = absolutePaths(globalState);
+  globalState: GlobalState,
+  fileBuffersState: FileBuffersState,
+): Promise<void | Error[]> {
+  const paths = absolutePaths(globalState, fileBuffersState.fileBuffers);
   const promise = new Promise((_, reject) => {
     const watcher = chokidar.watch(paths, {
       ignoreInitial: true,
@@ -64,12 +68,14 @@ export default async function watchHandler(
         reject();
       });
   })
-    .then(() => true)
-    .catch(() => false);
+    .then(() => {
+      return;
+    })
+    .catch((err: Error | Error[]): Error[] => [err].flat());
   return await promise;
 }
 
-function handleChange(globalState: OldGlobalState, reject: any) {
+function handleChange(globalState: GlobalState, reject: any) {
   console.time('handleChange');
   return reload(globalState)
     .then((res) => {
@@ -81,19 +87,23 @@ function handleChange(globalState: OldGlobalState, reject: any) {
     .catch(() => reject());
 }
 
-async function reload(state: OldGlobalState) {
-  const newState = await reloadFiles(state);
-  if (newState instanceof Error) {
-    return newState;
+async function reload(state: GlobalState) {
+  const newFileBuffersState = await reloadFiles(state);
+  if (isErrors(newFileBuffersState)) {
+    return newFileBuffersState;
   }
-  return await staticRenderer(newState);
+
+  return await staticRenderer(state, newFileBuffersState);
 }
 
-function absolutePaths(globalState: OldGlobalState): string[] {
-  const contextMap = loaderContextMap(globalState.loaderContexts);
-  const paths = globalState.files.map(({ namespace, path }) => {
-    const context = contextMap[namespace];
-    return join(context.path, path);
+function absolutePaths(
+  globalState: GlobalState,
+  fileBuffers: FileBuffer[],
+): string[] {
+  const nsm = namespaceMap(globalState.namespaces);
+  const paths = fileBuffers.map(({ namespace, path }) => {
+    const ns = nsm[namespace];
+    return join(ns.loaderContext.path, path);
   });
 
   const outputDir = outputDirectory(globalState);

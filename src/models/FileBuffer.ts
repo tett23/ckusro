@@ -5,6 +5,7 @@ import {
   isNonNullObject,
   isPropertyValidTypeOf,
 } from '../core/utils/types';
+import { Dependency, isDependency } from './DependencyTable';
 import { Namespace } from './Namespace';
 import {
   FileModes,
@@ -55,39 +56,9 @@ export type FileBuffer = {
   path: string;
   fileType: FileTypes;
   content: string | Buffer | null;
-  dependencies: FileBufferDependency;
+  dependencies: Dependency;
   variables: any[];
 };
-
-export type FileBufferDependency = {
-  name: FileBufferId[];
-  content: FileBufferId[];
-};
-
-export function isFileBufferDependency(
-  obj: unknown,
-): obj is FileBufferDependency {
-  if (!isNonNullObject(obj)) {
-    return false;
-  }
-
-  if (
-    !isPropertyValidTypeOf(obj as FileBufferDependency, 'name', isFileBufferIds)
-  ) {
-    return false;
-  }
-  if (
-    !isPropertyValidTypeOf(
-      obj as FileBufferDependency,
-      'content',
-      isFileBufferIds,
-    )
-  ) {
-    return false;
-  }
-
-  return true;
-}
 
 export function isFileBufferIds(obj: unknown): obj is FileBufferId[] {
   return isArrayOf(obj, (v: unknown): v is string => typeof v === 'string');
@@ -112,7 +83,7 @@ export function isFileBuffer(value: unknown): value is FileBuffer {
   if (!isPropertyValidTypeOf(obj, 'fileType', isValidFileType)) {
     return false;
   }
-  if (!isPropertyValidTypeOf(obj, 'dependencies', isFileBufferDependency)) {
+  if (!isPropertyValidTypeOf(obj, 'dependencies', isDependency)) {
     return false;
   }
   if (!isPropertyValidTypeOf(obj, 'variables', 'array')) {

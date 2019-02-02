@@ -71,7 +71,7 @@ export function isPropertyValidTypeOf<O, P extends keyof O>(
   }
 
   if (isFileTypes(validator)) {
-    return isTypeOf(obj, validator);
+    return isTypeOf(obj[property], validator);
   }
 
   return isValidTypeOf(obj[property], validator);

@@ -1,12 +1,14 @@
 import render from '../../src/staticRenderer/render';
-import { buildFile, buildGlobalState } from '../__fixtures__';
+import { buildFileBuffer, buildGlobalState } from '../__fixtures__';
 
 describe(render, () => {
   it('renders correctly', () => {
-    const file = buildFile();
-    const globalState = buildGlobalState({ files: [file] });
+    const file = buildFileBuffer();
+    const globalState = buildGlobalState();
     const actual = render({
       globalState,
+      fileBuffers: [file],
+
       markdown: {
         currentFileId: file.id,
         files: [file],

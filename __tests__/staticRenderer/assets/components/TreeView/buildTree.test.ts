@@ -1,23 +1,23 @@
 import {
-  CkusroFile,
+  FileBuffer,
   FileTypeDirectory,
   FileTypeMarkdown,
-} from '../../../../../src/models/CkusroFile';
+} from '../../../../../src/models/FileBuffer';
 import buildNamespaceTree, {
   buildTree,
   TreeViewItem,
 } from '../../../../../src/staticRenderer/assets/components/TreeView/buildTree';
-import { buildFile } from '../../../../__fixtures__';
+import { buildFileBuffer } from '../../../../__fixtures__';
 
 describe(buildNamespaceTree, () => {
   it('returns root items', () => {
     const files = [
-      buildFile({
+      buildFileBuffer({
         namespace: 'ns_1',
         fileType: FileTypeDirectory,
         path: '/',
       }),
-      buildFile({
+      buildFileBuffer({
         namespace: 'ns_2',
         fileType: FileTypeDirectory,
         path: '/',
@@ -33,7 +33,7 @@ describe(buildNamespaceTree, () => {
 
 describe(buildTree, () => {
   function _findId(
-    items: CkusroFile[],
+    items: FileBuffer[],
     namespace: string,
     path: string,
   ): string {
@@ -48,32 +48,32 @@ describe(buildTree, () => {
 
   it('returns children items', () => {
     const files = [
-      buildFile({
+      buildFileBuffer({
         namespace: 'ns_1',
         fileType: FileTypeDirectory,
         path: '/',
       }),
-      buildFile({
+      buildFileBuffer({
         namespace: 'ns_1',
         fileType: FileTypeDirectory,
         path: '/foo',
       }),
-      buildFile({
+      buildFileBuffer({
         namespace: 'ns_1',
         fileType: FileTypeDirectory,
         path: '/foo/bar',
       }),
-      buildFile({
+      buildFileBuffer({
         namespace: 'ns_1',
         fileType: FileTypeMarkdown,
         path: '/foo/bar/baz.md',
       }),
-      buildFile({
+      buildFileBuffer({
         namespace: 'ns_2',
         fileType: FileTypeDirectory,
         path: '/',
       }),
-      buildFile({
+      buildFileBuffer({
         namespace: 'ns_2',
         fileType: FileTypeMarkdown,
         path: '/hoge.md',

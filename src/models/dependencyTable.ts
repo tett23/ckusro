@@ -1,11 +1,26 @@
 import { isNonNullObject, isPropertyValidTypeOf } from '../core/utils/types';
-import { FileBuffer, isFileBufferIds } from './FileBuffer';
+import { FileBuffer, FileBufferId, isFileBufferIds } from './FileBuffer';
+
+export type Dependency = {
+  name: FileBufferId[];
+  content: FileBufferId[];
+};
+
+export function isDependency(v: unknown): v is Dependency {
+  if (!isNonNullObject(v)) {
+    return false;
+  }
+
+  const obj = v as Dependency;
+
+  return (
+    isPropertyValidTypeOf(obj, 'name', isFileBufferIds) &&
+    isPropertyValidTypeOf(obj, 'content', isFileBufferIds)
+  );
+}
 
 export type DependencyTable = {
-  [key: string]: {
-    name: string[];
-    content: string[];
-  };
+  [key: string]: Dependency;
 };
 
 export function isDependencyTable(obj: unknown): obj is DependencyTable {
@@ -18,29 +33,26 @@ export function isDependencyTable(obj: unknown): obj is DependencyTable {
       return false;
     }
 
-    return (
-      isPropertyValidTypeOf(v, 'name', isFileBufferIds) &&
-      isPropertyValidTypeOf(v, 'content', isFileBufferIds)
-    );
+    return isDependency(v);
   });
 }
 
 export function buildDependencyTable(files: FileBuffer[]): DependencyTable {
   return files.reduce((acc: DependencyTable, file) => {
-    const nameDependencies = file.dependencies.name.flatMap((id) => {
+    const name = file.dependencies.name.flatMap((id) => {
       const f = files.find((item) => id === item.id);
 
       return f != null ? [f.id] : [];
     });
-    const contentDependencies = file.dependencies.content.flatMap((id) => {
+    const content = file.dependencies.content.flatMap((id) => {
       const f = files.find((item) => id === item.id);
 
       return f != null ? [f.id] : [];
     });
 
     acc[file.id] = {
-      name: nameDependencies,
-      content: contentDependencies,
+      name,
+      content,
     };
 
     return acc;
@@ -50,25 +62,31 @@ export function buildDependencyTable(files: FileBuffer[]): DependencyTable {
 export function invert(table: DependencyTable): DependencyTable {
   return Object.entries(table).reduce(
     (acc: DependencyTable, [id, { name, content }]) => {
-      acc[id] = acc[id] || {
-        weakDependencies: [],
-        strongDependencies: [],
-      };
+      acc[id] =
+        acc[id] ||
+        ({
+          name: [],
+          content: [],
+        } as Dependency);
 
       name.forEach((refId) => {
-        acc[refId] = acc[refId] || {
-          weakDependencies: [],
-          strongDependencies: [],
-        };
+        acc[refId] =
+          acc[refId] ||
+          ({
+            name: [],
+            content: [],
+          } as Dependency);
 
         acc[refId].name.push(id);
       });
 
       content.forEach((refId) => {
-        acc[refId] = acc[refId] || {
-          weakDependencies: [],
-          strongDependencies: [],
-        };
+        acc[refId] =
+          acc[refId] ||
+          ({
+            name: [],
+            content: [],
+          } as Dependency);
 
         acc[refId].content.push(id);
       });
@@ -77,4 +95,10 @@ export function invert(table: DependencyTable): DependencyTable {
     },
     {},
   );
+}
+
+export function allDepdendencies(dependency: Dependency): FileBufferId[] {
+  const { name, content } = dependency;
+
+  return name.concat(content);
 }

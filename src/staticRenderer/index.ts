@@ -1,13 +1,14 @@
 import { join as joinPath } from 'path';
 import { curry } from 'ramda';
-import { separateErrors } from '../core/utils/errors';
+import { allDepdendencies } from '../models/DependencyTable';
 import {
-  CkusroFile,
-  CkusroId,
+  FileBuffer,
+  FileBufferId,
   isWritableFileType,
   replaceExt,
-} from '../models/CkusroFile';
-import { OldGlobalState } from '../models/OldGlobalState';
+} from '../models/FileBuffer';
+import { FileBuffersState } from '../models/FileBuffersState';
+import { GlobalState } from '../models/GlobalState';
 import { OutputContext } from '../models/OutputContext';
 import { jsAssets } from './assets';
 import { Props } from './assets/components';
@@ -15,38 +16,41 @@ import writeFile from './io';
 import render from './render';
 
 export default async function staticRenderer(
-  globalState: OldGlobalState,
-): Promise<ReturnType<typeof separateErrors>> {
+  globalState: GlobalState,
+  fileBuffersState: FileBuffersState,
+): Promise<Array<true | Error>> {
   const result = await jsAssets(globalState);
   if (result instanceof Error) {
-    return [[], [result]];
+    return [result];
   }
 
-  const items = await renderHTML(globalState);
-  const results = items.flatMap((item) => item);
-
-  return separateErrors(results);
+  const items = await renderHTML(globalState, fileBuffersState);
+  return items.flatMap((item) => item);
 }
 
 async function renderHTML(
-  globalState: OldGlobalState,
+  globalState: GlobalState,
+  fileBuffersState: FileBuffersState,
 ): Promise<Array<true | Error>> {
-  const curried = curry(renderEachNamesace)(globalState);
-  const ps = globalState.outputContexts.map(curried);
+  const curried = curry(renderEachNamesace)(globalState, fileBuffersState);
+  const ps = globalState.namespaces
+    .map((item) => item.outputContext)
+    .map(curried);
   const items = await Promise.all(ps);
 
   return items.flatMap((item) => item);
 }
 
 export async function renderEachNamesace(
-  globalState: OldGlobalState,
+  globalState: GlobalState,
+  fileBuffersState: FileBuffersState,
   context: OutputContext,
 ): Promise<Array<true | Error>> {
   const curriedFilterNamespace = curry(filterNamespace)(context.name);
   const curriedBuildWriteInfo = curry(buildWriteInfo)(context);
-  const curriedBuildProps = curry(buildProps)(globalState);
+  const curriedBuildProps = curry(buildProps)(globalState, fileBuffersState);
 
-  const ps = globalState.files
+  const ps = fileBuffersState.fileBuffers
     .flatMap(curriedFilterNamespace)
     .flatMap(filterWritable)
     .map(curriedBuildWriteInfo)
@@ -61,17 +65,17 @@ export async function renderEachNamesace(
 
 export function filterNamespace(
   namespace: string,
-  file: CkusroFile,
-): CkusroFile[] | [] {
+  file: FileBuffer,
+): FileBuffer[] | [] {
   return namespace === file.namespace ? [file] : [];
 }
 
-export function filterWritable(file: CkusroFile): CkusroFile[] {
-  const { fileType, content, isLoaded } = file;
+export function filterWritable(file: FileBuffer): FileBuffer[] {
+  const { fileType, content } = file;
   if (!isWritableFileType(fileType)) {
     return [];
   }
-  if (!isLoaded || content == null) {
+  if (content == null) {
     return [];
   }
 
@@ -80,14 +84,14 @@ export function filterWritable(file: CkusroFile): CkusroFile[] {
 
 export type FileInfo = {
   path: string;
-  file: CkusroFile;
+  file: FileBuffer;
 };
 
 export function buildWriteInfo(
   context: OutputContext,
-  file: CkusroFile,
+  file: FileBuffer,
 ): FileInfo {
-  if (!file.isLoaded || file.content == null) {
+  if (file.content == null) {
     throw new Error('');
   }
 
@@ -97,15 +101,18 @@ export function buildWriteInfo(
   };
 }
 
-export function buildProps(globalState: OldGlobalState, id: CkusroId): Props {
-  const { weakDependencies, strongDependencies } = globalState.dependencyTable[
-    id
-  ];
-  const ids = [id].concat(weakDependencies).concat(strongDependencies);
-  const deps = globalState.files.filter((f) => ids.includes(f.id));
+export function buildProps(
+  globalState: GlobalState,
+  fileBuffersState: FileBuffersState,
+  id: FileBufferId,
+): Props {
+  const dependency = fileBuffersState.dependencyTable[id];
+  const ids = [id].concat(allDepdendencies(dependency));
+  const deps = fileBuffersState.fileBuffers.filter((f) => ids.includes(f.id));
 
   return {
     globalState,
+    fileBuffers: fileBuffersState.fileBuffers,
     markdown: {
       currentFileId: id,
       files: deps,

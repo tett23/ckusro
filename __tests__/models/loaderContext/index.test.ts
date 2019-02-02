@@ -2,14 +2,34 @@ import { TargetDirectory } from '../../../src/models/ckusroConfig';
 import { defaultLoaderConfig } from '../../../src/models/ckusroConfig/LoaderConfig';
 import {
   isLoaderContext,
+  isValidContextType,
   LoaderContext,
   loaderContextMap,
   newLoaderContexts,
 } from '../../../src/models/loaderContext';
+import { GitLoaderContextType } from '../../../src/models/loaderContext/GitLoaderContext';
+import { LocalLoaderContextType } from '../../../src/models/loaderContext/LocalLoaderContext';
 import {
   buildGitLoaderContext,
   buildLocalLoaderContext,
 } from '../../__fixtures__';
+import '../../__matchers__/toValidTypes';
+
+describe(isValidContextType, () => {
+  it('judges type', () => {
+    expect([
+      [[LocalLoaderContextType], true],
+      [[GitLoaderContextType], true],
+      [['unexpected_context_type'], false],
+      [[{}], false],
+      [[undefined], false],
+      [[null], false],
+      [[true], false],
+      [[1], false],
+      [[() => {}], false], // tslint:disable-line no-empty
+    ]).toValidatePair(isValidContextType);
+  });
+});
 
 describe(isLoaderContext, () => {
   it('judges type', () => {
@@ -38,6 +58,7 @@ describe(newLoaderContexts, () => {
   it('returns LoaderContext[]', () => {
     const target: TargetDirectory[] = [
       {
+        type: LocalLoaderContextType,
         path: '/test',
         name: 'test',
         innerPath: './foo',

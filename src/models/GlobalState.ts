@@ -4,10 +4,12 @@ import NodeFS from '../core/LoaderInfoBuilder/NodeFS';
 import { FS } from '../core/types';
 import { separateErrors } from '../core/utils/errors';
 import { isErrors, isNonNullObject } from '../core/utils/types';
+import { CkusroConfig } from './ckusroConfig';
 import { FileBuffersState } from './FileBuffersState';
-import { LoaderContext } from './loaderContext';
+import { LoaderContext, newLoaderContexts } from './loaderContext';
 import { LocalLoaderContextType } from './loaderContext/LocalLoaderContext';
 import { isNamespace, Namespace } from './Namespace';
+import { newOutputContext } from './OutputContext';
 import { isPlugins, Plugins } from './plugins';
 
 export type GlobalState = {
@@ -35,6 +37,26 @@ export function isGlobalState(value: unknown): value is GlobalState {
   return true;
 }
 
+export function newGlobalState(conf: CkusroConfig): GlobalState {
+  const namespaces = newLoaderContexts(
+    conf.targetDirectories,
+    conf.loaderConfig,
+  ).map(
+    (loaderContext: LoaderContext): Namespace => {
+      return {
+        name: loaderContext.name,
+        loaderContext,
+        outputContext: newOutputContext(conf, loaderContext),
+      };
+    },
+  );
+
+  return {
+    namespaces,
+    plugins: conf.plugins,
+  };
+}
+
 function getFs(context: LoaderContext): FS {
   switch (context.type) {
     case LocalLoaderContextType:
@@ -49,6 +71,7 @@ export async function reloadFiles(
 ): Promise<FileBuffersState | Error[]> {
   const { plugins } = globalState;
   const ps = globalState.namespaces.map((ns) =>
+    // FIXME
     LoaderInfoBuilder(getFs(ns.loaderContext), ns, plugins),
   );
   const results: Array<FileBuffersState | Error> = (await Promise.all(

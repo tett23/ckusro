@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { isNonNullObject } from '../../core/utils/types';
+import { isNonNullObject, isPropertyValidTypeOf } from '../../core/utils/types';
 import { TargetDirectory } from '../ckusroConfig';
 import { isLoaderConfig, LoaderConfig } from '../ckusroConfig/LoaderConfig';
 
@@ -28,21 +28,13 @@ export function isGitLoaderContext(value: unknown): value is GitLoaderContext {
     return false;
   }
 
-  if ((value as GitLoaderContext).type !== GitLoaderContextType) {
-    return false;
-  }
+  const cast = value as GitLoaderContext;
 
-  if (typeof (value as GitLoaderContext).name !== 'string') {
-    return false;
-  }
-
-  if (typeof (value as GitLoaderContext).path !== 'string') {
-    return false;
-  }
-
-  if (!isLoaderConfig((value as GitLoaderContext).loaderConfig)) {
-    return false;
-  }
-
-  return true;
+  return (
+    isPropertyValidTypeOf(cast, 'type', 'string') &&
+    cast.type === GitLoaderContextType &&
+    isPropertyValidTypeOf(cast, 'name', 'string') &&
+    isPropertyValidTypeOf(cast, 'path', 'string') &&
+    isPropertyValidTypeOf(cast, 'loaderConfig', isLoaderConfig)
+  );
 }

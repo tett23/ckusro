@@ -1,19 +1,16 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import {
-  CkusroFile,
-  FileTypeMarkdown,
-} from '../../../../src/models/CkusroFile';
+import { FileTypeMarkdown } from '../../../../src/models/CkusroFile';
+import { FileBuffer } from '../../../../src/models/FileBuffer';
 import RawContents from '../../../../src/staticRenderer/assets/components/RawContents';
-import { buildFile } from '../../../__fixtures__';
+import { buildFileBuffer } from '../../../__fixtures__';
 
 describe(RawContents, () => {
   it('renders <RawContent />', () => {
-    const files: CkusroFile[] = [
-      buildFile({
-        name: 'foo.md',
+    const files: FileBuffer[] = [
+      buildFileBuffer({
         fileType: FileTypeMarkdown,
-        isLoaded: true,
+        path: '/foo.md',
         content: 'foo',
       }),
     ];
@@ -22,21 +19,19 @@ describe(RawContents, () => {
 
     expect(wrapper.length).toBe(1);
     expect(wrapper.at(0).name()).toBe('RawContent');
-    expect(wrapper.at(0).prop('file').name).toBe('foo.md');
+    expect(wrapper.at(0).prop('file').path).toBe('/foo.md');
   });
 
   it('renders <RawContent /> join with <hr /> when provide multiple file', () => {
-    const files: CkusroFile[] = [
-      buildFile({
-        name: 'foo.md',
+    const files: FileBuffer[] = [
+      buildFileBuffer({
         fileType: FileTypeMarkdown,
-        isLoaded: true,
+        path: '/foo.md',
         content: 'foo',
       }),
-      buildFile({
-        name: 'bar.md',
+      buildFileBuffer({
         fileType: FileTypeMarkdown,
-        isLoaded: true,
+        path: '/bar.md',
         content: 'bar',
       }),
     ];
@@ -47,37 +42,20 @@ describe(RawContents, () => {
 
     const content1 = wrapper.at(0);
     expect(content1.name()).toBe('RawContent');
-    expect(content1.prop('file').name).toBe('foo.md');
+    expect(content1.prop('file').path).toBe('/foo.md');
 
     const hr = wrapper.at(1);
     expect(hr.name()).toBe('hr');
 
     const content2 = wrapper.at(2);
     expect(content2.name()).toBe('RawContent');
-    expect(content2.prop('file').name).toBe('bar.md');
-  });
-
-  it('renders <EmptyContent /> when isLoaded is false', () => {
-    const files: CkusroFile[] = [
-      buildFile({
-        name: 'foo.md',
-        fileType: FileTypeMarkdown,
-        isLoaded: false,
-      }),
-    ];
-
-    const wrapper = shallow(<RawContents files={files} />).children();
-
-    expect(wrapper.length).toBe(1);
-    expect(wrapper.at(0).name()).toBe('EmptyContent');
+    expect(content2.prop('file').path).toBe('/bar.md');
   });
 
   it('renders <EmptyContent /> when content is null', () => {
-    const files: CkusroFile[] = [
-      buildFile({
-        name: 'foo.md',
+    const files: FileBuffer[] = [
+      buildFileBuffer({
         fileType: FileTypeMarkdown,
-        isLoaded: true,
         content: null,
       }),
     ];

@@ -1,8 +1,8 @@
 import webpack from 'webpack';
-import { assetsDirectory, OldGlobalState } from '../models/OldGlobalState';
+import { assetsDirectory, GlobalState } from '../models/GlobalState';
 import config from './webpack.config';
 
-export function jsAssets(globalState: OldGlobalState): Promise<true | Error> {
+export function jsAssets(globalState: GlobalState): Promise<true | Error> {
   const promise: Promise<true | Error> = new Promise((resolve) => {
     const compiler = webpack({
       ...config,

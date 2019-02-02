@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 import TreeView from '../../../../../src/staticRenderer/assets/components/TreeView';
-import { buildFile, buildOutputContext } from '../../../../__fixtures__';
+import { buildFileBuffer, buildOutputContext } from '../../../../__fixtures__';
 
 describe(TreeView, () => {
   it('renders correctly', () => {
@@ -10,9 +10,9 @@ describe(TreeView, () => {
       buildOutputContext({ name: 'test2', path: '/test2' }),
     ];
     const files = [
-      buildFile({ id: 'test1', namespace: 'test1', path: '/' }),
-      buildFile({ id: 'test1', namespace: 'test1', path: '/foo.md' }),
-      buildFile({ id: 'test2', namespace: 'test2', path: '/' }),
+      buildFileBuffer({ id: 'test1', namespace: 'test1', path: '/' }),
+      buildFileBuffer({ id: 'test1', namespace: 'test1', path: '/foo.md' }),
+      buildFileBuffer({ id: 'test2', namespace: 'test2', path: '/' }),
     ];
     const wrapper = shallow(<TreeView contexts={contexts} files={files} />);
 
@@ -21,7 +21,7 @@ describe(TreeView, () => {
   });
 
   it('throw Error when context does not exist', () => {
-    const files = [buildFile({ id: 'test1', path: '/' })];
+    const files = [buildFileBuffer({ id: 'test1', path: '/' })];
     const wrapper = () => shallow(<TreeView contexts={[]} files={files} />);
 
     expect(wrapper).toThrowError();
