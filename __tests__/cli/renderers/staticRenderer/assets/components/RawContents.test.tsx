@@ -1,9 +1,9 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import RawContents from '../../../../../src/cli/staticRenderer/assets/components/RawContents';
-import { FileTypeMarkdown } from '../../../../../src/models/CkusroFile';
-import { FileBuffer } from '../../../../../src/models/FileBuffer';
-import { buildFileBuffer } from '../../../../__fixtures__';
+import RawContents from '../../../../../../src/cli/renderers/staticRenderer/assets/components/RawContents';
+import { FileTypeMarkdown } from '../../../../../../src/models/CkusroFile';
+import { FileBuffer } from '../../../../../../src/models/FileBuffer';
+import { buildFileBuffer } from '../../../../../__fixtures__';
 
 describe(RawContents, () => {
   it('renders <RawContent />', () => {

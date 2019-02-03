@@ -1,13 +1,13 @@
 import buildNamespaceTree, {
   buildTree,
   TreeViewItem,
-} from '../../../../../../src/cli/staticRenderer/assets/components/TreeView/buildTree';
+} from '../../../../../../../src/cli/renderers/staticRenderer/assets/components/TreeView/buildTree';
 import {
   FileBuffer,
   FileTypeDirectory,
   FileTypeMarkdown,
-} from '../../../../../../src/models/FileBuffer';
-import { buildFileBuffer } from '../../../../../__fixtures__';
+} from '../../../../../../../src/models/FileBuffer';
+import { buildFileBuffer } from '../../../../../../__fixtures__';
 
 describe(buildNamespaceTree, () => {
   it('returns root items', () => {

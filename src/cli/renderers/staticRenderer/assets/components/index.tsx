@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FileBuffer } from '../../../../models/FileBuffer';
-import { GlobalState } from '../../../../models/GlobalState';
-import { OutputContext } from '../../../../models/OutputContext';
-import { Plugins } from '../../../../models/plugins';
+import { FileBuffer } from '../../../../../models/FileBuffer';
+import { GlobalState } from '../../../../../models/GlobalState';
+import { OutputContext } from '../../../../../models/OutputContext';
+import { Plugins } from '../../../../../models/plugins';
 import Breadcrumbs from './Breadcrumbs';
 import { Markdown } from './Markdown';
 import RawContents from './RawContents';

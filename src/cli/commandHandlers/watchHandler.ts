@@ -9,7 +9,7 @@ import {
   reloadFiles,
 } from '../../models/GlobalState';
 import { namespaceMap } from '../../models/Namespace';
-import staticRenderer from '../staticRenderer';
+import staticRenderer from '../renderers/staticRenderer';
 
 export default async function watchHandler(
   globalState: GlobalState,

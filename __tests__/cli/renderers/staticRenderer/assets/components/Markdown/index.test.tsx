@@ -3,10 +3,10 @@ import React from 'react';
 import {
   buildJSX,
   Markdown,
-} from '../../../../../../src/cli/staticRenderer/assets/components/Markdown';
-import { defaultPluginsConfig } from '../../../../../../src/models/DefaultPluginConfig';
-import defaultPlugins from '../../../../../../src/models/plugins/defaultPlugins';
-import { buildFileBuffer } from '../../../../../__fixtures__';
+} from '../../../../../../../src/cli/renderers/staticRenderer/assets/components/Markdown';
+import { defaultPluginsConfig } from '../../../../../../../src/models/DefaultPluginConfig';
+import defaultPlugins from '../../../../../../../src/models/plugins/defaultPlugins';
+import { buildFileBuffer } from '../../../../../../__fixtures__';
 
 describe(Markdown, () => {
   const plugins = defaultPlugins(defaultPluginsConfig());

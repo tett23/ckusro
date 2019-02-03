@@ -1,5 +1,5 @@
 import { sep } from 'path';
-import { FileBuffer } from '../../../../../models/FileBuffer';
+import { FileBuffer } from '../../../../../../models/FileBuffer';
 
 export type TreeViewItem = {
   id: string;

@@ -1,6 +1,9 @@
 import React from 'react';
-import { FileBuffer, fileBufferName } from '../../../../../models/FileBuffer';
-import { OutputContext } from '../../../../../models/OutputContext';
+import {
+  FileBuffer,
+  fileBufferName,
+} from '../../../../../../models/FileBuffer';
+import { OutputContext } from '../../../../../../models/OutputContext';
 import buildNamespaceTree, {
   TreeViewItem as TreeViewItemModel,
 } from './buildTree';

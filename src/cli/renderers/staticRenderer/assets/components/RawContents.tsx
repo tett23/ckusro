@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { FileBuffer } from '../../../../models/FileBuffer';
+import { FileBuffer } from '../../../../../models/FileBuffer';
 
 export type Props = {
   files: FileBuffer[];

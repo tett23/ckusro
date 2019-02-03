@@ -4,8 +4,8 @@ import {
   FileBuffer,
   fileBufferName,
   replaceExt,
-} from '../../../../../models/FileBuffer';
-import { OutputContext } from '../../../../../models/OutputContext';
+} from '../../../../../../models/FileBuffer';
+import { OutputContext } from '../../../../../../models/OutputContext';
 
 export type Props = {
   file: FileBuffer;

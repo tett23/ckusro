@@ -1,15 +1,15 @@
 import { join as joinPath } from 'path';
 import { curry } from 'ramda';
-import { allDepdendencies } from '../../models/DependencyTable';
+import { allDepdendencies } from '../../../models/DependencyTable';
 import {
   FileBuffer,
   FileBufferId,
   isWritableFileType,
   replaceExt,
-} from '../../models/FileBuffer';
-import { FileBuffersState } from '../../models/FileBuffersState';
-import { GlobalState } from '../../models/GlobalState';
-import { OutputContext } from '../../models/OutputContext';
+} from '../../../models/FileBuffer';
+import { FileBuffersState } from '../../../models/FileBuffersState';
+import { GlobalState } from '../../../models/GlobalState';
+import { OutputContext } from '../../../models/OutputContext';
 import { jsAssets } from './assets';
 import { Props } from './assets/components';
 import writeFile from './io';

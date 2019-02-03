@@ -1,7 +1,7 @@
 jest.mock('fs');
 jest.mock('mkdirp');
-jest.mock('../../../src/cli/staticRenderer/render');
-jest.mock('../../../src/cli/staticRenderer/assets');
+jest.mock('../../../../src/cli/renderers/staticRenderer/render');
+jest.mock('../../../../src/cli/renderers/staticRenderer/assets');
 
 import fs from 'fs';
 import * as mkdirp from 'mkdirp';
@@ -13,14 +13,14 @@ import staticRenderer, {
   filterNamespace,
   filterWritable,
   renderEachNamesace,
-} from '../../../src/cli/staticRenderer';
-import * as assets from '../../../src/cli/staticRenderer/assets';
-import * as render from '../../../src/cli/staticRenderer/render';
-import { defaultLoaderConfig } from '../../../src/models/ckusroConfig/LoaderConfig';
+} from '../../../../src/cli/renderers/staticRenderer';
+import * as assets from '../../../../src/cli/renderers/staticRenderer/assets';
+import * as render from '../../../../src/cli/renderers/staticRenderer/render';
+import { defaultLoaderConfig } from '../../../../src/models/ckusroConfig/LoaderConfig';
 import {
   FileTypeDirectory,
   FileTypeMarkdown,
-} from '../../../src/models/FileBuffer';
+} from '../../../../src/models/FileBuffer';
 import {
   buildDependency,
   buildFileBuffer,
@@ -29,11 +29,11 @@ import {
   buildLocalLoaderContext,
   buildNamespace,
   buildOutputContext,
-} from '../../__fixtures__';
+} from '../../../__fixtures__';
 import {
   mockFileSystem,
   restoreFileSystem,
-} from '../../__helpers__/mockFileSystem';
+} from '../../../__helpers__/mockFileSystem';
 
 // @ts-ignore
 render.default.mockResolvedValue({
