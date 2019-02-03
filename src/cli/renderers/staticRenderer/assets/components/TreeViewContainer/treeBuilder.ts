@@ -18,6 +18,8 @@ export type Leaf = {
   id: FileBufferId;
 };
 
+export type TreeElement = Root | Node | Leaf;
+
 type EachNamespace = { [key in string]: FileBuffer[] };
 
 export default function treeBuilder(fileBuffers: FileBuffer[]): Root[] {
