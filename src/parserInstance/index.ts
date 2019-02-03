@@ -8,7 +8,9 @@ import { ComponentPlugin } from '../models/ComponentPlugin';
 import { Plugins } from '../models/plugins';
 import renderJSXComponent, { Options } from './renderJSXComponent';
 
-export default function parserInstance(plugins: Plugins) {
+export type ParserInstance = unified.Processor;
+
+export default function parserInstance(plugins: Plugins): ParserInstance {
   let parser = unified()
     .use(remarkParse, { gfm: true })
     .use(remarkBreaks);
