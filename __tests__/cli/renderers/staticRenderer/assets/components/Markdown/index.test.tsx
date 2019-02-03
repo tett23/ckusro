@@ -14,7 +14,7 @@ describe(Markdown, () => {
   it('renders correctly', () => {
     const files = [buildFileBuffer({ id: 'test1', content: '[[foo]]' })];
     const actual = shallow(
-      <Markdown plugins={plugins} currentFileId={files[0].id} files={files} />,
+      <Markdown plugins={plugins} currentFileBufferId={files[0].id} fileBuffers={files} />,
     );
 
     expect(actual).toMatchSnapshot();
@@ -25,8 +25,8 @@ describe(Markdown, () => {
       shallow(
         <Markdown
           plugins={plugins}
-          currentFileId="does_not_exist"
-          files={[]}
+          currentFileBufferId="does_not_exist"
+          fileBuffers={[]}
         />,
       );
 

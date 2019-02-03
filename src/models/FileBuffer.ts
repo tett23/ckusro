@@ -60,6 +60,17 @@ export type FileBuffer = {
   variables: any[];
 };
 
+export type SingleNamespaceFileBuffer<T> = FileBuffer & {
+  namespace: T;
+};
+
+export function filterNamespace<N>(
+  fileBuffer: SingleNamespaceFileBuffer<N>,
+  fileBuffers: FileBuffer[],
+): Array<SingleNamespaceFileBuffer<T>> {
+  return fileBuffers.filter((item) => item.namespace === fileBuffer.namespace);
+}
+
 export function isFileBufferIds(obj: unknown): obj is FileBufferId[] {
   return isArrayOf(obj, (v: unknown): v is string => typeof v === 'string');
 }

@@ -1,5 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`TreeViewItem renders correctly 1`] = `ShallowWrapper {}`;
-
-exports[`TreeViewItem renders correctly when the component have children 1`] = `ShallowWrapper {}`;

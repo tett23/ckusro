@@ -2,11 +2,11 @@ import React, { Fragment } from 'react';
 import { FileBuffer } from '../../../../../models/FileBuffer';
 
 export type Props = {
-  files: FileBuffer[];
+  fileBuffers: FileBuffer[];
 };
 
-export default function RawContents({ files }: Props) {
-  const items = files
+export default function RawContents({ fileBuffers }: Props) {
+  const items = fileBuffers
     .map((file) => {
       if (file.content == null) {
         return <EmptyContent key={file.id} />;
@@ -14,7 +14,7 @@ export default function RawContents({ files }: Props) {
 
       return <RawContent key={file.id} file={file} />;
     })
-    .flatMap((item, i) => [item, <hr key={i} />])
+    .flatMap((item: any, i: number) => [item, <hr key={i} />])
     .slice(0, -1);
 
   return <Fragment>{items}</Fragment>;

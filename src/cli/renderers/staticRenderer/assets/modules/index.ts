@@ -1,11 +1,16 @@
 import { combineReducers, createStore, DeepPartial } from 'redux';
-import commonReducer, { CommonState } from './common';
-import fileBuffersReducer, { FileBuffersState } from './fileBuffers';
+import commonReducer, { CommonActions, CommonState } from './common';
+import fileBuffersReducer, {
+  FileBuffersActions,
+  FileBuffersState,
+} from './fileBuffers';
 
 export type State = {
   common: CommonState;
   fileBuffers: FileBuffersState;
 };
+
+export type Actions = CommonActions | FileBuffersActions;
 
 const reducers = combineReducers({
   common: commonReducer,
