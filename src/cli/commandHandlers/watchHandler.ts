@@ -71,7 +71,7 @@ export default async function watchHandler(
     .then(() => {
       return;
     })
-    .catch((err: Error | Error[]): Error[] => [err].flat());
+    .catch((err) => [err].flat());
   return await promise;
 }
 

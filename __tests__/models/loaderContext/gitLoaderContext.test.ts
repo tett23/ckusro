@@ -39,6 +39,7 @@ describe(isGitLoaderContext, () => {
 describe(newGitLoaderContext, () => {
   it('returns GitLoaderContext', () => {
     const target: TargetDirectory = {
+      type: GitLoaderContextType,
       path: '/test',
       name: 'test',
       innerPath: './foo',

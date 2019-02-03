@@ -1,4 +1,4 @@
-import cli from '../../src/cli/renderers';
+import cli from '../../src/cli';
 import * as commandHandlers from '../../src/cli/commandHandlers';
 import * as watchHandler from '../../src/cli/commandHandlers/watchHandler';
 

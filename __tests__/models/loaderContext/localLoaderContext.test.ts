@@ -39,6 +39,7 @@ describe(isLocalLoaderContext, () => {
 describe(newLocalLoaderContext, () => {
   it('returns LocalLoaderContext', () => {
     const target: TargetDirectory = {
+      type: LocalLoaderContextType,
       path: '/test',
       name: 'test',
       innerPath: './foo',

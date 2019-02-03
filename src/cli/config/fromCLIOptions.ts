@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import jsyaml from 'js-yaml';
 import merge from 'lodash.merge';
 import { extname } from 'path';
-import { CLIOptions } from '../renderers';
+import { CLIOptions } from '..';
 import { CkusroConfig } from '../../models/ckusroConfig';
 import { defaultPluginsConfig } from '../../models/DefaultPluginConfig';
 import defaultPlugins from '../../models/plugins/defaultPlugins';
