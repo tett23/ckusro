@@ -1,4 +1,4 @@
-import { join as joinPath } from 'path';
+import { join, join as joinPath } from 'path';
 import { curry } from 'ramda';
 import { allDepdendencies } from '../../../models/DependencyTable';
 import {
@@ -9,59 +9,60 @@ import {
 } from '../../../models/FileBuffer';
 import { FileBuffersState } from '../../../models/FileBuffersState';
 import { GlobalState } from '../../../models/GlobalState';
+import { Namespace, namespaceMap } from '../../../models/Namespace';
 import { OutputContext } from '../../../models/OutputContext';
+import { WriteInfo } from '../../models/WriteInfo';
 import { Props } from './assets/components';
-import writeFile from './io';
 import render from './render';
 
 export default async function staticRenderer(
   globalState: GlobalState,
   fileBuffersState: FileBuffersState,
-): Promise<Array<true | Error>> {
-  const items = await renderHTML(globalState, fileBuffersState);
-  return items.flatMap((item) => item);
-}
-
-async function renderHTML(
-  globalState: GlobalState,
-  fileBuffersState: FileBuffersState,
-): Promise<Array<true | Error>> {
-  const curried = curry(renderEachNamesace)(globalState, fileBuffersState);
-  const ps = globalState.namespaces
-    .map((item) => item.outputContext)
-    .map(curried);
-  const items = await Promise.all(ps);
-
-  return items.flatMap((item) => item);
+): Promise<Array<WriteInfo | Error>> {
+  return renderEachNamesace(globalState, fileBuffersState);
 }
 
 export async function renderEachNamesace(
   globalState: GlobalState,
   fileBuffersState: FileBuffersState,
-  context: OutputContext,
-): Promise<Array<true | Error>> {
-  const curriedFilterNamespace = curry(filterNamespace)(context.name);
-  const curriedBuildWriteInfo = curry(buildWriteInfo)(context);
+): Promise<Array<WriteInfo | Error>> {
+  const fileBuffers = filterFileBuffers(
+    fileBuffersState.fileBuffers,
+    globalState.namespaces,
+  );
+
   const curriedBuildProps = curry(buildProps)(globalState, fileBuffersState);
+  const nsMap = namespaceMap(globalState.namespaces);
 
-  const ps = fileBuffersState.fileBuffers
-    .flatMap(curriedFilterNamespace)
-    .flatMap(filterWritable)
-    .map(curriedBuildWriteInfo)
-    .map(
-      ({ path, file }): [string, Props] => [path, curriedBuildProps(file.id)],
-    )
-    .map(([path, props]) => ({ path, content: buildHTML(props) }))
-    .map(writeFile);
+  return fileBuffers.map(
+    (fileBuffer): WriteInfo => {
+      const props = curriedBuildProps(fileBuffer.id);
+      const content = buildHTML(props);
+      const ns = nsMap[fileBuffer.namespace];
+      const path = join(ns.outputContext.path, fileBuffer.path);
 
-  return Promise.all(ps);
+      return {
+        path,
+        content,
+      };
+    },
+  );
+}
+
+export function filterFileBuffers(
+  fileBuffers: FileBuffer[],
+  namespaces: Namespace[],
+): FileBuffer[] {
+  return filterNamespace(fileBuffers, namespaces);
 }
 
 export function filterNamespace(
-  namespace: string,
-  file: FileBuffer,
-): FileBuffer[] | [] {
-  return namespace === file.namespace ? [file] : [];
+  fileBuffers: FileBuffer[],
+  namespaces: Namespace[],
+): FileBuffer[] {
+  const nsNames = namespaces.map(({ name }) => name);
+
+  return fileBuffers.filter(({ namespace }) => nsNames.includes(namespace));
 }
 
 export function filterWritable(file: FileBuffer): FileBuffer[] {
