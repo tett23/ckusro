@@ -1,14 +1,14 @@
-jest.mock('../../../../src/cli/renderers/staticRenderer/render');
+jest.mock('../../../../src/cli/renderers/staticRenderer/buildHTML');
 
 import { WriteInfo } from '../../../../src/cli/models/WriteInfo';
 import staticRenderer, {
   buildProps,
   determineAbsolutePath,
-  renderEachNamesace,
+  getRenderedBuffer,
 } from '../../../../src/cli/renderers/staticRenderer';
-import * as render from '../../../../src/cli/renderers/staticRenderer/render';
-import { defaultLoaderConfig } from '../../../../src/models/ckusroConfig/LoaderConfig';
-import { FileTypeMarkdown } from '../../../../src/models/FileBuffer';
+import { Props } from '../../../../src/cli/renderers/staticRenderer/assets/components';
+import * as buildHTML from '../../../../src/cli/renderers/staticRenderer/buildHTML';
+import { FileBuffer, FileTypeRaw } from '../../../../src/models/FileBuffer';
 import {
   buildDependency,
   buildFileBuffer,
@@ -20,50 +20,11 @@ import {
 } from '../../../__fixtures__';
 
 // @ts-ignore
-render.default.mockResolvedValue({
-  html: '',
-  css: '',
+buildHTML.default.mockImplementation((props: Props) => {
+  return props.markdown.currentFileId;
 });
 
 describe.skip(staticRenderer, () => {
-  it('returns true array', async () => {
-    const globalState = buildGlobalState({
-      namespaces: [
-        buildNamespace({
-          loaderContext: buildLocalLoaderContext({
-            type: 'LocalLoaderContext',
-            path: '/test/ns',
-            name: 'ns',
-            loaderConfig: defaultLoaderConfig(),
-          }),
-          outputContext: buildOutputContext({
-            path: '/out',
-            name: 'ns',
-          }),
-        }),
-      ],
-    });
-    const fileBuffersState = buildFileBufferState({
-      fileBuffers: [
-        buildFileBuffer({
-          namespace: 'ns',
-          path: '/foo.md',
-          fileType: FileTypeMarkdown,
-          content: 'test file',
-        }),
-      ],
-    });
-    const [actualResults, actualErrors] = await staticRenderer(
-      globalState,
-      fileBuffersState,
-    );
-
-    expect(actualResults).toEqual(true);
-    expect(actualErrors).toEqual(undefined);
-  });
-});
-
-describe.skip(renderEachNamesace, () => {
   it('returns WriteInfo[]', async () => {
     const outputContext = buildOutputContext({ name: 'ns', path: '/out' });
     const loaderContext = buildLocalLoaderContext({
@@ -88,10 +49,10 @@ describe.skip(renderEachNamesace, () => {
     const fileBuffersState = buildFileBufferState({
       fileBuffers: files,
     });
-    const actual = await renderEachNamesace(globalState, fileBuffersState);
+    const actual = await staticRenderer(globalState, fileBuffersState);
     const expected: WriteInfo[] = [
       {
-        path: '/out/ns/foo.md',
+        path: '/out/ns/foo.html',
         content: '',
       },
     ];
@@ -100,23 +61,55 @@ describe.skip(renderEachNamesace, () => {
   });
 });
 
+describe(getRenderedBuffer, () => {
+  it('', () => {
+    const fileBuffer = buildFileBuffer({});
+    const globalState = buildGlobalState();
+    const fileBuffersState = buildFileBufferState({
+      fileBuffers: [fileBuffer],
+    });
+    const actual = getRenderedBuffer(fileBuffer, globalState, fileBuffersState);
+    const expected: Partial<FileBuffer> = {
+      path: '/foo.html',
+      fileType: FileTypeRaw,
+      content: fileBuffer.id,
+    };
+
+    expect(actual).toMatchObject(expected);
+  });
+});
+
 describe(determineAbsolutePath, () => {
   it('returns absolute path', () => {
-    const actual = determineAbsolutePath('/test/namespace', '/foo.md');
+    const namespace = buildNamespace({
+      outputContext: buildOutputContext({ path: '/test/namespace' }),
+    });
+    const fileBuffer = buildFileBuffer({ path: '/foo.html' });
+    const actual = determineAbsolutePath(namespace, fileBuffer);
 
-    expect(actual).toBe('/test/namespace/foo.md');
+    expect(actual).toBe('/test/namespace/foo.html');
   });
 
   it('threw error when outputDir is not absolute path', () => {
-    const actual = () => determineAbsolutePath('test/namespace', '/foo.md');
+    const namespace = buildNamespace({
+      outputContext: buildOutputContext({ path: 'test/namespace' }),
+    });
+    const fileBuffer = buildFileBuffer({ path: '/foo.html' });
+    const actual = () => determineAbsolutePath(namespace, fileBuffer);
 
-    expect(actual).toThrowError('outputDir must start with `/`');
+    expect(actual).toThrowError(
+      'Namespace.outputContext.path must start with `/`',
+    );
   });
 
   it('threw error when filePath is not absolute path', () => {
-    const actual = () => determineAbsolutePath('/test/namespace', 'foo.md');
+    const namespace = buildNamespace({
+      outputContext: buildOutputContext({ path: '/test/namespace' }),
+    });
+    const fileBuffer = buildFileBuffer({ path: 'foo.html' });
+    const actual = () => determineAbsolutePath(namespace, fileBuffer);
 
-    expect(actual).toThrowError('filePath must start with `/`');
+    expect(actual).toThrowError('FileBuffer.path must start with `/`');
   });
 });
 

@@ -1,6 +1,7 @@
 import { Stats } from 'fs';
 import { basename, extname, join } from 'path';
 import uuid from 'uuid/v4'; // tslint:disable-line match-default-export-name
+import { FileBuffer } from './FileBuffer';
 import { LoaderContext } from './loaderContext';
 import {
   statType,
@@ -102,7 +103,7 @@ export function detectType(stats: Stats, name: string): FileType {
   }
 }
 
-export function replaceExt({ fileType, path }: CkusroFile): string {
+export function replaceExt({ fileType, path }: FileBuffer): string {
   const newExt = convertExt(fileType);
   if (newExt instanceof Error) {
     return path;
@@ -145,19 +146,19 @@ export function isWritableFileType(fileType: FileType): boolean {
 export function newDoesNotExistFile(
   namespace: string,
   path: string,
-): CkusroFile {
+): FileBuffer {
   const absolutePath = join('/', path);
 
   return {
     id: `${namespace}:${absolutePath}`,
     namespace,
-    name: basename(path),
     path: absolutePath,
     fileType: FileTypeDoesNotExist,
-    isLoaded: false,
     content: null,
-    weakDependencies: [],
-    strongDependencies: [],
+    dependencies: {
+      name: [],
+      content: [],
+    },
     variables: [],
   };
 }

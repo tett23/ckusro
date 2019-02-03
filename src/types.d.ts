@@ -30,3 +30,8 @@ declare type DeepPartial<T> = {
 }
 
 declare type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+declare interface Array<T> {
+  flat(): T[];
+  flatMap(func: (x: T) => T | []): T[];
+}
