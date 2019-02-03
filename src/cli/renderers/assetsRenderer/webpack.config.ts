@@ -1,12 +1,14 @@
 import { join } from 'path';
 import webpack from 'webpack';
 
-const srcPath = join(__dirname, '../../src');
+const srcPath = join(__dirname, '../../../');
 // const modelsPath = join(srcPath, 'models');
 // const parserInstancePath = join(srcPath, 'parserInstance');
 // const assetsPath = join(srcPath, 'staticRenderer', 'assets');
 const assetsPath = join(
   srcPath,
+  'cli',
+  'renderers',
   'staticRenderer',
   'assets',
   'components',
@@ -15,10 +17,12 @@ const assetsPath = join(
 // const entries = [modelsPath, assetsPath, parserInstancePath];
 const entries = [assetsPath];
 
-const nodeMModulesPath = join(__dirname, '../../node_modules');
+const nodeModulesPath = join(__dirname, '../../../../node_modules');
 
 const config: webpack.Configuration = {
-  entry: ['@babel/polyfill', 'core-js', ...entries],
+  stats: 'errors-only',
+  // entry: ['@babel/polyfill', 'core-js', ...entries],
+  entry: [...entries],
   output: {
     path: `${__dirname}/lib`,
     filename: '[name].js',
@@ -40,7 +44,7 @@ const config: webpack.Configuration = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
-    modules: [nodeMModulesPath],
+    modules: [nodeModulesPath],
   },
 };
 

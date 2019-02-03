@@ -10,7 +10,6 @@ import {
 import { FileBuffersState } from '../../../models/FileBuffersState';
 import { GlobalState } from '../../../models/GlobalState';
 import { OutputContext } from '../../../models/OutputContext';
-import { jsAssets } from './assets';
 import { Props } from './assets/components';
 import writeFile from './io';
 import render from './render';
@@ -19,11 +18,6 @@ export default async function staticRenderer(
   globalState: GlobalState,
   fileBuffersState: FileBuffersState,
 ): Promise<Array<true | Error>> {
-  const result = await jsAssets(globalState);
-  if (result instanceof Error) {
-    return [result];
-  }
-
   const items = await renderHTML(globalState, fileBuffersState);
   return items.flatMap((item) => item);
 }
