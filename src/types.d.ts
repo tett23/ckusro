@@ -33,5 +33,6 @@ declare type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 declare interface Array<T> {
   flat(): T[];
-  flatMap(func: (x: T) => T | []): T[];
+  flatMap(func: (x: T, i?: number) => T | T[] | []): T[];
+  flatMap<U>(func: (x: T, i?: number) => U | U[] | []): U[];
 }
