@@ -4,17 +4,11 @@ import { WriteInfo } from '../../../../src/cli/models/WriteInfo';
 import staticRenderer, {
   buildProps,
   determineAbsolutePath,
-  filterFileBuffers,
-  filterNamespace,
-  filterWritable,
   renderEachNamesace,
 } from '../../../../src/cli/renderers/staticRenderer';
 import * as render from '../../../../src/cli/renderers/staticRenderer/render';
 import { defaultLoaderConfig } from '../../../../src/models/ckusroConfig/LoaderConfig';
-import {
-  FileTypeDirectory,
-  FileTypeMarkdown,
-} from '../../../../src/models/FileBuffer';
+import { FileTypeMarkdown } from '../../../../src/models/FileBuffer';
 import {
   buildDependency,
   buildFileBuffer,
@@ -103,47 +97,6 @@ describe.skip(renderEachNamesace, () => {
     ];
 
     expect(actual).toEqual(expected);
-  });
-});
-
-describe(filterNamespace, () => {
-  it('returns [FileBuffer] when match namespace', () => {
-    const fileBuffers = [buildFileBuffer({ namespace: 'ns' })];
-    const namespaces = [buildNamespace({ name: 'ns' })];
-    const actual = filterNamespace(fileBuffers, namespaces);
-
-    expect(actual).toEqual(fileBuffers);
-  });
-
-  it('returns [] when does not match namespace', () => {
-    const fileBuffers = [buildFileBuffer({ namespace: 'does_not_exist' })];
-    const namespaces = [buildNamespace({ name: 'ns' })];
-    const actual = filterNamespace(fileBuffers, namespaces);
-
-    expect(actual).toEqual([]);
-  });
-});
-
-describe(filterWritable, () => {
-  it('returns Object 1-tuple', () => {
-    const fileBuffers = [buildFileBuffer({})];
-    const actual = filterWritable(fileBuffers);
-
-    expect(actual).toEqual(fileBuffers);
-  });
-
-  it('returns 0-tuple when fileType is not writable type', () => {
-    const fileBuffers = [buildFileBuffer({ fileType: FileTypeDirectory })];
-    const actual = filterWritable(fileBuffers);
-
-    expect(actual).toEqual([]);
-  });
-
-  it('returns 0-tuple when content is null', () => {
-    const fileBuffers = [buildFileBuffer({ content: null })];
-    const actual = filterWritable(fileBuffers);
-
-    expect(actual).toEqual([]);
   });
 });
 

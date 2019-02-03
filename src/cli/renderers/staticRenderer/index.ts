@@ -1,18 +1,14 @@
 import { join, join as joinPath } from 'path';
 import { curry } from 'ramda';
 import { allDepdendencies } from '../../../models/DependencyTable';
-import {
-  FileBuffer,
-  FileBufferId,
-  isWritableFileType,
-  replaceExt,
-} from '../../../models/FileBuffer';
+import { FileBufferId, replaceExt } from '../../../models/FileBuffer';
 import { FileBuffersState } from '../../../models/FileBuffersState';
 import { GlobalState } from '../../../models/GlobalState';
-import { Namespace, namespaceMap } from '../../../models/Namespace';
+import { namespaceMap } from '../../../models/Namespace';
 import { OutputContext } from '../../../models/OutputContext';
 import { WriteInfo } from '../../models/WriteInfo';
 import { Props } from './assets/components';
+import { filterFileBuffers } from './filterFileBuffers';
 import render from './render';
 
 export default async function staticRenderer(
@@ -46,30 +42,6 @@ export async function renderEachNamesace(
         content,
       };
     },
-  );
-}
-
-export function filterFileBuffers(
-  fileBuffers: FileBuffer[],
-  namespaces: Namespace[],
-): FileBuffer[] {
-  const filtered = filterNamespace(fileBuffers, namespaces);
-
-  return filterWritable(filtered);
-}
-
-export function filterNamespace(
-  fileBuffers: FileBuffer[],
-  namespaces: Namespace[],
-): FileBuffer[] {
-  const nsNames = namespaces.map(({ name }) => name);
-
-  return fileBuffers.filter(({ namespace }) => nsNames.includes(namespace));
-}
-
-export function filterWritable(fileBuffers: FileBuffer[]): FileBuffer[] {
-  return fileBuffers.filter(
-    ({ fileType, content }) => content != null && isWritableFileType(fileType),
   );
 }
 
