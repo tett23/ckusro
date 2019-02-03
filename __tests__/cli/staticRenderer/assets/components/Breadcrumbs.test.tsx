@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 import Breadcrumbs, {
   pathItems,
-} from '../../../../src/staticRenderer/assets/components/Breadcrumbs';
+} from '../../../../../src/cli/staticRenderer/assets/components/Breadcrumbs';
 
 describe(Breadcrumbs, () => {
   it('renders correctly', () => {

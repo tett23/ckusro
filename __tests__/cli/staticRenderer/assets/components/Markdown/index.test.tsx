@@ -1,12 +1,12 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import { defaultPluginsConfig } from '../../../../../src/models/DefaultPluginConfig';
-import defaultPlugins from '../../../../../src/models/plugins/defaultPlugins';
 import {
   buildJSX,
   Markdown,
-} from '../../../../../src/staticRenderer/assets/components/Markdown';
-import { buildFileBuffer } from '../../../../__fixtures__';
+} from '../../../../../../src/cli/staticRenderer/assets/components/Markdown';
+import { defaultPluginsConfig } from '../../../../../../src/models/DefaultPluginConfig';
+import defaultPlugins from '../../../../../../src/models/plugins/defaultPlugins';
+import { buildFileBuffer } from '../../../../../__fixtures__';
 
 describe(Markdown, () => {
   const plugins = defaultPlugins(defaultPluginsConfig());

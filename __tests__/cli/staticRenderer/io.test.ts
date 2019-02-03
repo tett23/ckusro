@@ -3,7 +3,7 @@ jest.mock('mkdirp');
 
 import fs from 'fs';
 import * as mkdirp from 'mkdirp';
-import writeFile, { WriteInfo } from '../../src/staticRenderer/io';
+import writeFile, { WriteInfo } from '../../../src/cli/staticRenderer/io';
 
 describe(writeFile, () => {
   const writeInfo: WriteInfo = {

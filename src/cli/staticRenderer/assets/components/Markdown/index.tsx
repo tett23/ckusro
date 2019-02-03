@@ -1,6 +1,6 @@
-import { FileBuffer } from '../../../../models/FileBuffer';
-import { Plugins } from '../../../../models/plugins';
-import parserInstance from '../../../../parserInstance';
+import { FileBuffer } from '../../../../../models/FileBuffer';
+import { Plugins } from '../../../../../models/plugins';
+import parserInstance from '../../../../../parserInstance';
 
 export type Props = {
   currentFileId: string;

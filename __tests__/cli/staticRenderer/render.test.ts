@@ -1,5 +1,5 @@
-import render from '../../src/staticRenderer/render';
-import { buildFileBuffer, buildGlobalState } from '../__fixtures__';
+import render from '../../../src/cli/staticRenderer/render';
+import { buildFileBuffer, buildGlobalState } from '../../__fixtures__';
 
 describe(render, () => {
   it('renders correctly', () => {

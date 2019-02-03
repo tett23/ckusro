@@ -1,7 +1,10 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import TreeView from '../../../../../src/staticRenderer/assets/components/TreeView';
-import { buildFileBuffer, buildOutputContext } from '../../../../__fixtures__';
+import TreeView from '../../../../../../src/cli/staticRenderer/assets/components/TreeView';
+import {
+  buildFileBuffer,
+  buildOutputContext,
+} from '../../../../../__fixtures__';
 
 describe(TreeView, () => {
   it('renders correctly', () => {
