@@ -2,14 +2,10 @@ import fs from 'fs';
 import mkdirp from 'mkdirp';
 import { dirname } from 'path';
 import { promisify } from 'util';
+import { WriteInfo } from '../models/WriteInfo';
 
 const asyncWriteFile = promisify(fs.writeFile);
 const asyncMkdirP = promisify(mkdirp);
-
-export type WriteInfo = {
-  path: string;
-  content: string | Buffer;
-};
 
 export default async function writeFile({
   path,
