@@ -3,9 +3,8 @@ jest.mock('../../../../src/cli/renderers/staticRenderer/render');
 import { WriteInfo } from '../../../../src/cli/models/WriteInfo';
 import staticRenderer, {
   buildProps,
-  buildWriteInfo,
   determineAbsolutePath,
-  FileInfo,
+  filterFileBuffers,
   filterNamespace,
   filterWritable,
   renderEachNamesace,
@@ -127,46 +126,24 @@ describe(filterNamespace, () => {
 
 describe(filterWritable, () => {
   it('returns Object 1-tuple', () => {
-    const file = buildFileBuffer({});
-    const actual = filterWritable(file);
+    const fileBuffers = [buildFileBuffer({})];
+    const actual = filterWritable(fileBuffers);
 
-    expect(actual).toEqual([file]);
+    expect(actual).toEqual(fileBuffers);
   });
 
   it('returns 0-tuple when fileType is not writable type', () => {
-    const file = buildFileBuffer({ fileType: FileTypeDirectory });
-    const actual = filterWritable(file);
+    const fileBuffers = [buildFileBuffer({ fileType: FileTypeDirectory })];
+    const actual = filterWritable(fileBuffers);
 
     expect(actual).toEqual([]);
   });
 
   it('returns 0-tuple when content is null', () => {
-    const file = buildFileBuffer({ content: null });
-    const actual = filterWritable(file);
+    const fileBuffers = [buildFileBuffer({ content: null })];
+    const actual = filterWritable(fileBuffers);
 
     expect(actual).toEqual([]);
-  });
-});
-
-describe(buildWriteInfo, () => {
-  it('returns WriteInfo', () => {
-    const file = buildFileBuffer({});
-    const context = buildOutputContext({ path: '/out/ns', name: 'ns' });
-    const actual = buildWriteInfo(context, file);
-    const expected: FileInfo = {
-      path: '/out/ns/foo.html',
-      file,
-    };
-
-    expect(actual).toEqual(expected);
-  });
-
-  it('throws Error when content is null', () => {
-    const file = buildFileBuffer({ content: null });
-    const context = buildOutputContext({ path: '/out', name: 'ns' });
-    const actual = () => buildWriteInfo(context, file);
-
-    expect(actual).toThrowError();
   });
 });
 

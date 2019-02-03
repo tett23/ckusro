@@ -53,7 +53,9 @@ export function filterFileBuffers(
   fileBuffers: FileBuffer[],
   namespaces: Namespace[],
 ): FileBuffer[] {
-  return filterNamespace(fileBuffers, namespaces);
+  const filtered = filterNamespace(fileBuffers, namespaces);
+
+  return filterWritable(filtered);
 }
 
 export function filterNamespace(
@@ -65,35 +67,10 @@ export function filterNamespace(
   return fileBuffers.filter(({ namespace }) => nsNames.includes(namespace));
 }
 
-export function filterWritable(file: FileBuffer): FileBuffer[] {
-  const { fileType, content } = file;
-  if (!isWritableFileType(fileType)) {
-    return [];
-  }
-  if (content == null) {
-    return [];
-  }
-
-  return [file];
-}
-
-export type FileInfo = {
-  path: string;
-  file: FileBuffer;
-};
-
-export function buildWriteInfo(
-  context: OutputContext,
-  file: FileBuffer,
-): FileInfo {
-  if (file.content == null) {
-    throw new Error('');
-  }
-
-  return {
-    path: determineAbsolutePath(context.path, replaceExt(file)),
-    file,
-  };
+export function filterWritable(fileBuffers: FileBuffer[]): FileBuffer[] {
+  return fileBuffers.filter(
+    ({ fileType, content }) => content != null && isWritableFileType(fileType),
+  );
 }
 
 export function buildProps(
