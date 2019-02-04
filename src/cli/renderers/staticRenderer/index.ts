@@ -10,7 +10,7 @@ import { FileBuffersState } from '../../../models/FileBuffersState';
 import { GlobalState } from '../../../models/GlobalState';
 import { Namespace, namespaceMap } from '../../../models/Namespace';
 import { WriteInfo } from '../../models/WriteInfo';
-import { Props } from './assets/components';
+import { State } from './assets/modules';
 import buildHTML from './buildHTML';
 import filterFileBuffers from './filterFileBuffers';
 
@@ -26,11 +26,7 @@ export default async function staticRenderer(
 
   return fileBuffers
     .flatMap((fileBuffer) => {
-      const newBuffer = getRenderedBuffer(
-        fileBuffer,
-        globalState,
-        fileBuffersState,
-      );
+      const newBuffer = getRenderedBuffer(fileBuffer, fileBuffersState);
       if (newBuffer.content == null) {
         return [];
       }
@@ -50,10 +46,9 @@ export default async function staticRenderer(
 
 export function getRenderedBuffer(
   fileBuffer: FileBuffer,
-  globalState: GlobalState,
   fileBuffersState: FileBuffersState,
 ): FileBuffer {
-  const props = buildProps(globalState, fileBuffersState, fileBuffer.id);
+  const props = buildProps(fileBuffersState, fileBuffer.id);
   const content = buildHTML(props);
   const newPath = replaceExt(fileBuffer);
 
@@ -61,20 +56,20 @@ export function getRenderedBuffer(
 }
 
 export function buildProps(
-  globalState: GlobalState,
   fileBuffersState: FileBuffersState,
   id: FileBufferId,
-): Props {
+): State {
   const dependency = fileBuffersState.dependencyTable[id];
   const ids = [id].concat(allDepdendencies(dependency));
   const deps = fileBuffersState.fileBuffers.filter((f) => ids.includes(f.id));
 
   return {
-    globalState,
-    fileBuffers: fileBuffersState.fileBuffers,
-    markdown: {
-      currentFileId: id,
-      files: deps,
+    common: {
+      parserInstance: null as any,
+    },
+    fileBuffers: {
+      fileBuffersState,
+      currentFileBufferId: id,
     },
   };
 }
