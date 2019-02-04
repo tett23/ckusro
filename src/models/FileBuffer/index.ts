@@ -4,16 +4,16 @@ import {
   isArrayOf,
   isNonNullObject,
   isPropertyValidTypeOf,
-} from '../core/utils/types';
-import { Dependency, isDependency } from './DependencyTable';
-import { Namespace } from './Namespace';
+} from '../../core/utils/types';
+import { Dependency, isDependency } from '../DependencyTable';
+import { Namespace } from '../Namespace';
 import {
   FileModes,
   statType,
   StatTypeDirectory,
   StatTypeFile,
   StatTypes,
-} from './StatType';
+} from '../StatType';
 
 export const FileTypeDirectory: 'directory' = 'directory';
 export const FileTypeMarkdown: 'markdown' = 'markdown';
