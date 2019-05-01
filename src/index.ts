@@ -1,5 +1,5 @@
-import 'core-js/modules/esnext.array.flat';
-import 'core-js/modules/esnext.array.flat-map';
+import 'core-js/modules/es.array.flat';
+import 'core-js/modules/es.array.flat-map';
 import cli from './cli/index';
 import { isErrors } from './core/utils/types';
 
