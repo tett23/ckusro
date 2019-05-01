@@ -14,6 +14,7 @@ import {
   StatTypeFile,
   StatTypes,
 } from '../StatType';
+import { FileBufferTypeLeaf } from './LeafFileBuffer';
 
 export const FileTypeDirectory: 'directory' = 'directory';
 export const FileTypeMarkdown: 'markdown' = 'markdown';
@@ -50,7 +51,13 @@ export function isValidFileType(obj: unknown): obj is FileTypes {
 
 export type FileBufferId = string;
 
+export const FileBufferTypeAny: 'FileBuffer::Any' = 'FileBuffer::Any';
+export type FileBufferTypes =
+  | typeof FileBufferTypeAny
+  | typeof FileBufferTypeLeaf;
+
 export type FileBuffer = {
+  _type: FileBufferTypes;
   id: FileBufferId;
   namespace: string;
   path: string;

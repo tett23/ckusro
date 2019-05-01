@@ -1,7 +1,7 @@
 import { FileBuffer } from '.';
 import { isNonNullObject, isPropertyValidTypeOf } from '../../core/utils/types';
 
-export const FileBufferTypeLeaf: 'FileBufferTypeLeaf' = 'FileBufferTypeLeaf';
+export const FileBufferTypeLeaf: 'FileBuffer::Leaf' = 'FileBuffer::Leaf';
 
 export type LeafFileBuffer = FileBuffer & {
   _type: typeof FileBufferTypeLeaf;
@@ -22,5 +22,13 @@ export function isLeafFileBuffer(obj: unknown): obj is LeafFileBuffer {
     obj as LeafFileBuffer,
     '_type',
     isFileBufferTypeLeaf,
+  );
+}
+
+export function filterLeafFileBuffer(
+  fileBuffers: FileBuffer[],
+): LeafFileBuffer[] {
+  return fileBuffers.flatMap<LeafFileBuffer>((buf) =>
+    isLeafFileBuffer(buf) ? buf : [],
   );
 }
