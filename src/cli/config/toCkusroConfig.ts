@@ -108,15 +108,17 @@ export function toLoaderConfig(
   }
 
   if (ignore != null) {
-    ret.ignore = (ignore || []).flatMap(
-      (item: string | DeepPartial<RegExp>): [RegExp] | RegExp | [] => {
-        if (!isRegExpOrString(item)) {
-          return [];
-        }
+    ret.ignore = (ignore || [])
+      .map(
+        (item: string | DeepPartial<RegExp>): RegExp | null => {
+          if (!isRegExpOrString(item)) {
+            return null;
+          }
 
-        return toRegExp(item);
-      },
-    );
+          return toRegExp(item);
+        },
+      )
+      .filter((item): item is RegExp => item != null);
   }
 
   return ret;

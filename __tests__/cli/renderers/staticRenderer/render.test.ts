@@ -1,17 +1,24 @@
+/**
+ * @jest-environment node
+ */
+
 import render from '../../../../src/cli/renderers/staticRenderer/render';
-import { buildFileBuffer, buildGlobalState } from '../../../__fixtures__';
+import { defaultPluginsConfig } from '../../../../src/models/DefaultPluginConfig';
+import defaultPlugins from '../../../../src/models/plugins/defaultPlugins';
+import parserInstance from '../../../../src/parserInstance';
+import { buildFileBufferState } from '../../../__fixtures__';
 
 describe(render, () => {
   it('renders correctly', () => {
-    const file = buildFileBuffer();
-    const globalState = buildGlobalState();
+    const plugins = defaultPlugins(defaultPluginsConfig());
+    const fbState = buildFileBufferState();
     const actual = render({
-      globalState,
-      fileBuffers: [file],
-
-      markdown: {
-        currentFileId: file.id,
-        files: [file],
+      common: {
+        parserInstance: parserInstance(plugins),
+      },
+      fileBuffers: {
+        fileBuffersState: fbState,
+        currentFileBufferId: fbState.fileBuffers[0].id,
       },
     });
 

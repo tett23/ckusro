@@ -15,15 +15,16 @@ import {
   newDoesNotExistFile,
   replaceExt,
   toPath,
-} from '../../src/models/FileBuffer';
+} from '../../../src/models/FileBuffer';
+import { FileBufferTypeLeaf } from '../../../src/models/FileBuffer/LeafFileBuffer';
 import {
   FileModeBlockDevice,
   FileModeDirectory,
   FileModeFile,
   FileModes,
-} from '../../src/models/StatType';
-import { buildFileBuffer } from '../__fixtures__';
-import '../__matchers__/toValidTypes';
+} from '../../../src/models/StatType';
+import { buildFileBuffer } from '../../__fixtures__';
+import '../../__matchers__/toValidTypes';
 
 describe(isFileBufferIds, () => {
   it('judges types', () => {
@@ -159,6 +160,7 @@ describe(isWritableFileType, () => {
 
 describe(newDoesNotExistFile, () => {
   const expected: FileBuffer = {
+    _type: FileBufferTypeLeaf,
     id: 'test:/does_not_exist',
     namespace: 'test',
     path: '/does_not_exist',

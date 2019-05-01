@@ -6,6 +6,7 @@ import {
   invert,
   isDependency,
 } from '../../src/models/DependencyTable';
+import { FileBufferTypeLeaf } from '../../src/models/FileBuffer/LeafFileBuffer';
 import { buildDependency } from '../__fixtures__';
 import '../__matchers__/toValidTypes';
 
@@ -30,6 +31,7 @@ describe(buildDependencyTable, () => {
   it('returns FileTypeDirectory when statType is StatTypeDirectory', () => {
     const actual = buildDependencyTable([
       {
+        _type: FileBufferTypeLeaf,
         id: '1',
         namespace: 'foo',
         path: '/foo.md',
@@ -42,6 +44,7 @@ describe(buildDependencyTable, () => {
         variables: [],
       },
       {
+        _type: FileBufferTypeLeaf,
         id: '2',
         namespace: 'foo',
         path: '/foo.md',
@@ -54,6 +57,7 @@ describe(buildDependencyTable, () => {
         variables: [],
       },
       {
+        _type: FileBufferTypeLeaf,
         id: '3',
         namespace: 'foo',
         path: '/foo.md',

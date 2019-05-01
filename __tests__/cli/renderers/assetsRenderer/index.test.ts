@@ -36,11 +36,11 @@ describe(buildWriteInfos, () => {
     const expected: WriteInfo[] = [
       {
         path: '/assets/foo.js',
-        content: new Buffer('/foo.js'),
+        content: Buffer.from('/foo.js'),
       },
       {
         path: '/assets/bar.css',
-        content: new Buffer('/bar.css'),
+        content: Buffer.from('/bar.css'),
       },
     ];
 

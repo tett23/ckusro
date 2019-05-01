@@ -76,7 +76,7 @@ export async function reloadFiles(
   );
   const results: Array<FileBuffersState | Error> = (await Promise.all(
     ps,
-  )).flat();
+  )).flat() as any[];
   const [fsbs, errors] = separateErrors(results);
   if (isErrors(errors)) {
     return errors;

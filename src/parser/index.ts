@@ -29,7 +29,7 @@ function visit(node: Parent | Content): string[] {
     .concat(
       ((node.children as any) || []).flatMap((n: any): string[] => visit(n)),
     )
-    .flatMap((v: string | null) => (v == null ? [] : [v]));
+    .filter((v): v is string => typeof v === 'string');
 }
 
 export function determineDependency(

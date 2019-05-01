@@ -2,6 +2,7 @@ import { Stats } from 'fs';
 import { basename, extname, join } from 'path';
 import uuid from 'uuid/v4'; // tslint:disable-line match-default-export-name
 import { FileBuffer } from './FileBuffer';
+import { FileBufferTypeLeaf } from './FileBuffer/LeafFileBuffer';
 import { LoaderContext } from './loaderContext';
 import {
   statType,
@@ -150,6 +151,7 @@ export function newDoesNotExistFile(
   const absolutePath = join('/', path);
 
   return {
+    _type: FileBufferTypeLeaf,
     id: `${namespace}:${absolutePath}`,
     namespace,
     path: absolutePath,

@@ -21,7 +21,7 @@ import {
 
 // @ts-ignore
 buildHTML.default.mockImplementation((props: Props) => {
-  return props.markdown.currentFileId;
+  return props.fileBuffers.currentFileBufferId;
 });
 
 describe.skip(staticRenderer, () => {
@@ -64,11 +64,10 @@ describe.skip(staticRenderer, () => {
 describe(getRenderedBuffer, () => {
   it('', () => {
     const fileBuffer = buildFileBuffer({});
-    const globalState = buildGlobalState();
     const fileBuffersState = buildFileBufferState({
       fileBuffers: [fileBuffer],
     });
-    const actual = getRenderedBuffer(fileBuffer, globalState, fileBuffersState);
+    const actual = getRenderedBuffer(fileBuffer, fileBuffersState);
     const expected: Partial<FileBuffer> = {
       path: '/foo.html',
       fileType: FileTypeRaw,
@@ -124,13 +123,10 @@ describe(buildProps, () => {
       }),
     });
     const files = [file].concat(unreferenced).concat(referenced);
-    const globalState = buildGlobalState();
     const fileBuffersState = buildFileBufferState({ fileBuffers: files });
-    const actual = buildProps(globalState, fileBuffersState, file.id);
-    const expected = [file].concat(referenced).map(({ id }) => id);
+    const actual = buildProps(fileBuffersState, file.id);
 
-    expect(actual.globalState).toEqual(globalState);
-    expect(actual.markdown.currentFileId).toEqual(file.id);
-    expect(actual.markdown.files.map(({ id }) => id)).toEqual(expected);
+    expect(actual.fileBuffers.fileBuffersState).toEqual(fileBuffersState);
+    expect(actual.fileBuffers.currentFileBufferId).toEqual(file.id);
   });
 });

@@ -15,7 +15,7 @@ describe(RawContents, () => {
       }),
     ];
 
-    const wrapper = shallow(<RawContents files={files} />).children();
+    const wrapper = shallow(<RawContents fileBuffers={files} />).children();
 
     expect(wrapper.length).toBe(1);
     expect(wrapper.at(0).name()).toBe('RawContent');
@@ -36,7 +36,7 @@ describe(RawContents, () => {
       }),
     ];
 
-    const wrapper = shallow(<RawContents files={files} />).children();
+    const wrapper = shallow(<RawContents fileBuffers={files} />).children();
 
     expect(wrapper.length).toBe(3);
 
@@ -60,7 +60,7 @@ describe(RawContents, () => {
       }),
     ];
 
-    const wrapper = shallow(<RawContents files={files} />).children();
+    const wrapper = shallow(<RawContents fileBuffers={files} />).children();
 
     expect(wrapper.length).toBe(1);
     expect(wrapper.at(0).name()).toBe('EmptyContent');

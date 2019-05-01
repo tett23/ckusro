@@ -74,8 +74,11 @@ export type SingleNamespaceFileBuffer<T> = FileBuffer & {
 export function filterNamespace<N>(
   fileBuffer: SingleNamespaceFileBuffer<N>,
   fileBuffers: FileBuffer[],
-): Array<SingleNamespaceFileBuffer<T>> {
-  return fileBuffers.filter((item) => item.namespace === fileBuffer.namespace);
+): Array<SingleNamespaceFileBuffer<N>> {
+  return fileBuffers.filter(
+    (item): item is SingleNamespaceFileBuffer<N> =>
+      item.namespace === fileBuffer.namespace,
+  );
 }
 
 export function isFileBufferIds(obj: unknown): obj is FileBufferId[] {
@@ -124,6 +127,7 @@ export function newFileBuffer(
   const path = toPath(namespace.loaderContext.path, absolutePath);
 
   const file: FileBuffer = {
+    _type: FileBufferTypeLeaf,
     id: newFileBufferId(),
     namespace: namespace.name,
     path,
@@ -219,6 +223,7 @@ export function newDoesNotExistFile(
   const absolutePath = join('/', path);
 
   return {
+    _type: FileBufferTypeLeaf,
     id: `${namespace}:${absolutePath}`,
     namespace,
     path: absolutePath,

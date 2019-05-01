@@ -60,9 +60,7 @@ export async function readdirRecursive(
     return ret;
   });
 
-  const aa = await Promise.all(ps);
-
-  return aa.flatMap((item) => item);
+  return (await Promise.all(ps)).flat();
 }
 
 export async function bindStat(

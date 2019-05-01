@@ -1,5 +1,4 @@
 import { join } from 'path';
-import { allDepdendencies } from '../../../models/DependencyTable';
 import {
   FileBuffer,
   FileBufferId,
@@ -59,10 +58,6 @@ export function buildProps(
   fileBuffersState: FileBuffersState,
   id: FileBufferId,
 ): State {
-  const dependency = fileBuffersState.dependencyTable[id];
-  const ids = [id].concat(allDepdendencies(dependency));
-  const deps = fileBuffersState.fileBuffers.filter((f) => ids.includes(f.id));
-
   return {
     common: {
       parserInstance: null as any,

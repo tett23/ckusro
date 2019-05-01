@@ -54,7 +54,7 @@ describe(loadContents, () => {
   });
 });
 
-describe(loadEachItem, async () => {
+describe(loadEachItem, () => {
   it('returns UnloadedFile-string tuple', async () => {
     const readFile = jest.fn().mockRejectedValue('# test Markdown');
     const loaderContext = buildLocalLoaderContext();

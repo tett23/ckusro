@@ -25,6 +25,7 @@ import {
   FileTypeMarkdown,
   newFileBufferId,
 } from '../../src/models/FileBuffer';
+import { FileBufferTypeLeaf } from '../../src/models/FileBuffer/LeafFileBuffer';
 import { FileBuffersState } from '../../src/models/FileBuffersState';
 import { GlobalState } from '../../src/models/GlobalState';
 import {
@@ -144,6 +145,7 @@ export function buildFileBuffer(
   overrides: Partial<FileBuffer> = {},
 ): FileBuffer {
   const template: FileBuffer = {
+    _type: FileBufferTypeLeaf,
     id: newFileBufferId(),
     namespace: 'test',
     path: '/foo.md',

@@ -4,6 +4,7 @@ import {
   FileTypeDirectory,
   FileTypeDoesNotExist,
 } from '../../src/models/FileBuffer';
+import { FileBufferTypeLeaf } from '../../src/models/FileBuffer/LeafFileBuffer';
 import defaultPlugins from '../../src/models/plugins/defaultPlugins';
 import { buildAst, determineDependency } from '../../src/parser';
 import { buildFileBuffer } from '../__fixtures__';
@@ -47,6 +48,7 @@ describe(determineDependency, () => {
     const actual = determineDependency('test', rootNode, []);
     const expected: FileBuffer[] = [
       {
+        _type: FileBufferTypeLeaf,
         id: 'test:/does_not_exist',
         namespace: 'test',
         path: '/does_not_exist',

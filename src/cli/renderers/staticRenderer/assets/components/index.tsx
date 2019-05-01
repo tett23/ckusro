@@ -1,13 +1,22 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import styled from 'styled-components';
+import initializeStore, { State } from '../modules';
 import MainContainer from './MainContainer';
 import TreeViewContainer from './TreeViewContainer';
-export default function App() {
+
+export type Props = State;
+
+export default function App(props: Props) {
+  const store = initializeStore(props);
+
   return (
-    <Main>
-      <TreeViewContainer />
-      <MainContainer />
-    </Main>
+    <Provider store={store}>
+      <Main>
+        <TreeViewContainer />
+        <MainContainer />
+      </Main>
+    </Provider>
   );
 }
 
