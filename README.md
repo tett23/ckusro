@@ -2,7 +2,7 @@
 
 ## Installation
 
-``` sh
+```sh
 $ yarn install
 $ yarn start
 ```

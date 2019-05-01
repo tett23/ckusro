@@ -8,7 +8,9 @@ import {
 } from '../../../../src/models/FileBuffer';
 import { buildFileBuffer, buildNamespace } from '../../../__fixtures__';
 
-describe.skip(filterFileBuffers, () => {});
+describe.skip(filterFileBuffers, () => {
+  return;
+});
 
 describe(filterNamespace, () => {
   it('returns [FileBuffer] when match namespace', () => {

@@ -27,7 +27,8 @@
     "strictNullChecks": true,
     "esModuleInterop": true,
     "allowJs": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true
   },
   "include": ["./src/**/*", "./__tests__/**/*"],
   "exclude": [".git", "node_modules"],

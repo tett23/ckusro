@@ -12,7 +12,10 @@
     "watch": "yarn build --watch",
     "test": "jest",
     "test-watch": "jest --watchAll",
-    "lint": "tsc --noEmit && tslint --fix -p ./tsconfig.json"
+    "lint": "yarn run lint:tsc && yarn run lint:tslint && yarn run lint:prettier",
+    "lint:tsc": "tsc --noEmit -p ./tsconfig.json",
+    "lint:tslint": "tslint --fix -p ./tsconfig.json",
+    "lint:prettier": "prettier -c '**/*.@(md|json|yml|yaml|toml|html)'"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,6 @@
+tmp/
+log/
+
+node_modules/
+coverage/
+.vscode/
