@@ -86,6 +86,7 @@
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.13.0",
     "jest": "^24.8.0",
+    "lerna": "^3.14.1",
     "mdast": "^3.0.0",
     "mock-fs": "^4.9.0",
     "prettier": "^1.17.1",
