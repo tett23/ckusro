@@ -22,5 +22,8 @@
   },
   "bugs": {
     "url": "https://github.com/tett23/ckusro/issues"
+  },
+  "devDependencies": {
+    "typescript": "^3.4.5"
   }
 }
