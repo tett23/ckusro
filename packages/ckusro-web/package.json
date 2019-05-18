@@ -65,10 +65,11 @@
     "postcss-normalize": "7.0.1",
     "postcss-preset-env": "6.6.0",
     "postcss-safe-parser": "4.0.1",
-    "react": "^16.8.6",
+    "react": "16.8.3",
     "react-app-polyfill": "^1.0.1",
     "react-dev-utils": "^9.0.1",
     "react-dom": "^16.8.6",
+    "react-native": "^0.59.8",
     "react-native-web": "^0.11.2",
     "react-redux": "^7.0.3",
     "redux": "^4.0.1",
@@ -149,8 +150,13 @@
       "react-app"
     ]
   },
+  "alias": {
+    "react-native": "react-native-web"
+  },
   "devDependencies": {
+    "babel-plugin-module-resolver": "^3.2.0",
     "parcel-bundler": "^1.12.3",
+    "parcel-plugin-react-native-web": "^0.6.1",
     "typescript": "^3.4.5"
   }
 }
