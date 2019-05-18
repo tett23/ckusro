@@ -20,6 +20,7 @@ export function filterNamespace(
 }
 
 export function filterWritable(fileBuffers: FileBuffer[]): FileBuffer[] {
+  console.log(fileBuffers.map(({ content }) => content));
   return fileBuffers.filter(
     ({ fileType, content }) => content != null && isWritableFileType(fileType),
   );

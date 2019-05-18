@@ -1,3 +1,5 @@
+import { writeFile } from 'fs';
+import { promisify } from 'util';
 import { separateErrors } from '../../core/utils/errors';
 import { isErrors } from '../../core/utils/types';
 import { FileBuffersState } from '../../models/FileBuffersState';
@@ -9,10 +11,19 @@ export async function buildHandler(
   fileBuffersState: FileBuffersState,
 ): Promise<void | Error[]> {
   const result = await staticRenderer(globalState, fileBuffersState);
-  const [, errors] = separateErrors(result);
+  console.log(result);
+  const [writeInfos, errors] = separateErrors(result);
   if (isErrors(errors)) {
     return errors;
   }
+
+  const writeFileAsync = promisify(writeFile);
+  console.log(writeInfos);
+  const ps = writeInfos.map(({ path, content }) => {
+    return writeFileAsync(path, content);
+  });
+  console.log(ps);
+  await Promise.all(ps);
 
   return;
 }

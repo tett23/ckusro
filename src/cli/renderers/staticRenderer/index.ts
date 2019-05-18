@@ -21,6 +21,7 @@ export default async function staticRenderer(
     fileBuffersState.fileBuffers,
     globalState.namespaces,
   );
+  console.log(fileBuffers);
   const nsMap = namespaceMap(globalState.namespaces);
 
   return fileBuffers
@@ -48,6 +49,7 @@ export function getRenderedBuffer(
   fileBuffersState: FileBuffersState,
 ): FileBuffer {
   const props = buildProps(fileBuffersState, fileBuffer.id);
+  console.log(props);
   const content = buildHTML(props);
   const newPath = replaceExt(fileBuffer);
 
