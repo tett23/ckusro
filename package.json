@@ -1,5 +1,5 @@
 {
-  "name": "typescript-boilerplate",
+  "name": "ckusro",
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
@@ -28,6 +28,7 @@
     "url": "https://github.com/tett23/typescript-boilerplate/issues"
   },
   "homepage": "https://github.com/tett23/typescript-boilerplate#readme",
+  "private": true,
   "jest": {
     "moduleFileExtensions": [
       "ts",
