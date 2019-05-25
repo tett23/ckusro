@@ -15,6 +15,8 @@ import {
 } from './domain';
 import {
   initialWorkerState,
+  newWorkerDispatcher,
+  replaceRepositoryWorkerDispatcher,
   WorkersActions,
   workersReducer,
   WorkersState,
@@ -44,9 +46,18 @@ export default function initializeStore(
     workers: initialWorkerState(),
   };
 
-  return createStore(
+  const store = createStore(
     reducers as any,
     init,
     applyMiddleware(thunk as ThunkMiddleware<State, Actions>),
   );
+
+  const repositoryWorker = new Worker('../workers/repository.ts');
+  const repositoryWorkerDispatcher = newWorkerDispatcher(
+    repositoryWorker,
+    store.dispatch,
+  );
+  store.dispatch(replaceRepositoryWorkerDispatcher(repositoryWorkerDispatcher));
+
+  return store as any;
 }

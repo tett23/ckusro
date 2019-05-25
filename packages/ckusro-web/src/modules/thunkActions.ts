@@ -1,16 +1,13 @@
 import { Dispatch } from 'react';
-import { addRepository } from './domain';
-import { Actions } from './index';
+import { Actions, State } from './index';
+import { cloneRepository as cloneRepositoryAction } from './workerActions/repository';
 
 export function cloneRepository(url: string) {
-  return async (dispatch: Dispatch<Actions>) => {
-    dispatch(
-      addRepository({
-        type: 'git',
-        name: 'ckusro-web',
-        url: 'git+https://github.com/tett23/ckusro.git',
-        directory: '/packages/ckusro-web',
-      }),
-    );
+  return async (_: Dispatch<Actions>, getState: () => State) => {
+    const {
+      workers: { repositoryWorkerDispatcher },
+    } = getState();
+
+    repositoryWorkerDispatcher(cloneRepositoryAction(url));
   };
 }
