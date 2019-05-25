@@ -1,6 +1,8 @@
+export const CloneRepository = 'RepositoryWorker/Clone' as const;
+
 export function cloneRepository(url: string) {
   return {
-    type: 'RepositoryWorker/Clone',
+    type: CloneRepository,
     payload: { url },
   };
 }
