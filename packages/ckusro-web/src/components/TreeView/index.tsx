@@ -13,7 +13,7 @@ export type TreeViewProps = TreeViewStates;
 
 export function TreeView({ repositories }: TreeViewProps) {
   const repos = repositories.map((item) => (
-    <RepositoryComponent repository={item} />
+    <RepositoryComponent key={item.url} repository={item} />
   ));
 
   return (
