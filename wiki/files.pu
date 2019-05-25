@@ -1,0 +1,74 @@
+@startuml 'files'
+
+entity "UserSpace" {
+  id:UserID
+  name:string
+}
+
+entity "Namespace" {
+  id:NamespaceID
+  name:string
+}
+
+entity "PathFragment" {
+  path:string
+  namespaceID:NamespaceID
+}
+
+entity "Objects" {
+  id:ObjectID
+  parent:ObjectID
+}
+
+entity "Node" {
+  id:ObjectID
+  parent:ObjectID
+}
+
+entity "Leaf" {
+  id:ObjectID
+}
+
+entity "PathFragmentObjects" {
+  pathFragmentID:PathFragmentID
+  objectID:ObjectID
+}
+
+entity "Contents" {
+  digest:Digest
+  content:string
+}
+
+entity "ObjectContents" {
+  objectID:ObjectID
+  contentID:ContentID
+}
+
+entity "Dependency" {
+  objectID:ObjectID
+}
+
+entity "NullContent" {
+}
+
+UserSpace --{ Namespace
+Namespace --{ PathFragment
+
+PathFragment }--{ PathFragmentObjects
+PathFragmentObjects --o{ Objects
+
+Objects -- Leaf
+Objects -- Node
+Node -- Node
+Node -- Leaf
+
+Leaf -- Contents
+Node -- NullContent
+
+Objects }--{ ObjectContents 
+ObjectContents --o{ Contents
+
+Dependency --{ Contents
+Dependency --{ NullContent
+
+@enduml
