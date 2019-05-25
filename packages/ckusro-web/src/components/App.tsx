@@ -8,6 +8,15 @@ import TreeView from './TreeView';
 export default function App() {
   const store = initializeStore({});
 
+  const eventsWorker = new Worker('../workers/events.ts');
+  eventsWorker.addEventListener('message', (message: MessageEvent) => {
+    console.log('on message', message);
+  });
+  eventsWorker.addEventListener('error', (err: ErrorEvent) => {
+    console.log('on error', err);
+  });
+  eventsWorker.postMessage('hoge');
+
   return (
     <Provider store={store}>
       <View>
