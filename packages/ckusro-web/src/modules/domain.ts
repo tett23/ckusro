@@ -11,7 +11,7 @@ export type DomainState = {
   repositories: Repository[];
 };
 
-export function initialDomainStateState(): DomainState {
+export function initialDomainState(): DomainState {
   return {
     repositories: [
       {
@@ -36,7 +36,7 @@ export function addRepository(repository: Repository) {
 export type DomainActions = ReturnType<typeof addRepository>;
 
 export function domainReducer(
-  state: DomainState = initialDomainStateState(),
+  state: DomainState = initialDomainState(),
   action: DomainActions,
 ): DomainState {
   switch (action.type) {

@@ -11,7 +11,7 @@ import {
   DomainActions,
   domainReducer,
   DomainState,
-  initialDomainStateState,
+  initialDomainState,
 } from './domain';
 
 export type State = {
@@ -32,7 +32,7 @@ export default function initializeStore(
   props: DeepPartial<State>,
 ): ThunkStore<State, Actions> {
   const init: DeepPartial<State> = {
-    domain: { ...initialDomainStateState(), ...(props.domain || {}) },
+    domain: { ...initialDomainState(), ...(props.domain || {}) },
   };
 
   return createStore(
