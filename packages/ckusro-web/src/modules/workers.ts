@@ -3,7 +3,7 @@ export type WorkersState = {
 };
 
 export function initialWorkerState(): WorkersState {
-  const eventsWorker = new Worker('../workers/events.ts');
+  const eventsWorker = new Worker('../workers/repository.ts');
   eventsWorker.addEventListener('message', (message: MessageEvent) => {
     console.log('on message', message);
   });
@@ -17,14 +17,11 @@ export function initialWorkerState(): WorkersState {
   };
 }
 
-export type WorkersActions = any;
+export type WorkersActions = {};
 
 export function workersReducer(
   state: WorkersState = initialWorkerState(),
   action: WorkersActions,
 ): WorkersState {
-  switch (action.type) {
-    default:
-      return state;
-  }
+  return state;
 }
