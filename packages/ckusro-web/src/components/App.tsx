@@ -19,8 +19,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <View>
-        <Text>hogehoge</Text>
+      <View style={{ flex: 1, flexDirection: 'row' }}>
         <TreeView />
         <FileView />
       </View>
