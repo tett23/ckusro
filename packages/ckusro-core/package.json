@@ -18,12 +18,40 @@
     "url": "git+https://github.com/tett23/ckusro.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build": "rm -rf lib/ && parcel build src/index.ts -d lib",
+    "test": "jest",
+    "test-watch": "jest --watchAll"
   },
   "bugs": {
     "url": "https://github.com/tett23/ckusro/issues"
   },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "../../tsconfig.json"
+      }
+    },
+    "setupFiles": [
+      "./__tests__/setup.ts"
+    ],
+    "testRegex": "(models/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "testPathIgnorePatterns": [
+      "node_modules",
+      "lib"
+    ],
+    "testURL": "http://localhost/"
+  },
   "devDependencies": {
+    "@babel/core": "^7.4.5",
     "jest": "^24.8.0",
     "parcel-bundler": "^1.12.3",
     "ts-jest": "^24.0.2",
