@@ -27,5 +27,8 @@
     "jest": "^24.8.0",
     "ts-jest": "^24.0.2",
     "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "isomorphic-git": "^0.55.2"
   }
 }
