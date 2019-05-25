@@ -72,7 +72,7 @@
     },
     "globals": {
       "ts-jest": {
-        "tsConfig": "../../tsconfig.json"
+        "tsConfig": "./tsconfig.json"
       }
     },
     "setupFiles": [
