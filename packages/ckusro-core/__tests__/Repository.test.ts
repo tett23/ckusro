@@ -3,7 +3,7 @@ import * as Git from 'isomorphic-git';
 import { join } from 'path';
 import { CkusroConfig } from '../src/models/CkusroConfig';
 import { RepoPath, toPath } from '../src/models/RepoPath';
-import { headCommitObject, headOid } from '../src/Repository';
+import { headCommitObject, headOid, headRootTree } from '../src/Repository';
 import { repository } from '../src/Repository';
 import { buildCkusroConfig, buildRepoPath } from './__fixtures__';
 import { pfs } from './__helpers__';
@@ -58,6 +58,19 @@ describe(repository.name, () => {
     await dummyRepo(config, fs, repoPath);
 
     const expected = await headCommitObject(config, 'test', repoPath);
+
+    expect(expected).not.toBe(Error);
+  });
+
+  it(headRootTree.name, async () => {
+    const config = buildCkusroConfig();
+    const core = Git.cores.create('test');
+    const fs = pfs(config);
+    core.set('fs', fs);
+    const repoPath = buildRepoPath();
+    await dummyRepo(config, fs, repoPath);
+
+    const expected = await headRootTree(config, 'test', repoPath);
 
     expect(expected).not.toBe(Error);
   });
