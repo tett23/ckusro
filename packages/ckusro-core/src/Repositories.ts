@@ -34,5 +34,5 @@ export async function clone(
     return result;
   }
 
-  return repository(config, coreId);
+  return repository(config, coreId, repoPath);
 }

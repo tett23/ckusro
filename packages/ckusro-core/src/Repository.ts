@@ -4,29 +4,56 @@ import { gitDir, RepoPath } from './models/RepoPath';
 
 export type Repository = ReturnType<typeof repository>;
 
-export function repository(config: CkusroConfig, coreId: string) {
+export function repository(
+  config: CkusroConfig,
+  coreId: string,
+  repoPath: RepoPath,
+) {
   return {
-    fetchHeadOid: (repoPath: RepoPath) =>
-      fetchHeadOid(coreId, config, repoPath),
+    headOid: () => headOid(config, coreId, repoPath),
+    headCommitObject: () => headCommitObject(config, coreId, repoPath),
   };
 }
 
-export async function fetchHeadOid(
-  coreId: string,
+export async function headOid(
   config: CkusroConfig,
+  coreId: string,
   repoPath: RepoPath,
 ): Promise<string | Error> {
   const path = gitDir(config.base, repoPath);
-  const headOid = await (async () => {
-    return Git.resolveRef({
+  const headOid = await (async () =>
+    Git.resolveRef({
       core: coreId,
       gitdir: path,
       ref: 'HEAD',
-    });
-  })().catch((err) => err);
+    }))().catch((err) => err);
   if (headOid instanceof Error) {
     return headOid;
   }
 
   return headOid;
+}
+
+export async function headCommitObject(
+  config: CkusroConfig,
+  coreId: string,
+  repoPath: RepoPath,
+) {
+  const oid = await headOid(config, coreId, repoPath);
+  if (oid instanceof Error) {
+    return oid;
+  }
+
+  const path = gitDir(config.base, repoPath);
+  const objectDescription = await (async () =>
+    Git.readObject({
+      core: coreId,
+      gitdir: path,
+      oid,
+    }))().catch((err: Error) => err);
+  if (objectDescription instanceof Error) {
+    return objectDescription;
+  }
+
+  return objectDescription;
 }
