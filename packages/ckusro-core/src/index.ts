@@ -1,8 +1,10 @@
 import 'core-js/modules/es.array.flat';
 import 'core-js/modules/es.array.flat-map';
 import { clone, GitFsPlugin, plugins } from 'isomorphic-git';
+import { CkusroConfig } from './models/CkusroConfig';
+import { toPath, url2RepoPath } from './models/RepoPath';
 
-export default function(fs: GitFsPlugin) {
+export default function(config: CkusroConfig, fs: GitFsPlugin) {
   plugins.set('fs', fs);
 
   return {
@@ -10,35 +12,19 @@ export default function(fs: GitFsPlugin) {
   };
 }
 
-export async function cloneRepository(url: string) {
-  await clone({
-    dir: url,
-    url,
-  });
-}
-
-export type RepoPath = {
-  domain: string;
-  user: string;
-  name: string;
-};
-
-export function url2RepoPath(url: string): RepoPath | Error {
-  const items = url.split(/[@/:]/);
-
-  const name = (items.pop() || '').split('.')[0];
-  const user = items.pop() || '';
-  const domain = items.pop() || '';
-  const ret = {
-    domain,
-    user,
-    name,
-  };
-
-  const invalid = Object.values(ret).some((item) => item.length === 0);
-  if (invalid) {
-    return new Error(`Malformed URL. url=${url}`);
+export async function cloneRepository(
+  config: CkusroConfig,
+  url: string,
+): Promise<true | Error> {
+  const repoPath = url2RepoPath(url);
+  if (repoPath instanceof Error) {
+    return repoPath;
   }
 
-  return ret;
+  await clone({
+    dir: toPath(config.base, repoPath),
+    url,
+  });
+
+  return true;
 }
