@@ -8,11 +8,12 @@ export default function(config: CkusroConfig, fs: GitFsPlugin) {
   plugins.set('fs', fs);
 
   return {
-    clone,
+    clone: (url: string) => cloneRepo(fs, config, url),
   };
 }
 
-export async function cloneRepository(
+export async function cloneRepo(
+  fs: GitFsPlugin,
   config: CkusroConfig,
   url: string,
 ): Promise<true | Error> {
@@ -21,10 +22,18 @@ export async function cloneRepository(
     return repoPath;
   }
 
-  await clone({
-    dir: toPath(config.base, repoPath),
-    url,
-  });
+  const result = await (async () => {
+    await clone({
+      fs,
+      dir: toPath(config.base, repoPath),
+      url,
+      singleBranch: true,
+      depth: 1,
+    });
+  })().catch((err) => err);
+  if (result instanceof Error) {
+    return result;
+  }
 
   return true;
 }
