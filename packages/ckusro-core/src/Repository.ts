@@ -1,6 +1,11 @@
 import * as Git from 'isomorphic-git';
 import { CkusroConfig } from './models/CkusroConfig';
-import { CommitObject, GitObject, TreeObject } from './models/GitObject';
+import {
+  BlobObject,
+  CommitObject,
+  GitObject,
+  TreeObject,
+} from './models/GitObject';
 import { gitDir, RepoPath } from './models/RepoPath';
 
 export type Repository = ReturnType<typeof repository>;
@@ -14,6 +19,7 @@ export function repository(
     headOid: () => headOid(config, coreId, repoPath),
     headCommitObject: () => headCommitObject(config, coreId, repoPath),
     headRootTree: () => headRootTree(config, coreId, repoPath),
+    readTree: (oid: string) => readTree(config, coreId, repoPath, oid),
   };
 }
 
@@ -76,6 +82,40 @@ export async function headRootTree(
   }
 
   return tree;
+}
+
+export async function readTree(
+  config: CkusroConfig,
+  coreId: string,
+  repoPath: RepoPath,
+  oid: string,
+): Promise<Array<TreeObject | BlobObject> | Error> {
+  const tree = await fetchObject(config, coreId, repoPath, oid);
+  if (tree instanceof Error) {
+    return tree;
+  }
+  if (tree.type !== 'tree') {
+    return new Error('Invalid object type.');
+  }
+
+  const entries = await (async () => {
+    const ps = tree.content.map(async (item) => {
+      console.log(item);
+      const entry = await fetchObject(config, coreId, repoPath, item.oid);
+      if (entry instanceof Error) {
+        throw Error;
+      }
+      if (entry.type === 'commit' || entry.type === 'tag') {
+        throw new Error('Invalid object type.');
+      }
+
+      return entry;
+    });
+
+    return await Promise.all(ps);
+  })().catch((err: Error) => err);
+
+  return entries;
 }
 
 async function fetchObject(
