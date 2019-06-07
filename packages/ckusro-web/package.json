@@ -5,7 +5,8 @@
   "author": "tett23 <tett23@gmail.com>",
   "homepage": "https://github.com/tett23/ckusro/tree/master/packages/ckusro-web",
   "license": "MIT",
-  "main": "lib/ckusro-web.js",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
