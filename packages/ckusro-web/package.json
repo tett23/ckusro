@@ -1,5 +1,5 @@
 {
-  "name": "ckusro-web",
+  "name": "@ckusro/ckusro-web",
   "version": "0.0.0",
   "description": "> TODO: description",
   "author": "tett23 <tett23@gmail.com>",
@@ -27,6 +27,7 @@
     "url": "https://github.com/tett23/ckusro/issues"
   },
   "dependencies": {
+    "@ckusro/ckusro-core": "0.0.0",
     "core-js": "^3.1.2",
     "react": "16.8.3",
     "react-contextmenu": "^2.11.0",
