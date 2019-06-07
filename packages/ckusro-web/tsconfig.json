@@ -4,6 +4,6 @@
     "outDir": "./lib",
     "rootDir": "./src"
   },
-  "include": ["./src/**/*", "./__tests__/**/*"],
+  "include": ["./src/**/*"],
   "exclude": [".git", "node_modules"]
 }
