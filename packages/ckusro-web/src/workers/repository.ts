@@ -1,22 +1,26 @@
+import ckusroCore, { CkusroConfig } from '@ckusro/ckusro-core';
+import LightningFs from '@isomorphic-git/lightning-fs';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { Actions } from '../modules';
-import { addRef } from '../modules/domain';
+import { addObject, addRef } from '../modules/domain';
 import {
   CloneRepository,
   cloneRepository,
   errorMessage,
+  FetchObject,
+  fetchObject,
   RepositoryWorkerActions,
 } from '../modules/workerActions/repository';
-
-import ckusroCore, { CkusroConfig } from '@ckusro/ckusro-core';
-import LightningFs from '@isomorphic-git/lightning-fs';
 
 const defaultConfig: CkusroConfig = {
   base: '/repositories',
 };
 
 const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
+
+const CoreId = 'ckusro-web';
+const lfs = new LightningFs('ckusro-web');
 
 export type Handler = (payload: any) => Promise<HandlerResult>;
 export type HandlerResult = Actions[] | Error;
@@ -61,6 +65,8 @@ function actionHandler(action: RepositoryWorkerActions): Handler | null {
   switch (action.type) {
     case CloneRepository:
       return cloneHandler;
+    case FetchObject:
+      return fetchObjectHandler;
     default:
       return null;
   }
@@ -69,7 +75,7 @@ function actionHandler(action: RepositoryWorkerActions): Handler | null {
 async function cloneHandler({
   url,
 }: PayloadType<ReturnType<typeof cloneRepository>>): Promise<HandlerResult> {
-  const core = ckusroCore(defaultConfig, 'ckusro', new LightningFs('hoge'));
+  const core = ckusroCore(defaultConfig, CoreId, lfs);
   const repo = await core.repositories.clone(url);
   if (repo instanceof Error) {
     return repo;
@@ -87,4 +93,16 @@ async function cloneHandler({
       oid,
     }),
   ];
+}
+
+async function fetchObjectHandler(
+  oid: PayloadType<ReturnType<typeof fetchObject>>,
+): Promise<HandlerResult> {
+  const core = ckusroCore(defaultConfig, CoreId, lfs);
+  const object = await core.repositories.fetchObject(oid);
+  if (object instanceof Error) {
+    return object;
+  }
+
+  return [addObject(object)];
 }

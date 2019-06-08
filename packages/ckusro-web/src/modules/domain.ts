@@ -1,9 +1,12 @@
+import { GitObject } from '@ckusro/ckusro-core';
+import { createObjectManager, ObjectManager } from '../models/ObjectManager';
 import { createRefManager, Ref, RefManager } from '../models/RefManager';
 import { Repository } from '../models/Repository';
 
 export type DomainState = {
   repositories: Repository[];
   refManager: RefManager;
+  objectManager: ObjectManager;
 };
 
 export function initialDomainState(): DomainState {
@@ -19,6 +22,7 @@ export function initialDomainState(): DomainState {
     refManager: {
       refs: {},
     },
+    objectManager: {},
   };
 }
 
@@ -40,9 +44,19 @@ export function addRef(ref: Ref) {
   };
 }
 
+const AddObject = 'Domain/AddObject' as const;
+
+export function addObject(object: GitObject) {
+  return {
+    type: AddObject,
+    payload: object,
+  };
+}
+
 export type DomainActions =
   | ReturnType<typeof addRepository>
-  | ReturnType<typeof addRef>;
+  | ReturnType<typeof addRef>
+  | ReturnType<typeof addObject>;
 
 export function domainReducer(
   state: DomainState = initialDomainState(),
@@ -58,6 +72,13 @@ export function domainReducer(
       return {
         ...state,
         refManager: createRefManager(state.refManager).addRef(action.payload),
+      };
+    case AddObject:
+      return {
+        ...state,
+        objectManager: createObjectManager(state.objectManager).addObject(
+          action.payload,
+        ),
       };
     default:
       return state;

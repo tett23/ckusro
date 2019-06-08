@@ -7,6 +7,15 @@ export function cloneRepository(url: string) {
   };
 }
 
+export const FetchObject = 'RepositoryWorker/FetchObject' as const;
+
+export function fetchObject(oid: string) {
+  return {
+    type: FetchObject,
+    payload: oid,
+  };
+}
+
 export const ErrorMessage = 'RepositoryWorker/ErrorMessage' as const;
 
 export function errorMessage(err: Error) {
@@ -16,4 +25,7 @@ export function errorMessage(err: Error) {
   };
 }
 
-export type RepositoryWorkerActions = ReturnType<typeof cloneRepository>;
+export type RepositoryWorkerActions =
+  | ReturnType<typeof cloneRepository>
+  | ReturnType<typeof errorMessage>
+  | ReturnType<typeof fetchObject>;

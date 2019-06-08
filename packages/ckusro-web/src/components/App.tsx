@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Provider } from 'react-redux';
 import initializeStore from '../modules';
-import FileView from './FileView';
+import ObjectView from './ObjectView';
 import TreeView from './TreeView';
 
 export default function App() {
@@ -12,7 +12,7 @@ export default function App() {
     <Provider store={store}>
       <View style={{ flex: 1, flexDirection: 'row' }}>
         <TreeView />
-        <FileView />
+        <ObjectView />
       </View>
     </Provider>
   );

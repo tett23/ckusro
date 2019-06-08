@@ -14,6 +14,11 @@ import {
   initialDomainState,
 } from './domain';
 import {
+  ObjectViewActions,
+  objectViewReducer,
+  ObjectViewState,
+} from './objectView';
+import {
   initialWorkerState,
   newWorkerDispatcher,
   replaceRepositoryWorkerDispatcher,
@@ -24,13 +29,15 @@ import {
 
 export type State = {
   domain: DomainState;
+  objectView: ObjectViewState;
   workers: WorkersState;
 };
 
-export type Actions = DomainActions | WorkersActions;
+export type Actions = DomainActions | WorkersActions | ObjectViewActions;
 
 export const reducers = combineReducers<State>({
   domain: domainReducer,
+  objectView: objectViewReducer,
   workers: workersReducer,
 });
 
