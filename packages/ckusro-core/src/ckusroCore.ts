@@ -12,6 +12,6 @@ export default function ckusroCore(
   core.set('fs', fs);
 
   return {
-    repositories: (() => repositories(config, coreId))(),
+    repositories: (() => repositories(config, coreId, fs))(),
   };
 }
