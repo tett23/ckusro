@@ -1,11 +1,4 @@
-export type RepositoryType = 'git';
-
-export type Repository = {
-  type: RepositoryType;
-  url: string;
-  name: string;
-  directory: string;
-};
+import { Repository } from '../models/Repository';
 
 export type DomainState = {
   repositories: Repository[];
