@@ -3,3 +3,5 @@ declare interface Array<T> {
   flatMap(func: (x: T, i?: number) => T | T[] | []): T[];
   flatMap<U>(func: (x: T, i?: number) => U | U[] | []): U[];
 }
+
+declare module 'unionfs';

@@ -92,7 +92,9 @@ export async function allRepositories(
 }
 
 async function readdir(fs: typeof FS, path: string): Promise<string[] | Error> {
-  return await (async () => fs.readdirSync(path))().catch((err: Error) => err);
+  return await (async () => fs.promises.readdir(path))().catch(
+    (err: Error) => err,
+  );
 }
 
 export async function fetchObject(

@@ -2,6 +2,7 @@ import FS from 'fs';
 import * as Git from 'isomorphic-git';
 import { Volume } from 'memfs';
 import { join } from 'path';
+import pify from 'pify';
 import { Union } from 'unionfs';
 import { CkusroConfig } from '../../src/models/CkusroConfig';
 import { RepoPath, toPath } from '../../src/models/RepoPath';
@@ -12,6 +13,8 @@ export function pfs(config: CkusroConfig): typeof FS {
 
   const ufs = new Union();
   ufs.use(volume);
+
+  ufs.promises = pify(ufs);
 
   return ufs;
 }
