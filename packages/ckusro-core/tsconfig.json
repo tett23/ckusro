@@ -2,11 +2,11 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./lib",
-    "rootDir": "./src",
-    "declarationDir": "./lib",
-    "allowJs": false,
-    "declaration": true,
-    "emitDeclarationOnly": true
+    "rootDir": "./src"
+    // "declarationDir": "./lib",
+    // "allowJs": false,
+    // "declaration": true,
+    // "emitDeclarationOnly": true
   },
   "include": ["./src/**/*"],
   "exclude": [".git", "node_modules"]

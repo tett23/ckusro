@@ -2,8 +2,8 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
+import { Repository } from '../../models/Repository';
 import { Actions, State } from '../../modules';
-import { Repository } from '../../modules/domain';
 import { cloneRepository } from '../../modules/thunkActions';
 import RepositoryComponent from './Repository';
 

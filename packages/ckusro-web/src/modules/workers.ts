@@ -13,10 +13,13 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
   dispatcher: Dispatch,
 ): WorkerDispatcher<WorkerActions> {
   worker.addEventListener('message', (message: MessageEvent) => {
-    console.log('on message', message);
+    console.log('on message', message.data);
     const res: WorkerResponse = message.data;
 
     if (res.payload == null) {
+      return;
+    }
+    if (res.payload instanceof Error) {
       return;
     }
     if (res.error) {

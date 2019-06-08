@@ -1,27 +1,52 @@
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 import { Actions } from '../modules';
+import { addRef } from '../modules/domain';
 import {
   CloneRepository,
   cloneRepository,
+  errorMessage,
   RepositoryWorkerActions,
 } from '../modules/workerActions/repository';
 
+import ckusroCore, { CkusroConfig } from '@ckusro/ckusro-core';
+import LightningFs from '@isomorphic-git/lightning-fs';
+
+const defaultConfig: CkusroConfig = {
+  base: '/repositories',
+};
+
 const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
 
+export type Handler = (payload: any) => Promise<HandlerResult>;
+export type HandlerResult = Actions[] | Error;
 export type RepositoryWorkerResponse = WithRequestId<
-  FSAction<Actions[] | null>
+  FSAction<HandlerResult>
 > & {
   type: typeof WorkerResponseRepository;
 };
 
 self.addEventListener('message', async (e) => {
-  console.log(e);
   const action: WithRequestId<RepositoryWorkerActions> = e.data;
+  console.log(action);
 
   const handler = actionHandler(action);
-  const returnActions = handler == null ? null : await handler(action.payload);
+  if (handler == null) {
+    // TODO: wrap to empty action
+    return;
+  }
+
+  const result = await handler(action.payload).catch((err: Error) => err);
+  if (result instanceof Error) {
+    // TODO: wrap to error action
+    console.log(result);
+    (postMessage as any)([errorMessage(result)]);
+    return;
+  }
+
   const response: RepositoryWorkerResponse = {
     type: WorkerResponseRepository,
-    payload: returnActions,
+    payload: result,
     meta: {
       requestId: action.meta.requestId,
     },
@@ -30,7 +55,6 @@ self.addEventListener('message', async (e) => {
   (postMessage as any)(response);
 });
 
-export type Handler = (payload: any) => Promise<Actions[] | null>;
 type PayloadType<T extends { payload: any }> = T['payload'];
 
 function actionHandler(action: RepositoryWorkerActions): Handler | null {
@@ -44,8 +68,23 @@ function actionHandler(action: RepositoryWorkerActions): Handler | null {
 
 async function cloneHandler({
   url,
-}: PayloadType<ReturnType<typeof cloneRepository>>): Promise<null> {
-  console.log(url);
+}: PayloadType<ReturnType<typeof cloneRepository>>): Promise<HandlerResult> {
+  const core = ckusroCore(defaultConfig, 'ckusro', new LightningFs('hoge'));
+  const repo = await core.repositories.clone(url);
+  if (repo instanceof Error) {
+    return repo;
+  }
 
-  return null;
+  const oid = await repo.headOid();
+  if (oid instanceof Error) {
+    return oid;
+  }
+
+  return [
+    addRef({
+      repository: url,
+      name: 'HEAD',
+      oid,
+    }),
+  ];
 }

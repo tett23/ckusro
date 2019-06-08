@@ -1,19 +1,7 @@
 import 'core-js/modules/es.array.flat';
 import 'core-js/modules/es.array.flat-map';
-import FS from 'fs';
-import * as Git from 'isomorphic-git';
-import { CkusroConfig } from './models/CkusroConfig';
-import { repositories } from './Repositories';
+import ckusroCore from './ckusroCore';
 
-export default function ckusroCore(
-  config: CkusroConfig,
-  coreId: string,
-  fs: typeof FS,
-) {
-  const core = Git.cores.create(coreId);
-  core.set('fs', fs);
+export { CkusroConfig } from './models/CkusroConfig';
 
-  return {
-    repositories: () => repositories(config, coreId),
-  };
-}
+export default ckusroCore;

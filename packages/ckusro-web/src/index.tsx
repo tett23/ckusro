@@ -1,4 +1,3 @@
-// import React from 'react';
 import { AppRegistry } from 'react-native';
 import App from './components/App';
 // import './index.css';
@@ -9,6 +8,7 @@ import * as serviceWorker from './serviceWorker';
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 
+// render(React.createElement(App, null), document.getElementById('root'));
 // render(<App />, document.getElementById('root'));
 AppRegistry.registerComponent('App', () => App);
 AppRegistry.runApplication('App', {

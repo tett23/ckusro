@@ -24,6 +24,7 @@ export async function clone(
   const result = await (async () => {
     await Git.clone({
       core: coreId,
+      corsProxy: 'https://cors.isomorphic-git.org',
       dir: toPath(config.base, repoPath),
       url,
       singleBranch: true,

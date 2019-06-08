@@ -1,7 +1,7 @@
 import React from 'react';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import { Text, View } from 'react-native';
-import { Repository } from '../../../modules/domain';
+import { Repository } from '../../../models/Repository';
 
 export type RepositoryProps = {
   repository: Repository;

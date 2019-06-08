@@ -7,4 +7,13 @@ export function cloneRepository(url: string) {
   };
 }
 
+export const ErrorMessage = 'RepositoryWorker/ErrorMessage' as const;
+
+export function errorMessage(err: Error) {
+  return {
+    type: ErrorMessage,
+    payload: err.message,
+  };
+}
+
 export type RepositoryWorkerActions = ReturnType<typeof cloneRepository>;

@@ -12,7 +12,7 @@ export function initialDomainState(): DomainState {
       {
         type: 'git',
         name: 'ckusro-web',
-        url: 'git+https://github.com/tett23/ckusro.git',
+        url: 'https://github.com/tett23/ckusro.git',
         directory: '/packages/ckusro-web',
       },
     ],

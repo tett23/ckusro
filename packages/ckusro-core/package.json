@@ -19,7 +19,10 @@
     "url": "git+https://github.com/tett23/ckusro.git"
   },
   "scripts": {
-    "build": "rm -rf lib/ && parcel build src/index.ts -d lib && tsc",
+    "build": "rm -rf lib/ && yarn run build:parcel && yarn run build:dts",
+    "build:parcel": "parcel build src/index.ts --target browser --bundle-node-modules --no-minify -d lib",
+    "build:dts": "tsc --declaration true --emitDeclarationOnly true --declarationDir lib --allowJs false",
+    "prepare": "yarn test && yarn run build",
     "test": "jest",
     "test-watch": "jest --watchAll"
   },

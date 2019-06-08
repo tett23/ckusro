@@ -14,7 +14,7 @@
         "targets": {
           "node": "current"
         },
-        "useBuiltIns": "entry",
+        "useBuiltIns": "usage",
         "corejs": 3
       }
     ],
@@ -22,7 +22,6 @@
   ],
   "plugins": [
     "syntax-dynamic-import",
-    "@babel/plugin-proposal-object-rest-spread",
     [
       "module-resolver",
       {

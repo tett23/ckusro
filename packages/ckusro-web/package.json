@@ -20,7 +20,8 @@
   },
   "scripts": {
     "start": "rm -rf lib/ && parcel serve src/index.html -d lib --no-autoinstall --port 3001",
-    "build": "rm -rf lib/ && parcel serve src/index.html -d lib --no-autoinstall --port 3001",
+    "build": "rm -rf lib/ && parcel build src/index.html -d lib --no-source-maps --no-autoinstall --no-minify",
+    "build-watch": "rm -rf lib/ && parcel watch src/index.html -d lib",
     "test": "jest",
     "test-watch": "jest --watchAll"
   },
@@ -42,12 +43,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",
+    "@babel/polyfill": "^7.4.4",
     "@types/node": "^12.0.4",
     "babel-plugin-module-resolver": "^3.2.0",
+    "express": "^4.17.1",
     "jest": "^24.8.0",
     "memfs": "^2.15.4",
     "parcel-bundler": "^1.12.3",
-    "parcel-plugin-react-native-web": "^0.6.1",
     "ts-jest": "^24.0.2",
     "typescript": "^3.4.5",
     "unionfs": "^4.2.0"
