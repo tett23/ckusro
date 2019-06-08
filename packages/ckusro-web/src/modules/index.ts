@@ -27,7 +27,7 @@ export type State = {
   workers: WorkersState;
 };
 
-export type Actions = DomainActions & WorkersActions;
+export type Actions = DomainActions | WorkersActions;
 
 export const reducers = combineReducers<State>({
   domain: domainReducer,

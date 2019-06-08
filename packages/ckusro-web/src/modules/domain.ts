@@ -1,7 +1,9 @@
+import { createRefManager, Ref, RefManager } from '../models/RefManager';
 import { Repository } from '../models/Repository';
 
 export type DomainState = {
   repositories: Repository[];
+  refManager: RefManager;
 };
 
 export function initialDomainState(): DomainState {
@@ -14,10 +16,13 @@ export function initialDomainState(): DomainState {
         directory: '/packages/ckusro-web',
       },
     ],
+    refManager: {
+      refs: {},
+    },
   };
 }
 
-const AddRepository: 'Domain/AddRepository' = 'Domain/AddRepository';
+const AddRepository = 'Domain/AddRepository' as const;
 
 export function addRepository(repository: Repository) {
   return {
@@ -26,7 +31,18 @@ export function addRepository(repository: Repository) {
   };
 }
 
-export type DomainActions = ReturnType<typeof addRepository>;
+const AddRef = 'Domain/AddRef' as const;
+
+export function addRef(ref: Ref) {
+  return {
+    type: AddRef,
+    payload: ref,
+  };
+}
+
+export type DomainActions =
+  | ReturnType<typeof addRepository>
+  | ReturnType<typeof addRef>;
 
 export function domainReducer(
   state: DomainState = initialDomainState(),
@@ -37,6 +53,11 @@ export function domainReducer(
       return {
         ...state,
         repositories: [...state.repositories, action.payload],
+      };
+    case AddRef:
+      return {
+        ...state,
+        refManager: createRefManager(state.refManager).addRef(action.payload),
       };
     default:
       return state;
