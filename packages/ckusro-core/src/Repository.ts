@@ -118,7 +118,7 @@ export async function readTree(
   return entries;
 }
 
-async function fetchObject(
+export async function fetchObject(
   config: CkusroConfig,
   coreId: string,
   repoPath: RepoPath,

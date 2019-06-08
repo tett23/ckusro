@@ -1,8 +1,15 @@
 import * as Git from 'isomorphic-git';
 import { join } from 'path';
-import { allRepositories, clone, repositories } from '../src/Repositories';
+import { GitObject } from '../src/models/GitObject';
+import {
+  allRepositories,
+  clone,
+  fetchObject,
+  repositories,
+} from '../src/Repositories';
+import { headOid } from '../src/Repository';
 import { buildCkusroConfig, buildRepoPath } from './__fixtures__';
-import { pfs } from './__helpers__';
+import { dummyRepo, pfs } from './__helpers__';
 
 describe(repositories.name, () => {
   it.skip(clone.name, async () => {
@@ -17,7 +24,7 @@ describe(repositories.name, () => {
     expect(expected).not.toBeInstanceOf(Error);
   });
 
-  it(clone.name, async () => {
+  it(allRepositories.name, async () => {
     const config = buildCkusroConfig();
     const fs = pfs(config);
 
@@ -33,5 +40,42 @@ describe(repositories.name, () => {
       buildRepoPath({ domain: 'example.com', user: 'test_user1', name: 'foo' }),
       buildRepoPath({ domain: 'example.com', user: 'test_user2', name: 'bar' }),
     ]);
+  });
+
+  describe(fetchObject.name, () => {
+    it('returns GitObject', async () => {
+      const config = buildCkusroConfig();
+      const core = Git.cores.create('test');
+      const fs = pfs(config);
+      core.set('fs', fs);
+      const repoPath = buildRepoPath();
+      const commits = [
+        {
+          message: 'init',
+          tree: {
+            'README.md': 'read me',
+            foo: {
+              bar: {
+                'baz.md': 'baz.md',
+              },
+            },
+          },
+        },
+      ];
+      await dummyRepo(config, fs, repoPath, commits);
+
+      const oid = (await headOid(config, 'test', repoPath)) as string;
+      const expected = await fetchObject(config, 'test', fs, oid);
+
+      expect((expected as GitObject).oid).toBe(oid);
+    });
+
+    it('returns Error when object does not exists', async () => {
+      const config = buildCkusroConfig();
+      const fs = pfs(config);
+      const expected = await fetchObject(config, 'test', fs, 'hoge');
+
+      expect(expected).toBeInstanceOf(Error);
+    });
   });
 });

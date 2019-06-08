@@ -2,8 +2,13 @@ import FS from 'fs';
 import * as Git from 'isomorphic-git';
 import { join } from 'path';
 import { CkusroConfig } from './models/CkusroConfig';
+import { GitObject } from './models/GitObject';
 import { RepoPath, toPath, url2RepoPath } from './models/RepoPath';
-import { Repository, repository } from './Repository';
+import {
+  fetchObject as repositoryFetchObject,
+  Repository,
+  repository,
+} from './Repository';
 
 export type Repositories = ReturnType<typeof repositories>;
 
@@ -15,6 +20,7 @@ export function repositories(
   return {
     clone: (url: string) => clone(coreId, config, url),
     allRepositories: () => allRepositories(config, fs),
+    fetchObject: (oid: string) => fetchObject(config, coreId, fs, oid),
   };
 }
 
@@ -87,4 +93,26 @@ export async function allRepositories(
 
 async function readdir(fs: typeof FS, path: string): Promise<string[] | Error> {
   return await (async () => fs.readdirSync(path))().catch((err: Error) => err);
+}
+
+export async function fetchObject(
+  config: CkusroConfig,
+  coreId: string,
+  fs: typeof FS,
+  oid: string,
+): Promise<GitObject | Error> {
+  const repoPaths = await allRepositories(config, fs);
+  if (repoPaths instanceof Error) {
+    return repoPaths;
+  }
+
+  const ps = repoPaths.map(async (repoPath) =>
+    repositoryFetchObject(config, coreId, repoPath, oid),
+  );
+  const ret = (await Promise.all(ps)).find((item) => !(item instanceof Error));
+  if (ret == null || ret instanceof Error) {
+    return new Error(`Object not found. oid=${oid}`);
+  }
+
+  return ret;
 }
