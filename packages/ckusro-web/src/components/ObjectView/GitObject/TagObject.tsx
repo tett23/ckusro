@@ -1,6 +1,7 @@
 import { TagObject } from '@ckusro/ckusro-core';
 import React from 'react';
 import { Text, View } from 'react-native';
+import ObjectLink from '../ObjectLink';
 
 export type TagObjectProps = {
   object: TagObject;
@@ -19,7 +20,12 @@ export default function TagObject({ object }: TagObjectProps) {
         {object.content.tagger.timestamp}
       </Text>
       <Text>tag: {object.content.tag}</Text>
-      <Text>object: {object.content.object}</Text>
+      <Text>
+        object:
+        <ObjectLink oid={object.content.object}>
+          {object.content.object}
+        </ObjectLink>
+      </Text>
       <Text>message: {object.content.message}</Text>
     </View>
   );

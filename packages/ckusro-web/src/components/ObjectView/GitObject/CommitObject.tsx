@@ -1,6 +1,7 @@
 import { CommitObject } from '@ckusro/ckusro-core';
 import React from 'react';
 import { Text, View } from 'react-native';
+import ObjectLink from '../ObjectLink';
 
 export type CommitObjectProps = {
   object: CommitObject;
@@ -25,8 +26,18 @@ export default function CommitObject({ object }: CommitObjectProps) {
         {'>'}
         {object.content.committer.timestamp}
       </Text>
-      <Text>tree: {object.content.parent}</Text>
-      <Text>parent: {object.content.tree}</Text>
+      <Text>
+        tree:
+        <ObjectLink oid={object.content.tree}>{object.content.tree}</ObjectLink>
+      </Text>
+      <Text>
+        parent:
+        {object.content.parent.map((oid) => (
+          <ObjectLink key={oid} oid={oid}>
+            {oid}
+          </ObjectLink>
+        ))}
+      </Text>
       <Text>message: {object.content.message}</Text>
     </View>
   );
