@@ -1,3 +1,4 @@
+import { RepoPath, url2RepoPath } from '@ckusro/ckusro-core';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { connect } from 'react-redux';
@@ -24,7 +25,9 @@ export function TreeView({
   updateCurrentOid,
 }: TreeViewProps) {
   const repos = repositories.map((item) => {
-    const oid = createRefManager(refManager).headOid(item.url);
+    const oid = createRefManager(refManager).headOid(url2RepoPath(
+      item.url,
+    ) as RepoPath);
 
     return (
       <RepositoryComponent

@@ -16,6 +16,15 @@ export function fetchObject(oid: string) {
   };
 }
 
+export const FetchHeadOids = 'RepositoryWorker/FetchHeadOids' as const;
+
+export function fetchHeadOids() {
+  return {
+    type: FetchHeadOids,
+    payload: null,
+  };
+}
+
 export const ErrorMessage = 'RepositoryWorker/ErrorMessage' as const;
 
 export function errorMessage(err: Error) {
@@ -27,5 +36,6 @@ export function errorMessage(err: Error) {
 
 export type RepositoryWorkerActions =
   | ReturnType<typeof cloneRepository>
-  | ReturnType<typeof errorMessage>
-  | ReturnType<typeof fetchObject>;
+  | ReturnType<typeof fetchObject>
+  | ReturnType<typeof fetchHeadOids>
+  | ReturnType<typeof errorMessage>;

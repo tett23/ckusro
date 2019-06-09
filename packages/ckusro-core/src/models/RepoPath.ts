@@ -33,3 +33,7 @@ export function url2RepoPath(url: string): RepoPath | Error {
 
   return ret;
 }
+
+export function toInternalPath(repoPath: RepoPath): string {
+  return join(repoPath.domain, repoPath.user, repoPath.name);
+}

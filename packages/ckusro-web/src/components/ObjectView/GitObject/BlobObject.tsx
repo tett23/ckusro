@@ -14,7 +14,7 @@ export default function BlobObject({ object }: BlobObjectProps) {
         oid: <ObjectLink oid={object.oid}>{object.oid}</ObjectLink>
       </Text>
       <Text>type: {object.type}</Text>
-      <Text>content: {object.content}</Text>
+      <Text>content: {new TextDecoder().decode(object.content)}</Text>
     </View>
   );
 }

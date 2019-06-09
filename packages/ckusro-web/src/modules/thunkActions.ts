@@ -2,6 +2,7 @@ import { Dispatch } from 'react';
 import { Actions, State } from './index';
 import {
   cloneRepository as cloneRepositoryAction,
+  fetchHeadOids as fetchHeadOidsAction,
   fetchObject as fetchObjectAction,
 } from './workerActions/repository';
 
@@ -22,5 +23,15 @@ export function fetchObject(oid: string) {
     } = getState();
 
     repositoryWorkerDispatcher(fetchObjectAction(oid));
+  };
+}
+
+export function fetchHeadOids() {
+  return async (_: Dispatch<Actions>, getState: () => State) => {
+    const {
+      workers: { repositoryWorkerDispatcher },
+    } = getState();
+
+    repositoryWorkerDispatcher(fetchHeadOidsAction());
   };
 }

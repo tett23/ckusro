@@ -1,3 +1,5 @@
+import { RepoPath, toInternalPath } from '@ckusro/ckusro-core';
+
 export type Ref = {
   readonly repository: string;
   readonly name: string;
@@ -13,7 +15,7 @@ export type RefManager = {
 export function createRefManager(refManager: RefManager) {
   return {
     addRef: (ref: Ref) => addRef(refManager, ref),
-    headOid: (repository: string) => headOid(refManager, repository),
+    headOid: (repoPath: RepoPath) => headOid(refManager, repoPath),
   };
 }
 
@@ -29,9 +31,9 @@ export function addRef(refManager: RefManager, ref: Ref): RefManager {
 
 export function headOid(
   refManager: RefManager,
-  repository: string,
+  repoPath: RepoPath,
 ): string | null {
-  const refs = refManager[repository];
+  const refs = refManager[toInternalPath(repoPath)];
   if (refs == null) {
     return null;
   }

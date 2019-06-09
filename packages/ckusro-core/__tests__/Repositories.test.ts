@@ -5,6 +5,7 @@ import {
   allRepositories,
   clone,
   fetchObject,
+  headOids,
   repositories,
 } from '../src/Repositories';
 import { headOid } from '../src/Repository';
@@ -77,5 +78,32 @@ describe(repositories.name, () => {
 
       expect(expected).toBeInstanceOf(Error);
     });
+  });
+
+  it(headOids.name, async () => {
+    const config = buildCkusroConfig();
+    const core = Git.cores.create('test');
+    const fs = pfs(config);
+    core.set('fs', fs);
+    const repoPath = buildRepoPath();
+    const commits = [
+      {
+        message: 'init',
+        tree: {
+          'README.md': 'read me',
+          foo: {
+            bar: {
+              'baz.md': 'baz.md',
+            },
+          },
+        },
+      },
+    ];
+    await dummyRepo(config, fs, repoPath, commits);
+
+    const oid = (await headOid(config, 'test', repoPath)) as string;
+    const expected = await headOids(config, 'test', fs);
+
+    expect(expected).toMatchObject([[oid, repoPath]]);
   });
 });

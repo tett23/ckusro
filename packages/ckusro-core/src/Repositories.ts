@@ -6,6 +6,7 @@ import { GitObject } from './models/GitObject';
 import { RepoPath, toPath, url2RepoPath } from './models/RepoPath';
 import {
   fetchObject as repositoryFetchObject,
+  headOid,
   Repository,
   repository,
 } from './Repository';
@@ -21,6 +22,7 @@ export function repositories(
     clone: (url: string) => clone(coreId, config, url),
     allRepositories: () => allRepositories(config, fs),
     fetchObject: (oid: string) => fetchObject(config, coreId, fs, oid),
+    headOids: () => headOids(config, coreId, fs),
   };
 }
 
@@ -117,4 +119,32 @@ export async function fetchObject(
   }
 
   return ret;
+}
+
+export async function headOids(
+  config: CkusroConfig,
+  coreId: string,
+  fs: typeof FS,
+): Promise<Array<[string, RepoPath]> | Error> {
+  const repositories = await allRepositories(config, fs);
+  if (repositories instanceof Error) {
+    return repositories;
+  }
+
+  const ps = repositories.map(async (repoPath) => {
+    const oid = await headOid(config, coreId, repoPath);
+    if (oid instanceof Error) {
+      return oid;
+    }
+
+    return [oid, repoPath] as [string, RepoPath];
+  });
+
+  const headOids = await Promise.all(ps);
+  const errorIndex = headOids.findIndex((item) => item instanceof Error);
+  if (errorIndex !== -1) {
+    return headOids[errorIndex] as Error;
+  }
+
+  return headOids as Array<[string, RepoPath]>;
 }

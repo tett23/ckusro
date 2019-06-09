@@ -1,3 +1,4 @@
+import { TreeEntry } from '@ckusro/ckusro-core';
 import React, { ReactNode, useEffect } from 'react';
 import { Text } from 'react-native';
 import { connect } from 'react-redux';
@@ -8,6 +9,7 @@ import { fetchObject } from '../../modules/thunkActions';
 
 type ObjectLinkOwnProps = {
   oid: string;
+  treeEntry?: TreeEntry | null;
   children: ReactNode;
 };
 
@@ -22,7 +24,6 @@ export function ObjectLink({
   updateCurrentOid,
 }: ObjectLinkProps) {
   useEffect(() => {
-    console.log('effect', oid);
     fetchObject(oid);
   }, [oid]);
 

@@ -1,4 +1,8 @@
-import ckusroCore, { CkusroConfig } from '@ckusro/ckusro-core';
+import ckusroCore, {
+  CkusroConfig,
+  toInternalPath,
+  url2RepoPath,
+} from '@ckusro/ckusro-core';
 import LightningFs from '@isomorphic-git/lightning-fs';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -8,6 +12,7 @@ import {
   CloneRepository,
   cloneRepository,
   errorMessage,
+  FetchHeadOids,
   FetchObject,
   fetchObject,
   RepositoryWorkerActions,
@@ -67,6 +72,8 @@ function actionHandler(action: RepositoryWorkerActions): Handler | null {
       return cloneHandler;
     case FetchObject:
       return fetchObjectHandler;
+    case FetchHeadOids:
+      return fetchHeadOidsHandler;
     default:
       return null;
   }
@@ -75,6 +82,11 @@ function actionHandler(action: RepositoryWorkerActions): Handler | null {
 async function cloneHandler({
   url,
 }: PayloadType<ReturnType<typeof cloneRepository>>): Promise<HandlerResult> {
+  const repoPath = url2RepoPath(url);
+  if (repoPath instanceof Error) {
+    return repoPath;
+  }
+
   const core = ckusroCore(defaultConfig, CoreId, lfs);
   const repo = await core.repositories.clone(url);
   if (repo instanceof Error) {
@@ -88,7 +100,7 @@ async function cloneHandler({
 
   return [
     addRef({
-      repository: url,
+      repository: toInternalPath(repoPath),
       name: 'HEAD',
       oid,
     }),
@@ -105,4 +117,20 @@ async function fetchObjectHandler(
   }
 
   return [addObject(object)];
+}
+
+async function fetchHeadOidsHandler(): Promise<HandlerResult> {
+  const core = ckusroCore(defaultConfig, CoreId, lfs);
+  const heads = await core.repositories.headOids();
+  if (heads instanceof Error) {
+    return heads;
+  }
+
+  return heads.map(([oid, repoPath]) => {
+    return addRef({
+      repository: toInternalPath(repoPath),
+      name: 'HEAD',
+      oid,
+    });
+  });
 }
