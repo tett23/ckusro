@@ -5,6 +5,10 @@ import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { Actions, State } from '../../modules';
 import { fetchObject } from '../../modules/thunkActions';
+import BlobObject from './GitObject/BlobObject';
+import CommitObject from './GitObject/CommitObject';
+import TagObject from './GitObject/TagObject';
+import TreeObject from './GitObject/TreeObject';
 
 type ObjectViewStates = {
   oid: string | null;
@@ -30,12 +34,7 @@ export function ObjectView({ oid, object, fetchObject }: ObjectViewProps) {
     return <ObjectNotFound oid={oid} />;
   }
 
-  return (
-    <View>
-      <Text>oid: {oid}</Text>
-      <Text>type: {object.type}</Text>
-    </View>
-  );
+  return <GitObjectView object={object} />;
 }
 
 function EmptyObjectView() {
@@ -56,6 +55,23 @@ function ObjectNotFound({ oid }: ObjectNotFoundProps) {
       <Text>ObjectNotFound. oid={oid}</Text>
     </View>
   );
+}
+
+type GitObjectViewProps = {
+  object: GitObject;
+};
+
+function GitObjectView({ object }: GitObjectViewProps) {
+  switch (object.type) {
+    case 'commit':
+      return <CommitObject object={object} />;
+    case 'tree':
+      return <TreeObject object={object} />;
+    case 'blob':
+      return <BlobObject object={object} />;
+    case 'tag':
+      return <TagObject object={object} />;
+  }
 }
 
 function mapStateToProps({

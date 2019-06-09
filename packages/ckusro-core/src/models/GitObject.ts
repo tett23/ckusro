@@ -12,6 +12,8 @@ export type TreeObject = {
   content: TreeEntry[];
 };
 
+export type TreeEntry = TreeEntry;
+
 export type BlobObject = {
   oid: string;
   type: 'blob';
