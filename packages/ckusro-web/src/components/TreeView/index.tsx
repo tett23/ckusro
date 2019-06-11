@@ -1,17 +1,19 @@
-import { RepoPath, url2RepoPath } from '@ckusro/ckusro-core';
+import { CommitObject, RepoPath, url2RepoPath } from '@ckusro/ckusro-core';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
+import { ObjectManager } from '../../models/ObjectManager';
 import { createRefManager, RefManager } from '../../models/RefManager';
 import { Repository } from '../../models/Repository';
 import { Actions, State } from '../../modules';
-import { updateCurrentOid } from '../../modules/objectView';
 import { cloneRepository } from '../../modules/thunkActions';
+import FetchObject from '../FetchObject';
 import RepositoryComponent from './Repository';
 
 type TreeViewStates = {
   repositories: Repository[];
+  objectManager: ObjectManager;
   refManager: RefManager;
 };
 
@@ -20,39 +22,37 @@ export type TreeViewProps = TreeViewStates &
 
 export function TreeView({
   repositories,
+  objectManager,
   refManager,
   onClickClone,
-  updateCurrentOid,
 }: TreeViewProps) {
   const repos = repositories.map((item) => {
     const oid = createRefManager(refManager).headOid(url2RepoPath(
       item.url,
     ) as RepoPath);
+    const commitObject: CommitObject | null =
+      oid == null ? null : (objectManager[oid] as CommitObject);
 
     return (
-      <RepositoryComponent
-        key={item.url}
-        repository={item}
-        headOid={oid}
-        onClickClone={onClickClone}
-        updateCurrentOid={updateCurrentOid}
-      />
+      <FetchObject key={item.url} oid={oid}>
+        <RepositoryComponent
+          repository={item}
+          commitObject={commitObject}
+          onClickClone={onClickClone}
+        />
+      </FetchObject>
     );
   });
 
-  return (
-    <View>
-      <Text>TV</Text>
-      {repos}
-    </View>
-  );
+  return <View>{repos}</View>;
 }
 
 function mapStateToProps({
-  domain: { repositories, refManager },
+  domain: { repositories, objectManager, refManager },
 }: State): TreeViewStates {
   return {
     repositories,
+    objectManager,
     refManager,
   };
 }
@@ -63,9 +63,6 @@ function mapDispatchToProps(
   return {
     onClickClone(url: string) {
       dispatch(cloneRepository(url));
-    },
-    updateCurrentOid(oid: string | null) {
-      dispatch(updateCurrentOid(oid));
     },
   };
 }

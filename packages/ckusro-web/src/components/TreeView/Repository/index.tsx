@@ -1,35 +1,42 @@
-import React, { useEffect } from 'react';
+import { CommitObject } from '@ckusro/ckusro-core';
+import React from 'react';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { Repository } from '../../../models/Repository';
+import FetchObject from '../../FetchObject';
+import ObjectLink from '../../ObjectView/ObjectLink';
+import TreeObject from '../GitObject/TreeObject';
 
 export type RepositoryProps = {
   repository: Repository;
-  headOid: string | null;
+  commitObject: CommitObject | null;
   onClickClone: (url: string) => void;
-  updateCurrentOid: (oid: string | null) => void;
 };
 
 export default function Repository({
   repository,
-  headOid,
+  commitObject,
   onClickClone,
-  updateCurrentOid,
 }: RepositoryProps) {
-  useEffect(() => {
-    if (headOid == null) {
-    }
-  }, [headOid]);
+  if (commitObject == null) {
+    return null;
+  }
 
   return (
     <>
       <ContextMenuTrigger id="some_unique_identifier">
         <View>
-          <Text onPress={() => updateCurrentOid(headOid)}>
-            {repository.name}({headOid || 'None'})
-          </Text>
+          <ObjectLink oid={commitObject.oid}>
+            {repository.name}({commitObject.oid || 'None'})
+          </ObjectLink>
         </View>
       </ContextMenuTrigger>
+
+      <View>
+        <FetchObject oid={commitObject.content.tree}>
+          <TreeObject oid={commitObject.content.tree} />
+        </FetchObject>
+      </View>
 
       <ContextMenu id="some_unique_identifier">
         <MenuItem onClick={() => onClickClone(repository.url)}>Clone</MenuItem>
