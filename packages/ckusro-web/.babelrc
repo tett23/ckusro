@@ -29,6 +29,7 @@
           "^react-native$": "react-native-web"
         }
       }
-    ]
+    ],
+    "babel-plugin-styled-components"
   ]
 }
