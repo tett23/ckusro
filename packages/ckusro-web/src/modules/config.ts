@@ -9,7 +9,8 @@ export function initialConfigState(): CkusroConfig {
       main: 'B22E42',
       accent: 'A4CE50',
       text: '090C02',
-      background: 'DDE2C6',
+      // background: 'DDE2C6',
+      background: 'F6F7F4',
       base: 'BBC5AA',
     }),
   };

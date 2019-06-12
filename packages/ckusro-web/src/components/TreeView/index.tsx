@@ -1,6 +1,5 @@
 import { CommitObject, RepoPath, url2RepoPath } from '@ckusro/ckusro-core';
 import React from 'react';
-import { View } from 'react-native';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { ObjectManager } from '../../models/ObjectManager';
@@ -9,6 +8,7 @@ import { Repository } from '../../models/Repository';
 import { Actions, State } from '../../modules';
 import { cloneRepository } from '../../modules/thunkActions';
 import FetchObject from '../FetchObject';
+import styled from '../styled';
 import RepositoryComponent from './Repository';
 
 type TreeViewStates = {
@@ -44,7 +44,7 @@ export function TreeView({
     );
   });
 
-  return <View>{repos}</View>;
+  return <Wrapper>{repos}</Wrapper>;
 }
 
 function mapStateToProps({
@@ -71,3 +71,7 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(TreeView);
+
+const Wrapper = styled.View`
+  overflow-y: scroll;
+`;

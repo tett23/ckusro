@@ -1,10 +1,9 @@
 import React from 'react';
-import { View } from 'react-native';
 import { Provider } from 'react-redux';
 import initializeStore from '../modules';
 import { fetchHeadOids } from '../modules/thunkActions';
 import ObjectView from './ObjectView';
-import styled, { ThemeProvider } from './styled';
+import styled, { StyledProps, ThemeProvider } from './styled';
 import TreeView from './TreeView';
 
 export default function App() {
@@ -16,10 +15,8 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={{ colors: store.getState().config.colorScheme }}>
         <AppBackground>
-          <View style={{ flex: 1, flexDirection: 'row' }}>
-            <TreeView />
-            <ObjectView />
-          </View>
+          <TreeView />
+          <ObjectView />
         </AppBackground>
       </ThemeProvider>
     </Provider>
@@ -27,7 +24,13 @@ export default function App() {
 }
 
 const AppBackground = styled.View`
-  background-color: ${(props: any) => props.theme.colors.background};
   flex: 1;
   flex-direction: row;
+  flex-basis: 100%;
+  background-color: ${(props: StyledProps) => {
+    return `#${props.theme.colors.background.toString(16)}`;
+  }};
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
 `;
