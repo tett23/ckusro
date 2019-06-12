@@ -7,6 +7,7 @@ import {
   Store,
 } from 'redux';
 import thunk, { ThunkDispatch, ThunkMiddleware } from 'redux-thunk';
+import { configReducer, ConfigState } from './config';
 import {
   DomainActions,
   domainReducer,
@@ -29,6 +30,7 @@ import {
 
 export type State = {
   domain: DomainState;
+  config: ConfigState;
   objectView: ObjectViewState;
   workers: WorkersState;
 };
@@ -37,6 +39,7 @@ export type Actions = DomainActions | WorkersActions | ObjectViewActions;
 
 export const reducers = combineReducers<State>({
   domain: domainReducer,
+  config: configReducer,
   objectView: objectViewReducer,
   workers: workersReducer,
 });
@@ -62,7 +65,7 @@ export default function initializeStore(
   const repositoryWorker = new Worker('../workers/repository.ts');
   const repositoryWorkerDispatcher = newWorkerDispatcher(
     repositoryWorker,
-    store.dispatch,
+    store,
   );
   store.dispatch(replaceRepositoryWorkerDispatcher(repositoryWorkerDispatcher));
 

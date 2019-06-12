@@ -1,5 +1,7 @@
-import { Dispatch } from 'redux';
+import { CkusroConfig } from '@ckusro/ckusro-core';
+import { Store } from 'redux';
 import { RepositoryWorkerResponse } from '../workers/repository';
+import { State } from './index';
 import { RepositoryWorkerActions } from './workerActions/repository';
 
 export type WorkerDispatcher<WorkerActions extends FSAction> = (
@@ -10,7 +12,7 @@ export type WorkerResponse = RepositoryWorkerResponse;
 
 export function newWorkerDispatcher<WorkerActions extends FSAction>(
   worker: Worker,
-  dispatcher: Dispatch,
+  store: Store,
 ): WorkerDispatcher<WorkerActions> {
   worker.addEventListener('message', (message: MessageEvent) => {
     console.log('on message', message.data);
@@ -27,7 +29,7 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
     }
 
     res.payload.forEach((action) => {
-      dispatcher(action);
+      store.dispatch(action);
     });
   });
 
@@ -36,7 +38,32 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
   });
 
   return (action: WorkerActions) => {
-    worker.postMessage(withRequestId(action));
+    worker.postMessage(withConfig(withRequestId(action), store.getState));
+  };
+}
+
+export type WithConfig<T extends FSAction> = T & {
+  meta: { config: CkusroConfig };
+};
+
+export type WithRequestId<T extends FSAction> = T & {
+  meta: { requestId: number };
+};
+
+export type WorkerRequest<Action extends FSAction> = FSAction &
+  WithConfig<Action> &
+  WithRequestId<Action>;
+
+function withConfig<T extends FSAction>(
+  action: T,
+  getState: () => State,
+): WithConfig<T> {
+  return {
+    ...action,
+    meta: {
+      ...(action.meta || {}),
+      config: getState().config,
+    },
   };
 }
 

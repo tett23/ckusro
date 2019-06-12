@@ -11,5 +11,3 @@ type FSAction<Payload = any> = {
   error?: boolean;
   meta?: Object;
 };
-
-type WithRequestId<T extends FSAction> = T & { meta: { requestId: number } };

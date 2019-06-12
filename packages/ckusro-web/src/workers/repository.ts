@@ -1,6 +1,5 @@
 import ckusroCore, {
   CkusroConfig,
-  convertColorScheme,
   toInternalPath,
   url2RepoPath,
 } from '@ckusro/ckusro-core';
@@ -18,24 +17,17 @@ import {
   fetchObject,
   RepositoryWorkerActions,
 } from '../modules/workerActions/repository';
-
-const defaultConfig: CkusroConfig = {
-  base: '/repositories',
-  colorScheme: convertColorScheme({
-    main: 'B22E42',
-    accent: 'A4CE50',
-    text: '090C02',
-    background: 'DDE2C6',
-    base: 'BBC5AA',
-  }),
-};
+import { WithRequestId, WorkerRequest } from '../modules/workers';
 
 const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
 
 const CoreId = 'ckusro-web';
 const lfs = new LightningFs('ckusro-web');
 
-export type Handler = (payload: any) => Promise<HandlerResult>;
+export type Handler = (
+  config: CkusroConfig,
+  payload: any,
+) => Promise<HandlerResult>;
 export type HandlerResult = Actions[] | Error;
 export type RepositoryWorkerResponse = WithRequestId<
   FSAction<HandlerResult>
@@ -44,7 +36,7 @@ export type RepositoryWorkerResponse = WithRequestId<
 };
 
 self.addEventListener('message', async (e) => {
-  const action: WithRequestId<RepositoryWorkerActions> = e.data;
+  const action: WorkerRequest<RepositoryWorkerActions> = e.data;
   console.log(action);
 
   const handler = actionHandler(action);
@@ -53,7 +45,9 @@ self.addEventListener('message', async (e) => {
     return;
   }
 
-  const result = await handler(action.payload).catch((err: Error) => err);
+  const result = await handler(action.meta.config, action.payload).catch(
+    (err: Error) => err,
+  );
   if (result instanceof Error) {
     // TODO: wrap to error action
     console.log(result);
@@ -87,15 +81,16 @@ function actionHandler(action: RepositoryWorkerActions): Handler | null {
   }
 }
 
-async function cloneHandler({
-  url,
-}: PayloadType<ReturnType<typeof cloneRepository>>): Promise<HandlerResult> {
+async function cloneHandler(
+  config: CkusroConfig,
+  { url }: PayloadType<ReturnType<typeof cloneRepository>>,
+): Promise<HandlerResult> {
   const repoPath = url2RepoPath(url);
   if (repoPath instanceof Error) {
     return repoPath;
   }
 
-  const core = ckusroCore(defaultConfig, CoreId, lfs);
+  const core = ckusroCore(config, CoreId, lfs);
   const repo = await core.repositories.clone(url);
   if (repo instanceof Error) {
     return repo;
@@ -116,9 +111,10 @@ async function cloneHandler({
 }
 
 async function fetchObjectHandler(
+  config: CkusroConfig,
   oid: PayloadType<ReturnType<typeof fetchObject>>,
 ): Promise<HandlerResult> {
-  const core = ckusroCore(defaultConfig, CoreId, lfs);
+  const core = ckusroCore(config, CoreId, lfs);
   const object = await core.repositories.fetchObject(oid);
   if (object instanceof Error) {
     return object;
@@ -127,8 +123,10 @@ async function fetchObjectHandler(
   return [addObject(object)];
 }
 
-async function fetchHeadOidsHandler(): Promise<HandlerResult> {
-  const core = ckusroCore(defaultConfig, CoreId, lfs);
+async function fetchHeadOidsHandler(
+  config: CkusroConfig,
+): Promise<HandlerResult> {
+  const core = ckusroCore(config, CoreId, lfs);
   const heads = await core.repositories.headOids();
   if (heads instanceof Error) {
     return heads;
