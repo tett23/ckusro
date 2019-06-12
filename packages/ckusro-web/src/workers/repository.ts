@@ -1,5 +1,6 @@
 import ckusroCore, {
   CkusroConfig,
+  convertColorScheme,
   toInternalPath,
   url2RepoPath,
 } from '@ckusro/ckusro-core';
@@ -20,6 +21,13 @@ import {
 
 const defaultConfig: CkusroConfig = {
   base: '/repositories',
+  colorScheme: convertColorScheme({
+    main: 'B22E42',
+    accent: 'A4CE50',
+    text: '090C02',
+    background: 'DDE2C6',
+    base: 'BBC5AA',
+  }),
 };
 
 const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
