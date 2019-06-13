@@ -1,6 +1,7 @@
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
 import { AppRegistry } from 'react-native';
 import App from './components/App';
-// import './index.css';
 import * as serviceWorker from './serviceWorker';
 
 // If you want your app to work offline and load faster, you can change
@@ -14,3 +15,5 @@ AppRegistry.registerComponent('App', () => App);
 AppRegistry.runApplication('App', {
   rootTag: document.getElementById('root'),
 });
+
+library.add(fas);
