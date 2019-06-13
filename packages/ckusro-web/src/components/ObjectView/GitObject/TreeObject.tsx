@@ -1,10 +1,10 @@
-import { TreeEntry, TreeObject } from '@ckusro/ckusro-core';
+import { TreeEntry as TreeEntryType, TreeObject as TreeObjectType } from '@ckusro/ckusro-core';
 import React from 'react';
 import { Text, View } from 'react-native';
 import ObjectLink from '../ObjectLink';
 
 export type TreeObjectProps = {
-  object: TreeObject;
+  object: TreeObjectType;
 };
 
 export default function TreeObject({ object }: TreeObjectProps) {
@@ -21,7 +21,7 @@ export default function TreeObject({ object }: TreeObjectProps) {
 }
 
 export type TreeEntryProps = {
-  treeEntry: TreeEntry;
+  treeEntry: TreeEntryType;
 };
 function TreeEntry({ treeEntry }: TreeEntryProps) {
   return (

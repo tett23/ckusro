@@ -1,10 +1,10 @@
-import { CommitObject } from '@ckusro/ckusro-core';
+import { CommitObject as CommitObjectType } from '@ckusro/ckusro-core';
 import React from 'react';
 import { Text, View } from 'react-native';
 import ObjectLink from '../ObjectLink';
 
 export type CommitObjectProps = {
-  object: CommitObject;
+  object: CommitObjectType;
 };
 
 export default function CommitObject({ object }: CommitObjectProps) {

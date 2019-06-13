@@ -1,10 +1,10 @@
-import { TreeEntry } from '@ckusro/ckusro-core';
+import { TreeEntry as TreeEntryType } from '@ckusro/ckusro-core';
 import React from 'react';
 import TreeEntryBlob from './TreeEntryBlob';
 import TreeEntryTree from './TreeEntryTree';
 
 export type TreeEntryProps = {
-  treeEntry: TreeEntry;
+  treeEntry: TreeEntryType;
 };
 
 export default function TreeEntry({ treeEntry }: TreeEntryProps) {

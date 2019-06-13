@@ -1,10 +1,10 @@
-import { BlobObject } from '@ckusro/ckusro-core';
+import { BlobObject as BlobObjectType } from '@ckusro/ckusro-core';
 import React from 'react';
 import { Text, View } from 'react-native';
 import ObjectLink from '../ObjectLink';
 
 export type BlobObjectProps = {
-  object: BlobObject;
+  object: BlobObjectType;
 };
 
 export default function BlobObject({ object }: BlobObjectProps) {

@@ -2,13 +2,13 @@ import { CommitObject } from '@ckusro/ckusro-core';
 import React from 'react';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import { View } from 'react-native';
-import { Repository } from '../../../models/Repository';
+import { Repository as RepositoryType } from '../../../models/Repository';
 import FetchObject from '../../FetchObject';
 import ObjectLink from '../../ObjectView/ObjectLink';
 import TreeObject from '../GitObject/TreeObject';
 
 export type RepositoryProps = {
-  repository: Repository;
+  repository: RepositoryType;
   commitObject: CommitObject | null;
   onClickClone: (url: string) => void;
 };
