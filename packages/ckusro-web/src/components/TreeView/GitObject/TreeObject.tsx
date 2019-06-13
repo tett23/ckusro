@@ -1,9 +1,11 @@
 import { TreeObject as TreeObjectType } from '@ckusro/ckusro-core';
 import React from 'react';
-import { Text, View } from 'react-native';
-import { connect } from 'react-redux';
-import { State } from '../../../modules';
+import { Text } from 'react-native';
+import { useStore } from 'react-redux';
+import { Store } from 'redux';
+import { Actions, State } from '../../../modules';
 import FetchObject from '../../FetchObject';
+import styled from '../../styled';
 import TreeEntry from '../TreeEntry';
 
 type OwnProps = {
@@ -24,18 +26,19 @@ export function TreeObject({ oid, treeObject }: ObjectLinkProps) {
     </FetchObject>
   ));
 
-  return <View>{entries}</View>;
+  return <Wrapper>{entries}</Wrapper>;
 }
 
-function mapStateToProps(
-  { domain: { objectManager } }: State,
-  { oid }: OwnProps,
-) {
-  const treeObject = objectManager[oid] as TreeObjectType;
-  return {
-    oid,
-    treeObject,
-  };
-}
+const Wrapper = styled.View`
+  margin-left: 1rem;
+`;
 
-export default connect(mapStateToProps)(TreeObject);
+export default function(ownProps: OwnProps) {
+  const store: Store<State, Actions> = useStore();
+  const {
+    domain: { objectManager },
+  } = store.getState();
+  const treeObject = objectManager[ownProps.oid] as TreeObjectType;
+
+  return <TreeObject {...ownProps} treeObject={treeObject} />;
+}

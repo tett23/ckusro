@@ -3,25 +3,38 @@ import { faFolder, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { updateCurrentOid } from '../../../modules/objectView';
 import FetchObject from '../../FetchObject';
-import ObjectLink from '../../ObjectView/ObjectLink';
 import TreeObject from '../GitObject/TreeObject';
 
-export type TreeEntryTreeProps = {
+type OwnProps = {
   treeEntry: TreeEntry;
 };
 
-export default function TreeEntryTree({
+type DispatchProps = {
+  onPress: (oid: string) => void;
+};
+
+export type TreeEntryTreeProps = OwnProps & DispatchProps;
+
+export function TreeEntryTree({
   treeEntry: { oid, path },
+  onPress,
 }: TreeEntryTreeProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <View>
       <FetchObject oid={oid}>
-        <Text onPress={() => setIsOpen(!isOpen)}>
+        <Text
+          onPress={() => {
+            setIsOpen(!isOpen);
+            onPress(oid);
+          }}
+        >
           <FolderIcon isOpen={isOpen} />
-          <ObjectLink oid={oid}>{path}</ObjectLink>
+          <Text>{path}</Text>
         </Text>
         {isOpen && <TreeObject oid={oid} />}
       </FetchObject>
@@ -34,9 +47,22 @@ function FolderIcon({ isOpen }: { isOpen: boolean }) {
 }
 
 function FolderOpened() {
-  return <FontAwesomeIcon icon={faFolderOpen} />;
+  return (
+    <FontAwesomeIcon icon={faFolderOpen} style={{ paddingRight: '.25rem' }} />
+  );
 }
 
 function FolderClosed() {
-  return <FontAwesomeIcon icon={faFolder} />;
+  return <FontAwesomeIcon icon={faFolder} style={{ paddingRight: '.25rem' }} />;
+}
+
+export default function(ownProps: OwnProps) {
+  const dispatch = useDispatch();
+
+  return (
+    <TreeEntryTree
+      {...ownProps}
+      onPress={(oid: string) => dispatch(updateCurrentOid(oid))}
+    />
+  );
 }

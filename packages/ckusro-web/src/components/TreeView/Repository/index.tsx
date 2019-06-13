@@ -27,7 +27,7 @@ export default function Repository({
       <ContextMenuTrigger id="some_unique_identifier">
         <View>
           <ObjectLink oid={commitObject.oid}>
-            {repository.name}({commitObject.oid || 'None'})
+            {repository.name}({commitObject.oid.slice(0, 7) || 'None'})
           </ObjectLink>
         </View>
       </ContextMenuTrigger>
