@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "rm -rf lib/ && parcel serve src/index.html -d lib --no-autoinstall --port 3001",
-    "build": "rm -rf lib/ && parcel build src/index.html -d lib --no-source-maps --no-autoinstall --no-minify",
+    "build": "rm -rf lib/ && parcel build src/index.html -d lib",
     "build-watch": "rm -rf lib/ && parcel watch src/index.html -d lib",
     "test": "jest",
     "test-watch": "jest --watchAll"
@@ -45,6 +45,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
     "@babel/polyfill": "^7.4.4",
     "@types/node": "^12.0.4",
     "babel-plugin-module-resolver": "^3.2.0",
@@ -59,18 +61,6 @@
   },
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   },
   "jest": {
     "moduleFileExtensions": [
@@ -97,7 +87,52 @@
     ],
     "testURL": "http://localhost/"
   },
-  "alias": {
-    "react-native": "react-native-web"
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "modules": "commonjs",
+          "targets": {
+            "node": "8.10",
+            "browsers": "> 0.25%, not dead"
+          },
+          "spec": true,
+          "loose": true,
+          "useBuiltIns": "usage",
+          "corejs": 3
+        }
+      ],
+      [
+        "@babel/preset-typescript",
+        {
+          "isTSX": true,
+          "allExtensions": true
+        }
+      ],
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      [
+        "module-resolver",
+        {
+          "alias": {
+            "^react-native$": "react-native-web"
+          }
+        }
+      ],
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        }
+      ],
+      [
+        "@babel/plugin-proposal-object-rest-spread",
+        {},
+        "foo"
+      ],
+      "babel-plugin-styled-components"
+    ]
   }
 }
