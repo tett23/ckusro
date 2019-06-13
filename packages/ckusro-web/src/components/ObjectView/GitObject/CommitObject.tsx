@@ -4,41 +4,43 @@ import { Text, View } from 'react-native';
 import ObjectLink from '../ObjectLink';
 
 export type CommitObjectProps = {
-  object: CommitObjectType;
+  gitObject: CommitObjectType;
 };
 
-export default function CommitObject({ object }: CommitObjectProps) {
+export default function CommitObject({ gitObject }: CommitObjectProps) {
   return (
     <View>
-      <Text>oid: {object.oid}</Text>
-      <Text>type: {object.type}</Text>
+      <Text>oid: {gitObject.oid}</Text>
+      <Text>type: {gitObject.type}</Text>
       <Text>
-        {object.content.author.name}
+        {gitObject.content.author.name}
         {'<'}
-        {object.content.author.email}
+        {gitObject.content.author.email}
         {'>'}
-        {object.content.author.timestamp}
+        {gitObject.content.author.timestamp}
       </Text>
       <Text>
-        {object.content.committer.name}
+        {gitObject.content.committer.name}
         {'<'}
-        {object.content.committer.email}
+        {gitObject.content.committer.email}
         {'>'}
-        {object.content.committer.timestamp}
+        {gitObject.content.committer.timestamp}
       </Text>
       <Text>
         tree:
-        <ObjectLink oid={object.content.tree}>{object.content.tree}</ObjectLink>
+        <ObjectLink oid={gitObject.content.tree}>
+          {gitObject.content.tree}
+        </ObjectLink>
       </Text>
       <Text>
         parent:
-        {object.content.parent.map((oid) => (
+        {gitObject.content.parent.map((oid) => (
           <ObjectLink key={oid} oid={oid}>
             {oid}
           </ObjectLink>
         ))}
       </Text>
-      <Text>message: {object.content.message}</Text>
+      <Text>message: {gitObject.content.message}</Text>
     </View>
   );
 }

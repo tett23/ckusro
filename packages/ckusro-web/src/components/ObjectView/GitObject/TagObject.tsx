@@ -4,29 +4,29 @@ import { Text, View } from 'react-native';
 import ObjectLink from '../ObjectLink';
 
 export type TagObjectProps = {
-  object: TagObject;
+  gitObject: TagObject;
 };
 
-export default function TagObject({ object }: TagObjectProps) {
+export default function TagObject({ gitObject }: TagObjectProps) {
   return (
     <View>
-      <Text>oid: {object.oid}</Text>
-      <Text>type: {object.type}</Text>
+      <Text>oid: {gitObject.oid}</Text>
+      <Text>type: {gitObject.type}</Text>
       <Text>
-        {object.content.tagger.name}
+        {gitObject.content.tagger.name}
         {'<'}
-        {object.content.tagger.email}
+        {gitObject.content.tagger.email}
         {'>'}
-        {object.content.tagger.timestamp}
+        {gitObject.content.tagger.timestamp}
       </Text>
-      <Text>tag: {object.content.tag}</Text>
+      <Text>tag: {gitObject.content.tag}</Text>
       <Text>
         object:
-        <ObjectLink oid={object.content.object}>
-          {object.content.object}
+        <ObjectLink oid={gitObject.content.object}>
+          {gitObject.content.object}
         </ObjectLink>
       </Text>
-      <Text>message: {object.content.message}</Text>
+      <Text>message: {gitObject.content.message}</Text>
     </View>
   );
 }

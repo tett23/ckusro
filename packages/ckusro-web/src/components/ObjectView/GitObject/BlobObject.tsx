@@ -4,17 +4,17 @@ import { Text, View } from 'react-native';
 import ObjectLink from '../ObjectLink';
 
 export type BlobObjectProps = {
-  object: BlobObjectType;
+  gitObject: BlobObjectType;
 };
 
-export default function BlobObject({ object }: BlobObjectProps) {
+export default function BlobObject({ gitObject }: BlobObjectProps) {
   return (
     <View>
       <Text>
-        oid: <ObjectLink oid={object.oid}>{object.oid}</ObjectLink>
+        oid: <ObjectLink oid={gitObject.oid}>{gitObject.oid}</ObjectLink>
       </Text>
-      <Text>type: {object.type}</Text>
-      <Text>content: {new TextDecoder().decode(object.content)}</Text>
+      <Text>type: {gitObject.type}</Text>
+      <Text>content: {new TextDecoder().decode(gitObject.content)}</Text>
     </View>
   );
 }

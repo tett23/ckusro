@@ -12,13 +12,13 @@ import TreeObject from './GitObject/TreeObject';
 
 type ObjectViewStates = {
   oid: string | null;
-  object: GitObject | null;
+  gitObject: GitObject | null;
 };
 
 export type ObjectViewProps = ObjectViewStates &
   ReturnType<typeof mapDispatchToProps>;
 
-export function ObjectView({ oid, object, fetchObject }: ObjectViewProps) {
+export function ObjectView({ oid, gitObject, fetchObject }: ObjectViewProps) {
   useEffect(() => {
     if (oid == null) {
       return;
@@ -30,11 +30,11 @@ export function ObjectView({ oid, object, fetchObject }: ObjectViewProps) {
   if (oid == null) {
     return <EmptyObjectView />;
   }
-  if (object == null) {
+  if (gitObject == null) {
     return <ObjectNotFound oid={oid} />;
   }
 
-  return <GitObjectView object={object} />;
+  return <GitObjectView gitObject={gitObject} />;
 }
 
 function EmptyObjectView() {
@@ -58,19 +58,19 @@ function ObjectNotFound({ oid }: ObjectNotFoundProps) {
 }
 
 type GitObjectViewProps = {
-  object: GitObject;
+  gitObject: GitObject;
 };
 
-function GitObjectView({ object }: GitObjectViewProps) {
-  switch (object.type) {
+function GitObjectView({ gitObject }: GitObjectViewProps) {
+  switch (gitObject.type) {
     case 'commit':
-      return <CommitObject object={object} />;
+      return <CommitObject gitObject={gitObject} />;
     case 'tree':
-      return <TreeObject object={object} />;
+      return <TreeObject gitObject={gitObject} />;
     case 'blob':
-      return <BlobObject object={object} />;
+      return <BlobObject gitObject={gitObject} />;
     case 'tag':
-      return <TagObject object={object} />;
+      return <TagObject gitObject={gitObject} />;
   }
 }
 
@@ -80,7 +80,7 @@ function mapStateToProps({
 }: State): ObjectViewStates {
   return {
     oid: currentOid,
-    object: currentOid == null ? null : objectManager[currentOid],
+    gitObject: currentOid == null ? null : objectManager[currentOid],
   };
 }
 
