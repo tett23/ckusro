@@ -3,7 +3,7 @@ import React from 'react';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import { View } from 'react-native';
 import { Repository as RepositoryType } from '../../../models/Repository';
-import ObjectLink from '../../ObjectView/ObjectLink';
+import ObjectLink from '../../shared/ObjectLinkText';
 import TreeObject from '../GitObject/TreeObject';
 
 export type RepositoryProps = {

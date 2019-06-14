@@ -4,7 +4,7 @@ import {
 } from '@ckusro/ckusro-core';
 import React from 'react';
 import { Text, View } from 'react-native';
-import ObjectLink from '../ObjectLink';
+import ObjectLink from '../../shared/ObjectLinkText';
 
 export type TreeObjectProps = {
   gitObject: TreeObjectType;

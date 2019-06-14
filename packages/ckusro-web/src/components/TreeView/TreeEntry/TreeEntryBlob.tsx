@@ -1,7 +1,7 @@
 import { TreeEntry } from '@ckusro/ckusro-core';
 import React from 'react';
 import { View } from 'react-native';
-import ObjectLink from '../../ObjectView/ObjectLink';
+import ObjectLink from '../../shared/ObjectLinkText';
 
 export type TreeEntryBlobProps = {
   treeEntry: TreeEntry;
