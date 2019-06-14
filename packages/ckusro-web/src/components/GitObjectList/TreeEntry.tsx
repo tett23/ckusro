@@ -13,7 +13,7 @@ export default function TreeEntry({
 }: TreeEntryProps) {
   switch (type) {
     case 'tree':
-      return <TreeObject oid={oid} />;
+      return <TreeObject oid={oid} path={path} />;
     case 'blob':
       return <BlobObject oid={oid} path={path} />;
     case 'commit':

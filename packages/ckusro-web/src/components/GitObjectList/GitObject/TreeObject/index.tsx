@@ -1,13 +1,14 @@
 import { TreeObject as TreeObjectType } from '@ckusro/ckusro-core';
 import React from 'react';
-import { View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { State } from '../../../modules';
-import FetchObject from '../../FetchObject';
-import TreeEntry from '../TreeEntry';
+import { State } from '../../../../modules';
+import FetchObject from '../../../FetchObject';
+import TreeEntry from '../../TreeEntry';
+import TreeName from './TreeName';
 
 type OwnProps = {
   oid: string;
+  path: string;
 };
 
 type StateProps = {
@@ -16,7 +17,7 @@ type StateProps = {
 
 export type TreeObjectProps = OwnProps & StateProps;
 
-export function TreeObject({ treeObject }: TreeObjectProps) {
+export function TreeObject({ treeObject, path }: TreeObjectProps) {
   if (treeObject == null) {
     return null;
   }
@@ -25,7 +26,12 @@ export function TreeObject({ treeObject }: TreeObjectProps) {
     <TreeEntry key={item.oid + item.path} treeEntry={item} />
   ));
 
-  return <View>{entries}</View>;
+  return (
+    <>
+      <TreeName oid={treeObject.oid} name={path} />
+      {entries}
+    </>
+  );
 }
 
 export default function(ownProps: OwnProps) {

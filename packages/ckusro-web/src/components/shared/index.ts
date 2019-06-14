@@ -54,3 +54,13 @@ export const SmallAndMutedText = styled(Text)`
 export const BoldText = styled(Text)`
   font-weight: bold;
 `;
+
+export const View = styled.View``;
+
+export const borderBottom = css`
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: ${(props: StyledProps) => {
+    return `#${props.theme.colors.base.toString(16)}`;
+  }};
+`;

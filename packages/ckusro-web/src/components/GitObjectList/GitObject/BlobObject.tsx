@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../../../modules';
 import { updateCurrentOid } from '../../../modules/objectView';
 import FetchObject from '../../FetchObject';
-import { BoldText, SmallAndMutedText } from '../../shared';
-import styled, { StyledProps } from '../../styled';
+import { BoldText, borderBottom, SmallAndMutedText } from '../../shared';
+import styled from '../../styled';
 
 type OwnProps = {
   oid: string;
@@ -51,11 +51,7 @@ const ContentPreview = styled(SmallAndMutedText)`
 
 const Wrapper = styled.View`
   padding: 0.75rem;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  border-bottom-color: ${(props: StyledProps) => {
-    return `#${props.theme.colors.base.toString(16)}`;
-  }};
+  ${borderBottom}
 `;
 
 export default function(ownProps: OwnProps) {
