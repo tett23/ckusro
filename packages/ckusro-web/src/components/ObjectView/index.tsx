@@ -1,37 +1,21 @@
 import { GitObject } from '@ckusro/ckusro-core';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Text, View } from 'react-native';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { Actions, State } from '../../modules';
-import { fetchObject } from '../../modules/thunkActions';
+import { useSelector } from 'react-redux';
+import {  State } from '../../modules';
+import FetchObject from '../FetchObject';
 import BlobObject from './GitObject/BlobObject';
 import CommitObject from './GitObject/CommitObject';
 import TagObject from './GitObject/TagObject';
 import TreeObject from './GitObject/TreeObject';
 
-type ObjectViewStates = {
-  oid: string | null;
+export type ObjectViewProps = {
   gitObject: GitObject | null;
 };
 
-export type ObjectViewProps = ObjectViewStates &
-  ReturnType<typeof mapDispatchToProps>;
-
-export function ObjectView({ oid, gitObject, fetchObject }: ObjectViewProps) {
-  useEffect(() => {
-    if (oid == null) {
-      return;
-    }
-
-    fetchObject(oid);
-  }, [oid]);
-
-  if (oid == null) {
-    return <EmptyObjectView />;
-  }
+export function ObjectView({ gitObject }: ObjectViewProps) {
   if (gitObject == null) {
-    return <ObjectNotFound oid={oid} />;
+    return <EmptyObjectView />;
   }
 
   return <GitObjectView gitObject={gitObject} />;
@@ -41,18 +25,6 @@ function EmptyObjectView() {
   return (
     <View>
       <Text>EmptyObjectView</Text>
-    </View>
-  );
-}
-
-type ObjectNotFoundProps = {
-  oid: string;
-};
-
-function ObjectNotFound({ oid }: ObjectNotFoundProps) {
-  return (
-    <View>
-      <Text>ObjectNotFound. oid={oid}</Text>
     </View>
   );
 }
@@ -74,27 +46,18 @@ function GitObjectView({ gitObject }: GitObjectViewProps) {
   }
 }
 
-function mapStateToProps({
-  domain: { objectManager },
-  objectView: { currentOid },
-}: State): ObjectViewStates {
-  return {
-    oid: currentOid,
-    gitObject: currentOid == null ? null : objectManager[currentOid],
-  };
-}
-
-function mapDispatchToProps(
-  dispatch: ThunkDispatch<State, undefined, Actions>,
-) {
-  return {
-    fetchObject(oid: string) {
-      dispatch(fetchObject(oid));
+export default function() {
+  const { oid, gitObject } = useSelector(
+    ({ domain: { objectManager }, objectView: { currentOid } }: State) => {
+      return {
+        oid: currentOid,
+        gitObject: objectManager[currentOid || ''],
+      };
     },
-  };
-}
+  );
+  if (gitObject == null) {
+    return <FetchObject oid={oid} />;
+  }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ObjectView);
+  return <ObjectView gitObject={gitObject} />;
+}
