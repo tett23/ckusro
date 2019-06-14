@@ -14,7 +14,7 @@ type OwnProps = {
 };
 
 type StateProps = {
-  blobObject: BlobObjectType | null;
+  blobObject: BlobObjectType;
 };
 
 type DispatchProps = {
@@ -65,6 +65,10 @@ export default function(ownProps: OwnProps) {
   const gitObject = objectManager[ownProps.oid] as BlobObjectType;
   const dispatch = useDispatch();
   const onPress = () => dispatch(updateCurrentOid(ownProps.oid));
+
+  if (gitObject == null) {
+    return <FetchObject oid={ownProps.oid} />;
+  }
 
   return (
     <FetchObject oid={ownProps.oid}>

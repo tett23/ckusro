@@ -4,7 +4,7 @@ import { fetchObject } from '../modules/thunkActions';
 
 type OwnProps = {
   oid: string | null;
-  children: ReactNode;
+  children?: ReactNode;
 };
 
 export type FetchObjectProps = OwnProps;

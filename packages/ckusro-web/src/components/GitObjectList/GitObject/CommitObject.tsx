@@ -9,7 +9,7 @@ type OwnProps = {
   oid: string;
 };
 type StateProps = {
-  commitObject: CommitObjectType | null;
+  commitObject: CommitObjectType;
 };
 
 export type CommitObjectProps = OwnProps & StateProps;
@@ -33,6 +33,10 @@ export default function(ownProps: OwnProps) {
     (state: State) => state.domain.objectManager,
   );
   const gitObject = objectManager[ownProps.oid] as CommitObjectType;
+
+  if (gitObject == null) {
+    return <FetchObject oid={ownProps.oid} />;
+  }
 
   return (
     <FetchObject oid={ownProps.oid}>

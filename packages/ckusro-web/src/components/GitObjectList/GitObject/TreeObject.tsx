@@ -11,7 +11,7 @@ type OwnProps = {
 };
 
 type StateProps = {
-  treeObject: TreeObjectType | null;
+  treeObject: TreeObjectType;
 };
 
 export type TreeObjectProps = OwnProps & StateProps;
@@ -33,6 +33,9 @@ export default function(ownProps: OwnProps) {
     (state: State) => state.domain.objectManager,
   );
   const gitObject = objectManager[ownProps.oid] as TreeObjectType;
+  if (gitObject == null) {
+    return <FetchObject oid={ownProps.oid} />;
+  }
 
   return (
     <FetchObject oid={ownProps.oid}>
