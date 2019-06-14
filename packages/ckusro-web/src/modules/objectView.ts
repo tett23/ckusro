@@ -1,3 +1,5 @@
+import { SharedActions, UpdateCurrentOid } from './actions/shared';
+
 export type ObjectViewState = {
   currentOid: string | null;
 };
@@ -7,16 +9,8 @@ export function initialObjectViewState(): ObjectViewState {
     currentOid: null,
   };
 }
-const UpdateCurrentOid = 'ObjectView/UpdateCurrentOid' as const;
 
-export function updateCurrentOid(oid: string | null) {
-  return {
-    type: UpdateCurrentOid,
-    payload: oid,
-  };
-}
-
-export type ObjectViewActions = ReturnType<typeof updateCurrentOid>;
+export type ObjectViewActions = SharedActions;
 
 export function objectViewReducer(
   state: ObjectViewState = initialObjectViewState(),

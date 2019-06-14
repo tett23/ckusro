@@ -34,10 +34,12 @@ const Wrapper = styled.View`
 export default function() {
   const { objectManager, currentOid } = useSelector((state: State) => ({
     objectManager: state.domain.objectManager,
-    currentOid: state.objectView.currentOid,
+    currentOid: state.gitObjectList.currentOid,
   }));
-
   const gitObject = currentOid == null ? null : objectManager[currentOid];
+  if (gitObject == null) {
+    return <FetchObject oid={currentOid} />;
+  }
 
   return (
     <FetchObject oid={currentOid}>

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { updateCurrentOid } from '../../../modules/objectView';
+import { updateCurrentOid } from '../../../modules/thunkActions';
 import FetchObject from '../../FetchObject';
 import TreeObject from '../GitObject/TreeObject';
 

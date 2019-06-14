@@ -3,7 +3,7 @@ import React from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../../../modules';
-import { updateCurrentOid } from '../../../modules/objectView';
+import { updateCurrentOid } from '../../../modules/thunkActions';
 import FetchObject from '../../FetchObject';
 import { BoldText, borderBottom, SmallAndMutedText } from '../../shared';
 import styled from '../../styled';

@@ -15,6 +15,11 @@ import {
   initialDomainState,
 } from './domain';
 import {
+  GitObjectListActions,
+  gitObjectListReducer,
+  GitObjectListState,
+} from './gitObjectList';
+import {
   ObjectViewActions,
   objectViewReducer,
   ObjectViewState,
@@ -32,15 +37,21 @@ export type State = {
   domain: DomainState;
   config: ConfigState;
   objectView: ObjectViewState;
+  gitObjectList: GitObjectListState;
   workers: WorkersState;
 };
 
-export type Actions = DomainActions | WorkersActions | ObjectViewActions;
+export type Actions =
+  | DomainActions
+  | WorkersActions
+  | ObjectViewActions
+  | GitObjectListActions;
 
 export const reducers = combineReducers<State>({
   domain: domainReducer,
   config: configReducer,
   objectView: objectViewReducer,
+  gitObjectList: gitObjectListReducer,
   workers: workersReducer,
 });
 

@@ -4,7 +4,7 @@ import { Text } from 'react-native';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { Actions, State } from '../../modules';
-import { updateCurrentOid } from '../../modules/objectView';
+import { updateCurrentOid } from '../../modules/thunkActions';
 import { fetchObject } from '../../modules/thunkActions';
 
 type ObjectLinkOwnProps = {
@@ -27,6 +27,7 @@ export function ObjectLink({
     if (oid == null) {
       return;
     }
+
     fetchObject(oid);
   }, [oid]);
 
