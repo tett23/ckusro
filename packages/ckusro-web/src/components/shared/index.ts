@@ -12,7 +12,7 @@ function toRGBTriple(color: number): RGB {
   ];
 }
 
-function toCssColor(rgb: RGB | number, alpha?: number) {
+export function toCssColor(rgb: RGB | number, alpha?: number) {
   let triple: RGB;
   if (typeof rgb === 'number') {
     triple = toRGBTriple(rgb);
@@ -94,4 +94,9 @@ export const border = css`
   ${borderRight}
   ${borderBottom}
   ${borderLeft}
+`;
+
+export const drawer = css`
+  background-color: ${({ theme }: StyledProps) =>
+    toCssColor(theme.colors.base)};
 `;

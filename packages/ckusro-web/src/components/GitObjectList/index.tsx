@@ -28,8 +28,8 @@ export function GitObjectList({ gitObject }: GitObjectListProps) {
 
 const Wrapper = styled.View`
   overflow-y: scroll;
-  width: 20%;
-  flex-basis: 20%;
+  width: 20vw;
+  flex-basis: 20vw;
   ${borderRight};
   ${borderLeft};
 `;

@@ -8,6 +8,7 @@ import { Repository } from '../../models/Repository';
 import { Actions, State } from '../../modules';
 import { cloneRepository } from '../../modules/thunkActions';
 import FetchObject from '../FetchObject';
+import { drawer } from '../shared';
 import styled from '../styled';
 import RepositoryComponent from './Repository';
 
@@ -73,5 +74,10 @@ export default connect(
 )(TreeView);
 
 const Wrapper = styled.View`
+  ${drawer}
   overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 0.25rem 0.5rem;
+  width: 15vw;
+  flex-basis: 15vw;
 `;
