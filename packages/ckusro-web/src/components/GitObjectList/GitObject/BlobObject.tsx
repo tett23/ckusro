@@ -1,11 +1,10 @@
 import { BlobObject as BlobObjectType } from '@ckusro/ckusro-core';
 import React from 'react';
-import { TouchableWithoutFeedback } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { State } from '../../../modules';
-import { updateCurrentOid } from '../../../modules/thunkActions';
 import FetchObject from '../../FetchObject';
 import { BoldText, borderBottom, SmallAndMutedText } from '../../shared';
+import ObjectLinkView from '../../shared/ObjectLinkView';
 import styled from '../../styled';
 
 type OwnProps = {
@@ -17,13 +16,9 @@ type StateProps = {
   blobObject: BlobObjectType;
 };
 
-type DispatchProps = {
-  onPress: () => void;
-};
+export type BlobObjectProps = OwnProps & StateProps;
 
-export type BlobObjectProps = OwnProps & StateProps & DispatchProps;
-
-export function BlobObject({ path, blobObject, onPress }: BlobObjectProps) {
+export function BlobObject({ oid, path, blobObject }: BlobObjectProps) {
   if (blobObject == null) {
     return null;
   }
@@ -31,12 +26,12 @@ export function BlobObject({ path, blobObject, onPress }: BlobObjectProps) {
   const headline = content.slice(0, 200).replace(/(\r\n|\r|\n)/g, ' ');
 
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
+    <ObjectLinkView oid={oid}>
       <Wrapper>
         <FileName>{path}</FileName>
         <ContentPreview>{headline}</ContentPreview>
       </Wrapper>
-    </TouchableWithoutFeedback>
+    </ObjectLinkView>
   );
 }
 
@@ -59,8 +54,6 @@ export default function(ownProps: OwnProps) {
     (state: State) => state.domain.objectManager,
   );
   const gitObject = objectManager[ownProps.oid] as BlobObjectType;
-  const dispatch = useDispatch();
-  const onPress = () => dispatch(updateCurrentOid(ownProps.oid));
 
   if (gitObject == null) {
     return <FetchObject oid={ownProps.oid} />;
@@ -68,7 +61,7 @@ export default function(ownProps: OwnProps) {
 
   return (
     <FetchObject oid={ownProps.oid}>
-      <BlobObject {...ownProps} blobObject={gitObject} onPress={onPress} />
+      <BlobObject {...ownProps} blobObject={gitObject} />
     </FetchObject>
   );
 }

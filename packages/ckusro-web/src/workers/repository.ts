@@ -37,7 +37,6 @@ export type RepositoryWorkerResponse = WithRequestId<
 
 self.addEventListener('message', async (e) => {
   const action: WorkerRequest<RepositoryWorkerActions> = e.data;
-  console.log(action);
 
   const handler = actionHandler(action);
   if (handler == null) {

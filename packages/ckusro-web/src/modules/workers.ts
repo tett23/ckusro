@@ -15,7 +15,6 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
   store: Store,
 ): WorkerDispatcher<WorkerActions> {
   worker.addEventListener('message', (message: MessageEvent) => {
-    console.log('on message', message.data);
     const res: WorkerResponse = message.data;
 
     if (res.payload == null) {

@@ -1,6 +1,6 @@
 import React from 'react';
-import ObjectLink from '../../../ObjectView/ObjectLink';
 import { borderBottom, SmallAndMutedText, View } from '../../../shared';
+import ObjectLinkView from '../../../shared/ObjectLinkView';
 import styled from '../../../styled';
 
 export type TreeNameProps = {
@@ -11,15 +11,20 @@ export type TreeNameProps = {
 export default function TreeName({ oid, name }: TreeNameProps) {
   return (
     <TreeNameWrapper>
-      <ObjectLink oid={oid}>
-        <SmallAndMutedText>{name}</SmallAndMutedText>
-      </ObjectLink>
+      <ObjectLinkView oid={oid}>
+        <CenterizedText>{name}</CenterizedText>
+      </ObjectLinkView>
     </TreeNameWrapper>
   );
 }
 
+const CenterizedText = styled(SmallAndMutedText)`
+  text-align: center;
+`;
+
 const TreeNameWrapper = styled(View)`
   ${borderBottom};
-  text-align: center;
+  justify-content: center;
+  align-items: center;
   padding: 0.1rem;
 `;
