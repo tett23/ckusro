@@ -2,6 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import initializeStore from '../modules';
 import { fetchHeadOids } from '../modules/thunkActions';
+import GitObjectList from './GitObjectList';
 import ObjectView from './ObjectView';
 import styled, { StyledProps, ThemeProvider } from './styled';
 import TreeView from './TreeView';
@@ -16,6 +17,7 @@ export default function App() {
       <ThemeProvider theme={{ colors: store.getState().config.colorScheme }}>
         <AppBackground>
           <TreeView />
+          <GitObjectList />
           <ObjectView />
         </AppBackground>
       </ThemeProvider>
