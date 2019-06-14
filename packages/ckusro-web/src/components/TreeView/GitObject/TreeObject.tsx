@@ -40,5 +40,9 @@ export default function(ownProps: OwnProps) {
   } = store.getState();
   const treeObject = objectManager[ownProps.oid] as TreeObjectType;
 
-  return <TreeObject {...ownProps} treeObject={treeObject} />;
+  return (
+    <FetchObject oid={ownProps.oid}>
+      <TreeObject {...ownProps} treeObject={treeObject} />
+    </FetchObject>
+  );
 }

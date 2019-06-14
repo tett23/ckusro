@@ -8,7 +8,7 @@ import { updateCurrentOid } from '../../modules/objectView';
 import { fetchObject } from '../../modules/thunkActions';
 
 type ObjectLinkOwnProps = {
-  oid: string;
+  oid: string | null;
   treeEntry?: TreeEntry | null;
   children: ReactNode;
 };
@@ -24,6 +24,9 @@ export function ObjectLink({
   updateCurrentOid,
 }: ObjectLinkProps) {
   useEffect(() => {
+    if (oid == null) {
+      return;
+    }
     fetchObject(oid);
   }, [oid]);
 

@@ -3,7 +3,6 @@ import React from 'react';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import { View } from 'react-native';
 import { Repository as RepositoryType } from '../../../models/Repository';
-import FetchObject from '../../FetchObject';
 import ObjectLink from '../../ObjectView/ObjectLink';
 import TreeObject from '../GitObject/TreeObject';
 
@@ -18,26 +17,41 @@ export default function Repository({
   commitObject,
   onClickClone,
 }: RepositoryProps) {
-  if (commitObject == null) {
-    return null;
-  }
+  const treeOid = commitObject == null ? null : commitObject.content.tree;
+  return (
+    <>
+      <RepositoryName
+        repository={repository}
+        commitObject={commitObject}
+        onClickClone={onClickClone}
+      />
+      {treeOid && <TreeObject oid={treeOid} />}
+    </>
+  );
+}
+
+type RepositoryNameProps = {
+  repository: RepositoryType;
+  commitObject: CommitObject | null;
+  onClickClone: (url: string) => void;
+};
+
+function RepositoryName({
+  repository,
+  commitObject,
+  onClickClone,
+}: RepositoryNameProps) {
+  const oid = commitObject == null ? null : commitObject.oid;
 
   return (
     <>
       <ContextMenuTrigger id="some_unique_identifier">
         <View>
-          <ObjectLink oid={commitObject.oid}>
-            {repository.name}({commitObject.oid.slice(0, 7) || 'None'})
+          <ObjectLink oid={oid}>
+            {repository.name}({(oid || 'None').slice(0, 7)})
           </ObjectLink>
         </View>
       </ContextMenuTrigger>
-
-      <View>
-        <FetchObject oid={commitObject.content.tree}>
-          <TreeObject oid={commitObject.content.tree} />
-        </FetchObject>
-      </View>
-
       <ContextMenu id="some_unique_identifier">
         <MenuItem onClick={() => onClickClone(repository.url)}>Clone</MenuItem>
       </ContextMenu>
