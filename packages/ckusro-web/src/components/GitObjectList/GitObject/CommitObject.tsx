@@ -1,4 +1,7 @@
-import { CommitObject as CommitObjectType } from '@ckusro/ckusro-core';
+import {
+  CommitObject as CommitObjectType,
+  GitObject,
+} from '@ckusro/ckusro-core';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -29,10 +32,9 @@ export function CommitObject({ oid, commitObject }: CommitObjectProps) {
 }
 
 export default function(ownProps: OwnProps) {
-  const objectManager = useSelector(
-    (state: State) => state.domain.objectManager,
+  const gitObject: GitObject | null = useSelector(
+    (state: State) => state.domain.objectManager[ownProps.oid],
   );
-  const gitObject = objectManager[ownProps.oid] as CommitObjectType;
 
   if (gitObject == null) {
     return <FetchObject oid={ownProps.oid} />;
@@ -40,7 +42,10 @@ export default function(ownProps: OwnProps) {
 
   return (
     <FetchObject oid={ownProps.oid}>
-      <CommitObject {...ownProps} commitObject={gitObject} />
+      <CommitObject
+        {...ownProps}
+        commitObject={gitObject as CommitObjectType}
+      />
     </FetchObject>
   );
 }

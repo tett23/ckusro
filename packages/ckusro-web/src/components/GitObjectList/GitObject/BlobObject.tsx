@@ -1,4 +1,4 @@
-import { BlobObject as BlobObjectType } from '@ckusro/ckusro-core';
+import { BlobObject as BlobObjectType, GitObject } from '@ckusro/ckusro-core';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { State } from '../../../modules';
@@ -45,15 +45,14 @@ const ContentPreview = styled(SmallAndMutedText)`
 `;
 
 const Wrapper = styled.View`
-  padding: 0.75rem;
+  padding: 0.5rem 0.75rem 0.5rem 0.75rem;
   ${borderBottom}
 `;
 
 export default function(ownProps: OwnProps) {
-  const objectManager = useSelector(
-    (state: State) => state.domain.objectManager,
+  const gitObject: GitObject | null = useSelector(
+    (state: State) => state.domain.objectManager[ownProps.oid],
   );
-  const gitObject = objectManager[ownProps.oid] as BlobObjectType;
 
   if (gitObject == null) {
     return <FetchObject oid={ownProps.oid} />;
@@ -61,7 +60,7 @@ export default function(ownProps: OwnProps) {
 
   return (
     <FetchObject oid={ownProps.oid}>
-      <BlobObject {...ownProps} blobObject={gitObject} />
+      <BlobObject {...ownProps} blobObject={gitObject as BlobObjectType} />
     </FetchObject>
   );
 }

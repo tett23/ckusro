@@ -1,4 +1,4 @@
-import { TreeObject as TreeObjectType } from '@ckusro/ckusro-core';
+import { GitObject, TreeObject as TreeObjectType } from '@ckusro/ckusro-core';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { State } from '../../../../modules';
@@ -35,17 +35,16 @@ export function TreeObject({ treeObject, path }: TreeObjectProps) {
 }
 
 export default function(ownProps: OwnProps) {
-  const objectManager = useSelector(
-    (state: State) => state.domain.objectManager,
+  const gitObject: GitObject | null = useSelector(
+    (state: State) => state.domain.objectManager[ownProps.oid],
   );
-  const gitObject = objectManager[ownProps.oid] as TreeObjectType;
   if (gitObject == null) {
     return <FetchObject oid={ownProps.oid} />;
   }
 
   return (
     <FetchObject oid={ownProps.oid}>
-      <TreeObject {...ownProps} treeObject={gitObject} />
+      <TreeObject {...ownProps} treeObject={gitObject as TreeObjectType} />
     </FetchObject>
   );
 }

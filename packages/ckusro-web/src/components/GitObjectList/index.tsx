@@ -7,15 +7,15 @@ import { borderLeft, borderRight } from '../shared';
 import styled from '../styled';
 import TreeEntry from './TreeEntry';
 
-type StateProps = {
-  oid: string | null;
-  gitObject: GitObject | null;
+type OwnProps = {
+  oid: string;
+  gitObject: GitObject;
 };
 
-export type GitObjectListProps = StateProps;
+export type GitObjectListProps = OwnProps;
 
-export function GitObjectList({ oid, gitObject }: GitObjectListProps) {
-  if (oid == null || gitObject == null || gitObject.type !== 'tree') {
+export function GitObjectList({ gitObject }: GitObjectListProps) {
+  if (gitObject.type !== 'tree') {
     return <Wrapper />;
   }
 
@@ -40,8 +40,12 @@ export default function() {
     currentOid: state.gitObjectList.currentOid,
   }));
   const gitObject = currentOid == null ? null : objectManager[currentOid];
-  if (gitObject == null) {
-    return <FetchObject oid={currentOid} />;
+  if (currentOid == null || gitObject == null) {
+    return (
+      <FetchObject oid={currentOid}>
+        <Wrapper />
+      </FetchObject>
+    );
   }
 
   return (
