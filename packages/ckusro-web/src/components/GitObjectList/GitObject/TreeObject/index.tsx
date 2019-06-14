@@ -42,9 +42,5 @@ export default function(ownProps: OwnProps) {
     return <FetchObject oid={ownProps.oid} />;
   }
 
-  return (
-    <FetchObject oid={ownProps.oid}>
-      <TreeObject {...ownProps} treeObject={gitObject as TreeObjectType} />
-    </FetchObject>
-  );
+  return <TreeObject {...ownProps} treeObject={gitObject as TreeObjectType} />;
 }

@@ -41,11 +41,6 @@ export default function(ownProps: OwnProps) {
   }
 
   return (
-    <FetchObject oid={ownProps.oid}>
-      <CommitObject
-        {...ownProps}
-        commitObject={gitObject as CommitObjectType}
-      />
-    </FetchObject>
+    <CommitObject {...ownProps} commitObject={gitObject as CommitObjectType} />
   );
 }

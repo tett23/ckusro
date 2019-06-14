@@ -58,9 +58,5 @@ export default function(ownProps: OwnProps) {
     return <FetchObject oid={ownProps.oid} />;
   }
 
-  return (
-    <FetchObject oid={ownProps.oid}>
-      <BlobObject {...ownProps} blobObject={gitObject as BlobObjectType} />
-    </FetchObject>
-  );
+  return <BlobObject {...ownProps} blobObject={gitObject as BlobObjectType} />;
 }
