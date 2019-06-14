@@ -3,6 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { State } from '../../modules';
 import FetchObject from '../FetchObject';
+import { border, borderLeft, borderRight } from '../shared';
 import styled from '../styled';
 import TreeEntry from './TreeEntry';
 
@@ -29,6 +30,8 @@ const Wrapper = styled.View`
   overflow-y: scroll;
   width: 20%;
   flex-basis: 20%;
+  ${borderRight};
+  ${borderLeft};
 `;
 
 export default function() {

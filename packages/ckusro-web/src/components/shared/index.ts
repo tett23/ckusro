@@ -57,10 +57,41 @@ export const BoldText = styled(Text)`
 
 export const View = styled.View``;
 
+export const borderTop = css`
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: ${(props: StyledProps) => {
+    return `#${props.theme.colors.base.toString(16)}`;
+  }};
+`;
+
+export const borderRight = css`
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-right-color: ${(props: StyledProps) => {
+    return `#${props.theme.colors.base.toString(16)}`;
+  }};
+`;
+
 export const borderBottom = css`
   border-bottom-style: solid;
   border-bottom-width: 1px;
   border-bottom-color: ${(props: StyledProps) => {
     return `#${props.theme.colors.base.toString(16)}`;
   }};
+`;
+
+export const borderLeft = css`
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-left-color: ${(props: StyledProps) => {
+    return `#${props.theme.colors.base.toString(16)}`;
+  }};
+`;
+
+export const border = css`
+  ${borderTop}
+  ${borderRight}
+  ${borderBottom}
+  ${borderLeft}
 `;
