@@ -19,8 +19,13 @@ export function cloneRepository(url: string) {
 export function fetchObject(oid: string) {
   return async (_: Dispatch<Actions>, getState: () => State) => {
     const {
+      domain: { objectManager },
       workers: { repositoryWorkerDispatcher },
     } = getState();
+
+    if (objectManager[oid] != null) {
+      return;
+    }
 
     repositoryWorkerDispatcher(fetchObjectAction(oid));
   };
