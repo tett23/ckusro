@@ -1,7 +1,8 @@
+import console = require('console');
 import React from 'react';
 import { Hast, HastElement, HastText } from '../Hast';
 import { flowContentsNames, FlowContentsNames } from './elementTypes';
-import { Text, View } from './styles';
+import { markdownComponents, MarkdownTheme } from './styles';
 
 export type HtmlComponents = { [c in FlowContentsNames]: HtmlComponent } & {
   text: TextComponent;
@@ -13,40 +14,40 @@ type HtmlComponent = (props: HtmlComponentProps) => JSX.Element;
 type TextComponentProps = { value: string; key: string };
 type TextComponent = (props: TextComponentProps) => JSX.Element;
 
-export function HtmlComponents(): HtmlComponents {
-  const defaultComponent = ({ children, key }: HtmlComponentProps) => (
-    <View key={key}>{map(components as any, children)}</View>
-  );
-  const components = {
-    text: ({ value, key }: TextComponentProps) => (
-      <Text key={key}>{value}</Text>
-    ),
+export function HtmlComponents(theme: MarkdownTheme): HtmlComponents {
+  const components = markdownComponents(theme);
+
+  const textComponent = {
+    text: components.text,
   };
 
   return flowContentsNames.reduce(
     (acc: HtmlComponents, item: FlowContentsNames) => {
-      acc[item] = defaultComponent;
+      const c = (components as any)[item];
+      acc[item] = c == null ? components.text : c;
 
       return acc;
     },
-    components as HtmlComponents,
+    textComponent as HtmlComponents,
   );
 }
 
-export function render(hast: Hast): JSX.Element | null {
-  const components = HtmlComponents();
+export function render(hast: Hast, theme: MarkdownTheme): JSX.Element | null {
+  const components = HtmlComponents(theme);
+  console.log(hast);
 
-  return renderNode(components, hast, 'root');
+  return renderNode(components, components.text, hast, 'root');
 }
 
 function renderNode(
   components: HtmlComponents,
+  Component: any,
   node: Hast,
   key: string,
 ): JSX.Element | null {
   switch (node.type) {
     case 'root':
-      return <>{map(components, node.children)}</>;
+      return <>{map(components, components.text, node.children)}</>;
     case 'element':
       return renderElement(components, node, key);
     case 'doctype':
@@ -54,7 +55,7 @@ function renderNode(
     case 'comment':
       return null;
     case 'text':
-      return renderText(components, node, key);
+      return renderText(Component, node, key);
     default:
       throw new Error('');
   }
@@ -65,20 +66,28 @@ function renderElement(
   node: HastElement,
   key: string,
 ) {
-  const component = components[node.tagName];
-  if (component == null) {
+  const TextComponent = components[node.tagName];
+  if (TextComponent == null) {
     throw new Error('');
   }
 
-  return component({ ...node, key });
+  return (
+    <React.Fragment key={key}>
+      {map(components, TextComponent, node.children)}
+    </React.Fragment>
+  );
 }
 
-function renderText(components: HtmlComponents, node: HastText, key: string) {
-  return components.text({ value: node.value, key });
+function renderText(Component: any, node: HastText, key: string) {
+  if (node.value.trim().length === 0) {
+    return null;
+  }
+
+  return <Component key={key} children={node.value.trim()} />;
 }
 
-function map(components: HtmlComponents, nodes: Hast[]) {
+function map(components: HtmlComponents, Component: any, nodes: Hast[]) {
   return nodes.map((node, i) => {
-    return renderNode(components, node, `${i}`);
+    return renderNode(components, Component, node, `${i}`);
   });
 }

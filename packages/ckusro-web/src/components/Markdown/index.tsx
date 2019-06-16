@@ -15,7 +15,7 @@ export function Markdown({ ast }: MarkdownProps) {
     return null;
   }
 
-  const md = render(ast);
+  const md = render(ast, {});
 
   return <View>{md}</View>;
 }
