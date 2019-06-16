@@ -1,28 +1,38 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import unified from 'unified';
-import { Node } from 'unist';
 import { State } from '../../modules';
 import { parseMarkdown } from '../../modules/thunkActions';
 import { View } from '../shared';
+import { Hast } from './Hast';
+import { render } from './HtmlComponents';
 
 export type MarkdownProps = {
-  ast: Node;
+  ast: Hast;
 };
 
 export function Markdown({ ast }: MarkdownProps) {
-  return <View />;
+  if (ast == null) {
+    return null;
+  }
+
+  const md = render(ast);
+
+  return <View>{md}</View>;
 }
 
-export default function({ text }: { text: string }) {
+export default function({ oid, text }: { oid: string; text: string }) {
   const { ast } = useSelector(({ objectView: { currentAst } }: State) => {
     return {
       ast: currentAst,
     };
   });
   const dispatch = useDispatch();
-  if (ast == null) {
+
+  useEffect(() => {
     dispatch(parseMarkdown(text));
+  }, [oid, text]);
+
+  if (ast == null) {
     return <View />;
   }
 

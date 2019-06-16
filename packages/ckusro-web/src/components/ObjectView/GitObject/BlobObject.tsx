@@ -18,7 +18,7 @@ export default function BlobObject({ gitObject }: BlobObjectProps) {
       </Text>
       <Text>type: {gitObject.type}</Text>
       <Text>content: {content}</Text>
-      <Markdown text={content} />
+      <Markdown oid={gitObject.oid} text={content} />
     </View>
   );
 }

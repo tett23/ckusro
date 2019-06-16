@@ -10,7 +10,7 @@ export default function buildAst(plugins: Plugins, content: string): Root {
   const parser = parserInstance(plugins);
 
   try {
-    return parser.parse(content) as Root;
+    return parser.runSync(parser.parse(content)) as Root;
   } catch (e) {
     throw e;
   }

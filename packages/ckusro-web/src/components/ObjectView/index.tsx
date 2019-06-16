@@ -36,6 +36,7 @@ function EmptyObjectView() {
 
 const Wrapper = styled(View)`
   padding: 2rem;
+  overflow-y: scroll;
 `;
 
 type GitObjectViewProps = {

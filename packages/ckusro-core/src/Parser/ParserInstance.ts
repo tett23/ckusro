@@ -1,5 +1,3 @@
-import React from 'react';
-import rehypeReact from 'rehype-react';
 import remarkBreaks from 'remark-breaks';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
@@ -21,7 +19,6 @@ export default function parserInstance(plugins: Plugins): ParserInstance {
 
   // @ts-ignore
   parser = parser.use(remarkRehype, null, jsxHandlers(plugins.components));
-  parser = parser.use(rehypeReact, { createElement: React.createElement });
 
   return parser;
 }

@@ -6,13 +6,12 @@ Object {
     Object {
       "children": Array [
         Object {
-          "position": Position {
+          "position": Object {
             "end": Object {
               "column": 5,
               "line": 1,
               "offset": 4,
             },
-            "indent": Array [],
             "start": Object {
               "column": 1,
               "line": 1,
@@ -23,20 +22,21 @@ Object {
           "value": "test",
         },
       ],
-      "position": Position {
+      "position": Object {
         "end": Object {
           "column": 5,
           "line": 1,
           "offset": 4,
         },
-        "indent": Array [],
         "start": Object {
           "column": 1,
           "line": 1,
           "offset": 0,
         },
       },
-      "type": "paragraph",
+      "properties": Object {},
+      "tagName": "p",
+      "type": "element",
     },
   ],
   "position": Object {
