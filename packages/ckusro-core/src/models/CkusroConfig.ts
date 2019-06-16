@@ -3,6 +3,7 @@ import { Plugins } from './plugins';
 export type CkusroConfig = {
   base: string;
   coreId: string;
+  corsProxy: string;
   colorScheme: ColorScheme;
   plugins: Plugins;
 };

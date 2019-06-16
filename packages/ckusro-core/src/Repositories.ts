@@ -3,7 +3,7 @@ import * as Git from 'isomorphic-git';
 import { join } from 'path';
 import { CkusroConfig } from './models/CkusroConfig';
 import { GitObject } from './models/GitObject';
-import { RepoPath, toPath, url2RepoPath } from './models/RepoPath';
+import { gitDir, RepoPath, toPath, url2RepoPath } from './models/RepoPath';
 import {
   fetchObject as repositoryFetchObject,
   headOid,
@@ -17,6 +17,8 @@ export function repositories(config: CkusroConfig, fs: typeof FS) {
   return {
     clone: (url: string) => clone(config, url),
     allRepositories: () => allRepositories(config, fs),
+    fetchRepository: (repoPath: RepoPath) =>
+      fetchRepository(config, fs, repoPath),
     fetchObject: (oid: string) => fetchObject(config, fs, oid),
     headOids: () => headOids(config, fs),
   };
@@ -34,7 +36,7 @@ export async function clone(
   const result = await (async () => {
     await Git.clone({
       core: config.coreId,
-      corsProxy: 'https://cors.isomorphic-git.org',
+      corsProxy: config.corsProxy,
       dir: toPath(config.base, repoPath),
       url,
       singleBranch: true,
@@ -92,6 +94,21 @@ async function readdir(fs: typeof FS, path: string): Promise<string[] | Error> {
   return await (async () => fs.promises.readdir(path))().catch(
     (err: Error) => err,
   );
+}
+
+export async function fetchRepository(
+  config: CkusroConfig,
+  fs: typeof FS,
+  repoPath: RepoPath,
+): Promise<Repository | Error> {
+  const isExist = await fs.promises
+    .stat(gitDir(config.base, repoPath))
+    .catch((err: Error) => err);
+  if (isExist instanceof Error) {
+    return isExist;
+  }
+
+  return repository(config, repoPath);
 }
 
 export async function fetchObject(

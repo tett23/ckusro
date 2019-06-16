@@ -6,7 +6,7 @@ import {
   GitObject,
   TreeObject,
 } from './models/GitObject';
-import { gitDir, RepoPath } from './models/RepoPath';
+import { gitDir, RepoPath, toPath } from './models/RepoPath';
 
 export type Repository = ReturnType<typeof repository>;
 
@@ -16,6 +16,7 @@ export function repository(config: CkusroConfig, repoPath: RepoPath) {
     headCommitObject: () => headCommitObject(config, repoPath),
     headRootTree: () => headRootTree(config, repoPath),
     readTree: (oid: string) => readTree(config, repoPath, oid),
+    pull: () => pull(config, repoPath),
   };
 }
 
@@ -143,4 +144,20 @@ export async function fetchObject(
     default:
       return new Error('Invalid object type.');
   }
+}
+
+export async function pull(
+  config: CkusroConfig,
+  repoPath: RepoPath,
+): Promise<string | Error> {
+  const result = await (async () =>
+    Git.pull({
+      core: config.coreId,
+      dir: toPath(config.base, repoPath),
+    }))().catch((err: Error) => err);
+  if (result instanceof Error) {
+    return result;
+  }
+
+  return headOid(config, repoPath);
 }
