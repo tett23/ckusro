@@ -2,8 +2,9 @@ import { GitObject } from '@ckusro/ckusro-core';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import {  State } from '../../modules';
+import { State } from '../../modules';
 import FetchObject from '../FetchObject';
+import styled from '../styled';
 import BlobObject from './GitObject/BlobObject';
 import CommitObject from './GitObject/CommitObject';
 import TagObject from './GitObject/TagObject';
@@ -15,19 +16,27 @@ export type ObjectViewProps = {
 
 export function ObjectView({ gitObject }: ObjectViewProps) {
   if (gitObject == null) {
-    return <EmptyObjectView />;
+    return (
+      <Wrapper>
+        <EmptyObjectView />
+      </Wrapper>
+    );
   }
 
-  return <GitObjectView gitObject={gitObject} />;
+  return (
+    <Wrapper>
+      <GitObjectView gitObject={gitObject} />
+    </Wrapper>
+  );
 }
 
 function EmptyObjectView() {
-  return (
-    <View>
-      <Text>EmptyObjectView</Text>
-    </View>
-  );
+  return <Text>EmptyObjectView</Text>;
 }
+
+const Wrapper = styled(View)`
+  padding: 2rem;
+`;
 
 type GitObjectViewProps = {
   gitObject: GitObject;
