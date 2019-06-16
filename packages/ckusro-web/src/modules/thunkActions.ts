@@ -1,3 +1,4 @@
+import { RepoPath } from '@ckusro/ckusro-core';
 import { Dispatch } from 'react';
 import { updateCurrentOid as updateCurrentOidAction } from './actions/shared';
 import { Actions, State } from './index';
@@ -6,6 +7,7 @@ import {
   cloneRepository as cloneRepositoryAction,
   fetchHeadOids as fetchHeadOidsAction,
   fetchObject as fetchObjectAction,
+  pullRepository as pullRepositoryAction,
 } from './workerActions/repository';
 
 export function updateCurrentOid(oid: string | null) {
@@ -27,6 +29,16 @@ export function cloneRepository(url: string) {
     } = getState();
 
     repositoryWorkerDispatcher(cloneRepositoryAction(url));
+  };
+}
+
+export function pullRepository(repoPath: RepoPath) {
+  return async (_: Dispatch<Actions>, getState: () => State) => {
+    const {
+      workers: { repositoryWorkerDispatcher },
+    } = getState();
+
+    repositoryWorkerDispatcher(pullRepositoryAction(repoPath));
   };
 }
 

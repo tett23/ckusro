@@ -1,12 +1,10 @@
 import { CommitObject, RepoPath, url2RepoPath } from '@ckusro/ckusro-core';
 import React from 'react';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+import { useSelector } from 'react-redux';
 import { ObjectManager } from '../../models/ObjectManager';
 import { createRefManager, RefManager } from '../../models/RefManager';
 import { Repository } from '../../models/Repository';
-import { Actions, State } from '../../modules';
-import { cloneRepository } from '../../modules/thunkActions';
+import { State } from '../../modules';
 import FetchObject from '../FetchObject';
 import { drawer } from '../shared';
 import styled from '../styled';
@@ -18,14 +16,12 @@ type TreeViewStates = {
   refManager: RefManager;
 };
 
-export type TreeViewProps = TreeViewStates &
-  ReturnType<typeof mapDispatchToProps>;
+export type TreeViewProps = TreeViewStates;
 
 export function TreeView({
   repositories,
   objectManager,
   refManager,
-  onClickClone,
 }: TreeViewProps) {
   const repos = repositories.map((item) => {
     const oid = createRefManager(refManager).headOid(url2RepoPath(
@@ -36,42 +32,13 @@ export function TreeView({
 
     return (
       <FetchObject key={item.url} oid={oid}>
-        <RepositoryComponent
-          repository={item}
-          commitObject={commitObject}
-          onClickClone={onClickClone}
-        />
+        <RepositoryComponent repository={item} commitObject={commitObject} />
       </FetchObject>
     );
   });
 
   return <Wrapper>{repos}</Wrapper>;
 }
-
-function mapStateToProps({
-  domain: { repositories, objectManager, refManager },
-}: State): TreeViewStates {
-  return {
-    repositories,
-    objectManager,
-    refManager,
-  };
-}
-
-function mapDispatchToProps(
-  dispatch: ThunkDispatch<State, undefined, Actions>,
-) {
-  return {
-    onClickClone(url: string) {
-      dispatch(cloneRepository(url));
-    },
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(TreeView);
 
 const Wrapper = styled.View`
   ${drawer}
@@ -81,3 +48,13 @@ const Wrapper = styled.View`
   width: 15vw;
   flex-basis: 15vw;
 `;
+
+export default function() {
+  const state = useSelector(
+    ({ domain: { repositories, objectManager, refManager } }: State) => {
+      return { repositories, objectManager, refManager };
+    },
+  );
+
+  return <TreeView {...state} />;
+}

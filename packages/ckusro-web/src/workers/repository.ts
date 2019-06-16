@@ -15,6 +15,8 @@ import {
   FetchHeadOids,
   FetchObject,
   fetchObject,
+  PullRepository,
+  pullRepository,
   RepositoryWorkerActions,
 } from '../modules/workerActions/repository';
 import { Handler, HandlerResult, newHandler, PayloadType } from './util';
@@ -30,7 +32,9 @@ const eventHandler = newHandler<
 >(actionHandlers, WorkerResponseRepository);
 
 self.addEventListener('message', async (e) => {
+  console.log(e.data);
   const response = await eventHandler(e.data);
+  console.log(response);
   if (response == null) {
     return;
   }
@@ -47,6 +51,8 @@ function actionHandlers(
   switch (action.type) {
     case CloneRepository:
       return cloneHandler as any;
+    case PullRepository:
+      return pullRepositoryHandler as any;
     case FetchObject:
       return fetchObjectHandler as any;
     case FetchHeadOids:
@@ -82,6 +88,31 @@ async function cloneHandler(
       repository: toInternalPath(repoPath),
       name: 'HEAD',
       oid,
+    }),
+  ];
+}
+
+async function pullRepositoryHandler(
+  config: CkusroConfig,
+  fs: typeof LightningFs,
+  repoPath: PayloadType<ReturnType<typeof pullRepository>>,
+): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
+  const core = ckusroCore(config, fs);
+  const repo = await core.repositories.fetchRepository(repoPath);
+  if (repo instanceof Error) {
+    return repo;
+  }
+
+  const result = await repo.pull();
+  if (result instanceof Error) {
+    return result;
+  }
+
+  return [
+    addRef({
+      repository: toInternalPath(repoPath),
+      name: 'HEAD',
+      oid: result,
     }),
   ];
 }
