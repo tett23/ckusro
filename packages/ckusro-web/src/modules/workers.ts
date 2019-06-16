@@ -1,14 +1,13 @@
 import { CkusroConfig } from '@ckusro/ckusro-core';
 import { Store } from 'redux';
-import { RepositoryWorkerResponse } from '../workers/repository';
-import { State } from './index';
+import { Actions, State } from './index';
 import { RepositoryWorkerActions } from './workerActions/repository';
 
 export type WorkerDispatcher<WorkerActions extends FSAction> = (
   action: WorkerActions,
 ) => void;
 
-export type WorkerResponse = RepositoryWorkerResponse;
+export type WorkerResponse = FSAction<Actions[]>;
 
 export function newWorkerDispatcher<WorkerActions extends FSAction>(
   worker: Worker,
@@ -18,9 +17,6 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
     const res: WorkerResponse = message.data;
 
     if (res.payload == null) {
-      return;
-    }
-    if (res.payload instanceof Error) {
       return;
     }
     if (res.error) {
@@ -49,7 +45,7 @@ export type WithRequestId<T extends FSAction> = T & {
   meta: { requestId: number };
 };
 
-export type WorkerRequest<Action extends FSAction> = FSAction &
+export type WorkerRequest<Action extends FSAction> = Action &
   WithConfig<Action> &
   WithRequestId<Action>;
 

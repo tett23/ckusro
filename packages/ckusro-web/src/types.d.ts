@@ -11,3 +11,7 @@ type FSAction<Payload = any> = {
   error?: boolean;
   meta?: Object;
 };
+
+// type FSAction = {
+//   [prop: string]: any;
+// };

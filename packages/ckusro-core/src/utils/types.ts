@@ -126,7 +126,7 @@ export function isTypeOf<T>(value: unknown, type: TypeNames): value is T {
   }
 }
 
-export function hasProperty<O, P extends keyof O>(
+export function hasProperty<O extends Object, P extends keyof O>(
   obj: O,
   property: P,
 ): obj is O & Record<P, O[P]> {

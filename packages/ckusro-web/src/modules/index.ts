@@ -24,6 +24,7 @@ import {
   objectViewReducer,
   ObjectViewState,
 } from './objectView';
+import { CommonWorkerActions } from './workerActions/common';
 import {
   initialWorkerState,
   newWorkerDispatcher,
@@ -45,7 +46,8 @@ export type Actions =
   | DomainActions
   | WorkersActions
   | ObjectViewActions
-  | GitObjectListActions;
+  | GitObjectListActions
+  | CommonWorkerActions;
 
 export const reducers = combineReducers<State>({
   domain: domainReducer,

@@ -25,17 +25,7 @@ export function fetchHeadOids() {
   };
 }
 
-export const ErrorMessage = 'RepositoryWorker/ErrorMessage' as const;
-
-export function errorMessage(err: Error) {
-  return {
-    type: ErrorMessage,
-    payload: err.message,
-  };
-}
-
 export type RepositoryWorkerActions =
   | ReturnType<typeof cloneRepository>
   | ReturnType<typeof fetchObject>
-  | ReturnType<typeof fetchHeadOids>
-  | ReturnType<typeof errorMessage>;
+  | ReturnType<typeof fetchHeadOids>;
