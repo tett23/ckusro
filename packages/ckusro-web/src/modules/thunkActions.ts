@@ -1,6 +1,7 @@
 import { Dispatch } from 'react';
 import { updateCurrentOid as updateCurrentOidAction } from './actions/shared';
 import { Actions, State } from './index';
+import { parseMarkdown as parseMarkdownAction } from './workerActions/parser';
 import {
   cloneRepository as cloneRepositoryAction,
   fetchHeadOids as fetchHeadOidsAction,
@@ -51,5 +52,15 @@ export function fetchHeadOids() {
     } = getState();
 
     repositoryWorkerDispatcher(fetchHeadOidsAction());
+  };
+}
+
+export function parseMarkdown(md: string) {
+  return async (_: Dispatch<Actions>, getState: () => State) => {
+    const {
+      workers: { parserWorkerDispatcher },
+    } = getState();
+
+    parserWorkerDispatcher(parseMarkdownAction(md));
   };
 }

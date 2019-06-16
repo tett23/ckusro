@@ -1,16 +1,43 @@
+import { FileBuffer } from '@ckusro/ckusro-core';
+import { Node } from 'unist';
 import { SharedActions, UpdateCurrentOid } from './actions/shared';
 
 export type ObjectViewState = {
   currentOid: string | null;
+  currentFileBuffer: FileBuffer | null;
+  currentAst: Node | null;
 };
 
 export function initialObjectViewState(): ObjectViewState {
   return {
     currentOid: null,
+    currentFileBuffer: null,
+    currentAst: null,
   };
 }
 
-export type ObjectViewActions = SharedActions;
+const UpdateFileBuffer = 'ObjectView/UpdateFileBuffer' as const;
+
+export function updateFileBuffer(fb: FileBuffer | null) {
+  return {
+    type: UpdateFileBuffer,
+    payload: fb,
+  };
+}
+
+const UpdateCurrentAst = 'ObjectView/UpdateCurrentAst' as const;
+
+export function updateCurrentAst(ast: Node | null) {
+  return {
+    type: UpdateCurrentAst,
+    payload: ast,
+  };
+}
+
+export type ObjectViewActions =
+  | ReturnType<typeof updateFileBuffer>
+  | ReturnType<typeof updateCurrentAst>
+  | SharedActions;
 
 export function objectViewReducer(
   state: ObjectViewState = initialObjectViewState(),
@@ -21,6 +48,16 @@ export function objectViewReducer(
       return {
         ...state,
         currentOid: action.payload,
+      };
+    case UpdateFileBuffer:
+      return {
+        ...state,
+        currentFileBuffer: action.payload,
+      };
+    case UpdateCurrentAst:
+      return {
+        ...state,
+        currentAst: action.payload,
       };
     default:
       return state;

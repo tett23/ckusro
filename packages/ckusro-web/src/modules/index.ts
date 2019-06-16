@@ -28,6 +28,7 @@ import { CommonWorkerActions } from './workerActions/common';
 import {
   initialWorkerState,
   newWorkerDispatcher,
+  replaceParserWorkerDispatcher,
   replaceRepositoryWorkerDispatcher,
   WorkersActions,
   workersReducer,
@@ -81,6 +82,10 @@ export default function initializeStore(
     store,
   );
   store.dispatch(replaceRepositoryWorkerDispatcher(repositoryWorkerDispatcher));
+
+  const parserWorker = new Worker('../workers/parser.ts');
+  const parserWorkerDispatcher = newWorkerDispatcher(parserWorker, store);
+  store.dispatch(replaceParserWorkerDispatcher(parserWorkerDispatcher));
 
   return store as any;
 }

@@ -1,6 +1,7 @@
 import { CkusroConfig } from '@ckusro/ckusro-core';
 import { Store } from 'redux';
 import { Actions, State } from './index';
+import { ParserWorkerActions } from './workerActions/parser';
 import { RepositoryWorkerActions } from './workerActions/repository';
 
 export type WorkerDispatcher<WorkerActions extends FSAction> = (
@@ -23,9 +24,13 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
       return;
     }
 
-    res.payload.forEach((action) => {
-      store.dispatch(action);
-    });
+    if (Array.isArray(res.payload)) {
+      res.payload.forEach((action) => {
+        store.dispatch(action);
+      });
+    } else {
+      store.dispatch(res);
+    }
   });
 
   worker.addEventListener('error', (err: ErrorEvent) => {
@@ -91,6 +96,7 @@ function newDummyWorkerDispatcher<
 
 export type WorkersState = {
   repositoryWorkerDispatcher: WorkerDispatcher<RepositoryWorkerActions>;
+  parserWorkerDispatcher: WorkerDispatcher<ParserWorkerActions>;
 };
 
 export function initialWorkerState(): WorkersState {
@@ -98,6 +104,7 @@ export function initialWorkerState(): WorkersState {
     repositoryWorkerDispatcher: newDummyWorkerDispatcher<
       RepositoryWorkerActions
     >(),
+    parserWorkerDispatcher: newDummyWorkerDispatcher<ParserWorkerActions>(),
   };
 }
 
@@ -112,9 +119,20 @@ export function replaceRepositoryWorkerDispatcher(
   };
 }
 
-export type WorkersActions = ReturnType<
-  typeof replaceRepositoryWorkerDispatcher
->;
+const ReplaceParserWorkerDispatcher = 'Workers/ReplaceParserWorkerDispatcher' as const;
+
+export function replaceParserWorkerDispatcher(
+  dispatcher: WorkerDispatcher<ParserWorkerActions>,
+) {
+  return {
+    type: ReplaceParserWorkerDispatcher,
+    payload: dispatcher,
+  };
+}
+
+export type WorkersActions =
+  | ReturnType<typeof replaceRepositoryWorkerDispatcher>
+  | ReturnType<typeof replaceParserWorkerDispatcher>;
 
 export function workersReducer(
   state: WorkersState = initialWorkerState(),
@@ -125,6 +143,11 @@ export function workersReducer(
       return {
         ...state,
         repositoryWorkerDispatcher: action.payload,
+      };
+    case ReplaceParserWorkerDispatcher:
+      return {
+        ...state,
+        parserWorkerDispatcher: action.payload,
       };
     default:
       return state;

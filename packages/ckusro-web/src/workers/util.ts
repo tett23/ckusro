@@ -82,7 +82,7 @@ async function process<
     return errorMessage(new Error('')) as any;
   }
 
-  const handler = handlers(action.payload);
+  const handler = handlers(action);
   if (handler == null) {
     // TODO: wrap to empty action
     return emptyMessage() as any;
