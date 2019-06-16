@@ -1,4 +1,10 @@
-import { RepoPath, toPath, url2RepoPath } from '../../src/models/RepoPath';
+import {
+  compareRepoPath,
+  RepoPath,
+  toPath,
+  url2RepoPath,
+} from '../../src/models/RepoPath';
+import { buildRepoPath } from '../__fixtures__';
 
 describe(toPath, () => {
   it('returns RepoPath', () => {
@@ -51,5 +57,25 @@ describe(url2RepoPath, () => {
     const actual = url2RepoPath('');
 
     expect(actual).toBeInstanceOf(Error);
+  });
+});
+
+describe(compareRepoPath, () => {
+  it('returns boolean', () => {
+    let a = buildRepoPath();
+    let b = buildRepoPath();
+
+    expect(compareRepoPath(a, b)).toBe(true);
+
+    a = buildRepoPath({ name: 'foo' });
+    b = buildRepoPath({ name: 'bar' });
+
+    expect(compareRepoPath(a, b)).toBe(false);
+  });
+
+  it('returns true when a and b is same object', () => {
+    const a = buildRepoPath();
+
+    expect(compareRepoPath(a, a)).toBe(true);
   });
 });

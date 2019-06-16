@@ -37,3 +37,11 @@ export function url2RepoPath(url: string): RepoPath | Error {
 export function toInternalPath(repoPath: RepoPath): string {
   return join(repoPath.domain, repoPath.user, repoPath.name);
 }
+
+export function compareRepoPath(a: RepoPath, b: RepoPath): boolean {
+  if (a === b) {
+    return true;
+  }
+
+  return a.domain === b.domain && a.user === b.user && a.name === b.name;
+}

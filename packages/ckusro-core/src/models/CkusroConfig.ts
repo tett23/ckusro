@@ -1,6 +1,9 @@
+import { Plugins } from './plugins';
+
 export type CkusroConfig = {
   base: string;
   colorScheme: ColorScheme;
+  plugins: Plugins;
 };
 
 export type ColorScheme = {

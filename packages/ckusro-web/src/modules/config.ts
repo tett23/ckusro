@@ -13,6 +13,10 @@ export function initialConfigState(): CkusroConfig {
       background: 'F6F7F4',
       base: 'BBC5AA',
     }),
+    plugins: {
+      parsers: [],
+      components: []
+    }
   };
 }
 
