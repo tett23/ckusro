@@ -13,12 +13,12 @@ export default function BlobObject({ gitObject }: BlobObjectProps) {
 
   return (
     <View>
+      <Markdown oid={gitObject.oid} text={content} />
       <Text>
         oid: <ObjectLink oid={gitObject.oid}>{gitObject.oid}</ObjectLink>
       </Text>
       <Text>type: {gitObject.type}</Text>
       <Text>content: {content}</Text>
-      <Markdown oid={gitObject.oid} text={content} />
     </View>
   );
 }

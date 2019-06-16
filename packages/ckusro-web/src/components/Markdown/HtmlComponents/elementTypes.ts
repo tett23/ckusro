@@ -80,6 +80,13 @@ export const flowContentsNames = [
   'var',
   'video',
   'wbr',
+
+  'li',
+  'thead',
+  'tbody',
+  'tr',
+  'th',
+  'td',
 ] as const;
 
 type ValuesOf<T extends readonly any[]> = T[number];

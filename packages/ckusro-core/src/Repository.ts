@@ -93,7 +93,6 @@ export async function readTree(
 
   const entries = await (async () => {
     const ps = tree.content.map(async (item) => {
-      console.log(item);
       const entry = await fetchObject(config, repoPath, item.oid);
       if (entry instanceof Error) {
         throw Error;

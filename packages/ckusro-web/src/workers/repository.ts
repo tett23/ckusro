@@ -32,9 +32,7 @@ const eventHandler = newHandler<
 >(actionHandlers, WorkerResponseRepository);
 
 self.addEventListener('message', async (e) => {
-  console.log(e.data);
   const response = await eventHandler(e.data);
-  console.log(response);
   if (response == null) {
     return;
   }

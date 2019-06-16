@@ -1,3 +1,4 @@
+import console = require('console');
 import React from 'react';
 import { Hast, HastElement, HastText } from '../Hast';
 import { flowContentsNames, FlowContentsNames } from './elementTypes';
@@ -18,6 +19,7 @@ export function HtmlComponents(theme: MarkdownTheme): HtmlComponents {
 
   const textComponent = {
     text: components.text,
+    ...components,
   };
 
   return flowContentsNames.reduce(
@@ -33,6 +35,7 @@ export function HtmlComponents(theme: MarkdownTheme): HtmlComponents {
 
 export function render(hast: Hast, theme: MarkdownTheme): JSX.Element | null {
   const components = HtmlComponents(theme);
+  console.log(hast);
 
   return renderNode(components, components.text, hast, 'root');
 }
@@ -53,7 +56,7 @@ function renderNode(
     case 'comment':
       return null;
     case 'text':
-      return renderText(Component, node, key);
+      return renderText(components, Component, node, key);
     default:
       throw new Error('');
   }
@@ -66,26 +69,41 @@ function renderElement(
 ) {
   const TextComponent = components[node.tagName];
   if (TextComponent == null) {
-    throw new Error('');
+    console.log(node.tagName);
+    return (
+      <components.Block key={key}>
+        <>{map(components, components.text, node.children)}</>
+      </components.Block>
+    );
   }
 
   return (
-    <React.Fragment key={key}>
-      {map(components, TextComponent, node.children)}
-    </React.Fragment>
+    <components.Block key={key}>
+      <>{map(components, TextComponent, node.children)}</>
+    </components.Block>
   );
 }
 
-function renderText(Component: any, node: HastText, key: string) {
+function renderText(
+  components: HtmlComponent,
+  Component: any,
+  node: HastText,
+  key: string,
+) {
   if (node.value.trim().length === 0) {
     return null;
   }
 
-  return <Component key={key} children={node.value.trim()} />;
+  return (
+    <Component key={key}>
+      <components.text>{node.value.trim()}</components.text>
+    </Component>
+  );
 }
 
 function map(components: HtmlComponents, Component: any, nodes: Hast[]) {
   return nodes.map((node, i) => {
+    console.log(node);
     return renderNode(components, Component, node, `${i}`);
   });
 }
