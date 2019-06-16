@@ -13,21 +13,16 @@ import {
 
 export type Repositories = ReturnType<typeof repositories>;
 
-export function repositories(
-  config: CkusroConfig,
-  coreId: string,
-  fs: typeof FS,
-) {
+export function repositories(config: CkusroConfig, fs: typeof FS) {
   return {
-    clone: (url: string) => clone(coreId, config, url),
+    clone: (url: string) => clone(config, url),
     allRepositories: () => allRepositories(config, fs),
-    fetchObject: (oid: string) => fetchObject(config, coreId, fs, oid),
-    headOids: () => headOids(config, coreId, fs),
+    fetchObject: (oid: string) => fetchObject(config, fs, oid),
+    headOids: () => headOids(config, fs),
   };
 }
 
 export async function clone(
-  coreId: string,
   config: CkusroConfig,
   url: string,
 ): Promise<Repository | Error> {
@@ -38,7 +33,7 @@ export async function clone(
 
   const result = await (async () => {
     await Git.clone({
-      core: coreId,
+      core: config.coreId,
       corsProxy: 'https://cors.isomorphic-git.org',
       dir: toPath(config.base, repoPath),
       url,
@@ -50,7 +45,7 @@ export async function clone(
     return result;
   }
 
-  return repository(config, coreId, repoPath);
+  return repository(config, repoPath);
 }
 
 export async function allRepositories(
@@ -101,7 +96,6 @@ async function readdir(fs: typeof FS, path: string): Promise<string[] | Error> {
 
 export async function fetchObject(
   config: CkusroConfig,
-  coreId: string,
   fs: typeof FS,
   oid: string,
 ): Promise<GitObject | Error> {
@@ -111,7 +105,7 @@ export async function fetchObject(
   }
 
   const ps = repoPaths.map(async (repoPath) =>
-    repositoryFetchObject(config, coreId, repoPath, oid),
+    repositoryFetchObject(config, repoPath, oid),
   );
   const ret = (await Promise.all(ps)).find((item) => !(item instanceof Error));
   if (ret == null || ret instanceof Error) {
@@ -123,7 +117,6 @@ export async function fetchObject(
 
 export async function headOids(
   config: CkusroConfig,
-  coreId: string,
   fs: typeof FS,
 ): Promise<Array<[string, RepoPath]> | Error> {
   const repositories = await allRepositories(config, fs);
@@ -132,7 +125,7 @@ export async function headOids(
   }
 
   const ps = repositories.map(async (repoPath) => {
-    const oid = await headOid(config, coreId, repoPath);
+    const oid = await headOid(config, repoPath);
     if (oid instanceof Error) {
       return oid;
     }

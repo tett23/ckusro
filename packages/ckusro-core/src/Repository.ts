@@ -10,28 +10,23 @@ import { gitDir, RepoPath } from './models/RepoPath';
 
 export type Repository = ReturnType<typeof repository>;
 
-export function repository(
-  config: CkusroConfig,
-  coreId: string,
-  repoPath: RepoPath,
-) {
+export function repository(config: CkusroConfig, repoPath: RepoPath) {
   return {
-    headOid: () => headOid(config, coreId, repoPath),
-    headCommitObject: () => headCommitObject(config, coreId, repoPath),
-    headRootTree: () => headRootTree(config, coreId, repoPath),
-    readTree: (oid: string) => readTree(config, coreId, repoPath, oid),
+    headOid: () => headOid(config, repoPath),
+    headCommitObject: () => headCommitObject(config, repoPath),
+    headRootTree: () => headRootTree(config, repoPath),
+    readTree: (oid: string) => readTree(config, repoPath, oid),
   };
 }
 
 export async function headOid(
   config: CkusroConfig,
-  coreId: string,
   repoPath: RepoPath,
 ): Promise<string | Error> {
   const path = gitDir(config.base, repoPath);
   const headOid = await (async () =>
     Git.resolveRef({
-      core: coreId,
+      core: config.coreId,
       gitdir: path,
       ref: 'HEAD',
     }))().catch((err) => err);
@@ -44,15 +39,14 @@ export async function headOid(
 
 export async function headCommitObject(
   config: CkusroConfig,
-  coreId: string,
   repoPath: RepoPath,
 ): Promise<CommitObject | Error> {
-  const oid = await headOid(config, coreId, repoPath);
+  const oid = await headOid(config, repoPath);
   if (oid instanceof Error) {
     return oid;
   }
 
-  const commit = await fetchObject(config, coreId, repoPath, oid);
+  const commit = await fetchObject(config, repoPath, oid);
   if (commit instanceof Error) {
     return commit;
   }
@@ -65,15 +59,14 @@ export async function headCommitObject(
 
 export async function headRootTree(
   config: CkusroConfig,
-  coreId: string,
   repoPath: RepoPath,
 ): Promise<TreeObject | Error> {
-  const commit = await headCommitObject(config, coreId, repoPath);
+  const commit = await headCommitObject(config, repoPath);
   if (commit instanceof Error) {
     return commit;
   }
 
-  const tree = await fetchObject(config, coreId, repoPath, commit.content.tree);
+  const tree = await fetchObject(config, repoPath, commit.content.tree);
   if (tree instanceof Error) {
     return tree;
   }
@@ -86,11 +79,10 @@ export async function headRootTree(
 
 export async function readTree(
   config: CkusroConfig,
-  coreId: string,
   repoPath: RepoPath,
   oid: string,
 ): Promise<Array<TreeObject | BlobObject> | Error> {
-  const tree = await fetchObject(config, coreId, repoPath, oid);
+  const tree = await fetchObject(config, repoPath, oid);
   if (tree instanceof Error) {
     return tree;
   }
@@ -101,7 +93,7 @@ export async function readTree(
   const entries = await (async () => {
     const ps = tree.content.map(async (item) => {
       console.log(item);
-      const entry = await fetchObject(config, coreId, repoPath, item.oid);
+      const entry = await fetchObject(config, repoPath, item.oid);
       if (entry instanceof Error) {
         throw Error;
       }
@@ -120,14 +112,13 @@ export async function readTree(
 
 export async function fetchObject(
   config: CkusroConfig,
-  coreId: string,
   repoPath: RepoPath,
   oid: string,
 ): Promise<GitObject | Error> {
   const path = gitDir(config.base, repoPath);
   const objectDescription = await (async () =>
     Git.readObject({
-      core: coreId,
+      core: config.coreId,
       gitdir: path,
       oid,
     }))().catch((err: Error) => err);

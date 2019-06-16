@@ -12,39 +12,39 @@ import { dummyRepo, pfs } from './__helpers__';
 describe.skip(repository.name, () => {
   it(headOid.name, async () => {
     const config = buildCkusroConfig();
-    const core = Git.cores.create('test');
+    const core = Git.cores.create(config.coreId);
     const fs = pfs(config);
     core.set('fs', fs);
     const repoPath = buildRepoPath();
     await dummyRepo(config, fs, repoPath);
 
-    const expected = await headOid(config, 'test', repoPath);
+    const expected = await headOid(config, repoPath);
 
     expect(expected).not.toBe(Error);
   });
 
   it(headCommitObject.name, async () => {
     const config = buildCkusroConfig();
-    const core = Git.cores.create('test');
+    const core = Git.cores.create(config.coreId);
     const fs = pfs(config);
     core.set('fs', fs);
     const repoPath = buildRepoPath();
     await dummyRepo(config, fs, repoPath);
 
-    const expected = await headCommitObject(config, 'test', repoPath);
+    const expected = await headCommitObject(config, repoPath);
 
     expect(expected).not.toBe(Error);
   });
 
   it(headRootTree.name, async () => {
     const config = buildCkusroConfig();
-    const core = Git.cores.create('test');
+    const core = Git.cores.create(config.coreId);
     const fs = pfs(config);
     core.set('fs', fs);
     const repoPath = buildRepoPath();
     await dummyRepo(config, fs, repoPath);
 
-    const expected = await headRootTree(config, 'test', repoPath);
+    const expected = await headRootTree(config, repoPath);
 
     expect(expected).not.toBe(Error);
   });
@@ -52,7 +52,7 @@ describe.skip(repository.name, () => {
 
 it(readTree.name, async () => {
   const config = buildCkusroConfig();
-  const core = Git.cores.create('test');
+  const core = Git.cores.create(config.coreId);
   const fs = pfs(config);
   core.set('fs', fs);
   const repoPath = buildRepoPath();
@@ -71,7 +71,7 @@ it(readTree.name, async () => {
   ];
   await dummyRepo(config, fs, repoPath, commits);
 
-  const expected = await headRootTree(config, 'test', repoPath);
+  const expected = await headRootTree(config, repoPath);
 
   expect(expected).not.toBe(Error);
 });

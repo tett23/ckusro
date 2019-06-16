@@ -15,12 +15,12 @@ import { dummyRepo, pfs } from './__helpers__';
 describe(repositories.name, () => {
   it.skip(clone.name, async () => {
     const config = buildCkusroConfig();
-    const core = Git.cores.create('test');
+    const core = Git.cores.create(config.coreId);
     const fs = pfs(config);
     core.set('fs', fs);
     const url = 'https://github.com/tett23/ckusro.git';
 
-    const expected = await clone('test', config, url);
+    const expected = await clone(config, url);
 
     expect(expected).not.toBeInstanceOf(Error);
   });
@@ -46,7 +46,7 @@ describe(repositories.name, () => {
   describe(fetchObject.name, () => {
     it('returns GitObject', async () => {
       const config = buildCkusroConfig();
-      const core = Git.cores.create('test');
+      const core = Git.cores.create(config.coreId);
       const fs = pfs(config);
       core.set('fs', fs);
       const repoPath = buildRepoPath();
@@ -65,8 +65,8 @@ describe(repositories.name, () => {
       ];
       await dummyRepo(config, fs, repoPath, commits);
 
-      const oid = (await headOid(config, 'test', repoPath)) as string;
-      const expected = await fetchObject(config, 'test', fs, oid);
+      const oid = (await headOid(config, repoPath)) as string;
+      const expected = await fetchObject(config, fs, oid);
 
       expect((expected as GitObject).oid).toBe(oid);
     });
@@ -74,7 +74,7 @@ describe(repositories.name, () => {
     it('returns Error when object does not exists', async () => {
       const config = buildCkusroConfig();
       const fs = pfs(config);
-      const expected = await fetchObject(config, 'test', fs, 'hoge');
+      const expected = await fetchObject(config, fs, 'hoge');
 
       expect(expected).toBeInstanceOf(Error);
     });
@@ -82,7 +82,7 @@ describe(repositories.name, () => {
 
   it(headOids.name, async () => {
     const config = buildCkusroConfig();
-    const core = Git.cores.create('test');
+    const core = Git.cores.create(config.coreId);
     const fs = pfs(config);
     core.set('fs', fs);
     const repoPath = buildRepoPath();
@@ -101,8 +101,8 @@ describe(repositories.name, () => {
     ];
     await dummyRepo(config, fs, repoPath, commits);
 
-    const oid = (await headOid(config, 'test', repoPath)) as string;
-    const expected = await headOids(config, 'test', fs);
+    const oid = (await headOid(config, repoPath)) as string;
+    const expected = await headOids(config, fs);
 
     expect(expected).toMatchObject([[oid, repoPath]]);
   });

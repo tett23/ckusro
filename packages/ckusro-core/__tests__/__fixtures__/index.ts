@@ -19,6 +19,7 @@ export const buildPlugins = fixtureBuilder<Plugins>({
 
 export const buildCkusroConfig = fixtureBuilder<CkusroConfig>({
   base: '/repositories',
+  coreId: 'ckusro-core__test',
   colorScheme: convertColorScheme({
     main: 'B22E42',
     accent: 'A4CE50',

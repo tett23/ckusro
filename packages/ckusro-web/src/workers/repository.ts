@@ -21,11 +21,9 @@ import { WithRequestId, WorkerRequest } from '../modules/workers';
 
 const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
 
-const CoreId = 'ckusro-web';
-const lfs = new LightningFs('ckusro-web');
-
 export type Handler = (
   config: CkusroConfig,
+  fs: typeof LightningFs,
   payload: any,
 ) => Promise<HandlerResult>;
 export type HandlerResult = Actions[] | Error;
@@ -37,6 +35,12 @@ export type RepositoryWorkerResponse = WithRequestId<
 
 self.addEventListener('message', async (e) => {
   const action: WorkerRequest<RepositoryWorkerActions> = e.data;
+  const { config, requestId } = action.meta;
+  const lfs = new LightningFs(config.coreId);
+
+  if (config == null) {
+    (postMessage as any)([errorMessage(new Error(''))]);
+  }
 
   const handler = actionHandler(action);
   if (handler == null) {
@@ -44,7 +48,7 @@ self.addEventListener('message', async (e) => {
     return;
   }
 
-  const result = await handler(action.meta.config, action.payload).catch(
+  const result = await handler(config, lfs, action.payload).catch(
     (err: Error) => err,
   );
   if (result instanceof Error) {
@@ -58,7 +62,7 @@ self.addEventListener('message', async (e) => {
     type: WorkerResponseRepository,
     payload: result,
     meta: {
-      requestId: action.meta.requestId,
+      requestId,
     },
   };
 
@@ -82,6 +86,7 @@ function actionHandler(action: RepositoryWorkerActions): Handler | null {
 
 async function cloneHandler(
   config: CkusroConfig,
+  fs: typeof LightningFs,
   { url }: PayloadType<ReturnType<typeof cloneRepository>>,
 ): Promise<HandlerResult> {
   const repoPath = url2RepoPath(url);
@@ -89,7 +94,7 @@ async function cloneHandler(
     return repoPath;
   }
 
-  const core = ckusroCore(config, CoreId, lfs);
+  const core = ckusroCore(config, fs);
   const repo = await core.repositories.clone(url);
   if (repo instanceof Error) {
     return repo;
@@ -111,9 +116,10 @@ async function cloneHandler(
 
 async function fetchObjectHandler(
   config: CkusroConfig,
+  fs: typeof LightningFs,
   oid: PayloadType<ReturnType<typeof fetchObject>>,
 ): Promise<HandlerResult> {
-  const core = ckusroCore(config, CoreId, lfs);
+  const core = ckusroCore(config, fs);
   const object = await core.repositories.fetchObject(oid);
   if (object instanceof Error) {
     return object;
@@ -124,8 +130,9 @@ async function fetchObjectHandler(
 
 async function fetchHeadOidsHandler(
   config: CkusroConfig,
+  fs: typeof LightningFs,
 ): Promise<HandlerResult> {
-  const core = ckusroCore(config, CoreId, lfs);
+  const core = ckusroCore(config, fs);
   const heads = await core.repositories.headOids();
   if (heads instanceof Error) {
     return heads;

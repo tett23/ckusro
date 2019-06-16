@@ -40,16 +40,16 @@ export async function dummyRepo(
 
   fs.mkdirSync(repoRoot, { recursive: true });
   await Git.init({
-    core: 'test',
+    core: config.coreId,
     dir: repoRoot,
   });
 
   const ps = commits.map(async ({ message, tree }) => {
     const parent = [''];
-    await createDummyTree(fs, repoRoot, parent, tree);
+    await createDummyTree(config, fs, repoRoot, parent, tree);
 
     const result = await Git.commit({
-      core: 'test',
+      core: config.coreId,
       dir: repoRoot,
       message,
       author: {
@@ -65,6 +65,7 @@ export async function dummyRepo(
 }
 
 async function createDummyTree(
+  config: CkusroConfig,
   fs: typeof FS,
   repoRoot: string,
   parent: string[],
@@ -79,12 +80,12 @@ async function createDummyTree(
       fs.mkdirSync(join(repoRoot, entryPath));
 
       parent.push(name);
-      createDummyTree(fs, repoRoot, parent, content);
+      createDummyTree(config, fs, repoRoot, parent, content);
       parent.pop();
     }
 
     const result = await Git.add({
-      core: 'test',
+      core: config.coreId,
       dir: repoRoot,
       filepath: entryPath,
     }).catch((err) => err);

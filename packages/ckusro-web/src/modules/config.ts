@@ -5,6 +5,7 @@ export type ConfigState = CkusroConfig;
 export function initialConfigState(): CkusroConfig {
   return {
     base: '/repositories',
+    coreId: 'ckusro-web__dev',
     colorScheme: convertColorScheme({
       main: 'B22E42',
       accent: 'A4CE50',
@@ -15,8 +16,8 @@ export function initialConfigState(): CkusroConfig {
     }),
     plugins: {
       parsers: [],
-      components: []
-    }
+      components: [],
+    },
   };
 }
 
