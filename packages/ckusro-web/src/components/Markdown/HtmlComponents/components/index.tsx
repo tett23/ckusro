@@ -5,6 +5,7 @@ import Div from './Div';
 import { H1, H2, H3, H4, H5, H6 } from './Heading';
 import { Li, Ul } from './List';
 import { Paragraph } from './Paragraph';
+import Pre from './Pre';
 import Span from './Span';
 
 export default function components(_: MarkdownTheme) {
@@ -22,5 +23,6 @@ export default function components(_: MarkdownTheme) {
     p: Paragraph,
     blockquote: Blockquote,
     code: Code,
+    pre: Pre,
   };
 }
