@@ -39,7 +39,6 @@ export type BlockProps = ElementProps & {
 
 export type InlineProps = ElementProps & {
   TextElement: any;
-  Outer: any;
 };
 
 export function Block({

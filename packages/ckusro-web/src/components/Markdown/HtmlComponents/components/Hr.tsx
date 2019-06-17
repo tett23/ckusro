@@ -1,14 +1,6 @@
 import React from 'react';
-import styled, { css } from '../../../styled';
-import { Block, Div, ElementProps, Inline, Span } from './common';
-
-const listPadding = css`
-  padding-left: 2em;
-`;
-
-const ul = styled(Div)`
-  ${listPadding}
-`;
+import styled from '../../../styled';
+import { Block, Div, ElementProps, Span } from './common';
 
 const hr = styled(Div)`
   box-sizing: content-box;

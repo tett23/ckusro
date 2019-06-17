@@ -20,6 +20,7 @@ import {
   Thead,
   Tr,
 } from './Table';
+import { Emphasis, Strike, Strong } from './TextStyles';
 
 export default function components(_: MarkdownTheme) {
   return {
@@ -48,5 +49,12 @@ export default function components(_: MarkdownTheme) {
     thead: Thead,
     tr: Tr,
     hr: Hr,
+    strike: Strike,
+    s: Strike,
+    del: Strike,
+    strong: Strong,
+    b: Strong,
+    i: Emphasis,
+    em: Emphasis,
   };
 }
