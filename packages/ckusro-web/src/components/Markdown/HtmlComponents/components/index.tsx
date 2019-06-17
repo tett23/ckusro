@@ -1,17 +1,20 @@
 import { MarkdownTheme } from '../styles';
 import Div from './Div';
-import { Heading } from './Heading';
+import { H1, H2, H3, H4, H5, H6 } from './Heading';
+import { Li, Ul } from './List';
 import Span from './Span';
 
 export default function components(_: MarkdownTheme) {
   return {
     Span,
     Div,
-    h1: Heading,
-    h2: Heading,
-    h3: Heading,
-    h4: Heading,
-    h5: Heading,
-    h6: Heading,
+    h1: H1,
+    h2: H2,
+    h3: H3,
+    h4: H4,
+    h5: H5,
+    h6: H6,
+    ul: Ul,
+    li: Li,
   };
 }
