@@ -7,6 +7,18 @@ import { Li, Ul } from './List';
 import { Paragraph } from './Paragraph';
 import Pre from './Pre';
 import Span from './Span';
+import {
+  Caption,
+  Col,
+  ColGroup,
+  Table,
+  Tbody,
+  Td,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
+} from './Table';
 
 export default function components(_: MarkdownTheme) {
   return {
@@ -24,5 +36,15 @@ export default function components(_: MarkdownTheme) {
     blockquote: Blockquote,
     code: Code,
     pre: Pre,
+    caption: Caption,
+    col: Col,
+    colgroup: ColGroup,
+    table: Table,
+    tbody: Tbody,
+    td: Td,
+    tfoot: Tfoot,
+    th: Th,
+    thead: Thead,
+    tr: Tr,
   };
 }

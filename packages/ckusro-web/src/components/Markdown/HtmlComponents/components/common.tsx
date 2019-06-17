@@ -34,6 +34,7 @@ export const Span = styled.Text`
 export type BlockProps = ElementProps & {
   TextElement: any;
   Outer: any;
+  allowTextNode?: boolean;
 };
 
 export type InlineProps = ElementProps & {
@@ -41,13 +42,23 @@ export type InlineProps = ElementProps & {
   Outer: any;
 };
 
-export function Block({ components, hast, TextElement, Outer }: BlockProps) {
+export function Block({
+  components,
+  hast,
+  TextElement,
+  Outer,
+  allowTextNode,
+}: BlockProps) {
   const children = hast.children.map((node: HastElementChild) => {
     if (node.type === 'comment') {
       return null;
     }
     if (node.type === 'text') {
-      return <TextElement>{node.value}</TextElement>;
+      if (allowTextNode || allowTextNode == undefined) {
+        return <TextElement>{node.value}</TextElement>;
+      } else {
+        return null;
+      }
     }
 
     const C = components[node.tagName] || components.Div;
@@ -57,18 +68,18 @@ export function Block({ components, hast, TextElement, Outer }: BlockProps) {
   return <Outer>{children}</Outer>;
 }
 
-export function Inline({ components, hast, TextElement, Outer }: InlineProps) {
+export function Inline({ components, hast, TextElement }: InlineProps) {
   const children = hast.children.map((node: HastElementChild) => {
     if (node.type === 'comment') {
       return null;
     }
     if (node.type === 'text') {
-      return <TextElement>{node.value}</TextElement>;
+      return <>{node.value}</>;
     }
 
     const C = components[node.tagName] || components.Span;
     return <C components={components} hast={node} />;
   });
 
-  return <Outer>{children}</Outer>;
+  return <TextElement>{children}</TextElement>;
 }

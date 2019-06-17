@@ -19,5 +19,5 @@ export function Ul(props: ElementProps) {
 }
 
 export function Li(props: ElementProps) {
-  return <Inline {...props} Outer={li} TextElement={Span} />;
+  return <Inline {...props} TextElement={li} />;
 }

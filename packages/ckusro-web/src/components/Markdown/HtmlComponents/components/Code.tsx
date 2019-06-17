@@ -11,5 +11,5 @@ const codeText = styled(Span)`
 `;
 
 export default function Code(props: ElementProps) {
-  return <Inline {...props} Outer={Span} TextElement={codeText} />;
+  return <Inline {...props} TextElement={codeText} />;
 }

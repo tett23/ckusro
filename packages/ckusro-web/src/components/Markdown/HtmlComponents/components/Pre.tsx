@@ -18,17 +18,7 @@ const preText = styled(Span)`
   background: transparent;
 `;
 
-const preCode = styled(Div)`
-  background: transparent;
-  border: 0;
-  font-size: 100%;
-  margin: 0;
-  padding: 0;
-  white-space: pre;
-  word-break: normal;
-`;
-
-const preCodeText = styled(Span)`
+const preCode = styled(Span)`
   font-family: monospace;
   background-color: transparent;
   background: transparent;
@@ -36,6 +26,7 @@ const preCodeText = styled(Span)`
 `;
 
 export default function Pre({ components, hast }: ElementProps) {
+  console.log(hast);
   const children = hast.children.map((node: HastElementChild) => {
     if (node.type === 'comment') {
       return null;
@@ -47,12 +38,7 @@ export default function Pre({ components, hast }: ElementProps) {
 
     if (node.tagName === 'code') {
       return (
-        <Inline
-          components={components}
-          hast={node}
-          Outer={preCode}
-          TextElement={preCodeText}
-        />
+        <Inline components={components} hast={node} TextElement={preCode} />
       );
     }
 
