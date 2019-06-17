@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from '../../../styled';
-import { Block, Div, ElementProps, Span } from './common';
+import { Block, ElementProps, Span, topLevel } from './common';
 
-const blockquote = styled(Div)`
+const blockquote = styled(topLevel)`
   border-left-color: #dfe2e5;
   border-left-style: solid;
   border-left-width: 0.25em;

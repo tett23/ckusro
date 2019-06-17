@@ -25,10 +25,14 @@ export const Span = styled.Text`
   display: inline;
 
   color: #24292e;
-  font-size: 1em;
+  font-size: 16px;
   line-height: 1.5em;
   word-wrap: break-word;
-  margin: 0.67em 0;
+`;
+
+export const topLevel = styled(Div)`
+  margin-bottom: 16px;
+  margin-top: 0;
 `;
 
 export type BlockProps = ElementProps & {
@@ -53,8 +57,11 @@ export function Block({
       return null;
     }
     if (node.type === 'text') {
-      if (allowTextNode || allowTextNode == undefined) {
-        return <TextElement>{node.value}</TextElement>;
+      if (node.value.trim().length === 0) {
+        return null;
+      }
+      if (allowTextNode || allowTextNode == null) {
+        return <TextElement data-tag="text">{node.value}</TextElement>;
       } else {
         return null;
       }
@@ -64,7 +71,7 @@ export function Block({
     return <C components={components} hast={node} />;
   });
 
-  return <Outer>{children}</Outer>;
+  return <Outer data-tag={hast.tagName}>{children}</Outer>;
 }
 
 export function Inline({ components, hast, TextElement }: InlineProps) {
@@ -80,5 +87,5 @@ export function Inline({ components, hast, TextElement }: InlineProps) {
     return <C components={components} hast={node} />;
   });
 
-  return <TextElement>{children}</TextElement>;
+  return <TextElement data-tag={hast.tagName}>{children}</TextElement>;
 }

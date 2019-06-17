@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from '../../../styled';
 import { HastElementChild } from '../../Hast';
-import { Div, ElementProps, Inline, Span } from './common';
+import { ElementProps, Inline, Span, topLevel } from './common';
 
-const pre = styled(Div)`
+const pre = styled(topLevel)`
   background-color: #f6f8fa;
   border-radius: 3px;
   font-size: 85%;

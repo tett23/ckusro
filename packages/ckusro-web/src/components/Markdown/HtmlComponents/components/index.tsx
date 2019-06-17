@@ -4,7 +4,7 @@ import Code from './Code';
 import Div from './Div';
 import { H1, H2, H3, H4, H5, H6 } from './Heading';
 import { Hr } from './Hr';
-import { Li, Ul } from './List';
+import { Dd, Dl, Dt, Li, Ol, Ul } from './List';
 import { Paragraph } from './Paragraph';
 import Pre from './Pre';
 import Span from './Span';
@@ -32,8 +32,12 @@ export default function components(_: MarkdownTheme) {
     h4: H4,
     h5: H5,
     h6: H6,
+    ol: Ol,
     ul: Ul,
     li: Li,
+    dl: Dl,
+    dt: Dt,
+    dd: Dd,
     p: Paragraph,
     blockquote: Blockquote,
     code: Code,

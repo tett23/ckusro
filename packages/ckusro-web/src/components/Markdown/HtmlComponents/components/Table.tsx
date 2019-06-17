@@ -1,6 +1,14 @@
 import React from 'react';
 import styled from '../../../styled';
-import { Block, bold, Div, ElementProps, Inline, Span } from './common';
+import {
+  Block,
+  bold,
+  Div,
+  ElementProps,
+  Inline,
+  Span,
+  topLevel,
+} from './common';
 
 const tableCell = styled(Span)`
   display: table-cell;
@@ -9,7 +17,7 @@ const tableCell = styled(Span)`
   margin: 0;
 `;
 
-const table = styled(Div)`
+const table = styled(topLevel)`
   display: table;
   overflow: auto;
   width: 100%;
