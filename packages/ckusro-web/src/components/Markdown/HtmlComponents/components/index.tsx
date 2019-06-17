@@ -3,6 +3,7 @@ import Blockquote from './Blockquote';
 import Code from './Code';
 import Div from './Div';
 import { H1, H2, H3, H4, H5, H6 } from './Heading';
+import { Hr } from './Hr';
 import { Li, Ul } from './List';
 import { Paragraph } from './Paragraph';
 import Pre from './Pre';
@@ -46,5 +47,6 @@ export default function components(_: MarkdownTheme) {
     th: Th,
     thead: Thead,
     tr: Tr,
+    hr: Hr,
   };
 }

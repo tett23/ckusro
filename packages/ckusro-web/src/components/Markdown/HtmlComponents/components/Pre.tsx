@@ -26,7 +26,6 @@ const preCode = styled(Span)`
 `;
 
 export default function Pre({ components, hast }: ElementProps) {
-  console.log(hast);
   const children = hast.children.map((node: HastElementChild) => {
     if (node.type === 'comment') {
       return null;
