@@ -2,6 +2,8 @@ import React from 'react';
 import styled, { css } from '../../../styled';
 import { HastElement, HastElementChild } from '../../Hast';
 
+export type MarkdownTheme = {};
+
 export type ElementProps = {
   components: any;
   hast: HastElement;
