@@ -24,10 +24,10 @@ export type HastElement = UnistParent & {
   tagName: FlowContentsNames;
   properties?: HastProperties;
   content?: HastRoot;
-  children: HastElementChildren;
+  children: HastElementChild[];
 };
 
-export type HastElementChildren = Array<HastElement | HastComment | HastText>;
+export type HastElementChild = HastElement | HastComment | HastText;
 
 export type HastDoctype = UnistNode & {
   type: 'doctype';

@@ -10,7 +10,7 @@ export type ObjectViewState = {
 
 export function initialObjectViewState(): ObjectViewState {
   return {
-    currentOid: null,
+    currentOid: 'de753f3e8706e5f136a46dceb8fa38b4c671ead1',
     currentFileBuffer: null,
     currentAst: null,
   };

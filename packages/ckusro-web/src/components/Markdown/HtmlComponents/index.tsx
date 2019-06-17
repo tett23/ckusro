@@ -1,6 +1,7 @@
 import console = require('console');
 import React from 'react';
 import { Hast, HastElement, HastText } from '../Hast';
+import components from './components';
 import { flowContentsNames, FlowContentsNames } from './elementTypes';
 import { markdownComponents, MarkdownTheme } from './styles';
 
@@ -34,10 +35,11 @@ export function HtmlComponents(theme: MarkdownTheme): HtmlComponents {
 }
 
 export function render(hast: Hast, theme: MarkdownTheme): JSX.Element | null {
-  const components = HtmlComponents(theme);
+  const cs = components(theme);
   console.log(hast);
 
-  return renderNode(components, components.text, hast, 'root');
+  return <cs.Div components={cs} hast={hast} />;
+  // return renderNode(components, components.text, hast, 'root');
 }
 
 function renderNode(
