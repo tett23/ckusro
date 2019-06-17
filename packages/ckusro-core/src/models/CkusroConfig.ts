@@ -3,9 +3,12 @@ import { Plugins } from './plugins';
 export type CkusroConfig = {
   base: string;
   coreId: string;
-  corsProxy: string;
+  corsProxy: string | null;
   colorScheme: ColorScheme;
   plugins: Plugins;
+  authentication: {
+    github: string | null;
+  };
 };
 
 export type ColorScheme = {

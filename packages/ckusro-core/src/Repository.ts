@@ -152,6 +152,7 @@ export async function pull(
   const result = await (async () =>
     Git.pull({
       core: config.coreId,
+      token: config.authentication.github || undefined,
       dir: toPath(config.base, repoPath),
     }))().catch((err: Error) => err);
   if (result instanceof Error) {

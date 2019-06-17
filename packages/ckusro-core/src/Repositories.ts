@@ -36,7 +36,8 @@ export async function clone(
   const result = await (async () => {
     await Git.clone({
       core: config.coreId,
-      corsProxy: config.corsProxy,
+      corsProxy: config.corsProxy || undefined,
+      token: config.authentication.github || undefined,
       dir: toPath(config.base, repoPath),
       url,
       singleBranch: true,

@@ -27,6 +27,10 @@ export const buildCkusroConfig = fixtureBuilder<CkusroConfig>({
     background: 'DDE2C6',
     base: 'BBC5AA',
   }),
+  corsProxy: null,
+  authentication: {
+    github: null,
+  },
   plugins: buildPlugins(),
 });
 

@@ -18,6 +18,12 @@ export function initialDomainState(): DomainState {
         url: 'https://github.com/tett23/ckusro.git',
         directory: '/packages/ckusro-web',
       },
+      {
+        type: 'git',
+        name: 'trapahi',
+        url: 'https://github.com/tett23/trapahi.git',
+        directory: '/',
+      },
     ],
     refManager: {
       refs: {},
