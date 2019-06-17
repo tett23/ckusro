@@ -7,6 +7,7 @@ import { Hast } from './Hast';
 import { render } from './HtmlComponents';
 
 export type MarkdownProps = {
+  oid: string;
   ast: Hast;
 };
 
@@ -19,6 +20,11 @@ export function Markdown({ ast }: MarkdownProps) {
 
   return <View>{md}</View>;
 }
+
+const Memoized = React.memo(
+  Markdown,
+  (prev, next) => prev.oid === next.oid && prev.ast === next.ast,
+);
 
 export default function({ oid, text }: { oid: string; text: string }) {
   const { ast } = useSelector(({ objectView: { currentAst } }: State) => {
@@ -36,5 +42,5 @@ export default function({ oid, text }: { oid: string; text: string }) {
     return <View />;
   }
 
-  return <Markdown ast={ast} />;
+  return <Memoized oid={oid} ast={ast} />;
 }

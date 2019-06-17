@@ -34,6 +34,8 @@ export function TreeObject({ treeObject, path }: TreeObjectProps) {
   );
 }
 
+const Memoized = React.memo(TreeObject, (prev, next) => prev.oid === next.oid);
+
 export default function(ownProps: OwnProps) {
   const gitObject: GitObject | null = useSelector(
     (state: State) => state.domain.objectManager[ownProps.oid],
@@ -42,5 +44,5 @@ export default function(ownProps: OwnProps) {
     return <FetchObject oid={ownProps.oid} />;
   }
 
-  return <TreeObject {...ownProps} treeObject={gitObject as TreeObjectType} />;
+  return <Memoized {...ownProps} treeObject={gitObject as TreeObjectType} />;
 }

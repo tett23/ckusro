@@ -49,6 +49,8 @@ const Wrapper = styled.View`
   ${borderBottom}
 `;
 
+const Memoized = React.memo(BlobObject, (prev, next) => prev.oid === next.oid);
+
 export default function(ownProps: OwnProps) {
   const gitObject: GitObject | null = useSelector(
     (state: State) => state.domain.objectManager[ownProps.oid],
@@ -58,5 +60,5 @@ export default function(ownProps: OwnProps) {
     return <FetchObject oid={ownProps.oid} />;
   }
 
-  return <BlobObject {...ownProps} blobObject={gitObject as BlobObjectType} />;
+  return <Memoized {...ownProps} blobObject={gitObject as BlobObjectType} />;
 }

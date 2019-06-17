@@ -34,6 +34,11 @@ const Wrapper = styled.View`
   ${borderLeft};
 `;
 
+const Memoized = React.memo(
+  GitObjectList,
+  (prev, next) => prev.oid === next.oid,
+);
+
 export default function() {
   const { objectManager, currentOid } = useSelector((state: State) => ({
     objectManager: state.domain.objectManager,
@@ -50,7 +55,7 @@ export default function() {
 
   return (
     <FetchObject oid={currentOid}>
-      <GitObjectList oid={currentOid} gitObject={gitObject} />
+      <Memoized oid={currentOid} gitObject={gitObject} />
     </FetchObject>
   );
 }
