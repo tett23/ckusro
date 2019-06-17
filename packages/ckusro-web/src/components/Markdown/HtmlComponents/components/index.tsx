@@ -2,6 +2,7 @@ import { MarkdownTheme } from '../styles';
 import Div from './Div';
 import { H1, H2, H3, H4, H5, H6 } from './Heading';
 import { Li, Ul } from './List';
+import { Paragraph } from './Paragraph';
 import Span from './Span';
 
 export default function components(_: MarkdownTheme) {
@@ -16,5 +17,6 @@ export default function components(_: MarkdownTheme) {
     h6: H6,
     ul: Ul,
     li: Li,
+    p: Paragraph,
   };
 }
