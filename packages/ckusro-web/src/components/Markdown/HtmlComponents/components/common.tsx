@@ -47,14 +47,14 @@ export function Block({ components, hast, TextElement, Outer }: BlockProps) {
       return null;
     }
     if (node.type === 'text') {
-      return <TextElement components={components}>{node.value}</TextElement>;
+      return <TextElement>{node.value}</TextElement>;
     }
 
     const C = components[node.tagName] || components.Div;
     return <C components={components} hast={node} />;
   });
 
-  return <Outer components={components}>{children}</Outer>;
+  return <Outer>{children}</Outer>;
 }
 
 export function Inline({ components, hast, TextElement, Outer }: InlineProps) {
@@ -63,12 +63,12 @@ export function Inline({ components, hast, TextElement, Outer }: InlineProps) {
       return null;
     }
     if (node.type === 'text') {
-      return <TextElement components={components}>{node.value}</TextElement>;
+      return <TextElement>{node.value}</TextElement>;
     }
 
     const C = components[node.tagName] || components.Span;
     return <C components={components} hast={node} />;
   });
 
-  return <Outer components={components}>{children}</Outer>;
+  return <Outer>{children}</Outer>;
 }

@@ -1,4 +1,5 @@
 import { MarkdownTheme } from '../styles';
+import Blockquote from './Blockquote';
 import Div from './Div';
 import { H1, H2, H3, H4, H5, H6 } from './Heading';
 import { Li, Ul } from './List';
@@ -18,5 +19,6 @@ export default function components(_: MarkdownTheme) {
     ul: Ul,
     li: Li,
     p: Paragraph,
+    blockquote: Blockquote,
   };
 }
