@@ -18,7 +18,6 @@ export const bold = css`
 `;
 
 export const Div = styled.View`
-  ${base}
   display: block;
 `;
 
@@ -63,14 +62,18 @@ export function Block({
         return null;
       }
       if (allowTextNode || allowTextNode == null) {
-        return <TextElement data-tag="text">{node.value}</TextElement>;
+        return (
+          <TextElement key={getKey.next().value} data-tag="text">
+            {node.value}
+          </TextElement>
+        );
       } else {
         return null;
       }
     }
 
     const C = components[node.tagName] || components.Div;
-    return <C components={components} hast={node} />;
+    return <C key={getKey.next().value} components={components} hast={node} />;
   });
 
   return <Outer data-tag={hast.tagName}>{children}</Outer>;
@@ -82,12 +85,25 @@ export function Inline({ components, hast, TextElement }: InlineProps) {
       return null;
     }
     if (node.type === 'text') {
-      return <>{node.value}</>;
+      return (
+        <React.Fragment key={getKey.next().value}>{node.value}</React.Fragment>
+      );
     }
 
     const C = components[node.tagName] || components.Span;
-    return <C components={components} hast={node} />;
+    return <C key={getKey.next().value} components={components} hast={node} />;
   });
 
   return <TextElement data-tag={hast.tagName}>{children}</TextElement>;
+}
+
+const getKey = randomKey();
+
+export function* randomKey(): IterableIterator<string> {
+  let n = 0;
+
+  while (true) {
+    n++;
+    yield `${n}`;
+  }
 }

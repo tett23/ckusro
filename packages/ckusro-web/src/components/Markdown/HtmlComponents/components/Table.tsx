@@ -30,12 +30,10 @@ const rowGroup = styled(Div)`
 const tr = styled(Div)`
   display: table-row;
   background-color: #fff;
-  border-top: 1px solid #c6cbd1;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #c6cbd1;
   padding: 0;
-
-  :nth-child(2n) {
-    background-color: #f6f8fa;
-  }
 `;
 
 const thText = styled(tableCell)`

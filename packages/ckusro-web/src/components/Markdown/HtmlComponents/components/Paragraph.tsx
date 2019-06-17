@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '../../../styled';
 import { Block, ElementProps, Span, topLevel } from './common';
 
-export const paragraph = styled(topLevel)`
+const paragraph = styled(topLevel)`
   margin-top: 0;
 `;
 

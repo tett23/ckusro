@@ -1,50 +1,17 @@
 import React from 'react';
 import styled from '../../../styled';
 import { Block, Div, ElementProps, Inline, Span, topLevel } from './common';
-import { paragraph } from './Paragraph';
 
 const list = styled(topLevel)`
   padding-left: 2em;
 `;
 
-const ol = styled(list)`
-  ${list.selector} {
-    margin-bottom: 0;
-    margin-top: 0;
-    list-style-type: lower-roman;
+const ol = styled(list)``;
 
-    ${list.selector} {
-      list-style-type: lower-alpha;
-    }
-  }
-`;
-
-const ul = styled(list)`
-  ${ol.selector} {
-    list-style-type: lower-roman;
-  }
-
-  div[data-tag='ul'] {
-    margin-bottom: 0;
-    margin-top: 0;
-  }
-  ${list.selector} {
-    margin-bottom: 0;
-    margin-top: 0;
-  }
-`;
+const ul = styled(list)``;
 
 const li = styled(Div)`
   display: list-item;
-  word-wrap: break-all;
-
-  > ${paragraph.selector} {
-    margin-top: 16px;
-  }
-  div[data-tag='ul'] {
-    margin-bottom: 0;
-    margin-top: 0;
-  }
 `;
 
 export function Ol(props: ElementProps) {
@@ -69,19 +36,6 @@ const dd = styled(Div)`
 
 const dl = styled(list)`
   padding: 0;
-
-  ${dt.selector} {
-    font-size: 1em;
-    font-style: italic;
-    font-weight: 600;
-    margin-top: 16px;
-    padding: 0;
-  }
-
-  ${dd.selector} {
-    margin-bottom: 16px;
-    padding: 0 16px;
-  }
 `;
 
 export function Dl(props: ElementProps) {

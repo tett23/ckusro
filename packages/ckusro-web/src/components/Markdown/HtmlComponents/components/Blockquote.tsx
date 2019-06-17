@@ -7,13 +7,6 @@ const blockquote = styled(topLevel)`
   border-left-style: solid;
   border-left-width: 0.25em;
   padding: 0 1em;
-
-  :first-child {
-    margin-top: 0;
-  }
-  :last-child {
-    margin-bottom: 0;
-  }
 `;
 
 export default function Blockquote(props: ElementProps) {

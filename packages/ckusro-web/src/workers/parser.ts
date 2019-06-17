@@ -50,5 +50,5 @@ async function parseMarkdownHandler(
   const core = ckusroCore(config, fs);
   const ast = core.parser.buildAst(md);
 
-  return [updateCurrentAst(ast)];
+  return [updateCurrentAst(ast as any)];
 }

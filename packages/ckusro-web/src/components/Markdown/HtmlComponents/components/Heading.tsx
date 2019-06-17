@@ -1,25 +1,18 @@
 import React from 'react';
-import styled, { css } from '../../../styled';
+import styled from '../../../styled';
 import { Block, bold, Div, ElementProps, Span } from './common';
 
-const headingMargin = css`
+const heading = styled(Div)`
   margin-top: 0;
   margin-bottom: 0;
-`;
-
-const heading = styled(Div)`
-  ${headingMargin}
 
   margin-bottom: 16px;
   margin-top: 24px;
 `;
 const headingText = styled(Span)`
   ${bold}
-  ${headingMargin}
 
   line-height: 1.25em;
-  margin-bottom: 16px;
-  margin-top: 24px;
 `;
 
 const h1 = styled(heading)`
@@ -29,9 +22,6 @@ const h1 = styled(heading)`
 
   margin: 0.67em 0;
   padding-bottom: 0.3em;
-
-  margin-block-start: 0.83em;
-  margin-block-end: 0.83em;
 `;
 const h1Text = styled(headingText)`
   font-size: 2em;
@@ -41,9 +31,6 @@ const h2 = styled(heading)`
   border-bottom-style: solid;
   border-bottom-width: 1px;
   border-bottom-color: #eaecef;
-
-  margin-block-start: 0.83em;
-  margin-block-end: 0.83em;
 
   margin-bottom: 16px;
   margin-top: 24px;
