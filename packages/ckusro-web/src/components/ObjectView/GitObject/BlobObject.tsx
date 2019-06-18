@@ -1,24 +1,46 @@
 import { BlobObject as BlobObjectType } from '@ckusro/ckusro-core';
-import React from 'react';
-import { Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { State } from '../../../modules';
+import { parseMarkdown } from '../../../modules/thunkActions';
 import Markdown from '../../Markdown';
-import ObjectLink from '../../shared/ObjectLinkText';
+import { Hast } from '../../Markdown/Hast';
 
 export type BlobObjectProps = {
-  gitObject: BlobObjectType;
+  ast: Hast;
 };
 
-export default function BlobObject({ gitObject }: BlobObjectProps) {
-  const content = new TextDecoder().decode(gitObject.content);
-
+export function BlobObject({ ast }: BlobObjectProps) {
   return (
     <View>
-      <Markdown oid={gitObject.oid} text={content} />
-      <Text>
-        oid: <ObjectLink oid={gitObject.oid}>{gitObject.oid}</ObjectLink>
-      </Text>
-      <Text>type: {gitObject.type}</Text>
-      <Text>content: {content}</Text>
+      <Markdown ast={ast} />
     </View>
   );
+}
+
+const Memoized = React.memo(BlobObject, (prev, next) => prev.ast === next.ast);
+
+export default function(props: { gitObject: BlobObjectType }) {
+  const { ast } = useSelector(({ objectView: { currentAst } }: State) => {
+    return {
+      ast: currentAst,
+    };
+  });
+  const dispatch = useDispatch();
+
+  const {
+    gitObject: { oid, content: buffer },
+  } = props;
+  const content = new TextDecoder().decode(buffer);
+
+  useEffect(() => {
+    dispatch(parseMarkdown(content));
+  }, [oid]);
+
+  if (ast == null) {
+    return <View />;
+  }
+
+  return <Memoized ast={ast} />;
 }
