@@ -1,6 +1,7 @@
 import { RepoPath } from '@ckusro/ckusro-core';
 import { Dispatch } from 'react';
 import { updateCurrentOid as updateCurrentOidAction } from './actions/shared';
+import { addOids } from './fetchingObjects';
 import { Actions, State } from './index';
 import { parseMarkdown as parseMarkdownAction } from './workerActions/parser';
 import {
@@ -43,16 +44,20 @@ export function pullRepository(repoPath: RepoPath) {
 }
 
 export function fetchObjects(oids: string[]) {
-  return async (_: Dispatch<Actions>, getState: () => State) => {
+  return async (dispatch: Dispatch<Actions>, getState: () => State) => {
     const {
       domain: { objectManager },
       workers: { repositoryWorkerDispatcher },
+      fetchingObjects: { oids: fetchingOids },
     } = getState();
 
-    const fetchOids = oids.filter((oid) => objectManager[oid] == null);
+    const fetchOids = oids.filter(
+      (oid) => objectManager[oid] == null && !fetchingOids.includes(oid),
+    );
     if (fetchOids.length === 0) {
       return;
     }
+    dispatch(addOids(fetchOids));
 
     repositoryWorkerDispatcher(fetchObjectsAction(fetchOids));
   };

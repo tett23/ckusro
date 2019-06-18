@@ -47,8 +47,6 @@ export default function(ownProps: OwnProps) {
     return <FetchObjects oids={[ownProps.oid]} />;
   }
 
-  // dispatch(fetchObjects(gitObject.content.map(({ oid }) => oid)));
-
   return (
     <FetchObjects oids={gitObject.content.map(({ oid }) => oid)}>
       <Memoized {...ownProps} treeObject={gitObject} />

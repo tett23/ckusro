@@ -15,6 +15,11 @@ import {
   initialDomainState,
 } from './domain';
 import {
+  FetchingObjectsActions,
+  fetchingObjectsReducer,
+  FetchingObjectsState,
+} from './fetchingObjects';
+import {
   GitObjectListActions,
   gitObjectListReducer,
   GitObjectListState,
@@ -40,6 +45,7 @@ export type State = {
   config: ConfigState;
   objectView: ObjectViewState;
   gitObjectList: GitObjectListState;
+  fetchingObjects: FetchingObjectsState;
   workers: WorkersState;
 };
 
@@ -48,11 +54,13 @@ export type Actions =
   | WorkersActions
   | ObjectViewActions
   | GitObjectListActions
+  | FetchingObjectsActions
   | CommonWorkerActions;
 
 export const reducers = combineReducers<State>({
   domain: domainReducer,
   config: configReducer,
+  fetchingObjects: fetchingObjectsReducer,
   objectView: objectViewReducer,
   gitObjectList: gitObjectListReducer,
   workers: workersReducer,
