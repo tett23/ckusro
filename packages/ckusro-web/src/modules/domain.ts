@@ -50,19 +50,19 @@ export function addRef(ref: Ref) {
   };
 }
 
-const AddObject = 'Domain/AddObject' as const;
+const AddObjects = 'Domain/AddObjects' as const;
 
-export function addObject(object: GitObject) {
+export function addObjects(objects: GitObject[]) {
   return {
-    type: AddObject,
-    payload: object,
+    type: AddObjects,
+    payload: objects,
   };
 }
 
 export type DomainActions =
   | ReturnType<typeof addRepository>
   | ReturnType<typeof addRef>
-  | ReturnType<typeof addObject>;
+  | ReturnType<typeof addObjects>;
 
 export function domainReducer(
   state: DomainState = initialDomainState(),
@@ -79,10 +79,10 @@ export function domainReducer(
         ...state,
         refManager: createRefManager(state.refManager).addRef(action.payload),
       };
-    case AddObject:
+    case AddObjects:
       return {
         ...state,
-        objectManager: createObjectManager(state.objectManager).addObject(
+        objectManager: createObjectManager(state.objectManager).addObjects(
           action.payload,
         ),
       };

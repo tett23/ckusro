@@ -1,11 +1,11 @@
 import { CommitObject, RepoPath, url2RepoPath } from '@ckusro/ckusro-core';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { ObjectManager } from '../../models/ObjectManager';
+import { createObjectManager, ObjectManager } from '../../models/ObjectManager';
 import { createRefManager, RefManager } from '../../models/RefManager';
 import { Repository } from '../../models/Repository';
 import { State } from '../../modules';
-import FetchObject from '../FetchObject';
+import FetchObjects from '../FetchObject';
 import { drawer } from '../shared';
 import styled from '../styled';
 import RepositoryComponent from './Repository';
@@ -27,13 +27,15 @@ export function TreeView({
     const oid = createRefManager(refManager).headOid(url2RepoPath(
       item.url,
     ) as RepoPath);
-    const commitObject: CommitObject | null =
-      oid == null ? null : (objectManager[oid] as CommitObject);
+    const commitObject =
+      oid == null
+        ? null
+        : createObjectManager(objectManager).fetch<CommitObject>(oid);
 
     return (
-      <FetchObject key={item.url} oid={oid}>
+      <FetchObjects key={item.url} oids={oid == null ? [] : [oid]}>
         <RepositoryComponent repository={item} commitObject={commitObject} />
-      </FetchObject>
+      </FetchObjects>
     );
   });
 

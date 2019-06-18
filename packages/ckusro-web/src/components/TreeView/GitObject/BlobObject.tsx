@@ -2,7 +2,7 @@ import { BlobObject as BlobObjectType, GitObject } from '@ckusro/ckusro-core';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { State } from '../../../modules';
-import FetchObject from '../../FetchObject';
+import FetchObjects from '../../FetchObject';
 import ObjectLink from '../../shared/ObjectLinkText';
 import styled from '../../styled';
 import { Text, treeViewItem } from '../styles';
@@ -31,7 +31,7 @@ export default function({ path: name, oid }: { path: string; oid: string }) {
     (state: State) => state.domain.objectManager[oid],
   );
   if (gitObject == null) {
-    return <FetchObject oid={oid} />;
+    return <FetchObjects oids={[oid]} />;
   }
 
   return <BlobObject path={name} blobObject={gitObject as BlobObjectType} />;

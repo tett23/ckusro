@@ -2,7 +2,7 @@ import { BlobObject as BlobObjectType, GitObject } from '@ckusro/ckusro-core';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { State } from '../../../modules';
-import FetchObject from '../../FetchObject';
+import FetchObjects from '../../FetchObject';
 import { BoldText, borderBottom, SmallAndMutedText } from '../../shared';
 import ObjectLinkView from '../../shared/ObjectLinkView';
 import styled from '../../styled';
@@ -57,7 +57,7 @@ export default function(ownProps: OwnProps) {
   );
 
   if (gitObject == null) {
-    return <FetchObject oid={ownProps.oid} />;
+    return <FetchObjects oids={[ownProps.oid]} />;
   }
 
   return <Memoized {...ownProps} blobObject={gitObject as BlobObjectType} />;

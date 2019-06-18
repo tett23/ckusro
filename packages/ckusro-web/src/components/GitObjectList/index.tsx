@@ -1,24 +1,21 @@
-import { GitObject } from '@ckusro/ckusro-core';
+import { TreeObject } from '@ckusro/ckusro-core';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { createObjectManager } from '../../models/ObjectManager';
 import { State } from '../../modules';
-import FetchObject from '../FetchObject';
+import FetchObjects from '../FetchObject';
 import { borderLeft, borderRight } from '../shared';
 import styled from '../styled';
 import TreeEntry from './TreeEntry';
 
 type OwnProps = {
   oid: string;
-  gitObject: GitObject;
+  gitObject: TreeObject;
 };
 
 export type GitObjectListProps = OwnProps;
 
 export function GitObjectList({ gitObject }: GitObjectListProps) {
-  if (gitObject.type !== 'tree') {
-    return <Wrapper />;
-  }
-
   const entries = gitObject.content.map((item) => (
     <TreeEntry key={item.oid} treeEntry={item} />
   ));
@@ -41,21 +38,25 @@ const Memoized = React.memo(
 
 export default function() {
   const { objectManager, currentOid } = useSelector((state: State) => ({
-    objectManager: state.domain.objectManager,
+    objectManager: createObjectManager(state.domain.objectManager),
     currentOid: state.gitObjectList.currentOid,
   }));
-  const gitObject = currentOid == null ? null : objectManager[currentOid];
-  if (currentOid == null || gitObject == null) {
+  if (currentOid == null) {
+    return <Wrapper />;
+  }
+
+  const gitObject = objectManager.fetch<TreeObject>(currentOid);
+  if (gitObject == null) {
     return (
-      <FetchObject oid={currentOid}>
+      <FetchObjects oids={[currentOid]}>
         <Wrapper />
-      </FetchObject>
+      </FetchObjects>
     );
   }
 
   return (
-    <FetchObject oid={currentOid}>
+    <FetchObjects oids={gitObject.content.map(({ oid }) => oid)}>
       <Memoized oid={currentOid} gitObject={gitObject} />
-    </FetchObject>
+    </FetchObjects>
   );
 }

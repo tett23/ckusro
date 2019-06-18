@@ -1,10 +1,11 @@
-import { GitObject, TreeObject as TreeObjectType } from '@ckusro/ckusro-core';
+import { TreeObject as TreeObjectType } from '@ckusro/ckusro-core';
 import { faFolder, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { createObjectManager } from '../../../models/ObjectManager';
 import { State } from '../../../modules';
-import FetchObject from '../../FetchObject';
+import FetchObjects from '../../FetchObject';
 import ObjectLinkText from '../../shared/ObjectLinkText';
 import styled from '../../styled';
 import { Text, treeViewItem } from '../styles';
@@ -74,12 +75,16 @@ function FolderClosed() {
 }
 
 export default function({ path, oid }: { path: string; oid: string }) {
-  const gitObject: GitObject | null = useSelector(
-    (state: State) => state.domain.objectManager[oid],
+  const gitObject = useSelector((state: State) =>
+    createObjectManager(state.domain.objectManager).fetch<TreeObjectType>(oid),
   );
   if (gitObject == null) {
-    return <FetchObject oid={oid} />;
+    return <FetchObjects oids={[oid]} />;
   }
 
-  return <TreeObject path={path} treeObject={gitObject as TreeObjectType} />;
+  return (
+    <FetchObjects oids={gitObject.content.map(({ oid }) => oid)}>
+      <TreeObject path={path} treeObject={gitObject} />
+    </FetchObjects>
+  );
 }

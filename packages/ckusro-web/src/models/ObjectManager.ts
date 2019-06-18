@@ -6,13 +6,34 @@ export type ObjectManager = {
 
 export function createObjectManager(manager: ObjectManager) {
   return {
-    addObject: (object: GitObject) => addObject(manager, object),
+    addObjects: (objects: GitObject[]) => addObjects(manager, objects),
+    fetch: <T extends GitObject>(oid: string) => fetch<T>(manager, oid),
   };
 }
 
-export function addObject(manager: ObjectManager, object: GitObject) {
-  return {
+export function addObjects(
+  manager: ObjectManager,
+  objects: GitObject[],
+): ObjectManager {
+  const ret = {
     ...manager,
-    [object.oid]: object,
   };
+
+  objects.forEach((item) => {
+    ret[item.oid] = item;
+  });
+
+  return ret;
+}
+
+export function fetch<T extends GitObject>(
+  manager: ObjectManager,
+  oid: string,
+): T | null {
+  const object: GitObject | null = manager[oid];
+  if (object == null) {
+    return null;
+  }
+
+  return object as T;
 }

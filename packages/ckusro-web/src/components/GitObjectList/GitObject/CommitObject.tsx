@@ -6,7 +6,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { State } from '../../../modules';
-import FetchObject from '../../FetchObject';
+import FetchObjects from '../../FetchObject';
 
 type OwnProps = {
   oid: string;
@@ -37,7 +37,7 @@ export default function(ownProps: OwnProps) {
   );
 
   if (gitObject == null) {
-    return <FetchObject oid={ownProps.oid} />;
+    return <FetchObjects oids={[ownProps.oid]} />;
   }
 
   return (

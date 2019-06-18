@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect } from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { updateCurrentOid } from '../../modules/thunkActions';
-import { fetchObject } from '../../modules/thunkActions';
+import { fetchObjects } from '../../modules/thunkActions';
 
 type OwnProps = {
   oid: string | null;
@@ -42,7 +42,7 @@ export default function(ownProps: OwnProps) {
         return;
       }
 
-      dispatch(fetchObject(oid));
+      dispatch(fetchObjects([oid]));
     },
     updateCurrentOid() {
       dispatch(updateCurrentOid(oid));

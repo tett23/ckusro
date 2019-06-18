@@ -1,23 +1,23 @@
 import React, { ReactNode, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { fetchObject } from '../modules/thunkActions';
+import { fetchObjects } from '../modules/thunkActions';
 
 type OwnProps = {
-  oid: string | null;
+  oids: string[] | null;
   children?: ReactNode;
 };
 
-export type FetchObjectProps = OwnProps;
+export type FetchObjectsProps = OwnProps;
 
-export default function FetchObject({ oid, children }: FetchObjectProps) {
+export default function FetchObjects({ oids, children }: FetchObjectsProps) {
   const dispatch = useDispatch();
   useEffect(() => {
-    if (oid == null) {
+    if (oids == null || oids.length === 0) {
       return;
     }
 
-    dispatch(fetchObject(oid));
-  }, [oid]);
+    dispatch(fetchObjects(oids));
+  }, [(oids || []).join()]);
 
   return <>{children}</>;
 }

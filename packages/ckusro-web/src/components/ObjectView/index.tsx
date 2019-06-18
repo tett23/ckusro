@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { State } from '../../modules';
-import FetchObject from '../FetchObject';
+import FetchObjects from '../FetchObject';
 import styled from '../styled';
 import BlobObject from './GitObject/BlobObject';
 import CommitObject from './GitObject/CommitObject';
@@ -58,6 +58,11 @@ function GitObjectView({ gitObject }: GitObjectViewProps) {
   }
 }
 
+const Memoized = React.memo(
+  ObjectView,
+  (prev, next) => prev.gitObject === next.gitObject,
+);
+
 export default function() {
   const { oid, gitObject } = useSelector(
     ({ domain: { objectManager }, objectView: { currentOid } }: State) => {
@@ -68,8 +73,8 @@ export default function() {
     },
   );
   if (gitObject == null) {
-    return <FetchObject oid={oid} />;
+    return <FetchObjects oids={oid == null ? [] : [oid]} />;
   }
 
-  return <ObjectView gitObject={gitObject} />;
+  return <Memoized gitObject={gitObject} />;
 }

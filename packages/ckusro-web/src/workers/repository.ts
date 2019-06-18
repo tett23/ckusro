@@ -7,7 +7,7 @@ import LightningFs from '@isomorphic-git/lightning-fs';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { Actions } from '../modules';
-import { addObject, addRef } from '../modules/domain';
+import { addObjects, addRef } from '../modules/domain';
 import {
   CommonWorkerActions,
   errorMessage,
@@ -143,7 +143,7 @@ async function fetchObjectsHandler(
   const ps = oids.map((oid) => core.repositories.fetchObject(oid));
   const [objects, errors] = splitError(await Promise.all(ps));
 
-  return [...objects.map(addObject), ...errors.map(errorMessage)];
+  return [addObjects(objects), ...errors.map(errorMessage)];
 }
 
 async function fetchHeadOidsHandler(

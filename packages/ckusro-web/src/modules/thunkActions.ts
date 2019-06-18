@@ -42,18 +42,19 @@ export function pullRepository(repoPath: RepoPath) {
   };
 }
 
-export function fetchObject(oid: string) {
+export function fetchObjects(oids: string[]) {
   return async (_: Dispatch<Actions>, getState: () => State) => {
     const {
       domain: { objectManager },
       workers: { repositoryWorkerDispatcher },
     } = getState();
 
-    if (objectManager[oid] != null) {
+    const fetchOids = oids.filter((oid) => objectManager[oid] == null);
+    if (fetchOids.length === 0) {
       return;
     }
 
-    repositoryWorkerDispatcher(fetchObjectsAction([oid]));
+    repositoryWorkerDispatcher(fetchObjectsAction(fetchOids));
   };
 }
 

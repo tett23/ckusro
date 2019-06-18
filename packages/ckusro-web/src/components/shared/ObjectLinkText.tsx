@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateCurrentOid } from '../../modules/thunkActions';
-import { fetchObject } from '../../modules/thunkActions';
+import { fetchObjects } from '../../modules/thunkActions';
 import { Text } from './index';
 
 type OwnProps = {
@@ -38,7 +38,7 @@ export default function(ownProps: OwnProps) {
         return;
       }
 
-      dispatch(fetchObject(oid));
+      dispatch(fetchObjects([oid]));
     },
     updateCurrentOid() {
       dispatch(updateCurrentOid(oid));
