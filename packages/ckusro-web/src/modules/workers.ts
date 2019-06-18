@@ -16,6 +16,7 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
 ): WorkerDispatcher<WorkerActions> {
   worker.addEventListener('message', (message: MessageEvent) => {
     const res: WorkerResponse = message.data;
+    console.log('res', res);
 
     if (res.payload == null) {
       return;
@@ -38,6 +39,7 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
   });
 
   return (action: WorkerActions) => {
+    console.log('req', action);
     worker.postMessage(withConfig(withRequestId(action), store.getState));
   };
 }

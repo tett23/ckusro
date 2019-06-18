@@ -8,13 +8,16 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { Actions } from '../modules';
 import { addObject, addRef } from '../modules/domain';
-import { CommonWorkerActions } from '../modules/workerActions/common';
+import {
+  CommonWorkerActions,
+  errorMessage,
+} from '../modules/workerActions/common';
 import {
   CloneRepository,
   cloneRepository,
   FetchHeadOids,
-  FetchObject,
-  fetchObject,
+  FetchObjects,
+  fetchObjects,
   PullRepository,
   pullRepository,
   RepositoryWorkerActions,
@@ -51,8 +54,8 @@ function actionHandlers(
       return cloneHandler as any;
     case PullRepository:
       return pullRepositoryHandler as any;
-    case FetchObject:
-      return fetchObjectHandler as any;
+    case FetchObjects:
+      return fetchObjectsHandler as any;
     case FetchHeadOids:
       return fetchHeadOidsHandler;
     default:
@@ -115,18 +118,32 @@ async function pullRepositoryHandler(
   ];
 }
 
-async function fetchObjectHandler(
+function splitError<T>(items: Array<T | Error>): [T[], Error[]] {
+  return items.reduce(
+    (acc, item) => {
+      if (item instanceof Error) {
+        acc[1].push(item);
+        return acc;
+      }
+
+      acc[0].push(item);
+
+      return acc;
+    },
+    [[], []] as [T[], Error[]],
+  );
+}
+
+async function fetchObjectsHandler(
   config: CkusroConfig,
   fs: typeof LightningFs,
-  oid: PayloadType<ReturnType<typeof fetchObject>>,
+  oids: PayloadType<ReturnType<typeof fetchObjects>>,
 ): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
   const core = ckusroCore(config, fs);
-  const object = await core.repositories.fetchObject(oid);
-  if (object instanceof Error) {
-    return object;
-  }
+  const ps = oids.map((oid) => core.repositories.fetchObject(oid));
+  const [objects, errors] = splitError(await Promise.all(ps));
 
-  return [addObject(object)];
+  return [...objects.map(addObject), ...errors.map(errorMessage)];
 }
 
 async function fetchHeadOidsHandler(

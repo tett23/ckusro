@@ -6,7 +6,7 @@ import { parseMarkdown as parseMarkdownAction } from './workerActions/parser';
 import {
   cloneRepository as cloneRepositoryAction,
   fetchHeadOids as fetchHeadOidsAction,
-  fetchObject as fetchObjectAction,
+  fetchObjects as fetchObjectsAction,
   pullRepository as pullRepositoryAction,
 } from './workerActions/repository';
 
@@ -53,7 +53,7 @@ export function fetchObject(oid: string) {
       return;
     }
 
-    repositoryWorkerDispatcher(fetchObjectAction(oid));
+    repositoryWorkerDispatcher(fetchObjectsAction([oid]));
   };
 }
 

@@ -18,12 +18,12 @@ export function pullRepository(repoPath: RepoPath) {
   };
 }
 
-export const FetchObject = 'RepositoryWorker/FetchObject' as const;
+export const FetchObjects = 'RepositoryWorker/FetchObjects' as const;
 
-export function fetchObject(oid: string) {
+export function fetchObjects(oids: string[]) {
   return {
-    type: FetchObject,
-    payload: oid,
+    type: FetchObjects,
+    payload: oids,
   };
 }
 
@@ -39,5 +39,5 @@ export function fetchHeadOids() {
 export type RepositoryWorkerActions =
   | ReturnType<typeof cloneRepository>
   | ReturnType<typeof pullRepository>
-  | ReturnType<typeof fetchObject>
+  | ReturnType<typeof fetchObjects>
   | ReturnType<typeof fetchHeadOids>;
