@@ -15,21 +15,19 @@ import {
   initialDomainState,
 } from './domain';
 import {
-  FetchingObjectsActions,
-  fetchingObjectsReducer,
-  FetchingObjectsState,
-} from './fetchingObjects';
-import {
   GitObjectListActions,
   gitObjectListReducer,
   GitObjectListState,
 } from './gitObjectList';
+import persistStore from './middlewares/persistStore';
+import { MiscActions, miscReducer, MiscState } from './misc';
 import {
   ObjectViewActions,
   objectViewReducer,
   ObjectViewState,
 } from './objectView';
 import { CommonWorkerActions } from './workerActions/common';
+import { readPersistedState } from './workerActions/persistedState';
 import {
   initialWorkerState,
   newWorkerDispatcher,
@@ -45,7 +43,7 @@ export type State = {
   config: ConfigState;
   objectView: ObjectViewState;
   gitObjectList: GitObjectListState;
-  fetchingObjects: FetchingObjectsState;
+  misc: MiscState;
   workers: WorkersState;
 };
 
@@ -54,13 +52,13 @@ export type Actions =
   | WorkersActions
   | ObjectViewActions
   | GitObjectListActions
-  | FetchingObjectsActions
+  | MiscActions
   | CommonWorkerActions;
 
 export const reducers = combineReducers<State>({
   domain: domainReducer,
   config: configReducer,
-  fetchingObjects: fetchingObjectsReducer,
+  misc: miscReducer,
   objectView: objectViewReducer,
   gitObjectList: gitObjectListReducer,
   workers: workersReducer,
@@ -78,10 +76,25 @@ export default function initializeStore(
     workers: initialWorkerState(),
   };
 
+  const [persistedStateWorker, persistedStateMiddleware] = persistStore();
+
   const store = createStore(
     reducers as any,
     init,
-    applyMiddleware(thunk as ThunkMiddleware<State, Actions>),
+    applyMiddleware(
+      persistedStateMiddleware as any,
+      thunk as ThunkMiddleware<State, Actions>,
+    ),
+  );
+
+  persistedStateWorker.addEventListener('message', (message: MessageEvent) => {
+    console.log(message);
+  });
+  persistedStateWorker.addEventListener('error', (err: ErrorEvent) => {
+    console.log('on error', err);
+  });
+  persistedStateWorker.postMessage(
+    readPersistedState(store.getState().config.coreId),
   );
 
   const repositoryWorker = new Worker('../workers/repository.ts');

@@ -7,6 +7,9 @@ export function initialConfigState(): CkusroConfig {
     base: '/repositories',
     coreId: 'ckusro-web__dev',
     corsProxy: 'https://cors.isomorphic-git.org',
+    authentication: {
+      github: null,
+    },
     colorScheme: convertColorScheme({
       main: 'B22E42',
       accent: 'A4CE50',

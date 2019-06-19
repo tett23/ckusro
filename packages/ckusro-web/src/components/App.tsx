@@ -1,15 +1,17 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import initializeStore from '../modules';
+import { enablePersistedState } from '../modules/misc';
 import { fetchHeadOids } from '../modules/thunkActions';
 import GitObjectList from './GitObjectList';
 import ObjectView from './ObjectView';
 import styled, { StyledProps, ThemeProvider } from './styled';
 import TreeView from './TreeView';
 
-export default function App() {
-  const store = initializeStore({});
+const store = initializeStore({});
 
+export default function App() {
+  store.dispatch(enablePersistedState());
   store.dispatch(fetchHeadOids() as any);
 
   return (

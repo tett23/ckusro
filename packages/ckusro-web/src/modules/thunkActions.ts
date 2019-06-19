@@ -1,8 +1,8 @@
 import { RepoPath } from '@ckusro/ckusro-core';
 import { Dispatch } from 'react';
 import { updateCurrentOid as updateCurrentOidAction } from './actions/shared';
-import { addOids } from './fetchingObjects';
 import { Actions, State } from './index';
+import { addFetchingOids } from './misc';
 import { parseMarkdown as parseMarkdownAction } from './workerActions/parser';
 import {
   cloneRepository as cloneRepositoryAction,
@@ -48,7 +48,7 @@ export function fetchObjects(oids: string[]) {
     const {
       domain: { objectManager },
       workers: { repositoryWorkerDispatcher },
-      fetchingObjects: { oids: fetchingOids },
+      misc: { fetchingOids: fetchingOids },
     } = getState();
 
     const fetchOids = oids.filter(
@@ -57,7 +57,7 @@ export function fetchObjects(oids: string[]) {
     if (fetchOids.length === 0) {
       return;
     }
-    dispatch(addOids(fetchOids));
+    dispatch(addFetchingOids(fetchOids));
 
     repositoryWorkerDispatcher(fetchObjectsAction(fetchOids));
   };
