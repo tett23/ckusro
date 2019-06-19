@@ -1,3 +1,4 @@
+import { batch } from 'react-redux';
 import {
   Action,
   applyMiddleware,
@@ -7,6 +8,7 @@ import {
   Store,
 } from 'redux';
 import thunk, { ThunkDispatch, ThunkMiddleware } from 'redux-thunk';
+import { SharedActions } from './actions/shared';
 import { configReducer, ConfigState } from './config';
 import {
   DomainActions,
@@ -53,7 +55,8 @@ export type Actions =
   | ObjectViewActions
   | GitObjectListActions
   | MiscActions
-  | CommonWorkerActions;
+  | CommonWorkerActions
+  | SharedActions;
 
 export const reducers = combineReducers<State>({
   domain: domainReducer,
@@ -88,7 +91,9 @@ export default function initializeStore(
   );
 
   persistedStateWorker.addEventListener('message', (message: MessageEvent) => {
-    console.log(message);
+    batch(() => {
+      message.data.forEach(store.dispatch);
+    });
   });
   persistedStateWorker.addEventListener('error', (err: ErrorEvent) => {
     console.log('on error', err);

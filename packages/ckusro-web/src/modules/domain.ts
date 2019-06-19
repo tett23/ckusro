@@ -75,11 +75,13 @@ export function domainReducer(
         repositories: [...state.repositories, action.payload],
       };
     case AddRef:
+      // TODO: optimization
       return {
         ...state,
         refManager: createRefManager(state.refManager).addRef(action.payload),
       };
     case AddObjects:
+      // TODO: optimization
       return {
         ...state,
         objectManager: createObjectManager(state.objectManager).addObjects(

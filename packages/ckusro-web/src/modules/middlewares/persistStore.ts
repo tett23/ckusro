@@ -16,7 +16,6 @@ export default function() {
       worker.postMessage(persistedState);
     }
 
-    console.log(result);
     return result;
   };
 

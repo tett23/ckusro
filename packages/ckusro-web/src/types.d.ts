@@ -12,6 +12,10 @@ type FSAction<Payload = any> = {
   meta?: Object;
 };
 
-// type FSAction = {
-//   [prop: string]: any;
-// };
+type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends Array<infer U>
+    ? Array<DeepPartial<U>>
+    : T[P] extends ReadonlyArray<infer U>
+    ? ReadonlyArray<DeepPartial<U>>
+    : DeepPartial<T[P]>
+};

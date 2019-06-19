@@ -1,4 +1,5 @@
 import { FileBuffer } from '@ckusro/ckusro-core';
+import console = require('console');
 import { Hast } from '../components/Markdown/Hast';
 import { SharedActions, UpdateCurrentOid } from './actions/shared';
 
@@ -43,6 +44,7 @@ export function objectViewReducer(
   state: ObjectViewState = initialObjectViewState(),
   action: ObjectViewActions,
 ): ObjectViewState {
+  console.log(action);
   switch (action.type) {
     case UpdateCurrentOid:
       return {

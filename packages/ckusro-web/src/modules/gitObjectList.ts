@@ -4,7 +4,7 @@ export type GitObjectListState = {
   currentOid: string | null;
 };
 
-export function initialObjectViewState(): GitObjectListState {
+export function initialGitObjectListState(): GitObjectListState {
   return {
     currentOid: null,
   };
@@ -13,7 +13,7 @@ export function initialObjectViewState(): GitObjectListState {
 export type GitObjectListActions = SharedActions;
 
 export function gitObjectListReducer(
-  state: GitObjectListState = initialObjectViewState(),
+  state: GitObjectListState = initialGitObjectListState(),
   action: GitObjectListActions,
 ): GitObjectListState {
   switch (action.type) {

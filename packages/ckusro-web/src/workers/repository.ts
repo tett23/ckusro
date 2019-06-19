@@ -22,6 +22,7 @@ import {
   pullRepository,
   RepositoryWorkerActions,
 } from '../modules/workerActions/repository';
+import { splitError } from '../utils';
 import { Handler, HandlerResult, newHandler, PayloadType } from './util';
 
 export const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
@@ -116,22 +117,6 @@ async function pullRepositoryHandler(
       oid: result,
     }),
   ];
-}
-
-function splitError<T>(items: Array<T | Error>): [T[], Error[]] {
-  return items.reduce(
-    (acc, item) => {
-      if (item instanceof Error) {
-        acc[1].push(item);
-        return acc;
-      }
-
-      acc[0].push(item);
-
-      return acc;
-    },
-    [[], []] as [T[], Error[]],
-  );
 }
 
 async function fetchObjectsHandler(
