@@ -25,6 +25,9 @@ export function gitObjectListReducer(
 ): GitObjectListState {
   switch (action.type) {
     case UpdateCurrentOid:
+      if (state.currentOid == action.payload) {
+        return state;
+      }
       if (action.meta.objectType !== 'tree') {
         return state;
       }

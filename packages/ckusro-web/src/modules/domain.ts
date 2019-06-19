@@ -82,14 +82,17 @@ export function domainReducer(
         ...state,
         refManager: createRefManager(state.refManager).addRef(action.payload),
       };
-    case AddObjects:
-      // TODO: optimization
+    case AddObjects: {
+      const manager = createObjectManager(state.objectManager);
+      if (manager.includes(action.payload)) {
+        return state;
+      }
+
       return {
         ...state,
-        objectManager: createObjectManager(state.objectManager).addObjects(
-          action.payload,
-        ),
+        objectManager: manager.addObjects(action.payload),
       };
+    }
     case UpdateState:
       if (action.payload.domain == null) {
         return state;

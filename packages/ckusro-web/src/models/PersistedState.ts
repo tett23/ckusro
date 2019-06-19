@@ -120,7 +120,9 @@ export async function toState(
     domain: {
       objectManager,
     },
-    objectView: persistedState.objectView,
+    objectView: {
+      currentOid: persistedState.objectView.currentOid,
+    },
     gitObjectList: persistedState.gitObjectList,
   };
 }

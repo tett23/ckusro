@@ -51,16 +51,28 @@ export function objectViewReducer(
 ): ObjectViewState {
   switch (action.type) {
     case UpdateCurrentOid:
+      if (state.currentAst == action.payload) {
+        return state;
+      }
+
       return {
         ...state,
         currentOid: action.payload,
       };
     case UpdateFileBuffer:
+      if (state.currentFileBuffer == action.payload) {
+        return state;
+      }
+
       return {
         ...state,
         currentFileBuffer: action.payload,
       };
     case UpdateCurrentAst:
+      if (state.currentAst == action.payload) {
+        return state;
+      }
+
       return {
         ...state,
         currentAst: action.payload,
