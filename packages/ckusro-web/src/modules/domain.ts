@@ -2,6 +2,7 @@ import { GitObject } from '@ckusro/ckusro-core';
 import { createObjectManager, ObjectManager } from '../models/ObjectManager';
 import { createRefManager, Ref, RefManager } from '../models/RefManager';
 import { Repository } from '../models/Repository';
+import { updateState, UpdateState } from './actions/shared';
 
 export type DomainState = {
   repositories: Repository[];
@@ -62,7 +63,8 @@ export function addObjects(objects: GitObject[]) {
 export type DomainActions =
   | ReturnType<typeof addRepository>
   | ReturnType<typeof addRef>
-  | ReturnType<typeof addObjects>;
+  | ReturnType<typeof addObjects>
+  | ReturnType<typeof updateState>;
 
 export function domainReducer(
   state: DomainState = initialDomainState(),
@@ -87,6 +89,15 @@ export function domainReducer(
         objectManager: createObjectManager(state.objectManager).addObjects(
           action.payload,
         ),
+      };
+    case UpdateState:
+      if (action.payload.domain == null) {
+        return state;
+      }
+
+      return {
+        ...state,
+        ...((action.payload.domain || {}) as DomainState),
       };
     default:
       return state;

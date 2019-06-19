@@ -1,4 +1,5 @@
 import { CkusroConfig, convertColorScheme } from '@ckusro/ckusro-core';
+import { updateState, UpdateState } from './actions/shared';
 
 export type ConfigState = CkusroConfig;
 
@@ -25,9 +26,23 @@ export function initialConfigState(): CkusroConfig {
   };
 }
 
+export type ConfigActions = ReturnType<typeof updateState>;
+
 export function configReducer(
   state: ConfigState = initialConfigState(),
-  _: any,
+  action: ConfigActions,
 ): ConfigState {
-  return state;
+  switch (action.type) {
+    case UpdateState:
+      if (action.payload.config == null) {
+        return state;
+      }
+
+      return {
+        ...state,
+        ...((action.payload.config || {}) as ConfigState),
+      };
+    default:
+      return state;
+  }
 }

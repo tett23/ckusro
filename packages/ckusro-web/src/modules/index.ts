@@ -9,7 +9,7 @@ import {
 } from 'redux';
 import thunk, { ThunkDispatch, ThunkMiddleware } from 'redux-thunk';
 import { SharedActions } from './actions/shared';
-import { configReducer, ConfigState } from './config';
+import { ConfigActions, configReducer, ConfigState } from './config';
 import {
   DomainActions,
   domainReducer,
@@ -50,6 +50,7 @@ export type State = {
 };
 
 export type Actions =
+  | ConfigActions
   | DomainActions
   | WorkersActions
   | ObjectViewActions

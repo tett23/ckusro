@@ -1,7 +1,11 @@
 import { FileBuffer } from '@ckusro/ckusro-core';
-import console = require('console');
 import { Hast } from '../components/Markdown/Hast';
-import { SharedActions, UpdateCurrentOid } from './actions/shared';
+import {
+  SharedActions,
+  UpdateCurrentOid,
+  updateState,
+  UpdateState,
+} from './actions/shared';
 
 export type ObjectViewState = {
   currentOid: string | null;
@@ -38,13 +42,13 @@ export function updateCurrentAst(ast: Hast | null) {
 export type ObjectViewActions =
   | ReturnType<typeof updateFileBuffer>
   | ReturnType<typeof updateCurrentAst>
+  | ReturnType<typeof updateState>
   | SharedActions;
 
 export function objectViewReducer(
   state: ObjectViewState = initialObjectViewState(),
   action: ObjectViewActions,
 ): ObjectViewState {
-  console.log(action);
   switch (action.type) {
     case UpdateCurrentOid:
       return {
@@ -60,6 +64,15 @@ export function objectViewReducer(
       return {
         ...state,
         currentAst: action.payload,
+      };
+    case UpdateState:
+      if (action.payload.objectView == null) {
+        return state;
+      }
+
+      return {
+        ...state,
+        ...((action.payload.objectView || {}) as ObjectViewState),
       };
     default:
       return state;
