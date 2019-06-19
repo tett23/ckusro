@@ -31,7 +31,7 @@ export function includes(
   manager: ObjectManager,
   gitObjects: GitObject[],
 ): boolean {
-  return gitObjects.some(({ oid }) => manager[oid] == null);
+  return gitObjects.some(({ oid }) => manager[oid] != null);
 }
 
 export function fetch<T extends GitObject>(
