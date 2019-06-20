@@ -1,7 +1,6 @@
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateCurrentOid } from '../../modules/thunkActions';
-import { fetchObjects } from '../../modules/thunkActions';
 import { Text } from './index';
 
 type OwnProps = {
@@ -10,22 +9,15 @@ type OwnProps = {
 };
 
 type DispatchProps = {
-  fetchObject: () => void;
   updateCurrentOid: () => void;
 };
 
 export type ObjectLinkTextProps = OwnProps & DispatchProps;
 
 export function ObjectLinkText({
-  oid,
   children,
-  fetchObject,
   updateCurrentOid,
 }: ObjectLinkTextProps) {
-  useEffect(() => {
-    fetchObject();
-  }, [oid]);
-
   return <Text onPress={updateCurrentOid}>{children}</Text>;
 }
 
@@ -33,13 +25,6 @@ export default function(ownProps: OwnProps) {
   const { oid } = ownProps;
   const dispatch = useDispatch();
   const actions = {
-    fetchObject() {
-      if (oid == null) {
-        return;
-      }
-
-      dispatch(fetchObjects([oid]));
-    },
     updateCurrentOid() {
       dispatch(updateCurrentOid(oid));
     },

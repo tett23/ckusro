@@ -9,6 +9,7 @@ export function createObjectManager(manager: ObjectManager) {
     addObjects: (objects: GitObject[]) => addObjects(manager, objects),
     fetch: <T extends GitObject>(oid: string) => fetch<T>(manager, oid),
     includes: (objects: GitObject[]) => includes(manager, objects),
+    difference: (oids: string[]) => difference(manager, oids),
   };
 }
 
@@ -44,4 +45,10 @@ export function fetch<T extends GitObject>(
   }
 
   return object as T;
+}
+
+export function difference(manager: ObjectManager, oids: string[]): string[] {
+  const keys = Object.keys(manager);
+
+  return oids.filter((item) => !keys.includes(item));
 }
