@@ -1,6 +1,6 @@
 import { CommitObject as CommitObjectType } from '@ckusro/ckusro-core';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View } from '../../shared';
 import ObjectLink from '../../shared/ObjectLinkText';
 
 export type CommitObjectProps = {

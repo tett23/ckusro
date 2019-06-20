@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
-import { TouchableWithoutFeedback } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { updateCurrentOid } from '../../modules/thunkActions';
+import { TouchableWithoutFeedback } from './index';
 
 type OwnProps = {
   oid: string | null;

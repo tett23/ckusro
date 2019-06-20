@@ -40,9 +40,6 @@
     "react": "16.8.3",
     "react-contextmenu": "^2.11.0",
     "react-dom": "^16.8.6",
-    "react-native": "^0.59.8",
-    "react-native-web": "^0.11.2",
-    "react-primitives": "^0.8.0",
     "react-redux": "^7.1.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
@@ -66,7 +63,6 @@
     "jest": "^24.8.0",
     "memfs": "^2.15.4",
     "parcel-bundler": "^1.12.3",
-    "text-encoding": "^0.7.0",
     "ts-jest": "^24.0.2",
     "typescript": "^3.5.2",
     "unionfs": "^4.2.0"
@@ -128,9 +124,7 @@
       [
         "module-resolver",
         {
-          "alias": {
-            "^react-native$": "react-native-web"
-          }
+          "alias": {}
         }
       ],
       [

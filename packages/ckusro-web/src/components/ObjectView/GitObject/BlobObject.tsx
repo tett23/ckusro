@@ -1,11 +1,11 @@
 import { BlobObject as BlobObjectType } from '@ckusro/ckusro-core';
 import React, { useEffect } from 'react';
-import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../../../modules';
 import { parseMarkdown } from '../../../modules/thunkActions';
 import Markdown from '../../Markdown';
 import { Hast } from '../../Markdown/Hast';
+import { View } from '../../shared';
 
 export type BlobObjectProps = {
   ast: Hast;

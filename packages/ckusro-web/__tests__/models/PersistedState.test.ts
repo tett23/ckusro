@@ -32,7 +32,7 @@ describe('PersistedState', () => {
         blobObject,
       );
       const serialized = serializeState(state);
-      console.log(await writePersistedState(fs, serialized));
+      await writePersistedState(fs, serialized);
       const actual = await readPersistedState(config.coreId, fs);
 
       expect(merge(state, actual)).toMatchObject(state);

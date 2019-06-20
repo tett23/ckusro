@@ -3,13 +3,12 @@ import { faDatabase } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
-import { View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { Repository } from '../../../models/Repository';
 import { cloneRepository, pullRepository } from '../../../modules/thunkActions';
 import ObjectLink from '../../shared/ObjectLinkText';
 import styled from '../../styled';
-import { Text } from '../styles';
+import { Text, View } from '../styles';
 
 type OwnProps = {
   repoPath: RepoPath;

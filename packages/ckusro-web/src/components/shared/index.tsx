@@ -1,3 +1,4 @@
+import React, { ReactNode } from 'react';
 import styled, { css, StyledProps } from '../styled';
 
 type RGB = [number, number, number];
@@ -100,3 +101,13 @@ export const drawer = css`
   background-color: ${({ theme }: StyledProps) =>
     toCssColor(theme.colors.base)};
 `;
+
+export const TouchableWithoutFeedback = ({
+  children,
+  onPress,
+}: {
+  children: ReactNode;
+  onPress: () => any;
+}) => {
+  return <View onClick={onPress}>{children}</View>;
+};

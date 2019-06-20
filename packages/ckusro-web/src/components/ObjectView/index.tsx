@@ -1,9 +1,9 @@
 import { GitObject } from '@ckusro/ckusro-core';
 import React from 'react';
-import { Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { State } from '../../modules';
 import FetchObjects from '../FetchObject';
+import { Text, View } from '../shared';
 import styled from '../styled';
 import BlobObject from './GitObject/BlobObject';
 import CommitObject from './GitObject/CommitObject';
@@ -55,6 +55,8 @@ function GitObjectView({ gitObject }: GitObjectViewProps) {
       return <BlobObject gitObject={gitObject} />;
     case 'tag':
       return <TagObject gitObject={gitObject} />;
+    default:
+      return null;
   }
 }
 

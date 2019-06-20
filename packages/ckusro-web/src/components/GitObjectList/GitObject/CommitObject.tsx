@@ -3,10 +3,10 @@ import {
   GitObject,
 } from '@ckusro/ckusro-core';
 import React from 'react';
-import { Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { State } from '../../../modules';
 import FetchObjects from '../../FetchObject';
+import { View, Text } from '../../shared';
 
 type OwnProps = {
   oid: string;

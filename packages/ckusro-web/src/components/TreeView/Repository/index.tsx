@@ -1,7 +1,7 @@
 import { CommitObject } from '@ckusro/ckusro-core';
 import React from 'react';
-import { View } from 'react-native';
 import { Repository as RepositoryType } from '../../../models/Repository';
+import { View } from '../../shared';
 import TreeEntries from '../TreeEntries';
 import RepositoryName from './RepositoryName';
 

@@ -1,6 +1,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
-import { AppRegistry } from 'react-native';
+import React from 'react';
+import { render } from 'react-dom';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 
@@ -9,11 +10,6 @@ import * as serviceWorker from './serviceWorker';
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 
-// render(React.createElement(App, null), document.getElementById('root'));
-// render(<App />, document.getElementById('root'));
-AppRegistry.registerComponent('App', () => App);
-AppRegistry.runApplication('App', {
-  rootTag: document.getElementById('root'),
-});
+render(<App />, document.getElementById('root'));
 
 library.add(fas);
