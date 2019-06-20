@@ -9,6 +9,7 @@ import FetchObjects from '../FetchObject';
 import { drawer } from '../shared';
 import styled from '../styled';
 import RepositoryComponent from './Repository';
+import { View } from './styles';
 
 type TreeViewStates = {
   repositories: Repository[];
@@ -42,7 +43,7 @@ export function TreeView({
   return <Wrapper>{repos}</Wrapper>;
 }
 
-const Wrapper = styled.View`
+const Wrapper = styled(View)`
   ${drawer}
   overflow-y: scroll;
   overflow-x: hidden;

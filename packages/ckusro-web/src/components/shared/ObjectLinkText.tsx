@@ -18,7 +18,7 @@ export function ObjectLinkText({
   children,
   updateCurrentOid,
 }: ObjectLinkTextProps) {
-  return <Text onPress={updateCurrentOid}>{children}</Text>;
+  return <Text onClick={updateCurrentOid}>{children}</Text>;
 }
 
 export default function(ownProps: OwnProps) {

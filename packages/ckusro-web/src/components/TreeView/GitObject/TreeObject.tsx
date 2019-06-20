@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { createObjectManager } from '../../../models/ObjectManager';
 import { State } from '../../../modules';
 import FetchObjects from '../../FetchObject';
+import { View } from '../../shared';
 import ObjectLinkText from '../../shared/ObjectLinkText';
 import styled from '../../styled';
 import { Text, treeViewItem } from '../styles';
@@ -41,7 +42,7 @@ function TreeName({ oid, path, isOpen, setIsOpen }: TreeNameProps) {
   return (
     <Wrapper>
       <Text>
-        <Text onPress={() => setIsOpen(!isOpen)}>
+        <Text onClick={() => setIsOpen(!isOpen)}>
           <FolderIcon isOpen={isOpen} />
         </Text>
         <ObjectLinkText oid={oid}>
@@ -52,7 +53,7 @@ function TreeName({ oid, path, isOpen, setIsOpen }: TreeNameProps) {
   );
 }
 
-const Wrapper = styled.View`
+const Wrapper = styled(View)`
   ${treeViewItem}
 `;
 
@@ -62,7 +63,7 @@ function FolderIcon({ isOpen }: { isOpen: boolean }) {
   return <IconWrapper>{icon}</IconWrapper>;
 }
 
-const IconWrapper = styled.Text`
+const IconWrapper = styled(Text)`
   padding-right: 0.25rem;
 `;
 

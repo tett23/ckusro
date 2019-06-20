@@ -3,7 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { State } from '../../../modules';
 import FetchObjects from '../../FetchObject';
-import { BoldText, borderBottom, SmallAndMutedText } from '../../shared';
+import { BoldText, borderBottom, SmallAndMutedText, View } from '../../shared';
 import ObjectLinkView from '../../shared/ObjectLinkView';
 import styled from '../../styled';
 
@@ -44,7 +44,7 @@ const ContentPreview = styled(SmallAndMutedText)`
   overflow: hidden;
 `;
 
-const Wrapper = styled.View`
+const Wrapper = styled(View)`
   padding: 0.5rem 0.75rem 0.5rem 0.75rem;
   ${borderBottom}
 `;

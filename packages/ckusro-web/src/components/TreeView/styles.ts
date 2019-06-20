@@ -3,7 +3,7 @@ import {
   toCssColor,
   View as DefaultView,
 } from '../shared/index';
-import styled, { css, StyledProps } from '../styled';
+import styled, { css } from '../styled';
 
 export const treeViewItem = css`
   margin: 0.1rem 0;
@@ -11,9 +11,9 @@ export const treeViewItem = css`
 `;
 
 export const View = styled(DefaultView)`
-  color: ${({ theme }: StyledProps) => toCssColor(theme.colors.background)};
+  color: ${({ theme }) => toCssColor(theme.colors.background)};
 `;
 
 export const Text = styled(DefaultText)`
-  color: ${({ theme }: StyledProps) => toCssColor(theme.colors.background)};
+  color: ${({ theme }) => toCssColor(theme.colors.background)};
 `;

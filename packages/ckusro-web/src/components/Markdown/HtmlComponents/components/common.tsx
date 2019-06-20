@@ -1,5 +1,7 @@
 import React from 'react';
+import { View } from '../../../shared';
 import styled, { css } from '../../../styled';
+import { Text } from '../../../TreeView/styles';
 import { HastElement, HastElementChild } from '../../Hast';
 
 export type MarkdownTheme = {};
@@ -17,11 +19,11 @@ export const bold = css`
   font-weight: 600;
 `;
 
-export const Div = styled.View`
+export const Div = styled(View)`
   display: block;
 `;
 
-export const Span = styled.Text`
+export const Span = styled(Text)`
   ${base}
   display: inline;
 

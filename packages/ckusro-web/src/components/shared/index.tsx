@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import styled, { css, StyledProps } from '../styled';
+import styled, { css } from '../styled';
 
 type RGB = [number, number, number];
 
@@ -25,10 +25,18 @@ export function toCssColor(rgb: RGB | number, alpha?: number) {
   return `rgba(${r}, ${g}, ${b}, ${alpha || 1.0})`;
 }
 
-export const Text = styled.Text`
+function ViewBase(props: any) {
+  return <div {...props} />;
+}
+
+function TextBase(props: any) {
+  return <span {...props} />;
+}
+
+export const Text = styled(TextBase)`
   line-height: 1.3em;
   font-size: 1rem;
-  color: ${({ theme }: StyledProps) => toCssColor(theme.colors.text)};
+  color: ${({ theme }) => toCssColor(theme.colors.text)};
 `;
 
 export const small = css`
@@ -40,7 +48,7 @@ export const SmallText = styled(Text)`
 `;
 
 export const muted = css`
-  color: ${({ theme }: StyledProps) => toCssColor(theme.colors.text, 0.75)};
+  color: ${({ theme }) => toCssColor(theme.colors.text, 0.75)};
 `;
 
 export const MutedText = styled(Text)`
@@ -56,12 +64,15 @@ export const BoldText = styled(Text)`
   font-weight: bold;
 `;
 
-export const View = styled.View``;
+export const View = styled(ViewBase)`
+  display: flex;
+  flex-direction: column;
+`;
 
 export const borderTop = css`
   border-top-style: solid;
   border-top-width: 1px;
-  border-top-color: ${(props: StyledProps) => {
+  border-top-color: ${(props) => {
     return `#${props.theme.colors.base.toString(16)}`;
   }};
 `;
@@ -69,7 +80,7 @@ export const borderTop = css`
 export const borderRight = css`
   border-right-style: solid;
   border-right-width: 1px;
-  border-right-color: ${(props: StyledProps) => {
+  border-right-color: ${(props) => {
     return `#${props.theme.colors.base.toString(16)}`;
   }};
 `;
@@ -77,7 +88,7 @@ export const borderRight = css`
 export const borderBottom = css`
   border-bottom-style: solid;
   border-bottom-width: 1px;
-  border-bottom-color: ${(props: StyledProps) => {
+  border-bottom-color: ${(props) => {
     return `#${props.theme.colors.base.toString(16)}`;
   }};
 `;
@@ -85,7 +96,7 @@ export const borderBottom = css`
 export const borderLeft = css`
   border-left-style: solid;
   border-left-width: 1px;
-  border-left-color: ${(props: StyledProps) => {
+  border-left-color: ${(props) => {
     return `#${props.theme.colors.base.toString(16)}`;
   }};
 `;
@@ -98,8 +109,7 @@ export const border = css`
 `;
 
 export const drawer = css`
-  background-color: ${({ theme }: StyledProps) =>
-    toCssColor(theme.colors.base)};
+  background-color: ${({ theme }) => toCssColor(theme.colors.base)};
 `;
 
 export const TouchableWithoutFeedback = ({

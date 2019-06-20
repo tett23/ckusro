@@ -1,5 +1,6 @@
 import { TreeEntry as TreeEntryType } from '@ckusro/ckusro-core';
 import React from 'react';
+import { View } from '../shared';
 import styled from '../styled';
 import BlobObject from './GitObject/BlobObject';
 import TreeObject from './GitObject/TreeObject';
@@ -24,6 +25,6 @@ export default function TreeEntry({ treeEntry }: TreeEntryProps) {
   return <Wrapper>{component}</Wrapper>;
 }
 
-const Wrapper = styled.View`
+const Wrapper = styled(View)`
   overflow-x: hidden;
 `;

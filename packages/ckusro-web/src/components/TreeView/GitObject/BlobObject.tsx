@@ -22,7 +22,7 @@ export function BlobObject({ path, blobObject: { oid } }: BlobObjectProps) {
   );
 }
 
-const Wrapper = styled.View`
+const Wrapper = styled(Text)`
   ${treeViewItem}
 `;
 

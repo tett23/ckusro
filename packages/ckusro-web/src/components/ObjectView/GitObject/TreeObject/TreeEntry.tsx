@@ -44,10 +44,10 @@ function Icon({ type }: IconProps) {
   return <IconWrapper>{icon}</IconWrapper>;
 }
 
-const IconWrapper = styled.Text`
+const IconWrapper = styled(Text)`
   padding-right: 0.25rem;
 `;
 
-const EmptyIcon = styled.Text`
+const EmptyIcon = styled(Text)`
   width: 1em;
 `;
