@@ -1,64 +1,32 @@
-import { TreeObject } from '@ckusro/ckusro-core';
-import { List } from '@material-ui/core';
-import React, { ReactNode } from 'react';
-import { useSelector } from 'react-redux';
-import { createObjectManager } from '../../models/ObjectManager';
-import { State } from '../../modules';
-import FetchObjects from '../FetchObject';
-import TreeEntry from './TreeEntry';
+import { Paper } from '@material-ui/core';
+import React from 'react';
+import Header from './Header';
+import TreeEntries from './TreeEntries';
 import useGitObjectListStyles from './useGitObjectListStyles';
 
-type OwnProps = {
-  oid: string;
-  gitObject: TreeObject;
+type OwnProps = {};
+
+type StateProps = {};
+
+type DispatchProps = {};
+
+type StyleProps = {
+  classes: ReturnType<typeof useGitObjectListStyles>;
 };
 
-export type GitObjectListProps = OwnProps;
+export type HeaderProps = OwnProps & StateProps & DispatchProps & StyleProps;
 
-export function GitObjectList({ gitObject }: GitObjectListProps) {
-  const entries = gitObject.content.map((item) => (
-    <TreeEntry key={item.oid} treeEntry={item} />
-  ));
-
-  return <Wrapper>{entries}</Wrapper>;
-}
-
-function Wrapper({ children }: { children?: ReactNode }) {
-  const styles = useGitObjectListStyles();
-
+export function GitObjectList({ classes }: StyleProps) {
   return (
-    <List subheader={<li />} className={styles.rootClass}>
-      {children || null}
-    </List>
+    <Paper className={classes.rootClass}>
+      <Header />
+      <TreeEntries />
+    </Paper>
   );
 }
-
-const Memoized = React.memo(
-  GitObjectList,
-  (prev, next) => prev.oid === next.oid,
-);
 
 export default function() {
-  const { objectManager, currentOid } = useSelector((state: State) => ({
-    objectManager: createObjectManager(state.domain.objectManager),
-    currentOid: state.gitObjectList.currentOid,
-  }));
-  if (currentOid == null) {
-    return <Wrapper />;
-  }
+  const classes = useGitObjectListStyles();
 
-  const gitObject = objectManager.fetch<TreeObject>(currentOid);
-  if (gitObject == null) {
-    return (
-      <FetchObjects oids={[currentOid]}>
-        <Wrapper />
-      </FetchObjects>
-    );
-  }
-
-  return (
-    <FetchObjects oids={gitObject.content.map(({ oid }) => oid)}>
-      <Memoized oid={currentOid} gitObject={gitObject} />
-    </FetchObjects>
-  );
+  return <GitObjectList classes={classes} />;
 }

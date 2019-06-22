@@ -28,6 +28,7 @@ import {
   objectViewReducer,
   ObjectViewState,
 } from './objectView';
+import uiReducer, { UIActions, UIState } from './ui';
 import { CommonWorkerActions } from './workerActions/common';
 import { readPersistedState } from './workerActions/persistedState';
 import {
@@ -46,6 +47,7 @@ export type State = {
   objectView: ObjectViewState;
   gitObjectList: GitObjectListState;
   misc: MiscState;
+  ui: UIState;
   workers: WorkersState;
 };
 
@@ -57,6 +59,7 @@ export type Actions =
   | GitObjectListActions
   | MiscActions
   | CommonWorkerActions
+  | UIActions
   | SharedActions;
 
 export const reducers = combineReducers<State>({
@@ -65,6 +68,7 @@ export const reducers = combineReducers<State>({
   misc: miscReducer,
   objectView: objectViewReducer,
   gitObjectList: gitObjectListReducer,
+  ui: uiReducer,
   workers: workersReducer,
 });
 

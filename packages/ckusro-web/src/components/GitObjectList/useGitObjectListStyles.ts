@@ -5,7 +5,7 @@ const useGitObjectListStyles = makeStyles((theme: Theme) =>
     rootClass: {
       width: '18rem',
       maxWidth: '18rem',
-      height: '100%',
+      height: '100vh',
       backgroundColor: theme.palette.background.paper,
       position: 'relative',
       overflow: 'auto',
