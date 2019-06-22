@@ -3,7 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { State } from '../../modules';
 import { MainViewTypes } from '../../modules/ui/mainView';
-import ObjectView from '../ObjectView';
+import ObjectView from './ObjectView';
 
 type OwnProps = {};
 

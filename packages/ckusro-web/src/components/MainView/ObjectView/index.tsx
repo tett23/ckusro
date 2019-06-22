@@ -1,10 +1,10 @@
 import { GitObject } from '@ckusro/ckusro-core';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { State } from '../../modules';
-import FetchObjects from '../FetchObject';
-import { Text, View } from '../shared';
-import styled from '../styled';
+import { State } from '../../../modules';
+import FetchObjects from '../../FetchObject';
+import { Text, View } from '../../shared';
+import styled from '../../styled';
 import BlobObject from './GitObject/BlobObject';
 import CommitObject from './GitObject/CommitObject';
 import TagObject from './GitObject/TagObject';

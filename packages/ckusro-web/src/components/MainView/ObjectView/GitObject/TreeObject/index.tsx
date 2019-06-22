@@ -1,6 +1,6 @@
 import { TreeObject as TreeObjectType } from '@ckusro/ckusro-core';
 import React from 'react';
-import { View } from '../../../shared';
+import { View } from '../../../../shared';
 import { TreeEntry } from './TreeEntry';
 
 export type TreeObjectProps = {

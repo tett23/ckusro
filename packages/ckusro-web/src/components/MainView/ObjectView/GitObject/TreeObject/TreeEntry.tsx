@@ -5,9 +5,9 @@ import {
 import { faFile, faFolder } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
-import { Text, View } from '../../../shared';
-import ObjectLink from '../../../shared/ObjectLinkText';
-import styled from '../../../styled';
+import { Text, View } from '../../../../shared';
+import ObjectLink from '../../../../shared/ObjectLinkText';
+import styled from '../../../../styled';
 
 export type TreeEntryProps = {
   treeEntry: TreeEntryType;
