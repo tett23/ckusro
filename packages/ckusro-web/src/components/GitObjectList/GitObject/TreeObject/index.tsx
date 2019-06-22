@@ -5,6 +5,7 @@ import { createObjectManager } from '../../../../models/ObjectManager';
 import { State } from '../../../../modules';
 import FetchObjects from '../../../FetchObject';
 import TreeEntry from '../../TreeEntry';
+import useGitObjectListStyles from '../../useGitObjectListStyles';
 import TreeName from './TreeName';
 
 type OwnProps = {
@@ -16,9 +17,20 @@ type StateProps = {
   treeObject: TreeObjectType;
 };
 
-export type TreeObjectProps = OwnProps & StateProps;
+type StyleProps = {
+  listSectionClass: string;
+  ulClass: string;
+};
 
-export function TreeObject({ treeObject, path }: TreeObjectProps) {
+export type TreeObjectProps = OwnProps & StateProps & StyleProps;
+
+export function TreeObject({
+  treeObject,
+  oid,
+  path,
+  listSectionClass,
+  ulClass,
+}: TreeObjectProps) {
   if (treeObject == null) {
     return null;
   }
@@ -28,16 +40,19 @@ export function TreeObject({ treeObject, path }: TreeObjectProps) {
   ));
 
   return (
-    <>
-      <TreeName oid={treeObject.oid} name={path} />
-      {entries}
-    </>
+    <li className={listSectionClass}>
+      <ul className={ulClass}>
+        <TreeName oid={oid} name={path} />
+        {entries}
+      </ul>
+    </li>
   );
 }
 
 const Memoized = React.memo(TreeObject, (prev, next) => prev.oid === next.oid);
 
 export default function(ownProps: OwnProps) {
+  const styles = useGitObjectListStyles();
   const gitObject = useSelector((state: State) =>
     createObjectManager(state.domain.objectManager).fetch<TreeObjectType>(
       ownProps.oid,
@@ -49,7 +64,7 @@ export default function(ownProps: OwnProps) {
 
   return (
     <FetchObjects oids={gitObject.content.map(({ oid }) => oid)}>
-      <Memoized {...ownProps} treeObject={gitObject} />
+      <Memoized {...ownProps} treeObject={gitObject} {...styles} />
     </FetchObjects>
   );
 }

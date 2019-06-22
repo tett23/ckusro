@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme: Theme) => {
 
 export default function FileMenu() {
   const classes = useStyles();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
 
@@ -104,7 +104,7 @@ export default function FileMenu() {
         <TreeView />
       </Drawer>
       <AppBar
-        position="fixed"
+        position="sticky"
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}

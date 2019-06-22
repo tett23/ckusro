@@ -8,9 +8,21 @@ export type TreeEntryProps = {
   treeEntry: TreeEntryType;
 };
 
-export default function TreeEntry({
+export default function TreeEntry({ treeEntry }: TreeEntryProps) {
+  return (
+    <>
+      <TreeEntryContent treeEntry={treeEntry} />
+    </>
+  );
+}
+
+export type TreeEntryContentProps = {
+  treeEntry: TreeEntryType;
+};
+
+export function TreeEntryContent({
   treeEntry: { oid, type, path },
-}: TreeEntryProps) {
+}: TreeEntryContentProps) {
   switch (type) {
     case 'tree':
       return <TreeObject oid={oid} path={path} />;

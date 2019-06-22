@@ -1,30 +1,34 @@
+import { ListSubheader, Typography } from '@material-ui/core';
 import React from 'react';
-import { borderBottom, SmallAndMutedText, View } from '../../../shared';
 import ObjectLinkView from '../../../shared/ObjectLinkView';
-import styled from '../../../styled';
+import useGitObjectListStyles from '../../useGitObjectListStyles';
 
-export type TreeNameProps = {
+type OwnProps = {
   oid: string;
   name: string;
 };
 
-export default function TreeName({ oid, name }: TreeNameProps) {
+type StyleProps = Pick<
+  ReturnType<typeof useGitObjectListStyles>,
+  'borderBottomClass'
+>;
+
+export type TreeNameProps = OwnProps & StyleProps;
+
+export function TreeName({ oid, name, borderBottomClass }: TreeNameProps) {
   return (
-    <TreeNameWrapper>
-      <ObjectLinkView oid={oid}>
-        <CenterizedText>{name}</CenterizedText>
-      </ObjectLinkView>
-    </TreeNameWrapper>
+    <ObjectLinkView oid={oid}>
+      <ListSubheader className={borderBottomClass}>
+        <Typography align="center" variant="body2">
+          {name}
+        </Typography>
+      </ListSubheader>
+    </ObjectLinkView>
   );
 }
 
-const CenterizedText = styled(SmallAndMutedText)`
-  text-align: center;
-`;
+export default function(props: OwnProps) {
+  const styles = useGitObjectListStyles();
 
-const TreeNameWrapper = styled(View)`
-  ${borderBottom};
-  justify-content: center;
-  align-items: center;
-  padding: 0.1rem;
-`;
+  return <TreeName {...props} {...styles} />;
+}
