@@ -2,10 +2,10 @@ import { BlobObject as BlobObjectType } from '@ckusro/ckusro-core';
 import { ListItem, ListItemText, Typography } from '@material-ui/core';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { createObjectManager } from '../../../models/ObjectManager';
-import { State } from '../../../modules';
-import FetchObjects from '../../FetchObject';
-import ObjectLinkView from '../../shared/ObjectLinkView';
+import { createObjectManager } from '../../../../models/ObjectManager';
+import { State } from '../../../../modules';
+import FetchObjects from '../../../FetchObject';
+import ObjectLinkView from '../../../shared/ObjectLinkView';
 import useGitObjectListStyles from '../useGitObjectListStyles';
 
 type OwnProps = {

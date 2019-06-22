@@ -2,10 +2,10 @@ import { TreeObject as TreeObjectType } from '@ckusro/ckusro-core';
 import { Collapse } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createObjectManager } from '../../../../models/ObjectManager';
-import { State } from '../../../../modules';
-import { updateCurrentOid } from '../../../../modules/thunkActions';
-import FetchObjects from '../../../FetchObject';
+import { createObjectManager } from '../../../../../models/ObjectManager';
+import { State } from '../../../../../modules';
+import { updateCurrentOid } from '../../../../../modules/thunkActions';
+import FetchObjects from '../../../../FetchObject';
 import { TreeEntries } from '../../TreeEntries';
 import TreeName from './TreeName';
 

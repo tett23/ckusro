@@ -36,6 +36,7 @@ const useFileMenuStyles = makeStyles((theme: Theme) => {
     },
     drawerOpen: {
       height: '100vh',
+
       transition: theme.transitions.create(['margin', 'width'], {
         easing: theme.transitions.easing.easeOut,
         duration: theme.transitions.duration.enteringScreen,

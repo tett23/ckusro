@@ -1,6 +1,6 @@
 import { makeStyles, Theme } from '@material-ui/core';
 import { styled } from '@material-ui/styles';
-import { Text as DefaultText, View as DefaultView } from '../shared/index';
+import { Text as DefaultText, View as DefaultView } from '../../shared/index';
 
 export const styles = makeStyles((_: Theme) => ({
   treeViewItem: {

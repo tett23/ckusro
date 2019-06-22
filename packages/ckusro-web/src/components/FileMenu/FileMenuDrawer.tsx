@@ -6,7 +6,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../../modules';
 import { updateIsDrawerOpen } from '../../modules/ui/fileMenu';
-import TreeView from '../TreeView';
+import TreeView from './TreeView';
 import useFileMenuStyles from './useFileMenuStyles';
 
 type OwnProps = {};

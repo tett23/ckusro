@@ -3,11 +3,11 @@ import { List, ListSubheader, Theme } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { createObjectManager, ObjectManager } from '../../models/ObjectManager';
-import { createRefManager, RefManager } from '../../models/RefManager';
-import { Repository } from '../../models/Repository';
-import { State } from '../../modules';
-import FetchObjects from '../FetchObject';
+import { createObjectManager, ObjectManager } from '../../../models/ObjectManager';
+import { createRefManager, RefManager } from '../../../models/RefManager';
+import { Repository } from '../../../models/Repository';
+import { State } from '../../../modules';
+import FetchObjects from '../../FetchObject';
 import RepositoryComponent from './Repository';
 
 type TreeViewStates = {

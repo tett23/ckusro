@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from '../../../shared';
 import styled, { css } from '../../../styled';
-import { Text } from '../../../TreeView/styles';
+import { Text } from '../../../FileMenu/TreeView/styles';
 import { HastElement, HastElementChild } from '../../Hast';
 
 export type MarkdownTheme = {};

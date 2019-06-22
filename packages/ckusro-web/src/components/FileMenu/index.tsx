@@ -1,6 +1,6 @@
 import React from 'react';
-import GitObjectList from '../GitObjectList';
 import FileMenuDrawer from './FileMenuDrawer';
+import GitObjectList from './GitObjectList';
 
 export default function FileMenu() {
   return (

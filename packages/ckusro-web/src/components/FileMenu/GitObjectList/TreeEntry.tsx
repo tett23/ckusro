@@ -1,7 +1,6 @@
 import { TreeEntry as TreeEntryType } from '@ckusro/ckusro-core';
 import React from 'react';
 import BlobObject from './GitObject/BlobObject';
-import CommitObject from './GitObject/CommitObject';
 import TreeObject from './GitObject/TreeObject';
 
 export type TreeEntryProps = {
@@ -28,8 +27,6 @@ export function TreeEntryContent({
       return <TreeObject oid={oid} path={path} />;
     case 'blob':
       return <BlobObject oid={oid} path={path} />;
-    case 'commit':
-      return <CommitObject oid={oid} />;
     default:
       throw new Error(`Unexpected object type. type=${type}`);
   }

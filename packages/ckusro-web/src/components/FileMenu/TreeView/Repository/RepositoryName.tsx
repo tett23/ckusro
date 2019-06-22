@@ -12,9 +12,9 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { Repository } from '../../../models/Repository';
-import { cloneRepository, pullRepository } from '../../../modules/thunkActions';
-import ObjectLink from '../../shared/ObjectLinkText';
+import { Repository } from '../../../../models/Repository';
+import { cloneRepository, pullRepository } from '../../../../modules/thunkActions';
+import ObjectLink from '../../../shared/ObjectLinkText';
 
 type OwnProps = {
   repoPath: RepoPath;

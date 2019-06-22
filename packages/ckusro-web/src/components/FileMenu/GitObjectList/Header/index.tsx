@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { State } from '../../../modules';
-import { updateIsDrawerOpen } from '../../../modules/ui/fileMenu';
-import useFileMenuStyles from '../../FileMenu/useFileMenuStyles';
+import { State } from '../../../../modules';
+import { updateIsDrawerOpen } from '../../../../modules/ui/fileMenu';
+import useFileMenuStyles from '../../useFileMenuStyles';
 import useGitObjectListStyles from '../useGitObjectListStyles';
 
 type OwnProps = {};

@@ -1,6 +1,6 @@
 import { ListSubheader, Typography } from '@material-ui/core';
 import React from 'react';
-import ObjectLinkView from '../../../shared/ObjectLinkView';
+import ObjectLinkView from '../../../../shared/ObjectLinkView';
 import useGitObjectListStyles from '../../useGitObjectListStyles';
 
 type OwnProps = {
