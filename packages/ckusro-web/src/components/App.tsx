@@ -7,7 +7,7 @@ import initializeStore from '../modules';
 import { enablePersistedState } from '../modules/misc';
 import { fetchHeadOids } from '../modules/thunkActions';
 import FileMenu from './FileMenu';
-import ObjectView from './ObjectView';
+import MainView from './MainView';
 import { View } from './shared';
 
 const store = initializeStore({});
@@ -19,16 +19,12 @@ export default function App() {
   const theme = createMuiTheme();
 
   return (
-    <Provider store={store}>
+    <Provider store={store as any}>
       <GlobalStyle />
       <ThemeProvider theme={theme}>
         <AppBackground theme={theme}>
-          <View>
-            <FileMenu />
-          </View>
-          <View>
-            <ObjectView />
-          </View>
+          <FileMenu />
+          <MainView />
         </AppBackground>
       </ThemeProvider>
     </Provider>

@@ -37,7 +37,7 @@ function EmptyObjectView() {
 const Wrapper = styled(View)`
   padding: 2rem;
   overflow-y: scroll;
-  width: 65vw;
+  width: auto;
   flex-basis: 65vw;
 `;
 
