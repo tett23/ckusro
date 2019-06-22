@@ -1,14 +1,14 @@
+import { createMuiTheme, Theme } from '@material-ui/core';
+import { styled, ThemeProvider } from '@material-ui/styles';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { createGlobalStyle } from 'styled-components';
 import initializeStore from '../modules';
 import { enablePersistedState } from '../modules/misc';
 import { fetchHeadOids } from '../modules/thunkActions';
-import GitObjectList from './GitObjectList';
+import FileMenu from './FileMenu';
 import ObjectView from './ObjectView';
 import { View } from './shared';
-import styled, { ThemeProvider } from './styled';
-import TreeView from './TreeView';
 
 const store = initializeStore({});
 
@@ -16,13 +16,14 @@ export default function App() {
   store.dispatch(enablePersistedState());
   store.dispatch(fetchHeadOids() as any);
 
+  const theme = createMuiTheme();
+
   return (
     <Provider store={store}>
       <GlobalStyle />
-      <ThemeProvider theme={{ colors: store.getState().config.colorScheme }}>
-        <AppBackground>
-          <TreeView />
-          <GitObjectList />
+      <ThemeProvider theme={theme}>
+        <AppBackground theme={theme}>
+          <FileMenu />
           <ObjectView />
         </AppBackground>
       </ThemeProvider>
@@ -38,14 +39,14 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const AppBackground = styled(View)`
-  flex: 1;
-  flex-direction: row;
-  flex-basis: 100%;
-  background-color: ${(props) => {
-    return `#${props.theme.colors.background.toString(16)}`;
-  }};
-  overflow: hidden;
-  width: 100vw;
-  height: 100vh;
-`;
+const AppBackground = styled(View)(({ theme }: { theme: Theme }) => {
+  return {
+    flex: 1,
+    flexDirection: 'row',
+    flexBasis: '100%',
+    backgroundColor: theme.palette.background.default,
+    overflow: 'hidden',
+    width: '100vw',
+    height: '100vh',
+  };
+});

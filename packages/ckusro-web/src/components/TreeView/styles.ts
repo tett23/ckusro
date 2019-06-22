@@ -1,19 +1,26 @@
-import {
-  Text as DefaultText,
-  toCssColor,
-  View as DefaultView,
-} from '../shared/index';
-import styled, { css } from '../styled';
+import { makeStyles, Theme } from '@material-ui/core';
+import { styled } from '@material-ui/styles';
+import { Text as DefaultText, View as DefaultView } from '../shared/index';
 
-export const treeViewItem = css`
-  margin: 0.1rem 0;
-  height: 1.25em;
-`;
+export const styles = makeStyles((_: Theme) => ({
+  treeViewItem: {
+    // marginTop: '0.1rem',
+    // marginRight: 0,
+    // marginBottom: '0.1rem',
+    // marginLeft: 0,
+    margin: '0.1rem 0',
+    height: '1.25em',
+  },
+}));
 
-export const View = styled(DefaultView)`
-  color: ${({ theme }) => toCssColor(theme.colors.background)};
-`;
+export const View = styled(DefaultView)(({ theme }: { theme: Theme }) => {
+  return {
+    color: theme.palette.text.primary,
+  };
+});
 
-export const Text = styled(DefaultText)`
-  color: ${({ theme }) => toCssColor(theme.colors.background)};
-`;
+export const Text = styled(DefaultText)(({ theme }: { theme: Theme }) => {
+  return {
+    color: theme.palette.text.primary,
+  };
+});
