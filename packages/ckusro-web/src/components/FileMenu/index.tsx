@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme: Theme) => {
 
 export default function FileMenu() {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
 

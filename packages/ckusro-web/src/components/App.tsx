@@ -23,8 +23,12 @@ export default function App() {
       <GlobalStyle />
       <ThemeProvider theme={theme}>
         <AppBackground theme={theme}>
-          <FileMenu />
-          <ObjectView />
+          <View>
+            <FileMenu />
+          </View>
+          <View>
+            <ObjectView />
+          </View>
         </AppBackground>
       </ThemeProvider>
     </Provider>

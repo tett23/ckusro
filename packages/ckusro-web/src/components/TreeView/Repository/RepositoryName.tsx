@@ -1,14 +1,20 @@
 import { RepoPath, url2RepoPath } from '@ckusro/ckusro-core';
-import { faDatabase } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faDatabase } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  IconButton,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
+  Popover,
+  Typography,
+} from '@material-ui/core';
 import React from 'react';
-import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import { useDispatch } from 'react-redux';
 import { Repository } from '../../../models/Repository';
 import { cloneRepository, pullRepository } from '../../../modules/thunkActions';
 import ObjectLink from '../../shared/ObjectLinkText';
-import styled from '../../styled';
-import { Text, View } from '../styles';
 
 type OwnProps = {
   repoPath: RepoPath;
@@ -16,7 +22,7 @@ type OwnProps = {
 };
 
 type DispatchProps = {
-  onClickClone: (url: string) => void;
+  onClickClone: () => void;
   onClickPull: () => void;
 };
 
@@ -28,25 +34,56 @@ function RepositoryName({
   onClickClone,
   onClickPull,
 }: RepositoryNameProps) {
+  const popoverId = `repository-popover-${repoPath.name}`;
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const isOpenMenu = Boolean(anchorEl);
+
   return (
-    <View>
-      <ContextMenuTrigger id="some_unique_identifier">
-        <View>
+    <>
+      <ListItem button>
+        <ListItemIcon>
+          <FontAwesomeIcon icon={faDatabase} />
+        </ListItemIcon>
+        <ListItemText secondary={(headOid || 'None').slice(0, 7)}>
           <ObjectLink oid={headOid}>
-            <IconWrapper>
-              <FontAwesomeIcon icon={faDatabase} />
-            </IconWrapper>
-            <Text>
-              {repoPath.name}({(headOid || 'None').slice(0, 7)})
-            </Text>
+            <Typography>{repoPath.name}</Typography>
           </ObjectLink>
-        </View>
-      </ContextMenuTrigger>
-      <ContextMenu id="some_unique_identifier">
-        <MenuItem onClick={onClickClone}>Clone</MenuItem>
-        <MenuItem onClick={onClickPull}>Pull</MenuItem>
-      </ContextMenu>
-    </View>
+        </ListItemText>
+        <ListItemSecondaryAction>
+          <IconButton edge="end" onClick={handleClick}>
+            <FontAwesomeIcon icon={faBars} />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+      <Popover
+        id={popoverId}
+        open={isOpenMenu}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <ListItem button onClick={onClickClone}>
+          <Typography>Clone</Typography>
+        </ListItem>
+        <ListItem button onClick={onClickPull}>
+          <Typography>Pull</Typography>
+        </ListItem>
+      </Popover>
+    </>
   );
 }
 
@@ -70,7 +107,3 @@ export default function(ownProps: {
     />
   );
 }
-
-const IconWrapper = styled(Text)`
-  padding-right: 0.25rem;
-`;

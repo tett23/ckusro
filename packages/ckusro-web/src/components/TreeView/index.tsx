@@ -1,4 +1,6 @@
 import { CommitObject, RepoPath, url2RepoPath } from '@ckusro/ckusro-core';
+import { List, ListSubheader, Theme } from '@material-ui/core';
+import { createStyles, makeStyles } from '@material-ui/styles';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { createObjectManager, ObjectManager } from '../../models/ObjectManager';
@@ -6,10 +8,7 @@ import { createRefManager, RefManager } from '../../models/RefManager';
 import { Repository } from '../../models/Repository';
 import { State } from '../../modules';
 import FetchObjects from '../FetchObject';
-import { drawer } from '../shared';
-import styled from '../styled';
 import RepositoryComponent from './Repository';
-import { View } from './styles';
 
 type TreeViewStates = {
   repositories: Repository[];
@@ -24,6 +23,8 @@ export function TreeView({
   objectManager,
   refManager,
 }: TreeViewProps) {
+  const classes = useStyles();
+
   const repos = repositories.map((item) => {
     const oid = createRefManager(refManager).headOid(url2RepoPath(
       item.url,
@@ -40,17 +41,22 @@ export function TreeView({
     );
   });
 
-  return <Wrapper>{repos}</Wrapper>;
+  return (
+    <List
+      component="nav"
+      aria-labelledby="nested-list-subheader"
+      dense={true}
+      subheader={
+        <ListSubheader component="div" id="nested-list-subheader">
+          Repositories
+        </ListSubheader>
+      }
+      className={classes.root}
+    >
+      {repos}
+    </List>
+  );
 }
-
-const Wrapper = styled(View)`
-  ${drawer}
-  overflow-y: scroll;
-  overflow-x: hidden;
-  padding: 0.25rem 0.5rem;
-  width: 15vw;
-  flex-basis: 15vw;
-`;
 
 export default function() {
   const state = useSelector(
@@ -61,3 +67,16 @@ export default function() {
 
   return <TreeView {...state} />;
 }
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      width: '100%',
+      maxWidth: 360,
+      backgroundColor: theme.palette.background.paper,
+    },
+    nested: {
+      paddingLeft: theme.spacing(4),
+    },
+  }),
+);
