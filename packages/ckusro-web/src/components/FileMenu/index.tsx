@@ -21,7 +21,6 @@ import TreeView from '../TreeView';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) => {
-  console.log(theme);
   return createStyles({
     root: {
       display: 'flex',

@@ -20,7 +20,12 @@ export function TreeEntries({ treeEntries }: TreeEntriesProps) {
   const styles = useTreeViewStyles();
 
   return (
-    <List component="div" disablePadding className={styles.listStyle}>
+    <List
+      dense={true}
+      component="div"
+      disablePadding
+      className={styles.listStyle}
+    >
       {entries}
     </List>
   );

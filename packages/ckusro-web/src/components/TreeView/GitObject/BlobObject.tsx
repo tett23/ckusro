@@ -4,6 +4,7 @@ import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { updateCurrentOid } from '../../../modules/thunkActions';
+import useTreeViewStyles from '../useTreeViewStyles';
 
 type OwnProps = {
   oid: string;
@@ -14,12 +15,20 @@ type DispatchProps = {
   onClick: () => void;
 };
 
-export type BlobObjectProps = OwnProps & DispatchProps;
+type StyleProps = {
+  fileTypeIconClass: ReturnType<typeof useTreeViewStyles>['fileTypeIcon'];
+};
 
-export function BlobObject({ path, onClick }: BlobObjectProps) {
+export type BlobObjectProps = OwnProps & DispatchProps & StyleProps;
+
+export function BlobObject({
+  path,
+  onClick,
+  fileTypeIconClass,
+}: BlobObjectProps) {
   return (
     <ListItem button onClick={onClick}>
-      <ListItemIcon>
+      <ListItemIcon className={fileTypeIconClass}>
         <FontAwesomeIcon icon={faFile} />
       </ListItemIcon>
       <ListItemText primary={path} />
@@ -30,6 +39,13 @@ export function BlobObject({ path, onClick }: BlobObjectProps) {
 export default function(props: OwnProps) {
   const dispatch = useDispatch();
   const onClick = () => dispatch(updateCurrentOid(props.oid));
+  const styles = useTreeViewStyles();
 
-  return <BlobObject {...props} onClick={onClick} />;
+  return (
+    <BlobObject
+      {...props}
+      onClick={onClick}
+      fileTypeIconClass={styles.fileTypeIcon}
+    />
+  );
 }

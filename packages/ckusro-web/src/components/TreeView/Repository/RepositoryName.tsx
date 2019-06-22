@@ -49,7 +49,7 @@ function RepositoryName({
 
   return (
     <>
-      <ListItem button onClick={onClick}>
+      <ListItem dense={true} button onClick={onClick}>
         <ListItemIcon>
           <FontAwesomeIcon icon={faDatabase} />
         </ListItemIcon>
