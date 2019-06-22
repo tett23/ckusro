@@ -19,6 +19,7 @@ import ObjectLink from '../../shared/ObjectLinkText';
 type OwnProps = {
   repoPath: RepoPath;
   headOid: string | null;
+  onClick: () => void;
 };
 
 type DispatchProps = {
@@ -31,6 +32,7 @@ export type RepositoryNameProps = OwnProps & DispatchProps;
 function RepositoryName({
   repoPath,
   headOid,
+  onClick,
   onClickClone,
   onClickPull,
 }: RepositoryNameProps) {
@@ -47,7 +49,7 @@ function RepositoryName({
 
   return (
     <>
-      <ListItem button>
+      <ListItem button onClick={onClick}>
         <ListItemIcon>
           <FontAwesomeIcon icon={faDatabase} />
         </ListItemIcon>
@@ -90,6 +92,7 @@ function RepositoryName({
 export default function(ownProps: {
   repository: Repository;
   headOid: string | null;
+  onClick: () => void;
 }) {
   const dispatch = useDispatch();
   const {
@@ -102,6 +105,7 @@ export default function(ownProps: {
     <RepositoryName
       repoPath={repoPath}
       headOid={headOid}
+      onClick={ownProps.onClick}
       onClickClone={() => dispatch(cloneRepository(url))}
       onClickPull={() => dispatch(pullRepository(repoPath))}
     />

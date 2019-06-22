@@ -1,5 +1,6 @@
 import { CommitObject } from '@ckusro/ckusro-core';
-import React from 'react';
+import { Collapse } from '@material-ui/core';
+import React, { useState } from 'react';
 import { Repository as RepositoryType } from '../../../models/Repository';
 import { View } from '../../shared';
 import TreeEntries from '../TreeEntries';
@@ -24,7 +25,9 @@ type HaveNotBeenClonedProps = {
 };
 
 function HaveNotBeenCloned({ repository }: HaveNotBeenClonedProps) {
-  return <RepositoryName repository={repository} headOid={null} />;
+  return (
+    <RepositoryName repository={repository} headOid={null} onClick={() => {}} />
+  );
 }
 
 type ClonedProps = {
@@ -39,10 +42,18 @@ function Cloned({
     content: { tree },
   },
 }: ClonedProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <View>
-      <RepositoryName repository={repository} headOid={oid} />
-      <TreeEntries oid={tree} />
+      <RepositoryName
+        repository={repository}
+        headOid={oid}
+        onClick={() => setIsOpen(!isOpen)}
+      />
+      <Collapse in={isOpen} timeout="auto" unmountOnExit>
+        <TreeEntries oid={tree} />
+      </Collapse>
     </View>
   );
 }

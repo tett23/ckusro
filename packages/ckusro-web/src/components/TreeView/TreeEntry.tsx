@@ -1,30 +1,23 @@
 import { TreeEntry as TreeEntryType } from '@ckusro/ckusro-core';
 import React from 'react';
-import { View } from '../shared';
-import styled from '../styled';
 import BlobObject from './GitObject/BlobObject';
 import TreeObject from './GitObject/TreeObject';
 
-export type TreeEntryProps = {
+type OwnProps = {
   treeEntry: TreeEntryType;
 };
 
-export default function TreeEntry({ treeEntry }: TreeEntryProps) {
-  let component;
-  switch (treeEntry.type) {
+export type TreeEntryProps = OwnProps;
+
+export default function TreeEntry({
+  treeEntry: { type, oid, path },
+}: TreeEntryProps) {
+  switch (type) {
     case 'tree':
-      component = <TreeObject oid={treeEntry.oid} path={treeEntry.path} />;
-      break;
+      return <TreeObject oid={oid} path={path} />;
     case 'blob':
-      component = <BlobObject oid={treeEntry.oid} path={treeEntry.path} />;
-      break;
+      return <BlobObject oid={oid} path={path} />;
     default:
       return null;
   }
-
-  return <Wrapper>{component}</Wrapper>;
 }
-
-const Wrapper = styled(View)`
-  overflow-x: hidden;
-`;

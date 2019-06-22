@@ -1,38 +1,35 @@
-import { BlobObject as BlobObjectType, GitObject } from '@ckusro/ckusro-core';
+import { faFile } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { State } from '../../../modules';
-import FetchObjects from '../../FetchObject';
-import ObjectLink from '../../shared/ObjectLinkText';
-import styled from '../../styled';
-import { Text, treeViewItem } from '../styles';
+import { useDispatch } from 'react-redux';
+import { updateCurrentOid } from '../../../modules/thunkActions';
 
-export type BlobObjectProps = {
+type OwnProps = {
+  oid: string;
   path: string;
-  blobObject: BlobObjectType;
 };
 
-export function BlobObject({ path, blobObject: { oid } }: BlobObjectProps) {
+type DispatchProps = {
+  onClick: () => void;
+};
+
+export type BlobObjectProps = OwnProps & DispatchProps;
+
+export function BlobObject({ path, onClick }: BlobObjectProps) {
   return (
-    <Wrapper>
-      <ObjectLink oid={oid}>
-        <Text>{path}</Text>
-      </ObjectLink>
-    </Wrapper>
+    <ListItem button onClick={onClick}>
+      <ListItemIcon>
+        <FontAwesomeIcon icon={faFile} />
+      </ListItemIcon>
+      <ListItemText primary={path} />
+    </ListItem>
   );
 }
 
-const Wrapper = styled(Text)`
-  ${treeViewItem}
-`;
+export default function(props: OwnProps) {
+  const dispatch = useDispatch();
+  const onClick = () => dispatch(updateCurrentOid(props.oid));
 
-export default function({ path: name, oid }: { path: string; oid: string }) {
-  const gitObject: GitObject | null = useSelector(
-    (state: State) => state.domain.objectManager[oid],
-  );
-  if (gitObject == null) {
-    return <FetchObjects oids={[oid]} />;
-  }
-
-  return <BlobObject path={name} blobObject={gitObject as BlobObjectType} />;
+  return <BlobObject {...props} onClick={onClick} />;
 }

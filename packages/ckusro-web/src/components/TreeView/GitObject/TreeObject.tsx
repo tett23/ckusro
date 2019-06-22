@@ -1,71 +1,102 @@
 import { TreeObject as TreeObjectType } from '@ckusro/ckusro-core';
-import { faFolder, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronDown,
+  faChevronRight,
+  faFolder,
+  faFolderOpen,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  Collapse,
+  IconButton,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
+} from '@material-ui/core';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createObjectManager } from '../../../models/ObjectManager';
 import { State } from '../../../modules';
+import { updateCurrentOid } from '../../../modules/thunkActions';
 import FetchObjects from '../../FetchObject';
-import { View } from '../../shared';
-import ObjectLinkText from '../../shared/ObjectLinkText';
-import styled from '../../styled';
-import { Text, treeViewItem } from '../styles';
 import { TreeEntries } from '../TreeEntries';
 
-export type TreeObjectProps = {
+type OwnProps = {
+  oid: string;
   path: string;
+};
+
+type StateProps = {
   treeObject: TreeObjectType;
 };
 
+type DispatchProps = {
+  onClick: () => void;
+};
+
+export type TreeObjectProps = OwnProps & StateProps & DispatchProps;
+
 export function TreeObject({
   path,
-  treeObject: { oid, content },
+  onClick,
+  treeObject: { content },
 }: TreeObjectProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <TreeName oid={oid} path={path} isOpen={isOpen} setIsOpen={setIsOpen} />
-      <TreeEntries treeEntries={!isOpen ? [] : content} />
+      <TreeName
+        path={path}
+        onClick={onClick}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
+      <Collapse in={isOpen} timeout="auto" unmountOnExit>
+        <TreeEntries treeEntries={!isOpen ? [] : content} />
+      </Collapse>
     </>
   );
 }
 
 type TreeNameProps = {
-  oid: string;
   path: string;
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
+  onClick: () => void;
 };
 
-function TreeName({ oid, path, isOpen, setIsOpen }: TreeNameProps) {
+function TreeName({ path, isOpen, setIsOpen, onClick }: TreeNameProps) {
   return (
-    <Wrapper>
-      <Text>
-        <Text onClick={() => setIsOpen(!isOpen)}>
-          <FolderIcon isOpen={isOpen} />
-        </Text>
-        <ObjectLinkText oid={oid}>
-          <Text>{path}</Text>
-        </ObjectLinkText>
-      </Text>
-    </Wrapper>
+    <ListItem button onClick={onClick}>
+      <ListItemIcon>
+        <FolderIcon isOpen={isOpen} />
+      </ListItemIcon>
+      <ListItemText primary={path} />
+      <ListItemSecondaryAction>
+        <IconButton edge="end" onClick={() => setIsOpen(!isOpen)}>
+          <ChevronIcon isOpen={isOpen} />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
   );
 }
 
-const Wrapper = styled(View)`
-  ${treeViewItem}
-`;
-
-function FolderIcon({ isOpen }: { isOpen: boolean }) {
-  const icon = isOpen ? <FolderOpened /> : <FolderClosed />;
-
-  return <IconWrapper>{icon}</IconWrapper>;
+function ChevronIcon({ isOpen }: { isOpen: boolean }) {
+  return isOpen ? <ChevronDown /> : <ChevronRight />;
 }
 
-const IconWrapper = styled(Text)`
-  padding-right: 0.25rem;
-`;
+function ChevronRight() {
+  return <FontAwesomeIcon icon={faChevronRight} />;
+}
+
+function ChevronDown() {
+  return <FontAwesomeIcon icon={faChevronDown} />;
+}
+
+function FolderIcon({ isOpen }: { isOpen: boolean }) {
+  return isOpen ? <FolderOpened /> : <FolderClosed />;
+}
 
 function FolderOpened() {
   return <FontAwesomeIcon icon={faFolderOpen} />;
@@ -75,7 +106,12 @@ function FolderClosed() {
   return <FontAwesomeIcon icon={faFolder} />;
 }
 
-export default function({ path, oid }: { path: string; oid: string }) {
+export default function(props: OwnProps) {
+  const { oid } = props;
+
+  const dispatch = useDispatch();
+  const onClick = () => dispatch(updateCurrentOid(oid));
+
   const gitObject = useSelector((state: State) =>
     createObjectManager(state.domain.objectManager).fetch<TreeObjectType>(oid),
   );
@@ -83,9 +119,5 @@ export default function({ path, oid }: { path: string; oid: string }) {
     return <FetchObjects oids={[oid]} />;
   }
 
-  return (
-    <FetchObjects oids={gitObject.content.map(({ oid }) => oid)}>
-      <TreeObject path={path} treeObject={gitObject} />
-    </FetchObjects>
-  );
+  return <TreeObject {...props} treeObject={gitObject} onClick={onClick} />;
 }
