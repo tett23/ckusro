@@ -16,7 +16,9 @@ export function repository(config: CkusroConfig, repoPath: RepoPath) {
     headCommitObject: () => headCommitObject(config, repoPath),
     headRootTree: () => headRootTree(config, repoPath),
     readTree: (oid: string) => readTree(config, repoPath, oid),
+    fetch: (ref?: string) => fetch(config, repoPath, ref),
     pull: () => pull(config, repoPath),
+    checkout: (ref: string) => checkout(config, repoPath, ref),
   };
 }
 
@@ -30,7 +32,7 @@ export async function headOid(
       core: config.coreId,
       gitdir: path,
       ref: 'HEAD',
-    }))().catch((err) => err);
+    }))().catch((err: Error) => err);
   if (headOid instanceof Error) {
     return headOid;
   }
@@ -145,19 +147,59 @@ export async function fetchObject(
   }
 }
 
+export async function fetch(
+  config: CkusroConfig,
+  repoPath: RepoPath,
+  ref?: string,
+) {
+  const result = await Git.fetch({
+    core: config.coreId,
+    token: config.authentication.github || undefined,
+    dir: toPath(config.base, repoPath),
+    ref: ref || 'master',
+    singleBranch: true,
+  }).catch((err: Error) => err);
+  if (result instanceof Error) {
+    return result;
+  }
+
+  if (result.fetchHead == null) {
+    return;
+  }
+
+  const checkoutResult = await checkout(config, repoPath, result.fetchHead);
+  if (checkoutResult instanceof Error) {
+    return checkoutResult;
+  }
+
+  return;
+}
+
 export async function pull(
   config: CkusroConfig,
   repoPath: RepoPath,
 ): Promise<string | Error> {
-  const result = await (async () =>
-    Git.pull({
-      core: config.coreId,
-      token: config.authentication.github || undefined,
-      dir: toPath(config.base, repoPath),
-    }))().catch((err: Error) => err);
+  const result = await fetch(config, repoPath);
   if (result instanceof Error) {
     return result;
   }
 
   return headOid(config, repoPath);
+}
+
+export async function checkout(
+  config: CkusroConfig,
+  repoPath: RepoPath,
+  ref: string,
+): Promise<void | Error> {
+  const checkoutResult = await Git.checkout({
+    core: config.coreId,
+    dir: toPath(config.base, repoPath),
+    ref,
+  }).catch((err: Error) => err);
+  if (checkoutResult instanceof Error) {
+    return checkoutResult;
+  }
+
+  return;
 }

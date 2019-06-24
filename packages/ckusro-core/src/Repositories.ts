@@ -61,21 +61,18 @@ export async function clone(
       singleBranch: true,
       depth: 2,
     });
-  })().catch((err) => err);
+  })().catch((err: Error) => err);
   if (result instanceof Error) {
     return result;
   }
 
-  const checkoutResult = await Git.checkout({
-    core: config.coreId,
-    dir: dirPath,
-    ref: 'origin/master',
-  }).catch((err: Error) => err);
+  const repo = repository(config, repoPath);
+  const checkoutResult = await repo.checkout('origin/master');
   if (checkoutResult instanceof Error) {
     return checkoutResult;
   }
 
-  return repository(config, repoPath);
+  return repo;
 }
 
 export async function allRepositories(
