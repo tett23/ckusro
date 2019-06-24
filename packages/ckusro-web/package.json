@@ -38,6 +38,7 @@
     "@fortawesome/react-fontawesome": "^0.1.4",
     "@isomorphic-git/lightning-fs": "^3.2.1",
     "@material-ui/core": "^4.1.1",
+    "@material-ui/lab": "^4.0.0-alpha.17",
     "clsx": "^1.0.4",
     "core-js": "^3.1.2",
     "lodash.merge": "^4.6.1",

@@ -8,6 +8,7 @@ import { State } from '../../modules';
 import { updateIsDrawerOpen } from '../../modules/ui/fileMenu';
 import TreeView from './TreeView';
 import useFileMenuStyles from './useFileMenuStyles';
+import DrawerFab from './DrawerFab';
 
 type OwnProps = {};
 
@@ -57,6 +58,7 @@ export function FileMenuDrawer({
             </Button>
           </ListSubheader>
           <TreeView />
+          <DrawerFab />
         </Drawer>
       )}
     </div>
