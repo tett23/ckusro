@@ -1,5 +1,5 @@
 import { FileBuffer } from '@ckusro/ckusro-core';
-import { Hast } from '../components/Markdown/Hast';
+import { HastRoot } from '../components/Markdown/Hast';
 import {
   SharedActions,
   UpdateCurrentOid,
@@ -10,7 +10,7 @@ import {
 export type ObjectViewState = {
   currentOid: string | null;
   currentFileBuffer: FileBuffer | null;
-  currentAst: Hast | null;
+  currentAst: HastRoot | null;
 };
 
 export function initialObjectViewState(): ObjectViewState {
@@ -32,7 +32,7 @@ export function updateFileBuffer(fb: FileBuffer | null) {
 
 const UpdateCurrentAst = 'ObjectView/UpdateCurrentAst' as const;
 
-export function updateCurrentAst(ast: Hast | null) {
+export function updateCurrentAst(ast: HastRoot | null) {
   return {
     type: UpdateCurrentAst,
     payload: ast,

@@ -4,7 +4,7 @@ import MainViewComponent from './MainViewComponent';
 
 export default function MainView() {
   return (
-    <Paper style={{ width: 'auto', overflowY: 'scroll' }}>
+    <Paper style={{ padding: '2rem', width: 'auto', overflowY: 'scroll' }}>
       <MainViewComponent />
     </Paper>
   );

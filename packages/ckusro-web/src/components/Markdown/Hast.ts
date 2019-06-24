@@ -6,7 +6,7 @@ import {
 import { FlowContentsNames } from './HtmlComponents/elementTypes';
 
 export type HastParent = UnistParent & {
-  children: [HastElement | HastDoctype | HastComment | HastText];
+  children: Array<HastDoctype | HastElementChild>;
 };
 
 export type HastLiteral = UnistLiteral & {
@@ -15,6 +15,7 @@ export type HastLiteral = UnistLiteral & {
 
 export type HastRoot = HastParent & {
   type: 'root';
+  children: HastElementChild[];
 };
 
 export type HastProperties = {};

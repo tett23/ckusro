@@ -1,10 +1,9 @@
 import { GitObject } from '@ckusro/ckusro-core';
+import { Typography } from '@material-ui/core';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { State } from '../../../modules';
 import FetchObjects from '../../FetchObject';
-import { Text, View } from '../../shared';
-import styled from '../../styled';
 import BlobObject from './GitObject/BlobObject';
 import CommitObject from './GitObject/CommitObject';
 import TagObject from './GitObject/TagObject';
@@ -16,30 +15,15 @@ export type ObjectViewProps = {
 
 export function ObjectView({ gitObject }: ObjectViewProps) {
   if (gitObject == null) {
-    return (
-      <Wrapper>
-        <EmptyObjectView />
-      </Wrapper>
-    );
+    return <EmptyObjectView />;
   }
 
-  return (
-    <Wrapper>
-      <GitObjectView gitObject={gitObject} />
-    </Wrapper>
-  );
+  return <GitObjectView gitObject={gitObject} />;
 }
 
 function EmptyObjectView() {
-  return <Text>EmptyObjectView</Text>;
+  return <Typography>EmptyObjectView</Typography>;
 }
-
-const Wrapper = styled(View)`
-  padding: 2rem;
-  overflow-y: scroll;
-  width: auto;
-  flex-basis: 65vw;
-`;
 
 type GitObjectViewProps = {
   gitObject: GitObject;

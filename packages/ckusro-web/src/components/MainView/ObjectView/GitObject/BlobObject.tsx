@@ -1,22 +1,36 @@
 import { BlobObject as BlobObjectType } from '@ckusro/ckusro-core';
-import React, { useEffect } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import rehypeReact from 'rehype-react';
+import unified from 'unified';
 import { State } from '../../../../modules';
 import { parseMarkdown } from '../../../../modules/thunkActions';
-import Markdown from '../../../Markdown';
-import { Hast } from '../../../Markdown/Hast';
+import { HastRoot } from '../../../Markdown/Hast';
+import rehypeRemoveBlankTextNode from '../../../Markdown/rehype-remove-blank-text-node';
 import { View } from '../../../shared';
 
 export type BlobObjectProps = {
-  ast: Hast;
+  ast: HastRoot;
 };
 
 export function BlobObject({ ast }: BlobObjectProps) {
-  return (
-    <View>
-      <Markdown ast={ast} />
-    </View>
-  );
+  const [content, setContent] = useState(null as ReactNode);
+  useEffect(() => {
+    const processor = unified()
+      .use(rehypeRemoveBlankTextNode as any)
+      .use(rehypeReact as any, {
+        createElement: React.createElement,
+      });
+
+    (async () => {
+      const transformed = await processor.run(ast);
+      const md = processor.stringify(transformed);
+
+      setContent(md);
+    })();
+  }, [ast]);
+
+  return <View>{content}</View>;
 }
 
 const Memoized = React.memo(BlobObject, (prev, next) => prev.ast === next.ast);
