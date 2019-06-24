@@ -20,7 +20,7 @@ describe(repositories.name, () => {
     core.set('fs', fs);
     const url = 'https://github.com/tett23/ckusro.git';
 
-    const expected = await clone(config, url);
+    const expected = await clone(config, fs, url);
 
     expect(expected).not.toBeInstanceOf(Error);
   });

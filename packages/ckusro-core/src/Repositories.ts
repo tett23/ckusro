@@ -1,5 +1,6 @@
 import FS from 'fs';
 import * as Git from 'isomorphic-git';
+import rimraf from 'rimraf';
 import { join } from 'path';
 import { CkusroConfig } from './models/CkusroConfig';
 import { GitObject } from './models/GitObject';
@@ -10,12 +11,13 @@ import {
   Repository,
   repository,
 } from './Repository';
+import { promisify, callbackify } from 'util';
 
 export type Repositories = ReturnType<typeof repositories>;
 
 export function repositories(config: CkusroConfig, fs: typeof FS) {
   return {
-    clone: (url: string) => clone(config, url),
+    clone: (url: string) => clone(config, fs, url),
     allRepositories: () => allRepositories(config, fs),
     fetchRepository: (repoPath: RepoPath) =>
       fetchRepository(config, fs, repoPath),
@@ -26,6 +28,7 @@ export function repositories(config: CkusroConfig, fs: typeof FS) {
 
 export async function clone(
   config: CkusroConfig,
+  fs: typeof FS,
   url: string,
 ): Promise<Repository | Error> {
   const repoPath = url2RepoPath(url);
@@ -33,12 +36,27 @@ export async function clone(
     return repoPath;
   }
 
+  const dirPath = toPath(config.base, repoPath);
+  const rmrfResult = await promisify(rimraf)(dirPath, {
+    ...fs,
+    lstat: callbackify(fs.promises.stat) as any,
+  }).catch((err: Error) => err);
+  if (rmrfResult instanceof Error) {
+    return rmrfResult;
+  }
+  const mkdirResult = await fs.promises
+    .mkdir(dirPath, { recursive: true })
+    .catch((err: Error) => err);
+  if (mkdirResult instanceof Error) {
+    return mkdirResult;
+  }
+
   const result = await (async () => {
     await Git.clone({
       core: config.coreId,
       corsProxy: config.corsProxy || undefined,
       token: config.authentication.github || undefined,
-      dir: toPath(config.base, repoPath),
+      dir: dirPath,
       url,
       singleBranch: true,
       depth: 2,
@@ -46,6 +64,15 @@ export async function clone(
   })().catch((err) => err);
   if (result instanceof Error) {
     return result;
+  }
+
+  const checkoutResult = await Git.checkout({
+    core: config.coreId,
+    dir: dirPath,
+    ref: 'origin/master',
+  }).catch((err: Error) => err);
+  if (checkoutResult instanceof Error) {
+    return checkoutResult;
   }
 
   return repository(config, repoPath);
@@ -148,7 +175,7 @@ export async function headOids(
       return oid;
     }
 
-    return [oid, repoPath] as [string, RepoPath];
+    return [oid, repoPath] as const;
   });
 
   const headOids = await Promise.all(ps);
