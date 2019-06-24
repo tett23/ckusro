@@ -41,7 +41,7 @@ export async function clone(
       dir: toPath(config.base, repoPath),
       url,
       singleBranch: true,
-      depth: 1,
+      depth: 2,
     });
   })().catch((err) => err);
   if (result instanceof Error) {
