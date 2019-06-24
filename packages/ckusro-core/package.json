@@ -23,6 +23,8 @@
     "build:parcel": "parcel build src/index.ts --target browser --bundle-node-modules --no-minify -d lib",
     "build:dts": "tsc --declaration true --emitDeclarationOnly true --declarationDir lib --allowJs false",
     "prepare": "yarn test && yarn run build",
+    "lint": "yarn run lint:prettier",
+    "lint:prettier": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --write --no-editorconfig -c '**/*.@(js|jsx|ts|tsx|md|json|yml|yaml|toml|html)'",
     "test": "jest",
     "test-watch": "jest --watchAll"
   },
@@ -62,6 +64,7 @@
     "memfs": "^2.15.4",
     "parcel-bundler": "^1.12.3",
     "pify": "^4.0.1",
+    "prettier": "^1.18.2",
     "ts-jest": "^24.0.2",
     "typescript": "^3.5.2",
     "unionfs": "^4.2.0"

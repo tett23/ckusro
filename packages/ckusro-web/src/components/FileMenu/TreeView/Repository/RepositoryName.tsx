@@ -13,7 +13,10 @@ import {
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Repository } from '../../../../models/Repository';
-import { cloneRepository, pullRepository } from '../../../../modules/thunkActions';
+import {
+  cloneRepository,
+  pullRepository,
+} from '../../../../modules/thunkActions';
 import ObjectLink from '../../../shared/ObjectLinkText';
 
 type OwnProps = {

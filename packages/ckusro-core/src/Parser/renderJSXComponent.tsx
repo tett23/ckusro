@@ -33,7 +33,7 @@ export default function renderJSXComponent(
     return node;
   }
 
-  const html = ReactDOMServer.renderToString(<Component {...props || {}} />);
+  const html = ReactDOMServer.renderToString(<Component {...(props || {})} />);
   const hast: any = unified()
     .use(rehypeParse)
     .parse(html);

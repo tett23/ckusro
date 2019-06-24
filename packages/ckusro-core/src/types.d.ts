@@ -9,7 +9,7 @@ declare type DeepPartial<T> = {
     ? Array<DeepPartial<U>>
     : T[P] extends ReadonlyArray<infer U>
     ? ReadonlyArray<DeepPartial<U>>
-    : DeepPartial<T[P]>
+    : DeepPartial<T[P]>;
 };
 
 declare module 'unionfs';
