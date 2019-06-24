@@ -1,6 +1,6 @@
 import { CkusroConfig } from '@ckusro/ckusro-core';
 import LightningFs from '@isomorphic-git/lightning-fs';
-import console = require('console');
+import FS from 'fs';
 import { emptyMessage, errorMessage } from '../modules/workerActions/common';
 import { WithRequestId, WorkerRequest } from '../modules/workers';
 
@@ -9,7 +9,7 @@ export type Handler<
   ResponseActions extends FSAction
 > = (
   config: CkusroConfig,
-  fs: typeof LightningFs,
+  fs: typeof FS,
   payload: PayloadType<RequestActions>,
 ) => Promise<HandlerResult<ResponseActions>>;
 
@@ -50,7 +50,7 @@ async function handler<
   action: WorkerRequest<RequestActions>,
 ): Promise<WithRequestId<ResponseActions>> {
   const { config, requestId } = action.meta;
-  const fs = new LightningFs(config.coreId);
+  const fs: typeof FS = new LightningFs(config.coreId);
 
   const response = await process<RequestActions, ResponseActions>(
     handlers,
@@ -75,7 +75,7 @@ async function process<
   handlers: Handlers<RequestActions, ResponseActions>,
   actionType: string,
   config: CkusroConfig,
-  fs: typeof LightningFs,
+  fs: typeof FS,
   action: WorkerRequest<RequestActions>,
 ): Promise<ResponseActions> {
   if (config == null) {

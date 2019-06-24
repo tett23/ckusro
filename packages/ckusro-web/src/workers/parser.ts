@@ -1,5 +1,5 @@
 import ckusroCore, { CkusroConfig } from '@ckusro/ckusro-core';
-import LightningFs from '@isomorphic-git/lightning-fs';
+import FS from 'fs';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { Actions } from '../modules';
@@ -44,7 +44,7 @@ function actionHandlers(
 
 async function parseMarkdownHandler(
   config: CkusroConfig,
-  fs: typeof LightningFs,
+  fs: typeof FS,
   { md }: PayloadType<ReturnType<typeof parseMarkdown>>,
 ): Promise<HandlerResult<ParserWorkerResponseActions>> {
   const core = ckusroCore(config, fs);

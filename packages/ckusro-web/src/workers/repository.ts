@@ -3,8 +3,8 @@ import ckusroCore, {
   toInternalPath,
   url2RepoPath,
 } from '@ckusro/ckusro-core';
-import LightningFs from '@isomorphic-git/lightning-fs';
 import 'core-js/stable';
+import FS from 'fs';
 import 'regenerator-runtime/runtime';
 import { Actions } from '../modules';
 import { addObjects, addRef } from '../modules/domain';
@@ -66,7 +66,7 @@ function actionHandlers(
 
 async function cloneHandler(
   config: CkusroConfig,
-  fs: typeof LightningFs,
+  fs: typeof FS,
   { url }: PayloadType<ReturnType<typeof cloneRepository>>,
 ): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
   const repoPath = url2RepoPath(url);
@@ -96,7 +96,7 @@ async function cloneHandler(
 
 async function pullRepositoryHandler(
   config: CkusroConfig,
-  fs: typeof LightningFs,
+  fs: typeof FS,
   repoPath: PayloadType<ReturnType<typeof pullRepository>>,
 ): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
   const core = ckusroCore(config, fs);
@@ -121,7 +121,7 @@ async function pullRepositoryHandler(
 
 async function fetchObjectsHandler(
   config: CkusroConfig,
-  fs: typeof LightningFs,
+  fs: typeof FS,
   oids: PayloadType<ReturnType<typeof fetchObjects>>,
 ): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
   const core = ckusroCore(config, fs);
@@ -133,7 +133,7 @@ async function fetchObjectsHandler(
 
 async function fetchHeadOidsHandler(
   config: CkusroConfig,
-  fs: typeof LightningFs,
+  fs: typeof FS,
 ): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
   const core = ckusroCore(config, fs);
   const heads = await core.repositories.headOids();
