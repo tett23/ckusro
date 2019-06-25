@@ -96,7 +96,7 @@ async function process<
   );
   if (result instanceof Error) {
     // TODO: wrap to error action
-    console.log(result);
+    console.error(result);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return errorMessage(result) as any;
   }

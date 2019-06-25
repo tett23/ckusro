@@ -103,7 +103,7 @@ export default function initializeStore(
     });
   });
   persistedStateWorker.addEventListener('error', (err: ErrorEvent) => {
-    console.log('on error', err);
+    console.error('on error', err);
   });
   persistedStateWorker.postMessage(
     readPersistedState(store.getState().config.coreId),

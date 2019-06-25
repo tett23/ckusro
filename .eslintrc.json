@@ -33,6 +33,7 @@
       }
     ],
     "react/display-name": 0,
+    "no-console": [2, { "allow": ["error", "warn", "info"] }],
     "@typescript-eslint/array-type": [2, "array-simple"],
     "@typescript-eslint/no-unused-vars": [2, { "argsIgnorePattern": "^_" }],
     "prettier/prettier": 2
