@@ -5,6 +5,7 @@ import { writePersistedState } from '../workerActions/persistedState';
 export default function() {
   const worker = new Worker('../../workers/persistState.ts');
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const middleware = (store: ThunkStore<State, Actions>) => (next: any) => (
     action: Actions,
   ) => {

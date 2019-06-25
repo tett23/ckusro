@@ -26,10 +26,12 @@ export function toCssColor(rgb: RGB | number, alpha?: number) {
   return `rgba(${r}, ${g}, ${b}, ${alpha || 1.0})`;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ViewBase(props: any) {
   return <div {...props} />;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function TextBase(props: any) {
   return <span {...props} />;
 }
@@ -96,6 +98,7 @@ export const TouchableWithoutFeedback = ({
   onPress,
 }: {
   children: ReactNode;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onPress: () => any;
 }) => {
   return <View onClick={onPress}>{children}</View>;

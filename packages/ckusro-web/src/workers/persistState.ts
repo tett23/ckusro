@@ -32,10 +32,12 @@ self.addEventListener('message', async (e) => {
 
   const response = await handler(action.payload);
   if (response instanceof Error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return errorMessage(response) as any;
   }
 
   if (response.length > 0) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (postMessage as any)(response);
   }
 });
@@ -49,8 +51,10 @@ function actionHandlers(
 ): Handler | null {
   switch (action.type) {
     case WritePersistedState:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return writeStateHandler as any;
     case ReadPersistedState:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return readStateHandler as any;
     default:
       return null;

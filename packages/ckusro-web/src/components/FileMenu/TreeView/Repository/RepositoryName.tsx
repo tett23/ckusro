@@ -40,9 +40,13 @@ function RepositoryName({
   onClickPull,
 }: RepositoryNameProps) {
   const popoverId = `repository-popover-${repoPath.name}`;
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(
+    null as HTMLButtonElement | null,
+  );
 
-  const handleClick = (event: any) => {
+  const handleClick = (
+    event: React.SyntheticEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {

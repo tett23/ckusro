@@ -62,6 +62,7 @@ async function handler<
   if (response instanceof Error) {
     return withRequestId<ResponseActions>(requestId, errorMessage(
       response,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ) as any);
   }
 
@@ -79,12 +80,14 @@ async function process<
   action: WorkerRequest<RequestActions>,
 ): Promise<ResponseActions> {
   if (config == null) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return errorMessage(new Error('')) as any;
   }
 
   const handler = handlers(action);
   if (handler == null) {
     // TODO: wrap to empty action
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return emptyMessage() as any;
   }
 
@@ -94,12 +97,14 @@ async function process<
   if (result instanceof Error) {
     // TODO: wrap to error action
     console.log(result);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return errorMessage(result) as any;
   }
 
   return {
     type: actionType,
     payload: result,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any;
 }
 

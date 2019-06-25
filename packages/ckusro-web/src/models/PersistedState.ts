@@ -48,6 +48,7 @@ export async function readPersistedState(
     .readFile(PersistedStatePath, 'utf8')
     .catch((err: Error) => err);
   if (stateJson instanceof Error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((stateJson as any).code === ENOENT) {
       return { config: DefaultConfig };
     }
@@ -107,13 +108,10 @@ export async function toState(
   }
   const [gitObjects] = splitError(objects);
 
-  const objectManager = gitObjects.reduce(
-    (acc, item) => {
-      acc[item.oid] = item;
-      return acc;
-    },
-    {} as ObjectManager,
-  );
+  const objectManager = gitObjects.reduce((acc: ObjectManager, item) => {
+    acc[item.oid] = item;
+    return acc;
+  }, {});
 
   return {
     config: persistedState.config,

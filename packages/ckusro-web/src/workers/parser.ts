@@ -11,6 +11,7 @@ import {
   ParserWorkerActions,
 } from '../modules/workerActions/parser';
 import { Handler, HandlerResult, newHandler, PayloadType } from './util';
+import { HastRoot } from '../components/Markdown/Hast';
 
 export const WorkerResponseParser = 'WorkerResponse/Parser' as const;
 
@@ -28,6 +29,7 @@ self.addEventListener('message', async (e) => {
     return;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (postMessage as any)(response);
 });
 
@@ -36,6 +38,7 @@ function actionHandlers(
 ): Handler<ParserWorkerRequestActions, ParserWorkerResponseActions> | null {
   switch (action.type) {
     case ParseMarkdown:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return parseMarkdownHandler as any;
     default:
       return null;
@@ -50,5 +53,5 @@ async function parseMarkdownHandler(
   const core = ckusroCore(config, fs);
   const ast = core.parser.buildAst(md);
 
-  return [updateCurrentAst(ast as any)];
+  return [updateCurrentAst(ast as HastRoot)];
 }

@@ -17,7 +17,9 @@ export function BlobObject({ ast }: BlobObjectProps) {
   const [content, setContent] = useState(null as ReactNode);
   useEffect(() => {
     const processor = unified()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .use(rehypeRemoveBlankTextNode as any)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .use(rehypeReact as any, {
         createElement: React.createElement,
       });

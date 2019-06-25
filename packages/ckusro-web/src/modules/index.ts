@@ -1,6 +1,5 @@
 import { batch } from 'react-redux';
 import {
-  Action,
   applyMiddleware,
   combineReducers,
   createStore,
@@ -72,7 +71,8 @@ export const reducers = combineReducers<State>({
   workers: workersReducer,
 });
 
-export type ThunkStore<S, A extends Action<any>> = Store<S, A> & {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ThunkStore<S, A extends Actions> = Store<S, A> & {
   dispatch: ThunkDispatch<S, undefined, A>;
 };
 
@@ -87,9 +87,11 @@ export default function initializeStore(
   const [persistedStateWorker, persistedStateMiddleware] = persistStore();
 
   const store = createStore(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     reducers as any,
     init,
     applyMiddleware(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       persistedStateMiddleware as any,
       thunk as ThunkMiddleware<State, Actions>,
     ),
@@ -118,5 +120,6 @@ export default function initializeStore(
   const parserWorkerDispatcher = newWorkerDispatcher(parserWorker, store);
   store.dispatch(replaceParserWorkerDispatcher(parserWorkerDispatcher));
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return store as any;
 }

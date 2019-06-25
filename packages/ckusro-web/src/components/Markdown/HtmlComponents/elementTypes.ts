@@ -89,6 +89,7 @@ export const flowContentsNames = [
   'td',
 ] as const;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ValuesOf<T extends readonly any[]> = T[number];
 
 export type FlowContentsNames = ValuesOf<typeof flowContentsNames>;

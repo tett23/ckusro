@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 declare module '*.svg' {
   const content: any;
   export default content;
@@ -9,7 +10,7 @@ type FSAction<Payload = any> = {
   type: string;
   payload: Payload;
   error?: boolean;
-  meta?: Object;
+  meta?: Record<string, any>;
 };
 
 type DeepPartial<T> = {

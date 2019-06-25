@@ -14,11 +14,13 @@ const store = initializeStore({});
 
 export default function App() {
   store.dispatch(enablePersistedState());
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   store.dispatch(fetchHeadOids() as any);
 
   const theme = createMuiTheme();
 
   return (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <Provider store={store as any}>
       <GlobalStyle />
       <ThemeProvider theme={theme}>

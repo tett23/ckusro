@@ -41,6 +41,7 @@ self.addEventListener('message', async (e) => {
     return;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (postMessage as any)(response);
 });
 
@@ -52,10 +53,13 @@ function actionHandlers(
 > | null {
   switch (action.type) {
     case CloneRepository:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return cloneHandler as any;
     case PullRepository:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return pullRepositoryHandler as any;
     case FetchObjects:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return fetchObjectsHandler as any;
     case FetchHeadOids:
       return fetchHeadOidsHandler;

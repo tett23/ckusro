@@ -1,10 +1,10 @@
-import { TagObject } from '@ckusro/ckusro-core';
+import { TagObject as TagObjectType } from '@ckusro/ckusro-core';
 import React from 'react';
 import { Text, View } from '../../../shared';
 import ObjectLink from '../../../shared/ObjectLinkText';
 
 export type TagObjectProps = {
-  gitObject: TagObject;
+  gitObject: TagObjectType;
 };
 
 export default function TagObject({ gitObject }: TagObjectProps) {

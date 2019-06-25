@@ -7,6 +7,7 @@ import { HastElement, HastElementChild } from '../../Hast';
 export type MarkdownTheme = {};
 
 export type ElementProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   components: any;
   hast: HastElement;
 };
@@ -39,12 +40,15 @@ export const topLevel = styled(Div)`
 `;
 
 export type BlockProps = ElementProps & {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TextElement: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Outer: any;
   allowTextNode?: boolean;
 };
 
 export type InlineProps = ElementProps & {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TextElement: any;
 };
 
