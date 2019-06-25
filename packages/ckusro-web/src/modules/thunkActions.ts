@@ -10,6 +10,7 @@ import {
   fetchObjects as fetchObjectsAction,
   pullRepository as pullRepositoryAction,
 } from './workerActions/repository';
+import { updateMainViewType } from './ui/mainView';
 
 export function updateCurrentOid(oid: string | null) {
   return async (dispatch: Dispatch<Actions>, getState: () => State) => {
@@ -19,6 +20,7 @@ export function updateCurrentOid(oid: string | null) {
 
     const objectType = (objectManager[oid || ''] || { type: undefined }).type;
 
+    dispatch(updateMainViewType('object'));
     dispatch(updateCurrentOidAction(oid, objectType));
   };
 }

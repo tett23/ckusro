@@ -4,6 +4,8 @@ import { Theme } from '@material-ui/core';
 import { faCog, faEllipsisH, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useDispatch } from 'react-redux';
+import { updateMainViewType } from '../../modules/ui/mainView';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,12 +26,24 @@ const actions = [
   { icon: faPlus, name: 'Add repository' },
 ];
 
-export function Fabs() {
+type DispatchProps = Record<'onClickConfig', () => void>;
+
+type DrawerFabProps = DispatchProps;
+
+export function DrawerFab({ onClickConfig }: DrawerFabProps) {
   const classes = useStyles();
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
-  const handleClick = () => setIsOpen(!isOpen);
+  const handleClick = (name: string | null) => {
+    switch (name) {
+      case 'Config':
+        onClickConfig();
+        break;
+      default:
+    }
+    setIsOpen(!isOpen);
+  };
 
   return (
     <div className={classes.exampleWrapper}>
@@ -38,7 +52,7 @@ export function Fabs() {
         className={classes.speedDial}
         icon={<FontAwesomeIcon icon={faEllipsisH} />}
         onBlur={handleClose}
-        onClick={handleClick}
+        onClick={() => handleClick(null)}
         onClose={handleClose}
         onFocus={handleOpen}
         onMouseEnter={handleOpen}
@@ -51,7 +65,7 @@ export function Fabs() {
             key={action.name}
             icon={<FontAwesomeIcon icon={action.icon} />}
             tooltipTitle={action.name}
-            onClick={handleClick}
+            onClick={() => handleClick(action.name)}
           />
         ))}
       </SpeedDial>
@@ -60,5 +74,10 @@ export function Fabs() {
 }
 
 export default function() {
-  return <Fabs />;
+  const dispatch = useDispatch();
+  const dispatchProps = {
+    onClickConfig: () => dispatch(updateMainViewType('config')),
+  };
+
+  return <DrawerFab {...dispatchProps} />;
 }

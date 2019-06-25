@@ -1,4 +1,4 @@
-export type MainViewTypes = 'object';
+export type MainViewTypes = 'object' | 'config';
 
 export type MainViewState = {
   mainViewType: MainViewTypes;

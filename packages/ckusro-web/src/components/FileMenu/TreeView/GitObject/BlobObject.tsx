@@ -2,7 +2,7 @@ import { faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, batch } from 'react-redux';
 import { updateCurrentOid } from '../../../../modules/thunkActions';
 import useTreeViewStyles from '../useTreeViewStyles';
 
