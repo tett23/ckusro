@@ -1,0 +1,40 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["@typescript-eslint", "prettier"],
+  "parser": "@typescript-eslint/parser",
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "globals": {},
+  "rules": {
+    "@typescript-eslint/indent": 0,
+    "@typescript-eslint/no-use-before-define": 0,
+    "@typescript-eslint/prefer-interface": 0,
+    "@typescript-eslint/explicit-function-return-type": [
+      0,
+      {
+        "allowExpressions": true,
+        "allowTypedFunctionExpressions": true,
+        "allowHigherOrderFunctions": true
+      }
+    ],
+    "react/display-name": 0,
+    "@typescript-eslint/array-type": [2, "array-simple"],
+    "@typescript-eslint/no-unused-vars": [2, { "argsIgnorePattern": "^_" }],
+    "prettier/prettier": 2
+  }
+}
