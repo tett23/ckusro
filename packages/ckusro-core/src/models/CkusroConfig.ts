@@ -5,7 +5,8 @@ export type CkusroConfig = {
   coreId: string;
   corsProxy: string | null;
   colorScheme: ColorScheme;
-  plugins: Plugins;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  plugins: Plugins<any, any>;
   authentication: {
     github: string | null;
   };
@@ -30,6 +31,7 @@ export function convertColorScheme(colorScheme: ColorSchemeText): ColorScheme {
 
       return acc;
     },
+    // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
     {} as ColorScheme,
   );
 }

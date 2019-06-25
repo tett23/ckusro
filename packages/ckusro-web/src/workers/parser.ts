@@ -51,7 +51,10 @@ async function parseMarkdownHandler(
   { md }: PayloadType<ReturnType<typeof parseMarkdown>>,
 ): Promise<HandlerResult<ParserWorkerResponseActions>> {
   const core = ckusroCore(config, fs);
-  const ast = core.parser.buildAst(md);
+  const ast = await core.parser.buildAst(md);
+  if (ast instanceof Error) {
+    return ast;
+  }
 
   return [updateCurrentAst(ast as HastRoot)];
 }

@@ -2,12 +2,18 @@ import { isNonNullObject } from '../utils/types';
 import { ComponentPlugin } from './ComponentPlugin';
 import { ParserPlugin } from './ParserPlugin';
 
-export type Plugins = {
-  parsers: ParserPlugin[];
-  components: ComponentPlugin[];
+export type Plugins<
+  PP extends Record<string, unknown>,
+  CP extends Record<string, unknown>
+> = {
+  parsers: Array<ParserPlugin<PP>>;
+  components: Array<ComponentPlugin<CP>>;
 };
 
-export function isPlugins(obj: any): obj is Plugins {
+export function isPlugins<
+  PP extends Record<string, unknown>,
+  CP extends Record<string, unknown>
+>(obj: unknown): obj is Plugins<PP, CP> {
   if (!isNonNullObject(obj)) {
     return false;
   }

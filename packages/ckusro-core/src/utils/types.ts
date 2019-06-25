@@ -1,7 +1,6 @@
 import { FileTypes } from '../models/FileBuffer';
 
-// tslint:disable-next-line ban-types
-export function isNonNullObject(obj: any): obj is Object {
+export function isNonNullObject(obj: unknown): obj is Record<string, unknown> {
   if (obj === null) {
     return false;
   }
@@ -43,14 +42,15 @@ export type AnyValue =
   | boolean
   | null
   | undefined
-  | Function // tslint:disable-line ban-types
-  | any[]
+  | Function
+  | any[] // eslint-disable-line @typescript-eslint/no-explicit-any
   | {};
 
 export function isArrayOf<T>(
   obj: unknown,
   validator: Validator<T>,
 ): obj is T[] {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (!isTypeOf<any[]>(obj, 'array')) {
     return false;
   }
@@ -126,7 +126,8 @@ export function isTypeOf<T>(value: unknown, type: TypeNames): value is T {
   }
 }
 
-export function hasProperty<O extends Object, P extends keyof O>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function hasProperty<O extends Record<string, any>, P extends keyof O>(
   obj: O,
   property: P,
 ): obj is O & Record<P, O[P]> {
@@ -134,5 +135,6 @@ export function hasProperty<O extends Object, P extends keyof O>(
     return false;
   }
 
+  // eslint-disable-next-line no-prototype-builtins
   return obj.hasOwnProperty(property);
 }

@@ -12,7 +12,8 @@ export function fixtureBuilder<T>(base: T): (override?: Partial<T>) => T {
   };
 }
 
-export const buildPlugins = fixtureBuilder<Plugins>({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const buildPlugins = fixtureBuilder<Plugins<any, any>>({
   parsers: [],
   components: [],
 });

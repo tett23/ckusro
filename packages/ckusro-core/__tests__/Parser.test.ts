@@ -2,9 +2,9 @@ import buildAst from '../src/Parser/buildAst';
 import { buildCkusroConfig } from './__fixtures__';
 
 describe('Parser', () => {
-  it('', () => {
+  it('', async () => {
     const config = buildCkusroConfig();
-    const actual = buildAst(config.plugins, 'test');
+    const actual = await buildAst(config.plugins, 'test');
 
     expect(actual).toMatchSnapshot();
   });

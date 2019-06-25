@@ -1,4 +1,5 @@
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace, no-redeclare
   namespace jest {
     interface Matchers<R> {
       toValidatePair(validator: AnyFunction): CustomMatcherResult;
@@ -6,6 +7,7 @@ declare global {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyFunction = (...args: any[]) => any;
 type ValidateData<F extends AnyFunction> = Array<
   [Parameters<F>, ReturnType<F>]

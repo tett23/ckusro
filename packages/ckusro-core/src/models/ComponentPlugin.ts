@@ -6,12 +6,14 @@ export type Props = {
   gitObjects: BlobObject[];
 };
 
-export type ComponentPlugin = {
+export type ComponentPlugin<P extends Record<string, unknown>> = {
   name: string;
-  plugin: (props: any) => JSX.Element;
+  plugin: (props: P) => JSX.Element;
 };
 
-export function isComponentPlugins(obj: any): obj is ComponentPlugin[] {
+export function isComponentPlugins<P extends Record<string, unknown>>(
+  obj: Array<ComponentPlugin<P>>,
+): obj is Array<ComponentPlugin<P>> {
   if (!Array.isArray(obj)) {
     return false;
   }
@@ -19,7 +21,9 @@ export function isComponentPlugins(obj: any): obj is ComponentPlugin[] {
   return obj.every(isComponentPlugin);
 }
 
-export function isComponentPlugin(obj: any): obj is ComponentPlugin {
+export function isComponentPlugin<P extends Record<string, unknown>>(
+  obj: unknown,
+): obj is ComponentPlugin<P> {
   if (!isNonNullObject(obj)) {
     return false;
   }

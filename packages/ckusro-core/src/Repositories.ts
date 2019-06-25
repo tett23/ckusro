@@ -39,6 +39,7 @@ export async function clone(
   const dirPath = toPath(config.base, repoPath);
   const rmrfResult = await promisify(rimraf)(dirPath, {
     ...fs,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     lstat: callbackify(fs.promises.stat) as any,
   }).catch((err: Error) => err);
   if (rmrfResult instanceof Error) {
@@ -106,6 +107,7 @@ export async function allRepositories(
     return Promise.all(usersPs);
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ret: Array<RepoPath | Error> = (await Promise.all(ps)).flat(3) as any;
   const errorIndex = ret.findIndex((item) => item instanceof Error);
   if (errorIndex !== -1) {

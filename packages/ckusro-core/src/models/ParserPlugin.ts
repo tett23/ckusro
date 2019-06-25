@@ -1,11 +1,13 @@
 import { isNonNullObject } from '../utils/types';
 
-export type ParserPlugin = {
+export type ParserPlugin<P extends Record<string, unknown>> = {
   name: string;
-  plugin: (options?: any) => void;
+  plugin: (options?: P) => void;
 };
 
-export function isParserPlugins(obj: any): obj is ParserPlugin[] {
+export function isParserPlugins<P extends Record<string, unknown>>(
+  obj: unknown,
+): obj is Array<ParserPlugin<P>> {
   if (!Array.isArray(obj)) {
     return false;
   }
@@ -13,7 +15,9 @@ export function isParserPlugins(obj: any): obj is ParserPlugin[] {
   return obj.every(isParserPlugin);
 }
 
-export function isParserPlugin(obj: any): obj is ParserPlugin {
+export function isParserPlugin<P extends Record<string, unknown>>(
+  obj: unknown,
+): obj is ParserPlugin<P> {
   if (!isNonNullObject(obj)) {
     return false;
   }

@@ -6,17 +6,24 @@ import { RepoPath } from '../models/RepoPath';
 import parseLinkText, { determineLinkFile } from './parseLinkText';
 import parserInstance from './parserInstance';
 
-export default function buildAst(plugins: Plugins, content: string): Root {
+export default async function buildAst<
+  PP extends Record<string, unknown>,
+  CP extends Record<string, unknown>
+>(plugins: Plugins<PP, CP>, content: string): Promise<Root | Error> {
   const parser = parserInstance(plugins);
 
-  try {
-    return parser.runSync(parser.parse(content)) as Root;
-  } catch (e) {
-    throw e;
+  const result = await parser
+    .run(parser.parse(content))
+    .catch((err: Error) => err);
+  if (result instanceof Error) {
+    return result;
   }
+
+  return result as Root;
 }
 
 function targetData(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: { props: { internalLink?: any } } | null,
 ): string | null {
   if (data == null) {
@@ -27,8 +34,10 @@ function targetData(
 }
 
 function visit(node: Parent | Content): string[] {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return [targetData((node.data as any) || null)]
     .concat(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ((node.children as any) || []).flatMap((n: any): string[] => visit(n)),
     )
     .filter((v): v is string => typeof v === 'string');
