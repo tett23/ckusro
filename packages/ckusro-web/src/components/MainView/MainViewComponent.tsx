@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { State } from '../../modules';
-import { MainViewTypes } from '../../modules/ui/mainView';
+import { MainViewTypes } from '../../modules/ui/mainView/mainViewMisc';
 import ObjectView from './ObjectView';
 import ConfigView from './ConfigView';
 
@@ -33,7 +33,7 @@ export function MainViewComponent({ mainViewType }: MainViewComponentProps) {
 
 export default function() {
   const state = useSelector((state: State) => ({
-    mainViewType: state.ui.mainView.mainViewType,
+    mainViewType: state.ui.mainView.misc.mainViewType,
   }));
 
   return <MainViewComponent {...state} />;

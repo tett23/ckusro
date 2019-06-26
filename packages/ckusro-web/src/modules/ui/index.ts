@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { FileMenuActions, fileMenuReducer, FileMenuState } from './fileMenu';
-import { mainViewReducer, MainViewState, MainViewActions } from './mainView';
+import mainViewReducer, { MainViewState, MainViewActions } from './mainView';
 
 export type UIState = {
   fileMenu: FileMenuState;
