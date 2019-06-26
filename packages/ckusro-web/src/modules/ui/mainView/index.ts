@@ -3,21 +3,21 @@ import mainViewMiscReducer, {
   MainViewMiscState,
   MainViewMiscActions,
 } from './mainViewMisc';
-import configViewReducer, {
-  ConfigViewState,
-  ConfigViewActions,
-} from './configView';
+import settingsViewReducer, {
+  SettingsViewState,
+  SettingsViewActions,
+} from './settingsView';
 
 export type MainViewState = {
   misc: MainViewMiscState;
-  configView: ConfigViewState;
+  configView: SettingsViewState;
 };
 
-export type MainViewActions = MainViewMiscActions | ConfigViewActions;
+export type MainViewActions = MainViewMiscActions | SettingsViewActions;
 
 const mainViewReducer = combineReducers<MainViewState>({
   misc: mainViewMiscReducer,
-  configView: configViewReducer,
+  configView: settingsViewReducer,
 });
 
 export default mainViewReducer;

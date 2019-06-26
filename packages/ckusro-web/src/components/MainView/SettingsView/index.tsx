@@ -5,8 +5,8 @@ import { Tabs, Tab, Box } from '@material-ui/core';
 import {
   SettingsViewTypes,
   updateSettingsViewType,
-} from '../../../modules/ui/mainView/configView/settingsViewMisc';
-import SettingsView from './ConfigView';
+} from '../../../modules/ui/mainView/settingsView/settingsViewMisc';
+import ConfigView from './ConfigView';
 
 type OwnProps = {};
 
@@ -20,15 +20,15 @@ type DispatchProps = {
 
 type StyleProps = {};
 
-export type ConfigViewProps = OwnProps &
+export type SettingsViewProps = OwnProps &
   StateProps &
   DispatchProps &
   StyleProps;
 
-export function ConfigView({
+export function SettingsView({
   settingsViewType,
   updateSettingsViewType,
-}: ConfigViewProps) {
+}: SettingsViewProps) {
   const tabTypes: SettingsViewTypes[] = ['Config', 'FileSystem'];
   const tabs = tabTypes.map((value) => (
     <Tab key={value} value={value} label={value} />
@@ -61,7 +61,7 @@ export default function() {
       dispatch(updateSettingsViewType(value)),
   };
 
-  return <ConfigView {...state} {...dispatchProps} />;
+  return <SettingsView {...state} {...dispatchProps} />;
 }
 
 export type ContentProps = {
@@ -70,7 +70,7 @@ export type ContentProps = {
 export function Content({ settingsViewType }: ContentProps) {
   switch (settingsViewType) {
     case 'Config':
-      return <SettingsView />;
+      return <ConfigView />;
     case 'FileSystem':
       return null;
     default:

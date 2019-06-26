@@ -10,7 +10,7 @@ import {
   fetchObjects as fetchObjectsAction,
   pullRepository as pullRepositoryAction,
 } from './workerActions/repository';
-import { updateMainViewType } from './ui/mainView';
+import { updateMainViewType } from './ui/mainView/mainViewMisc';
 
 export function updateCurrentOid(oid: string | null) {
   return async (dispatch: Dispatch<Actions>, getState: () => State) => {

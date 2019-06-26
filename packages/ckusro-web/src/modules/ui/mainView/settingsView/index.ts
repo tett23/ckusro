@@ -8,16 +8,16 @@ import settingsViewMiscReducer, {
   SettingsViewMiscState,
 } from './settingsViewMisc';
 
-export type ConfigViewState = {
+export type SettingsViewState = {
   misc: SettingsViewMiscState;
   fileSystem: FileSystemState;
 };
 
-export type ConfigViewActions = FileSystemActions | SettingsViewMiscActions;
+export type SettingsViewActions = FileSystemActions | SettingsViewMiscActions;
 
-const configViewReducer = combineReducers<ConfigViewState>({
+const settingsViewReducer = combineReducers<SettingsViewState>({
   misc: settingsViewMiscReducer,
   fileSystem: fileSystemReducer,
 });
 
-export default configViewReducer;
+export default settingsViewReducer;

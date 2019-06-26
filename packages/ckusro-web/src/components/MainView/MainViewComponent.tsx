@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { State } from '../../modules';
 import { MainViewTypes } from '../../modules/ui/mainView/mainViewMisc';
 import ObjectView from './ObjectView';
-import ConfigView from './ConfigView';
+import ConfigView from './SettingsView';
 
 type OwnProps = {};
 
