@@ -9,7 +9,7 @@ export function initialConfigState(): CkusroConfig {
     coreId: 'ckusro-web__dev',
     corsProxy: 'https://cors.isomorphic-git.org',
     authentication: {
-      github: 'c78d4766c55b508df46f176e9ec2616466e96f65',
+      github: null,
     },
     colorScheme: convertColorScheme({
       main: 'B22E42',
@@ -26,13 +26,44 @@ export function initialConfigState(): CkusroConfig {
   };
 }
 
-export type ConfigActions = ReturnType<typeof updateState>;
+const UpdateCorsProxy = 'Config/UpdateCorsProxy' as const;
+
+export function updateCorsProxy(value: string | null) {
+  return {
+    type: UpdateCorsProxy,
+    payload: value,
+  };
+}
+
+const UpdateAuthenticationGithub = 'Config/UpdateAuthenticationGithub' as const;
+
+export function updateAuthenticationGithub(value: string | null) {
+  return {
+    type: UpdateAuthenticationGithub,
+    payload: value,
+  };
+}
+
+export type ConfigActions =
+  | ReturnType<typeof updateCorsProxy>
+  | ReturnType<typeof updateAuthenticationGithub>
+  | ReturnType<typeof updateState>;
 
 export function configReducer(
   state: ConfigState = initialConfigState(),
   action: ConfigActions,
 ): ConfigState {
   switch (action.type) {
+    case UpdateCorsProxy:
+      return { ...state, corsProxy: action.payload };
+    case UpdateAuthenticationGithub:
+      return {
+        ...state,
+        authentication: {
+          ...state.authentication,
+          github: action.payload,
+        },
+      };
     case UpdateState:
       if (action.payload.config == null) {
         return state;

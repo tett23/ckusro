@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { State } from '../../modules';
 import { MainViewTypes } from '../../modules/ui/mainView';
 import ObjectView from './ObjectView';
+import ConfigView from './ConfigView';
 
 type OwnProps = {};
 
@@ -23,6 +24,8 @@ export function MainViewComponent({ mainViewType }: MainViewComponentProps) {
   switch (mainViewType) {
     case 'object':
       return <ObjectView />;
+    case 'config':
+      return <ConfigView />;
     default:
       return null;
   }
