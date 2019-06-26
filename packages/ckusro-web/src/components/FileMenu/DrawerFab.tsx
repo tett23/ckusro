@@ -5,7 +5,7 @@ import { faCog, faEllipsisH, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch } from 'react-redux';
-import { updateMainViewType } from '../../modules/ui/mainView';
+import { updateMainViewType } from '../../modules/ui/mainView/mainViewMisc';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

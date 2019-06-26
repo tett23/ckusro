@@ -1,36 +1,24 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { State } from '../../../modules';
-import { CkusroConfig } from '@ckusro/ckusro-core';
+import { Tabs, Tab, Box } from '@material-ui/core';
 import {
-  TextField,
-  FormGroup,
-  FormLabel,
-  IconButton,
-  Grid,
-} from '@material-ui/core';
-import useConfigViewStyles from './useConfigViewStyles';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import {
-  updateCorsProxy as updateCorsProxyAction,
-  updateAuthenticationGithub as updateAuthenticationGithubAction,
-} from '../../../modules/config';
+  SettingsViewTypes,
+  updateSettingsViewType,
+} from '../../../modules/ui/mainView/configView/settingsViewMisc';
+import SettingsView from './ConfigView';
 
 type OwnProps = {};
 
 type StateProps = {
-  ckusroConfig: CkusroConfig;
+  settingsViewType: SettingsViewTypes;
 };
 
 type DispatchProps = {
-  updateCorsProxy: (value: string | null) => void;
-  updateAuthenticationGithub: (value: string | null) => void;
+  updateSettingsViewType: (value: SettingsViewTypes) => void;
 };
 
-type StyleProps = {
-  classes: ReturnType<typeof useConfigViewStyles>;
-};
+type StyleProps = {};
 
 export type ConfigViewProps = OwnProps &
   StateProps &
@@ -38,105 +26,54 @@ export type ConfigViewProps = OwnProps &
   StyleProps;
 
 export function ConfigView({
-  ckusroConfig,
-  updateCorsProxy,
-  updateAuthenticationGithub,
-  classes,
+  settingsViewType,
+  updateSettingsViewType,
 }: ConfigViewProps) {
+  const tabTypes: SettingsViewTypes[] = ['Config', 'FileSystem'];
+  const tabs = tabTypes.map((value) => (
+    <Tab key={value} value={value} label={value} />
+  ));
+
   return (
     <>
-      <FormGroup className={classes.formGroup}>
-        <FormLabel>General</FormLabel>
-        <TextField
-          disabled
-          label="Core ID"
-          defaultValue={ckusroConfig.coreId}
-          className={classes.textField}
-          margin="normal"
-        />
-        <TextField
-          disabled
-          label="Base"
-          defaultValue={ckusroConfig.base}
-          className={classes.textField}
-          margin="normal"
-        />
-        <Grid container justify="space-between" alignItems="center">
-          <Grid item xs={11}>
-            <TextField
-              label="CORS Proxy"
-              value={ckusroConfig.corsProxy || ''}
-              placeholder={ckusroConfig.corsProxy || 'null'}
-              onChange={(e) => {
-                const value = e.target.value.trim();
-
-                updateCorsProxy(value.length === 0 ? null : value);
-              }}
-              className={classes.textField}
-              margin="normal"
-            />
-          </Grid>
-          <Grid item xs={1}>
-            <IconButton
-              className={classes.deleteButton}
-              aria-label="Delete"
-              onClick={() => updateCorsProxy(null)}
-            >
-              <FontAwesomeIcon icon={faTrash} />
-            </IconButton>
-          </Grid>
-        </Grid>
-      </FormGroup>
-      <FormGroup className={classes.formGroup}>
-        <FormLabel>Authentication</FormLabel>
-        <Grid container justify="space-between" alignItems="center">
-          <Grid item xs={11}>
-            <TextField
-              label="GitHub token"
-              value={ckusroConfig.authentication.github || ''}
-              placeholder={ckusroConfig.authentication.github || 'null'}
-              onChange={(e) => {
-                const value = e.target.value.trim();
-
-                updateAuthenticationGithub(value.length === 0 ? null : value);
-              }}
-              className={classes.textField}
-              margin="normal"
-            />
-          </Grid>
-          <Grid item xs={1}>
-            <IconButton
-              className={classes.deleteButton}
-              aria-label="Delete"
-              onClick={() => updateAuthenticationGithub(null)}
-            >
-              <FontAwesomeIcon icon={faTrash} />
-            </IconButton>
-          </Grid>
-        </Grid>
-      </FormGroup>
+      <Tabs
+        value={settingsViewType}
+        indicatorColor="primary"
+        textColor="primary"
+        onChange={(_, value) => updateSettingsViewType(value)}
+      >
+        {tabs}
+      </Tabs>
+      <Box>
+        <Content settingsViewType={settingsViewType}></Content>
+      </Box>
     </>
   );
 }
 
 export default function() {
   const state = useSelector((state: State) => ({
-    ckusroConfig: state.config,
+    settingsViewType: state.ui.mainView.configView.misc.settingsViewTypes,
   }));
   const dispatch = useDispatch();
-  const classes = useConfigViewStyles();
   const dispatchProps = {
-    updateCorsProxy: (value: string | null) =>
-      dispatch(updateCorsProxyAction(value)),
-    updateAuthenticationGithub: (value: string | null) =>
-      dispatch(updateAuthenticationGithubAction(value)),
+    updateSettingsViewType: (value: SettingsViewTypes) =>
+      dispatch(updateSettingsViewType(value)),
   };
 
-  return (
-    <ConfigView
-      ckusroConfig={state.ckusroConfig}
-      {...dispatchProps}
-      classes={classes}
-    />
-  );
+  return <ConfigView {...state} {...dispatchProps} />;
+}
+
+export type ContentProps = {
+  settingsViewType: SettingsViewTypes;
+};
+export function Content({ settingsViewType }: ContentProps) {
+  switch (settingsViewType) {
+    case 'Config':
+      return <SettingsView />;
+    case 'FileSystem':
+      return null;
+    default:
+      return null;
+  }
 }
