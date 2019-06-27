@@ -5,9 +5,10 @@ import {
 import { faFile, faFolder } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
-import { Text, View } from '../../../../shared';
 import ObjectLink from '../../../../shared/ObjectLinkText';
-import styled from '../../../../styled';
+import { Box } from '@material-ui/core';
+import { styled } from '@material-ui/core/styles';
+import { ReactNode } from 'react';
 
 export type TreeEntryProps = {
   treeEntry: TreeEntryType;
@@ -15,12 +16,12 @@ export type TreeEntryProps = {
 
 export function TreeEntry({ treeEntry: { type, path, oid } }: TreeEntryProps) {
   return (
-    <View>
-      <Text>
+    <Box>
+      <span>
         <Icon type={type as GitObjectTypes} path={path} />
         <ObjectLink oid={oid}>{path}</ObjectLink>
-      </Text>
-    </View>
+      </span>
+    </Box>
   );
 }
 
@@ -44,10 +45,14 @@ function Icon({ type }: IconProps) {
   return <IconWrapper>{icon}</IconWrapper>;
 }
 
-const IconWrapper = styled(Text)`
-  padding-right: 0.25rem;
-`;
+function Span({ children }: { children?: ReactNode }) {
+  return <span>{children}</span>;
+}
 
-const EmptyIcon = styled(Text)`
-  width: 1em;
-`;
+const IconWrapper = styled(Span)({
+  paddingRight: '0.25rem',
+});
+
+const EmptyIcon = styled(Span)({
+  width: '1em',
+});

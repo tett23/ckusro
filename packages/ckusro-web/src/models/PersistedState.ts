@@ -8,7 +8,7 @@ import { ObjectManager } from './ObjectManager';
 
 export type PersistedState = Pick<
   State,
-  'config' | 'objectView' | 'gitObjectList'
+  'config' | 'ui' | 'objectView' | 'gitObjectList'
 > & {
   oids: string[];
 };
@@ -90,6 +90,7 @@ export function serializeState(state: State): PersistedState {
 
   return {
     config: state.config,
+    ui: state.ui,
     oids,
     objectView: state.objectView,
     gitObjectList: state.gitObjectList,
@@ -118,6 +119,7 @@ export async function toState(
     domain: {
       objectManager,
     },
+    ui: persistedState.ui,
     objectView: {
       currentOid: persistedState.objectView.currentOid,
     },

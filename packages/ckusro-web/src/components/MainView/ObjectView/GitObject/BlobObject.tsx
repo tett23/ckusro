@@ -7,7 +7,7 @@ import { State } from '../../../../modules';
 import { parseMarkdown } from '../../../../modules/thunkActions';
 import { HastRoot } from '../../../Markdown/Hast';
 import rehypeRemoveBlankTextNode from '../../../Markdown/rehype-remove-blank-text-node';
-import { View } from '../../../shared';
+import { Box } from '@material-ui/core';
 
 export type BlobObjectProps = {
   ast: HastRoot;
@@ -32,7 +32,7 @@ export function BlobObject({ ast }: BlobObjectProps) {
     })();
   }, [ast]);
 
-  return <View>{content}</View>;
+  return <Box>{content}</Box>;
 }
 
 const Memoized = React.memo(BlobObject, (prev, next) => prev.ast === next.ast);
@@ -55,7 +55,7 @@ export default function(props: { gitObject: BlobObjectType }) {
   }, [oid]);
 
   if (ast == null) {
-    return <View />;
+    return <Box />;
   }
 
   return <Memoized ast={ast} />;

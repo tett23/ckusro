@@ -1,8 +1,7 @@
 import { CommitObject } from '@ckusro/ckusro-core';
-import { Collapse } from '@material-ui/core';
+import { Collapse, Box } from '@material-ui/core';
 import React, { useState } from 'react';
 import { Repository as RepositoryType } from '../../../../models/Repository';
-import { View } from '../../../shared';
 import TreeEntries from '../TreeEntries';
 import RepositoryName from './RepositoryName';
 
@@ -45,7 +44,7 @@ function Cloned({
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <View>
+    <Box>
       <RepositoryName
         repository={repository}
         headOid={oid}
@@ -54,6 +53,6 @@ function Cloned({
       <Collapse in={isOpen} timeout="auto" unmountOnExit>
         <TreeEntries oid={tree} />
       </Collapse>
-    </View>
+    </Box>
   );
 }

@@ -1,7 +1,7 @@
 import { TreeObject as TreeObjectType } from '@ckusro/ckusro-core';
 import React from 'react';
-import { View } from '../../../../shared';
 import { TreeEntry } from './TreeEntry';
+import { Box } from '@material-ui/core';
 
 export type TreeObjectProps = {
   gitObject: TreeObjectType;
@@ -12,5 +12,5 @@ export default function TreeObject({ gitObject }: TreeObjectProps) {
     <TreeEntry key={item.oid + item.path} treeEntry={item} />
   ));
 
-  return <View>{entries}</View>;
+  return <Box>{entries}</Box>;
 }

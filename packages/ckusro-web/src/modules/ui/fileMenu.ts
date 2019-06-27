@@ -1,3 +1,5 @@
+import { updateState, UpdateState } from '../actions/shared';
+
 export type FileMenuState = {
   isDrawerOpen: boolean;
 };
@@ -17,7 +19,9 @@ export function updateIsDrawerOpen(value: boolean) {
   };
 }
 
-export type FileMenuActions = ReturnType<typeof updateIsDrawerOpen>;
+export type FileMenuActions =
+  | ReturnType<typeof updateIsDrawerOpen>
+  | ReturnType<typeof updateState>;
 
 export function fileMenuReducer(
   state: FileMenuState = initialFileMenuState(),
@@ -28,6 +32,15 @@ export function fileMenuReducer(
       return {
         ...state,
         isDrawerOpen: action.payload,
+      };
+    case UpdateState:
+      if (action.payload.ui == null || action.payload.ui.fileMenu == null) {
+        return state;
+      }
+
+      return {
+        ...state,
+        ...action.payload.ui.fileMenu,
       };
     default:
       return state;

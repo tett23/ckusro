@@ -1,7 +1,7 @@
 import React from 'react';
-import { View } from '../shared';
 import { Hast } from './Hast';
 import { render } from './HtmlComponents';
+import { Box } from '@material-ui/core';
 
 export type MarkdownProps = {
   ast: Hast;
@@ -14,7 +14,7 @@ export function Markdown({ ast }: MarkdownProps) {
 
   const md = render(ast, {});
 
-  return <View>{md}</View>;
+  return <Box>{md}</Box>;
 }
 
 export default React.memo(Markdown, (prev, next) => prev.ast === next.ast);

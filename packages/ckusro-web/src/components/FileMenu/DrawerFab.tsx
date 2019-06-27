@@ -26,13 +26,27 @@ const actions = [
   { icon: faPlus, name: 'Add repository' },
 ];
 
-type DispatchProps = Record<'onClickConfig', () => void>;
+type StateProps = {
+  isOpen: boolean;
+};
 
-type DrawerFabProps = DispatchProps;
+type DispatchProps = {
+  onClickConfig: () => void;
+  setIsOpen: (value: boolean) => void;
+};
 
-export function DrawerFab({ onClickConfig }: DrawerFabProps) {
-  const classes = useStyles();
-  const [isOpen, setIsOpen] = useState(false);
+type StyleProps = {
+  classes: ReturnType<typeof useStyles>;
+};
+
+type DrawerFabProps = StateProps & DispatchProps & StyleProps;
+
+export function DrawerFab({
+  isOpen,
+  onClickConfig,
+  setIsOpen,
+  classes,
+}: DrawerFabProps) {
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
   const handleClick = (name: string | null) => {
@@ -74,10 +88,13 @@ export function DrawerFab({ onClickConfig }: DrawerFabProps) {
 }
 
 export default function() {
+  const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
   const dispatchProps = {
     onClickConfig: () => dispatch(updateMainViewType('config')),
+    setIsOpen: (value: boolean) => setIsOpen(value),
   };
+  const classes = useStyles();
 
-  return <DrawerFab {...dispatchProps} />;
+  return <DrawerFab isOpen={isOpen} {...dispatchProps} classes={classes} />;
 }

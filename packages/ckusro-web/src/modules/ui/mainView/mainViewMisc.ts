@@ -1,3 +1,5 @@
+import { updateState, UpdateState } from '../../actions/shared';
+
 export type MainViewTypes = 'object' | 'config';
 
 export type MainViewMiscState = {
@@ -19,7 +21,9 @@ export function updateMainViewType(value: MainViewTypes) {
   };
 }
 
-export type MainViewMiscActions = ReturnType<typeof updateMainViewType>;
+export type MainViewMiscActions =
+  | ReturnType<typeof updateMainViewType>
+  | ReturnType<typeof updateState>;
 
 export default function mainViewMiscReducer(
   state: MainViewMiscState = initialMainMiscViewState(),
@@ -30,6 +34,19 @@ export default function mainViewMiscReducer(
       return {
         ...state,
         mainViewType: action.payload,
+      };
+    case UpdateState:
+      if (
+        action.payload.ui == null ||
+        action.payload.ui.mainView == null ||
+        action.payload.ui.mainView.misc == null
+      ) {
+        return state;
+      }
+
+      return {
+        ...state,
+        ...action.payload.ui.mainView.misc,
       };
     default:
       return state;

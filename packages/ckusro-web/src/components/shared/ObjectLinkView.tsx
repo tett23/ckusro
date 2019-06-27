@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateCurrentOid } from '../../modules/thunkActions';
-import { TouchableWithoutFeedback } from './index';
 
 type OwnProps = {
   oid: string | null;
@@ -18,11 +17,7 @@ export function ObjectLinkView({
   children,
   updateCurrentOid,
 }: ObjectLinkViewProps) {
-  return (
-    <TouchableWithoutFeedback onPress={updateCurrentOid}>
-      {children}
-    </TouchableWithoutFeedback>
-  );
+  return <div onClick={updateCurrentOid}>{children}</div>;
 }
 
 export default function(ownProps: OwnProps) {

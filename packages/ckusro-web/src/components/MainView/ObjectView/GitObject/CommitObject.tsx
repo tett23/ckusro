@@ -1,7 +1,7 @@
 import { CommitObject as CommitObjectType } from '@ckusro/ckusro-core';
 import React from 'react';
-import { Text, View } from '../../../shared';
 import ObjectLink from '../../../shared/ObjectLinkText';
+import { Box, Typography } from '@material-ui/core';
 
 export type CommitObjectProps = {
   gitObject: CommitObjectType;
@@ -9,38 +9,38 @@ export type CommitObjectProps = {
 
 export default function CommitObject({ gitObject }: CommitObjectProps) {
   return (
-    <View>
-      <Text>oid: {gitObject.oid}</Text>
-      <Text>type: {gitObject.type}</Text>
-      <Text>
+    <Box>
+      <Typography>oid: {gitObject.oid}</Typography>
+      <Typography>type: {gitObject.type}</Typography>
+      <Typography>
         {gitObject.content.author.name}
         {'<'}
         {gitObject.content.author.email}
         {'>'}
         {gitObject.content.author.timestamp}
-      </Text>
-      <Text>
+      </Typography>
+      <Typography>
         {gitObject.content.committer.name}
         {'<'}
         {gitObject.content.committer.email}
         {'>'}
         {gitObject.content.committer.timestamp}
-      </Text>
-      <Text>
+      </Typography>
+      <Typography>
         tree:
         <ObjectLink oid={gitObject.content.tree}>
           {gitObject.content.tree}
         </ObjectLink>
-      </Text>
-      <Text>
+      </Typography>
+      <Typography>
         parent:
         {gitObject.content.parent.map((oid) => (
           <ObjectLink key={oid} oid={oid}>
             {oid}
           </ObjectLink>
         ))}
-      </Text>
-      <Text>message: {gitObject.content.message}</Text>
-    </View>
+      </Typography>
+      <Typography>message: {gitObject.content.message}</Typography>
+    </Box>
   );
 }

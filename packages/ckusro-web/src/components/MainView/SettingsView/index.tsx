@@ -7,6 +7,7 @@ import {
   updateSettingsViewType,
 } from '../../../modules/ui/mainView/settingsView/settingsViewMisc';
 import ConfigView from './ConfigView';
+import FileSystem from './FileSystem';
 
 type OwnProps = {};
 
@@ -53,7 +54,7 @@ export function SettingsView({
 
 export default function() {
   const state = useSelector((state: State) => ({
-    settingsViewType: state.ui.mainView.configView.misc.settingsViewTypes,
+    settingsViewType: state.ui.mainView.settingsView.misc.settingsViewTypes,
   }));
   const dispatch = useDispatch();
   const dispatchProps = {
@@ -72,7 +73,7 @@ export function Content({ settingsViewType }: ContentProps) {
     case 'Config':
       return <ConfigView />;
     case 'FileSystem':
-      return null;
+      return <FileSystem />;
     default:
       return null;
   }

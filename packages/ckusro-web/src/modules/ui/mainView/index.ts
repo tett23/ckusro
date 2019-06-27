@@ -10,14 +10,14 @@ import settingsViewReducer, {
 
 export type MainViewState = {
   misc: MainViewMiscState;
-  configView: SettingsViewState;
+  settingsView: SettingsViewState;
 };
 
 export type MainViewActions = MainViewMiscActions | SettingsViewActions;
 
 const mainViewReducer = combineReducers<MainViewState>({
   misc: mainViewMiscReducer,
-  configView: settingsViewReducer,
+  settingsView: settingsViewReducer,
 });
 
 export default mainViewReducer;

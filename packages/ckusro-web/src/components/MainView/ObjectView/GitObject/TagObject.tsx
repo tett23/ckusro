@@ -1,7 +1,7 @@
 import { TagObject as TagObjectType } from '@ckusro/ckusro-core';
 import React from 'react';
-import { Text, View } from '../../../shared';
 import ObjectLink from '../../../shared/ObjectLinkText';
+import { Box, Typography } from '@material-ui/core';
 
 export type TagObjectProps = {
   gitObject: TagObjectType;
@@ -9,24 +9,24 @@ export type TagObjectProps = {
 
 export default function TagObject({ gitObject }: TagObjectProps) {
   return (
-    <View>
-      <Text>oid: {gitObject.oid}</Text>
-      <Text>type: {gitObject.type}</Text>
-      <Text>
+    <Box>
+      <Typography>oid: {gitObject.oid}</Typography>
+      <Typography>type: {gitObject.type}</Typography>
+      <Typography>
         {gitObject.content.tagger.name}
         {'<'}
         {gitObject.content.tagger.email}
         {'>'}
         {gitObject.content.tagger.timestamp}
-      </Text>
-      <Text>tag: {gitObject.content.tag}</Text>
-      <Text>
+      </Typography>
+      <Typography>tag: {gitObject.content.tag}</Typography>
+      <Typography>
         object:
         <ObjectLink oid={gitObject.content.object}>
           {gitObject.content.object}
         </ObjectLink>
-      </Text>
-      <Text>message: {gitObject.content.message}</Text>
-    </View>
+      </Typography>
+      <Typography>message: {gitObject.content.message}</Typography>
+    </Box>
   );
 }

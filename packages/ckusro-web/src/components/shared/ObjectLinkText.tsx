@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateCurrentOid } from '../../modules/thunkActions';
-import { Text } from './index';
 
 type OwnProps = {
   oid: string | null;
@@ -18,7 +17,7 @@ export function ObjectLinkText({
   children,
   updateCurrentOid,
 }: ObjectLinkTextProps) {
-  return <Text onClick={updateCurrentOid}>{children}</Text>;
+  return <span onClick={updateCurrentOid}>{children}</span>;
 }
 
 export default function(ownProps: OwnProps) {
