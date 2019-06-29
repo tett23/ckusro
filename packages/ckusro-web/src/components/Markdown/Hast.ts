@@ -18,7 +18,8 @@ export type HastRoot = HastParent & {
   children: HastElementChild[];
 };
 
-export type HastProperties = {};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type HastProperties = Record<string, any>;
 
 export type HastElement = UnistParent & {
   type: 'element';
