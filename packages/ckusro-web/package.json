@@ -43,14 +43,13 @@
     "clsx": "^1.0.4",
     "core-js": "^3.1.2",
     "lodash.merge": "^4.6.1",
-    "react": "16.8.3",
+    "react": "~16.8.6",
     "react-contextmenu": "^2.11.0",
-    "react-dom": "^16.8.6",
+    "react-dom": "~16.8.6",
     "react-redux": "^7.1.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "rehype-react": "^3.1.0",
-    "remark-react": "^5.0.1",
     "styled-components": "^4.3.1",
     "unified": "^7.1.0"
   },
@@ -60,7 +59,6 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
     "@babel/polyfill": "^7.4.4",
     "@material-ui/types": "^4.1.0",
-    "@types/lodash.merge": "^4.6.6",
     "@types/node": "^12.0.4",
     "@types/react-redux": "^7.1.0",
     "@types/rehype-react": "^3.1.0",
@@ -86,6 +84,7 @@
       "ts",
       "tsx",
       "js",
+      "jsx",
       "json"
     ],
     "transform": {
@@ -106,6 +105,9 @@
     ],
     "testURL": "http://localhost/"
   },
+  "alias": {
+    "react": "./node_modules/react"
+  },
   "babel": {
     "presets": [
       [
@@ -121,23 +123,9 @@
           "useBuiltIns": "usage",
           "corejs": 3
         }
-      ],
-      [
-        "@babel/preset-typescript",
-        {
-          "isTSX": true,
-          "allExtensions": true
-        }
-      ],
-      "@babel/preset-react"
+      ]
     ],
     "plugins": [
-      [
-        "module-resolver",
-        {
-          "alias": {}
-        }
-      ],
       [
         "@babel/plugin-proposal-class-properties",
         {
