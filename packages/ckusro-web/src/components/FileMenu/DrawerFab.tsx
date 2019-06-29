@@ -10,7 +10,8 @@ import { updateMainViewType } from '../../modules/ui/mainView/mainViewMisc';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     exampleWrapper: {
-      position: 'relative',
+      position: 'sticky',
+      bottom: 0,
       height: 380,
     },
     speedDial: {
