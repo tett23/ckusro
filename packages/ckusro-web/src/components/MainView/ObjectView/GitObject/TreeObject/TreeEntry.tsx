@@ -1,6 +1,7 @@
 import {
   GitObjectTypes,
   TreeEntry as TreeEntryType,
+  createInternalPath,
 } from '@ckusro/ckusro-core';
 import { faFile, faFolder } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,17 +10,33 @@ import ObjectLink from '../../../../shared/ObjectLinkText';
 import { Box } from '@material-ui/core';
 import { styled } from '@material-ui/core/styles';
 import { ReactNode } from 'react';
+import {
+  TreeBufferInfo,
+  createBufferInfo,
+} from '../../../../../models/BufferInfo';
 
 export type TreeEntryProps = {
   treeEntry: TreeEntryType;
+  treeBufferInfo: TreeBufferInfo;
 };
 
-export function TreeEntry({ treeEntry: { type, path, oid } }: TreeEntryProps) {
+export function TreeEntry({
+  treeEntry: { type, path, oid },
+  treeBufferInfo,
+}: TreeEntryProps) {
   return (
     <Box>
       <span>
         <Icon type={type as GitObjectTypes} path={path} />
-        <ObjectLink oid={oid}>{path}</ObjectLink>
+        <ObjectLink
+          bufferInfo={createBufferInfo(
+            type as 'tree' | 'blob',
+            oid,
+            createInternalPath(treeBufferInfo.internalPath).join(path),
+          )}
+        >
+          {path}
+        </ObjectLink>
       </span>
     </Box>
   );

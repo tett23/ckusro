@@ -8,10 +8,18 @@ import { parseMarkdown } from '../../../../modules/thunkActions';
 import { HastRoot } from '../../../Markdown/Hast';
 import rehypeRemoveBlankTextNode from '../../../Markdown/rehype-remove-blank-text-node';
 import { Box } from '@material-ui/core';
+import { BlobBufferInfo } from '../../../../models/BufferInfo';
 
-export type BlobObjectProps = {
+type OwnProps = {
+  gitObject: BlobObjectType;
+  blobBufferInfo: BlobBufferInfo;
+};
+
+type StateProps = {
   ast: HastRoot;
 };
+
+export type BlobObjectProps = OwnProps & StateProps;
 
 export function BlobObject({ ast }: BlobObjectProps) {
   const [content, setContent] = useState(null as ReactNode);
@@ -37,10 +45,10 @@ export function BlobObject({ ast }: BlobObjectProps) {
 
 const Memoized = React.memo(BlobObject, (prev, next) => prev.ast === next.ast);
 
-export default function(props: { gitObject: BlobObjectType }) {
-  const { ast } = useSelector(({ objectView: { currentAst } }: State) => {
+export default function(props: OwnProps) {
+  const { ast } = useSelector((state: State) => {
     return {
-      ast: currentAst,
+      ast: state.ui.mainView.objectView.currentAst,
     };
   });
   const dispatch = useDispatch();
@@ -58,5 +66,5 @@ export default function(props: { gitObject: BlobObjectType }) {
     return <Box />;
   }
 
-  return <Memoized ast={ast} />;
+  return <Memoized {...props} ast={ast} />;
 }

@@ -1,16 +1,30 @@
 import React from 'react';
 import InternalPathNavigation from './InternalPathNavigation';
-import { InternalPath } from '@ckusro/ckusro-core';
 import { useSelector } from 'react-redux';
 import { State } from '../../../../modules';
+import { BufferInfo } from '../../../../models/BufferInfo';
 
 type OwnProps = {
-  internalPath: InternalPath | null;
+  bufferInfo: BufferInfo | null;
 };
 
 export type NavigationProps = OwnProps;
 
-export function Navigation({ internalPath }: NavigationProps) {
+export function Navigation({ bufferInfo }: NavigationProps) {
+  if (bufferInfo == null) {
+    return null;
+  }
+
+  let internalPath = null;
+  switch (bufferInfo.type) {
+    case 'commit':
+    case 'tag':
+      internalPath = { repoPath: bufferInfo.repoPath, path: '/' };
+      break;
+    case 'blob':
+    case 'tree':
+      internalPath = bufferInfo.internalPath;
+  }
   if (internalPath == null) {
     return null;
   }
@@ -24,7 +38,7 @@ export function Navigation({ internalPath }: NavigationProps) {
 
 export default function() {
   const state = useSelector((state: State) => ({
-    internalPath: state.ui.misc.currentInternalPath,
+    bufferInfo: state.ui.mainView.objectView.bufferInfo,
   }));
 
   return <Navigation {...state} />;

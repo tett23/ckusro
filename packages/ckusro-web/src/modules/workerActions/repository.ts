@@ -1,4 +1,4 @@
-import { RepoPath } from '@ckusro/ckusro-core';
+import { RepoPath, InternalPath } from '@ckusro/ckusro-core';
 
 export const CloneRepository = 'RepositoryWorker/Clone' as const;
 
@@ -27,6 +27,15 @@ export function fetchObjects(oids: string[]) {
   };
 }
 
+export const UpdateByInternalPath = 'RepositoryWorker/UpdateByInternalPath' as const;
+
+export function updateByInternalPath(internalPath: InternalPath) {
+  return {
+    type: UpdateByInternalPath,
+    payload: internalPath,
+  };
+}
+
 export const FetchHeadOids = 'RepositoryWorker/FetchHeadOids' as const;
 
 export function fetchHeadOids() {
@@ -40,4 +49,5 @@ export type RepositoryWorkerActions =
   | ReturnType<typeof cloneRepository>
   | ReturnType<typeof pullRepository>
   | ReturnType<typeof fetchObjects>
+  | ReturnType<typeof updateByInternalPath>
   | ReturnType<typeof fetchHeadOids>;

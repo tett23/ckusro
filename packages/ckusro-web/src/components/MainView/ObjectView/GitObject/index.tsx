@@ -8,17 +8,25 @@ import BlobObject from './BlobObject';
 import CommitObject from './CommitObject';
 import TagObject from './TagObject';
 import TreeObject from './TreeObject';
+import {
+  BufferInfo,
+  TagBufferInfo,
+  CommitBufferInfo,
+  TreeBufferInfo,
+  BlobBufferInfo,
+} from '../../../../models/BufferInfo';
 
 export type GitObjectProps = {
   gitObject: GitObjectType | null;
+  bufferInfo: BufferInfo;
 };
 
-export function GitObject({ gitObject }: GitObjectProps) {
+export function GitObject({ gitObject, bufferInfo }: GitObjectProps) {
   if (gitObject == null) {
     return <EmptyObjectView />;
   }
 
-  return <GitObjectView gitObject={gitObject} />;
+  return <GitObjectView gitObject={gitObject} bufferInfo={bufferInfo} />;
 }
 
 function EmptyObjectView() {
@@ -27,18 +35,39 @@ function EmptyObjectView() {
 
 type GitObjectViewProps = {
   gitObject: GitObjectType;
+  bufferInfo: BufferInfo;
 };
 
-function GitObjectView({ gitObject }: GitObjectViewProps) {
+function GitObjectView({ gitObject, bufferInfo }: GitObjectViewProps) {
   switch (gitObject.type) {
     case 'commit':
-      return <CommitObject gitObject={gitObject} />;
+      return (
+        <CommitObject
+          gitObject={gitObject}
+          repoPath={(bufferInfo as CommitBufferInfo).repoPath}
+        />
+      );
     case 'tree':
-      return <TreeObject gitObject={gitObject} />;
+      return (
+        <TreeObject
+          gitObject={gitObject}
+          treeBufferInfo={bufferInfo as TreeBufferInfo}
+        />
+      );
     case 'blob':
-      return <BlobObject gitObject={gitObject} />;
+      return (
+        <BlobObject
+          gitObject={gitObject}
+          blobBufferInfo={bufferInfo as BlobBufferInfo}
+        />
+      );
     case 'tag':
-      return <TagObject gitObject={gitObject} />;
+      return (
+        <TagObject
+          gitObject={gitObject}
+          repoPath={(bufferInfo as TagBufferInfo).repoPath}
+        />
+      );
     default:
       return null;
   }
@@ -50,17 +79,23 @@ const Memoized = React.memo(
 );
 
 export default function() {
-  const { oid, gitObject } = useSelector(
-    ({ domain: { objectManager }, objectView: { currentOid } }: State) => {
-      return {
-        oid: currentOid,
-        gitObject: objectManager[currentOid || ''],
-      };
-    },
-  );
-  if (gitObject == null) {
+  const { oid, gitObject, bufferInfo } = useSelector((state: State) => {
+    const oid = (state.ui.mainView.objectView.bufferInfo || { oid: null }).oid;
+
+    return {
+      oid,
+      bufferInfo: state.ui.mainView.objectView.bufferInfo,
+      gitObject: oid == null ? null : state.domain.objectManager[oid],
+    };
+  });
+  if (gitObject == null || bufferInfo == null) {
     return <FetchObjects oids={oid == null ? [] : [oid]} />;
   }
 
-  return <Memoized gitObject={gitObject} />;
+  const state = {
+    bufferInfo,
+    gitObject,
+  };
+
+  return <Memoized {...state} />;
 }

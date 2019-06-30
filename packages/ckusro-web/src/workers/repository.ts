@@ -21,9 +21,13 @@ import {
   PullRepository,
   pullRepository,
   RepositoryWorkerActions,
+  UpdateByInternalPath,
+  updateByInternalPath,
 } from '../modules/workerActions/repository';
 import { splitError } from '../utils';
 import { Handler, HandlerResult, newHandler, PayloadType } from './util';
+import { selectBufferInfo } from '../modules/actions/shared';
+import { createBufferInfo } from '../models/BufferInfo';
 
 export const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
 
@@ -61,6 +65,9 @@ function actionHandlers(
     case FetchObjects:
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return fetchObjectsHandler as any;
+    case UpdateByInternalPath:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return updateByInternalPathHandler as any;
     case FetchHeadOids:
       return fetchHeadOidsHandler;
     default:
@@ -133,6 +140,28 @@ async function fetchObjectsHandler(
   const [objects, errors] = splitError(await Promise.all(ps));
 
   return [addObjects(objects), ...errors.map(errorMessage)];
+}
+
+async function updateByInternalPathHandler(
+  config: CkusroConfig,
+  fs: typeof FS,
+  internalPath: PayloadType<ReturnType<typeof updateByInternalPath>>,
+): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
+  const core = ckusroCore(config, fs);
+  const result = await core.repositories.fetchObjectByInternalPath(
+    internalPath,
+  );
+  if (result instanceof Error) {
+    return result;
+  }
+
+  const bufferInfo = createBufferInfo(
+    result.type as 'tree' | 'blob',
+    result.oid,
+    internalPath,
+  );
+
+  return [addObjects([result]), selectBufferInfo(bufferInfo)];
 }
 
 async function fetchHeadOidsHandler(

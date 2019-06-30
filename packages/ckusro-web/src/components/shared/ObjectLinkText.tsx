@@ -1,11 +1,10 @@
 import React, { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateCurrentInternalPathAndOid } from '../../modules/thunkActions';
-import { InternalPath } from '@ckusro/ckusro-core';
+import { updateByBufferInfo } from '../../modules/thunkActions';
+import { BufferInfo } from '../../models/BufferInfo';
 
 type OwnProps = {
-  oid: string | null;
-  internalPath: InternalPath;
+  bufferInfo: BufferInfo;
   children: ReactNode;
 };
 
@@ -23,11 +22,10 @@ export function ObjectLinkText({
 }
 
 export default function(ownProps: OwnProps) {
-  const { oid, internalPath } = ownProps;
   const dispatch = useDispatch();
   const actions = {
     updateCurrentOid() {
-      dispatch(updateCurrentInternalPathAndOid(internalPath, oid));
+      dispatch(updateByBufferInfo(ownProps.bufferInfo));
     },
   };
 

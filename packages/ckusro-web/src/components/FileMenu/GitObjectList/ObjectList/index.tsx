@@ -4,13 +4,12 @@ import { State } from '../../../../modules';
 import { useSelector } from 'react-redux';
 import FetchObjects from '../../../FetchObject';
 import { createObjectManager } from '../../../../models/ObjectManager';
-import { InternalPath } from '@ckusro/ckusro-core';
+import { TreeBufferInfo } from '../../../../models/BufferInfo';
 
 type OwnProps = {};
 
 type StateProps = {
-  oid: string | null;
-  internalPath: InternalPath | null;
+  bufferInfo: TreeBufferInfo;
 };
 
 type DispatchProps = {};
@@ -19,31 +18,32 @@ type StyleProps = {};
 
 export type HeaderProps = OwnProps & StateProps & DispatchProps & StyleProps;
 
-export function ObjectList({ oid, internalPath }: HeaderProps) {
-  if (oid == null || internalPath == null) {
+export function ObjectList({ bufferInfo }: HeaderProps) {
+  if (bufferInfo == null) {
     return null;
   }
 
-  return <TreeEntries oid={oid} internalPath={internalPath} />;
+  return (
+    <TreeEntries oid={bufferInfo.oid} internalPath={bufferInfo.internalPath} />
+  );
 }
 
 export default function() {
-  const { objectManager, internalPath, oid } = useSelector((state: State) => ({
+  const { objectManager, bufferInfo } = useSelector((state: State) => ({
     objectManager: createObjectManager(state.domain.objectManager),
-    internalPath: state.ui.misc.currentInternalPath,
-    oid: state.objectView.currentOid,
+    bufferInfo: state.ui.fileMenu.gitObjectList.bufferInfo,
   }));
+  if (bufferInfo == null || bufferInfo.type !== 'tree') {
+    return null;
+  }
 
-  if (oid != null) {
-    const gitObject = objectManager.fetch(oid, 'tree');
-    if (gitObject == null) {
-      return <FetchObjects oids={[oid]} />;
-    }
+  const gitObject = objectManager.fetch(bufferInfo.oid, 'tree');
+  if (gitObject == null) {
+    return <FetchObjects oids={[bufferInfo.oid]} />;
   }
 
   const state = {
-    oid,
-    internalPath,
+    bufferInfo,
   };
 
   return <ObjectList {...state} />;

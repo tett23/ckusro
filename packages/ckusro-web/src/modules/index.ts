@@ -15,18 +15,8 @@ import {
   DomainState,
   initialDomainState,
 } from './domain';
-import {
-  GitObjectListActions,
-  gitObjectListReducer,
-  GitObjectListState,
-} from './gitObjectList';
 import persistStore from './middlewares/persistStore';
 import { MiscActions, miscReducer, MiscState } from './misc';
-import {
-  ObjectViewActions,
-  objectViewReducer,
-  ObjectViewState,
-} from './objectView';
 import uiReducer, { UIActions, UIState } from './ui';
 import { CommonWorkerActions } from './workerActions/common';
 import { readPersistedState } from './workerActions/persistedState';
@@ -43,8 +33,6 @@ import {
 export type State = {
   domain: DomainState;
   config: ConfigState;
-  objectView: ObjectViewState;
-  gitObjectList: GitObjectListState;
   misc: MiscState;
   ui: UIState;
   workers: WorkersState;
@@ -54,8 +42,6 @@ export type Actions =
   | ConfigActions
   | DomainActions
   | WorkersActions
-  | ObjectViewActions
-  | GitObjectListActions
   | MiscActions
   | CommonWorkerActions
   | UIActions
@@ -65,8 +51,6 @@ export const reducers = combineReducers<State>({
   domain: domainReducer,
   config: configReducer,
   misc: miscReducer,
-  objectView: objectViewReducer,
-  gitObjectList: gitObjectListReducer,
   ui: uiReducer,
   workers: workersReducer,
 });

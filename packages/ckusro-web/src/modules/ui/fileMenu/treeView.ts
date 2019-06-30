@@ -1,5 +1,5 @@
 import { UpdateState, updateState } from '../../actions/shared';
-import { InternalPath, compareInternalPath } from '@ckusro/ckusro-core';
+import { InternalPath } from '@ckusro/ckusro-core';
 import {
   createOpenedInternalPathManager,
   OpenedInternalPathManager,

@@ -3,6 +3,7 @@ import React from 'react';
 import ObjectLinkView from '../../../../shared/ObjectLinkView';
 import useGitObjectListStyles from '../../useGitObjectListStyles';
 import { InternalPath, createInternalPath } from '@ckusro/ckusro-core';
+import { createBufferInfo } from '../../../../../models/BufferInfo';
 
 type OwnProps = {
   oid: string;
@@ -22,7 +23,7 @@ export function TreeName({
   borderBottomClass,
 }: TreeNameProps) {
   return (
-    <ObjectLinkView internalPath={internalPath} oid={oid}>
+    <ObjectLinkView bufferInfo={createBufferInfo('tree', oid, internalPath)}>
       <ListSubheader className={borderBottomClass}>
         <Typography align="center" variant="body2">
           {createInternalPath(internalPath).basename()}

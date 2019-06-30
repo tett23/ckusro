@@ -3,9 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { updateCurrentInternalPathAndOid } from '../../../../modules/thunkActions';
+import { updateByBufferInfo } from '../../../../modules/thunkActions';
 import useTreeViewStyles from '../useTreeViewStyles';
 import { InternalPath, createInternalPath } from '@ckusro/ckusro-core';
+import { createBufferInfo } from '../../../../models/BufferInfo';
 
 type OwnProps = {
   oid: string;
@@ -41,7 +42,11 @@ export default function(props: OwnProps) {
   const dispatch = useDispatch();
   const dispatchProps = {
     onClick: () =>
-      dispatch(updateCurrentInternalPathAndOid(props.internalPath, props.oid)),
+      dispatch(
+        updateByBufferInfo(
+          createBufferInfo('blob', props.oid, props.internalPath),
+        ),
+      ),
   };
   const styles = useTreeViewStyles();
 

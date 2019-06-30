@@ -1,18 +1,12 @@
-import { GitObjectTypes } from '@ckusro/ckusro-core';
 import { State } from '../';
+import { BufferInfo } from '../../models/BufferInfo';
 
-export const UpdateCurrentOid = 'Shared/UpdateCurrentOid' as const;
+export const SelectBufferInfo = 'Shared/SelectBufferInfo' as const;
 
-export function updateCurrentOid(
-  oid: string | null,
-  objectType?: GitObjectTypes,
-) {
+export function selectBufferInfo(bufferInfo: BufferInfo) {
   return {
-    type: UpdateCurrentOid,
-    payload: oid,
-    meta: {
-      objectType,
-    },
+    type: SelectBufferInfo,
+    payload: bufferInfo,
   };
 }
 
@@ -26,5 +20,5 @@ export function updateState(partialState: DeepPartial<State>) {
 }
 
 export type SharedActions =
-  | ReturnType<typeof updateCurrentOid>
+  | ReturnType<typeof selectBufferInfo>
   | ReturnType<typeof updateState>;

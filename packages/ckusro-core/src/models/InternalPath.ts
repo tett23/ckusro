@@ -24,6 +24,10 @@ export function compareInternalPath(a: InternalPath, b: InternalPath): boolean {
 }
 
 export function basename(internalPath: InternalPath): string {
+  if (internalPath.path.trim() === '/') {
+    return internalPath.repoPath.name;
+  }
+
   return _basename(internalPath.path);
 }
 

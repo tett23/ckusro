@@ -8,12 +8,13 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createObjectManager } from '../../../../../models/ObjectManager';
 import { State } from '../../../../../modules';
-import { updateCurrentInternalPathAndOid } from '../../../../../modules/thunkActions';
+import { updateByBufferInfo } from '../../../../../modules/thunkActions';
 import FetchObjects from '../../../../FetchObject';
 import { TreeEntries } from '../../TreeEntries';
 import TreeName from './TreeName';
 import { updateOpened } from '../../../../../modules/ui/fileMenu/treeView';
 import { createOpenedInternalPathManager } from '../../../../../models/OpenedInternalPathManager';
+import { createBufferInfo } from '../../../../../models/BufferInfo';
 
 type OwnProps = {
   oid: string;
@@ -67,7 +68,8 @@ export default function(props: OwnProps) {
   }));
   const dispatch = useDispatch();
   const dispatchProps = {
-    onClick: () => dispatch(updateCurrentInternalPathAndOid(internalPath, oid)),
+    onClick: () =>
+      dispatch(updateByBufferInfo(createBufferInfo('tree', oid, internalPath))),
     onClickSecondaryAction: () =>
       dispatch(updateOpened(internalPath, !state.isOpened)),
   };

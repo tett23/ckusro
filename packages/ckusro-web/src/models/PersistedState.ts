@@ -6,10 +6,7 @@ import { State } from '../modules/index';
 import { splitError } from '../utils';
 import { ObjectManager } from './ObjectManager';
 
-export type PersistedState = Pick<
-  State,
-  'config' | 'ui' | 'objectView' | 'gitObjectList'
-> & {
+export type PersistedState = Pick<State, 'config' | 'ui'> & {
   oids: string[];
 };
 
@@ -92,8 +89,6 @@ export function serializeState(state: State): PersistedState {
     config: state.config,
     ui: state.ui,
     oids,
-    objectView: state.objectView,
-    gitObjectList: state.gitObjectList,
   };
 }
 
@@ -120,9 +115,5 @@ export async function toState(
       objectManager,
     },
     ui: persistedState.ui,
-    objectView: {
-      currentOid: persistedState.objectView.currentOid,
-    },
-    gitObjectList: persistedState.gitObjectList,
   };
 }

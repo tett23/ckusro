@@ -11,6 +11,7 @@ import { State } from '../../../../modules';
 import FetchObjects from '../../../FetchObject';
 import ObjectLinkView from '../../../shared/ObjectLinkView';
 import useGitObjectListStyles from '../useGitObjectListStyles';
+import { createBufferInfo } from '../../../../models/BufferInfo';
 
 type OwnProps = {
   oid: string;
@@ -54,7 +55,7 @@ export function BlobObject({
 
   return (
     <ListItem className={borderBottomClass}>
-      <ObjectLinkView internalPath={internalPath} oid={oid}>
+      <ObjectLinkView bufferInfo={createBufferInfo('blob', oid, internalPath)}>
         <ListItemText primary={primary} secondary={secondary} />
       </ObjectLinkView>
     </ListItem>

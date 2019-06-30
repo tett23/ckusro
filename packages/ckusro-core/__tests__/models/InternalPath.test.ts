@@ -36,6 +36,12 @@ describe(basename, () => {
 
     expect(basename(internalPath)).toBe('bar.md');
   });
+
+  it('returns string', () => {
+    const internalPath = buildInternalPath({ path: '/' });
+
+    expect(basename(internalPath)).toBe(internalPath.repoPath.name);
+  });
 });
 
 describe(join, () => {

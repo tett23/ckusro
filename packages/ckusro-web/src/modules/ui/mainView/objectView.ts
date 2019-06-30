@@ -1,32 +1,22 @@
-import { FileBuffer } from '@ckusro/ckusro-core';
-import { HastRoot } from '../components/Markdown/Hast';
+import { HastRoot } from '../../../components/Markdown/Hast';
 import {
   SharedActions,
-  UpdateCurrentOid,
   updateState,
+  selectBufferInfo,
+  SelectBufferInfo,
   UpdateState,
-} from './actions/shared';
+} from '../../actions/shared';
+import { BufferInfo, compareBufferInfo } from '../../../models/BufferInfo';
 
 export type ObjectViewState = {
-  currentOid: string | null;
-  currentFileBuffer: FileBuffer | null;
+  bufferInfo: BufferInfo | null;
   currentAst: HastRoot | null;
 };
 
 export function initialObjectViewState(): ObjectViewState {
   return {
-    currentOid: 'de753f3e8706e5f136a46dceb8fa38b4c671ead1',
-    currentFileBuffer: null,
+    bufferInfo: null,
     currentAst: null,
-  };
-}
-
-const UpdateFileBuffer = 'ObjectView/UpdateFileBuffer' as const;
-
-export function updateFileBuffer(fb: FileBuffer | null) {
-  return {
-    type: UpdateFileBuffer,
-    payload: fb,
   };
 }
 
@@ -40,33 +30,27 @@ export function updateCurrentAst(ast: HastRoot | null) {
 }
 
 export type ObjectViewActions =
-  | ReturnType<typeof updateFileBuffer>
+  | ReturnType<typeof selectBufferInfo>
   | ReturnType<typeof updateCurrentAst>
   | ReturnType<typeof updateState>
   | SharedActions;
 
-export function objectViewReducer(
+export default function objectViewReducer(
   state: ObjectViewState = initialObjectViewState(),
   action: ObjectViewActions,
 ): ObjectViewState {
   switch (action.type) {
-    case UpdateCurrentOid:
-      if (state.currentAst == action.payload) {
+    case SelectBufferInfo:
+      if (state.bufferInfo == null) {
+        return { ...state, bufferInfo: action.payload };
+      }
+      if (compareBufferInfo(state.bufferInfo, action.payload)) {
         return state;
       }
 
       return {
         ...state,
-        currentOid: action.payload,
-      };
-    case UpdateFileBuffer:
-      if (state.currentFileBuffer == action.payload) {
-        return state;
-      }
-
-      return {
-        ...state,
-        currentFileBuffer: action.payload,
+        bufferInfo: action.payload,
       };
     case UpdateCurrentAst:
       if (state.currentAst == action.payload) {
@@ -78,13 +62,17 @@ export function objectViewReducer(
         currentAst: action.payload,
       };
     case UpdateState:
-      if (action.payload.objectView == null) {
+      if (
+        action.payload.ui == null ||
+        action.payload.ui.mainView == null ||
+        action.payload.ui.mainView.objectView == null
+      ) {
         return state;
       }
 
       return {
         ...state,
-        ...((action.payload.objectView || {}) as ObjectViewState),
+        ...((action.payload.ui.mainView.objectView || {}) as ObjectViewState),
       };
     default:
       return state;

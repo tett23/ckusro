@@ -1,13 +1,15 @@
-import { TagObject as TagObjectType } from '@ckusro/ckusro-core';
+import { TagObject as TagObjectType, RepoPath } from '@ckusro/ckusro-core';
 import React from 'react';
 import ObjectLink from '../../../shared/ObjectLinkText';
 import { Box, Typography } from '@material-ui/core';
+import { createBufferInfo } from '../../../../models/BufferInfo';
 
 export type TagObjectProps = {
   gitObject: TagObjectType;
+  repoPath: RepoPath;
 };
 
-export default function TagObject({ gitObject }: TagObjectProps) {
+export default function TagObject({ gitObject, repoPath }: TagObjectProps) {
   return (
     <Box>
       <Typography>oid: {gitObject.oid}</Typography>
@@ -22,7 +24,13 @@ export default function TagObject({ gitObject }: TagObjectProps) {
       <Typography>tag: {gitObject.content.tag}</Typography>
       <Typography>
         object:
-        <ObjectLink oid={gitObject.content.object}>
+        <ObjectLink
+          bufferInfo={createBufferInfo(
+            'commit',
+            gitObject.content.object,
+            repoPath,
+          )}
+        >
           {gitObject.content.object}
         </ObjectLink>
       </Typography>

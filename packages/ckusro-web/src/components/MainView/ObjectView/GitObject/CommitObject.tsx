@@ -1,13 +1,21 @@
-import { CommitObject as CommitObjectType } from '@ckusro/ckusro-core';
+import {
+  CommitObject as CommitObjectType,
+  RepoPath,
+} from '@ckusro/ckusro-core';
 import React from 'react';
 import ObjectLink from '../../../shared/ObjectLinkText';
 import { Box, Typography } from '@material-ui/core';
+import { createBufferInfo } from '../../../../models/BufferInfo';
 
 export type CommitObjectProps = {
   gitObject: CommitObjectType;
+  repoPath: RepoPath;
 };
 
-export default function CommitObject({ gitObject }: CommitObjectProps) {
+export default function CommitObject({
+  gitObject,
+  repoPath,
+}: CommitObjectProps) {
   return (
     <Box>
       <Typography>oid: {gitObject.oid}</Typography>
@@ -28,14 +36,22 @@ export default function CommitObject({ gitObject }: CommitObjectProps) {
       </Typography>
       <Typography>
         tree:
-        <ObjectLink oid={gitObject.content.tree}>
+        <ObjectLink
+          bufferInfo={createBufferInfo('tree', gitObject.content.tree, {
+            repoPath,
+            path: '/',
+          })}
+        >
           {gitObject.content.tree}
         </ObjectLink>
       </Typography>
       <Typography>
         parent:
         {gitObject.content.parent.map((oid) => (
-          <ObjectLink key={oid} oid={oid}>
+          <ObjectLink
+            key={oid}
+            bufferInfo={createBufferInfo('commit', oid, repoPath)}
+          >
             {oid}
           </ObjectLink>
         ))}

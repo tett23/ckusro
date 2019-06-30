@@ -64,13 +64,18 @@ export function Header({
 export default function() {
   const styles = useGitObjectListStyles();
   const fileMenuStyles = useFileMenuStyles();
-  const stateProps = useSelector((state: State) => ({
-    isDrawerOpen: state.ui.fileMenu.misc.isDrawerOpen,
-    headerTitle:
-      state.ui.misc.currentInternalPath == null
+  const stateProps = useSelector((state: State) => {
+    const bufferInfo = state.ui.fileMenu.gitObjectList.bufferInfo;
+    const headerTitle =
+      bufferInfo == null
         ? ''
-        : createInternalPath(state.ui.misc.currentInternalPath).basename(),
-  }));
+        : createInternalPath(bufferInfo.internalPath).basename();
+
+    return {
+      isDrawerOpen: state.ui.fileMenu.misc.isDrawerOpen,
+      headerTitle,
+    };
+  });
   const dispatch = useDispatch();
   const dispatchProps = {
     onClickDrawerOpen: () => dispatch(updateIsDrawerOpen(true)),

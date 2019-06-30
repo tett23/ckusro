@@ -164,8 +164,14 @@ export async function fetchObjectByPath(
   if (root instanceof Error) {
     return root;
   }
+  if (path.trim() === '/') {
+    return root;
+  }
 
-  const paths = path.split('/').slice(1);
+  const paths = path
+    .trim()
+    .split('/')
+    .slice(1);
 
   return fetchItem(config, root as TreeObject, repoPath, paths);
 }

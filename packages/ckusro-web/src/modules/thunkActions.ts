@@ -1,6 +1,5 @@
 import { RepoPath, InternalPath } from '@ckusro/ckusro-core';
 import { Dispatch } from 'react';
-import { updateCurrentOid as updateCurrentOidAction } from './actions/shared';
 import { Actions, State } from './index';
 import { addFetchingOids } from './misc';
 import { parseMarkdown as parseMarkdownAction } from './workerActions/parser';
@@ -8,25 +7,36 @@ import {
   cloneRepository as cloneRepositoryAction,
   fetchHeadOids as fetchHeadOidsAction,
   fetchObjects as fetchObjectsAction,
+  updateByInternalPath as updateByInternalPathAction,
   pullRepository as pullRepositoryAction,
 } from './workerActions/repository';
 import { updateMainViewType } from './ui/mainView/mainViewMisc';
-import { updateCurrentInternalPath } from './ui/uiMisc';
+import { BufferInfo } from '../models/BufferInfo';
+import { selectBufferInfo } from './actions/shared';
 
-export function updateCurrentInternalPathAndOid(
-  internalPath: InternalPath | null,
-  oid: string | null,
-) {
-  return async (dispatch: Dispatch<Actions>, getState: () => State) => {
-    const {
-      domain: { objectManager },
-    } = getState();
-
-    const objectType = (objectManager[oid || ''] || { type: undefined }).type;
+export function updateByBufferInfo(bufferInfo: BufferInfo | null) {
+  return async (dispatch: Dispatch<Actions>) => {
+    if (bufferInfo == null) {
+      return;
+    }
 
     dispatch(updateMainViewType('object'));
-    dispatch(updateCurrentInternalPath(internalPath));
-    dispatch(updateCurrentOidAction(oid, objectType));
+    dispatch(selectBufferInfo(bufferInfo));
+  };
+}
+
+export function updateByInternalPath(internalPath: InternalPath) {
+  return async (dispatch: Dispatch<Actions>, getState: () => State) => {
+    if (internalPath == null) {
+      return;
+    }
+
+    const {
+      workers: { repositoryWorkerDispatcher },
+    } = getState();
+
+    dispatch(updateMainViewType('object'));
+    repositoryWorkerDispatcher(updateByInternalPathAction(internalPath));
   };
 }
 

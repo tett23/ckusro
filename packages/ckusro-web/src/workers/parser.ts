@@ -3,7 +3,7 @@ import FS from 'fs';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { Actions } from '../modules';
-import { updateCurrentAst } from '../modules/objectView';
+import { updateCurrentAst } from '../modules/ui/mainView/objectView';
 import { CommonWorkerActions } from '../modules/workerActions/common';
 import {
   ParseMarkdown,

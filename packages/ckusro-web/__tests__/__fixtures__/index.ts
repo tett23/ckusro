@@ -3,10 +3,9 @@ import crypto from 'crypto';
 import { Ref, RefManager } from '../../src/models/RefManager';
 import { State } from '../../src/modules';
 import { initialDomainState } from '../../src/modules/domain';
-import { initialGitObjectListState } from '../../src/modules/gitObjectList';
 import { initialMiscState } from '../../src/modules/misc';
-import { initialObjectViewState } from '../../src/modules/objectView';
 import { initialWorkerState } from '../../src/modules/workers';
+import uiReducer from '../../src/modules/ui';
 
 export function fixtureBuilder<T>(base: T): (override?: Partial<T>) => T {
   return (override: Partial<T> = {}) => {
@@ -38,8 +37,7 @@ export const buildState = fixtureBuilder<State>({
   domain: initialDomainState(),
   config: buildCkusroConfig(),
   misc: initialMiscState(),
-  objectView: initialObjectViewState(),
-  gitObjectList: initialGitObjectListState(),
+  ui: uiReducer(undefined, null as any), // eslint-disable-line @typescript-eslint/no-explicit-any
   workers: initialWorkerState(),
 });
 

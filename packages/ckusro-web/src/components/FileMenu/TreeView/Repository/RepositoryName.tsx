@@ -18,6 +18,7 @@ import {
   pullRepository,
 } from '../../../../modules/thunkActions';
 import ObjectLink from '../../../shared/ObjectLinkText';
+import { createBufferInfo } from '../../../../models/BufferInfo';
 
 type OwnProps = {
   repoPath: RepoPath;
@@ -53,10 +54,6 @@ function RepositoryName({
     setAnchorEl(null);
   };
   const isOpenMenu = Boolean(anchorEl);
-  const internalPath = {
-    repoPath,
-    path: '/',
-  };
 
   return (
     <>
@@ -65,7 +62,9 @@ function RepositoryName({
           <FontAwesomeIcon icon={faDatabase} />
         </ListItemIcon>
         <ListItemText secondary={(headOid || 'None').slice(0, 7)}>
-          <ObjectLink oid={headOid} internalPath={internalPath}>
+          <ObjectLink
+            bufferInfo={createBufferInfo('commit', headOid || '', repoPath)}
+          >
             <Typography>{repoPath.name}</Typography>
           </ObjectLink>
         </ListItemText>

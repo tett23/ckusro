@@ -2,7 +2,7 @@ import React from 'react';
 import { Breadcrumbs, Link } from '@material-ui/core';
 import { InternalPath } from '@ckusro/ckusro-core';
 import { useDispatch } from 'react-redux';
-import { updateCurrentInternalPath } from '../../../../../modules/ui/uiMisc';
+import { updateByInternalPath } from '../../../../../modules/thunkActions';
 
 type OwnProps = {
   internalPath: InternalPath;
@@ -33,7 +33,7 @@ export default function(props: OwnProps) {
   const dispatch = useDispatch();
   const dispatchProps = {
     onClick: () => {
-      dispatch(updateCurrentInternalPath({ ...props.internalPath, path: '/' }));
+      dispatch(updateByInternalPath({ ...props.internalPath, path: '/' }));
     },
   };
 
