@@ -66,9 +66,7 @@ const Memoized = React.memo(BlobObject, (prev, next) => prev.oid === next.oid);
 export default function(ownProps: OwnProps) {
   const styles = useGitObjectListStyles();
   const gitObject = useSelector((state: State) =>
-    createObjectManager(state.domain.objectManager).fetch<BlobObjectType>(
-      ownProps.oid,
-    ),
+    createObjectManager(state.domain.objectManager).fetch(ownProps.oid, 'blob'),
   );
 
   if (gitObject == null) {

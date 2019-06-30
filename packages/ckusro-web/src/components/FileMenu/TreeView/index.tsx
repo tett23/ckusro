@@ -1,4 +1,4 @@
-import { CommitObject, RepoPath, url2RepoPath } from '@ckusro/ckusro-core';
+import { RepoPath, url2RepoPath } from '@ckusro/ckusro-core';
 import { List, ListSubheader, Theme } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import React from 'react';
@@ -35,7 +35,7 @@ export function TreeView({
     const commitObject =
       oid == null
         ? null
-        : createObjectManager(objectManager).fetch<CommitObject>(oid);
+        : createObjectManager(objectManager).fetch(oid, 'commit');
 
     return (
       <FetchObjects key={item.url} oids={oid == null ? [] : [oid]}>

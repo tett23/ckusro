@@ -34,7 +34,7 @@ export function TreeEntries({
 }: TreeEntriesProps) {
   const entries = gitObject.content.map((item) => (
     <TreeEntry
-      key={item.oid}
+      key={item.oid + item.path}
       treeEntry={item}
       internalPath={createInternalPath(internalPath).join(item.path)}
     />
