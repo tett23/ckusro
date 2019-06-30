@@ -1,4 +1,8 @@
-import { BlobObject as BlobObjectType } from '@ckusro/ckusro-core';
+import {
+  BlobObject as BlobObjectType,
+  InternalPath,
+  createInternalPath,
+} from '@ckusro/ckusro-core';
 import { ListItem, ListItemText, Typography } from '@material-ui/core';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -10,7 +14,7 @@ import useGitObjectListStyles from '../useGitObjectListStyles';
 
 type OwnProps = {
   oid: string;
-  path: string;
+  internalPath: InternalPath;
 };
 
 type StateProps = {
@@ -26,7 +30,7 @@ export type BlobObjectProps = OwnProps & StateProps & StyleProps;
 
 export function BlobObject({
   oid,
-  path,
+  internalPath,
   blobObject,
   borderBottomClass,
 }: BlobObjectProps) {
@@ -35,7 +39,9 @@ export function BlobObject({
   }
   const content = new TextDecoder().decode(blobObject.content);
   const headline = content.slice(0, 200).replace(/(\r\n|\r|\n)/g, ' ');
-  const primary = <Typography>{path}</Typography>;
+  const primary = (
+    <Typography>{createInternalPath(internalPath).basename()}</Typography>
+  );
   const secondary = (
     <Typography
       style={{ height: '3em', overflow: 'hidden' }}
@@ -48,7 +54,7 @@ export function BlobObject({
 
   return (
     <ListItem className={borderBottomClass}>
-      <ObjectLinkView oid={oid}>
+      <ObjectLinkView internalPath={internalPath} oid={oid}>
         <ListItemText primary={primary} secondary={secondary} />
       </ObjectLinkView>
     </ListItem>

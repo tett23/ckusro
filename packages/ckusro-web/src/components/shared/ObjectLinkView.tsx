@@ -1,9 +1,11 @@
 import React, { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateCurrentOid } from '../../modules/thunkActions';
+import { updateCurrentInternalPathAndOid } from '../../modules/thunkActions';
+import { InternalPath } from '@ckusro/ckusro-core';
 
 type OwnProps = {
   oid: string | null;
+  internalPath: InternalPath;
   children: ReactNode;
 };
 
@@ -21,11 +23,11 @@ export function ObjectLinkView({
 }
 
 export default function(ownProps: OwnProps) {
-  const { oid } = ownProps;
+  const { oid, internalPath } = ownProps;
   const dispatch = useDispatch();
   const actions = {
     updateCurrentOid() {
-      dispatch(updateCurrentOid(oid));
+      dispatch(updateCurrentInternalPathAndOid(internalPath, oid));
     },
   };
 

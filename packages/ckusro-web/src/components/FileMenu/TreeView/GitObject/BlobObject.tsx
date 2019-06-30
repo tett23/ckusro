@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { updateCurrentOid } from '../../../../modules/thunkActions';
+import { updateCurrentInternalPathAndOid } from '../../../../modules/thunkActions';
 import useTreeViewStyles from '../useTreeViewStyles';
 import { InternalPath, createInternalPath } from '@ckusro/ckusro-core';
 
@@ -39,13 +39,16 @@ export function BlobObject({
 
 export default function(props: OwnProps) {
   const dispatch = useDispatch();
-  const onClick = () => dispatch(updateCurrentOid(props.oid));
+  const dispatchProps = {
+    onClick: () =>
+      dispatch(updateCurrentInternalPathAndOid(props.internalPath, props.oid)),
+  };
   const styles = useTreeViewStyles();
 
   return (
     <BlobObject
       {...props}
-      onClick={onClick}
+      {...dispatchProps}
       fileTypeIconClass={styles.fileTypeIcon}
     />
   );

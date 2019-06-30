@@ -2,10 +2,11 @@ import { ListSubheader, Typography } from '@material-ui/core';
 import React from 'react';
 import ObjectLinkView from '../../../../shared/ObjectLinkView';
 import useGitObjectListStyles from '../../useGitObjectListStyles';
+import { InternalPath, createInternalPath } from '@ckusro/ckusro-core';
 
 type OwnProps = {
   oid: string;
-  name: string;
+  internalPath: InternalPath;
 };
 
 type StyleProps = Pick<
@@ -15,12 +16,16 @@ type StyleProps = Pick<
 
 export type TreeNameProps = OwnProps & StyleProps;
 
-export function TreeName({ oid, name, borderBottomClass }: TreeNameProps) {
+export function TreeName({
+  oid,
+  internalPath,
+  borderBottomClass,
+}: TreeNameProps) {
   return (
-    <ObjectLinkView oid={oid}>
+    <ObjectLinkView internalPath={internalPath} oid={oid}>
       <ListSubheader className={borderBottomClass}>
         <Typography align="center" variant="body2">
-          {name}
+          {createInternalPath(internalPath).basename()}
         </Typography>
       </ListSubheader>
     </ObjectLinkView>

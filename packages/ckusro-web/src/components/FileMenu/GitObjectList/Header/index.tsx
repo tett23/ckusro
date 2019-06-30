@@ -7,6 +7,7 @@ import { State } from '../../../../modules';
 import { updateIsDrawerOpen } from '../../../../modules/ui/fileMenu/fileMenuMisc';
 import useFileMenuStyles from '../../useFileMenuStyles';
 import useGitObjectListStyles from '../useGitObjectListStyles';
+import { createInternalPath } from '@ckusro/ckusro-core';
 
 type OwnProps = {};
 
@@ -31,6 +32,7 @@ export function Header({
   headerTitle,
   onClickDrawerOpen,
   fileMenuClasses,
+  classes,
 }: HeaderProps) {
   return (
     <AppBar position="sticky" className={fileMenuClasses.appBar}>
@@ -46,7 +48,12 @@ export function Header({
             <FontAwesomeIcon icon={faBars} />
           </IconButton>
         )}
-        <Typography variant="h6" noWrap>
+        <Typography
+          className={classes.headerText}
+          variant="h6"
+          align="center"
+          noWrap
+        >
           {headerTitle}
         </Typography>
       </Toolbar>
@@ -59,6 +66,10 @@ export default function() {
   const fileMenuStyles = useFileMenuStyles();
   const stateProps = useSelector((state: State) => ({
     isDrawerOpen: state.ui.fileMenu.misc.isDrawerOpen,
+    headerTitle:
+      state.ui.misc.currentInternalPath == null
+        ? ''
+        : createInternalPath(state.ui.misc.currentInternalPath).basename(),
   }));
   const dispatch = useDispatch();
   const dispatchProps = {
@@ -68,7 +79,6 @@ export default function() {
   return (
     <Header
       {...stateProps}
-      headerTitle={''}
       {...dispatchProps}
       classes={styles}
       fileMenuClasses={fileMenuStyles}

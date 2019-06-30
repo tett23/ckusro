@@ -1,6 +1,5 @@
 import {
   TreeEntry as TreeEntryType,
-  TreeObject as TreeObjectType,
   InternalPath,
   createInternalPath,
 } from '@ckusro/ckusro-core';
@@ -48,7 +47,7 @@ export default function({
   oid: string;
 }) {
   const gitObject = useSelector((state: State) =>
-    createObjectManager(state.domain.objectManager).fetch<TreeObjectType>(oid),
+    createObjectManager(state.domain.objectManager).fetch(oid, 'tree'),
   );
   if (gitObject == null) {
     return <FetchObjects oids={oid == null ? [] : [oid]} />;

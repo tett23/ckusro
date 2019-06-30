@@ -53,6 +53,10 @@ function RepositoryName({
     setAnchorEl(null);
   };
   const isOpenMenu = Boolean(anchorEl);
+  const internalPath = {
+    repoPath,
+    path: '/',
+  };
 
   return (
     <>
@@ -61,7 +65,7 @@ function RepositoryName({
           <FontAwesomeIcon icon={faDatabase} />
         </ListItemIcon>
         <ListItemText secondary={(headOid || 'None').slice(0, 7)}>
-          <ObjectLink oid={headOid}>
+          <ObjectLink oid={headOid} internalPath={internalPath}>
             <Typography>{repoPath.name}</Typography>
           </ObjectLink>
         </ListItemText>

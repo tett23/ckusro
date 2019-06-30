@@ -1,4 +1,4 @@
-import { RepoPath } from '@ckusro/ckusro-core';
+import { RepoPath, InternalPath } from '@ckusro/ckusro-core';
 import { Dispatch } from 'react';
 import { updateCurrentOid as updateCurrentOidAction } from './actions/shared';
 import { Actions, State } from './index';
@@ -11,8 +11,12 @@ import {
   pullRepository as pullRepositoryAction,
 } from './workerActions/repository';
 import { updateMainViewType } from './ui/mainView/mainViewMisc';
+import { updateCurrentInternalPath } from './ui/uiMisc';
 
-export function updateCurrentOid(oid: string | null) {
+export function updateCurrentInternalPathAndOid(
+  internalPath: InternalPath | null,
+  oid: string | null,
+) {
   return async (dispatch: Dispatch<Actions>, getState: () => State) => {
     const {
       domain: { objectManager },
@@ -21,6 +25,7 @@ export function updateCurrentOid(oid: string | null) {
     const objectType = (objectManager[oid || ''] || { type: undefined }).type;
 
     dispatch(updateMainViewType('object'));
+    dispatch(updateCurrentInternalPath(internalPath));
     dispatch(updateCurrentOidAction(oid, objectType));
   };
 }

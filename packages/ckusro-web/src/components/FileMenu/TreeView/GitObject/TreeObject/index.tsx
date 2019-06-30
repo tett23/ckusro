@@ -8,7 +8,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createObjectManager } from '../../../../../models/ObjectManager';
 import { State } from '../../../../../modules';
-import { updateCurrentOid } from '../../../../../modules/thunkActions';
+import { updateCurrentInternalPathAndOid } from '../../../../../modules/thunkActions';
 import FetchObjects from '../../../../FetchObject';
 import { TreeEntries } from '../../TreeEntries';
 import TreeName from './TreeName';
@@ -67,7 +67,7 @@ export default function(props: OwnProps) {
   }));
   const dispatch = useDispatch();
   const dispatchProps = {
-    onClick: () => dispatch(updateCurrentOid(oid)),
+    onClick: () => dispatch(updateCurrentInternalPathAndOid(internalPath, oid)),
     onClickSecondaryAction: () =>
       dispatch(updateOpened(internalPath, !state.isOpened)),
   };

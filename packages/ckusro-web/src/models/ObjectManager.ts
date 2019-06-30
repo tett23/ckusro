@@ -1,4 +1,12 @@
-import { GitObject } from '@ckusro/ckusro-core';
+import {
+  GitObject,
+  GitObjectTypes,
+  isCommitObject,
+  isTreeObject,
+  isBlobObject,
+  isTagObject,
+  LookUpGitObjectType,
+} from '@ckusro/ckusro-core';
 
 export type ObjectManager = {
   [oid: string]: GitObject;
@@ -7,7 +15,8 @@ export type ObjectManager = {
 export function createObjectManager(manager: ObjectManager) {
   return {
     addObjects: (objects: GitObject[]) => addObjects(manager, objects),
-    fetch: <T extends GitObject>(oid: string) => fetch<T>(manager, oid),
+    fetch: <N extends GitObjectTypes>(oid: string, type?: N) =>
+      fetch(manager, oid, type),
     includes: (objects: GitObject[]) => includes(manager, objects),
     difference: (oids: string[]) => difference(manager, oids),
   };
@@ -35,16 +44,35 @@ export function includes(
   return gitObjects.some(({ oid }) => manager[oid] != null);
 }
 
-export function fetch<T extends GitObject>(
+type NameOrGitObject<
+  N extends GitObjectTypes | undefined
+> = N extends GitObjectTypes ? LookUpGitObjectType<N> : GitObject;
+
+export function fetch<N extends GitObjectTypes | undefined>(
   manager: ObjectManager,
   oid: string,
-): T | null {
+  type?: N,
+): NameOrGitObject<N> | null {
   const object: GitObject | null = manager[oid];
   if (object == null) {
     return null;
   }
+  if (type == null) {
+    return object as NameOrGitObject<N>;
+  }
 
-  return object as T;
+  switch (type) {
+    case 'commit':
+      return isCommitObject(object) ? (object as NameOrGitObject<N>) : null;
+    case 'tree':
+      return isTreeObject(object) ? (object as NameOrGitObject<N>) : null;
+    case 'blob':
+      return isBlobObject(object) ? (object as NameOrGitObject<N>) : null;
+    case 'tag':
+      return isTagObject(object) ? (object as NameOrGitObject<N>) : null;
+    default:
+      return null;
+  }
 }
 
 export function difference(manager: ObjectManager, oids: string[]): string[] {

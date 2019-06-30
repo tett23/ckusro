@@ -10,6 +10,9 @@ const useGitObjectListStyles = makeStyles((theme: Theme) =>
       position: 'relative',
       overflow: 'auto',
     },
+    list: {
+      padding: 0,
+    },
     listSectionClass: {
       backgroundColor: 'inherit',
     },
@@ -19,6 +22,9 @@ const useGitObjectListStyles = makeStyles((theme: Theme) =>
     },
     borderBottomClass: {
       borderBottom: '2px solid ' + theme.palette.divider,
+    },
+    headerText: {
+      width: '100%',
     },
   }),
 );
