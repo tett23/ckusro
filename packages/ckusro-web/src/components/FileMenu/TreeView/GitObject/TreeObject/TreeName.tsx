@@ -18,8 +18,8 @@ import useTreeViewStyles from '../../useTreeViewStyles';
 type OwnProps = {
   path: string;
   isOpen: boolean;
-  setIsOpen: (value: boolean) => void;
   onClick: () => void;
+  onClickSecondaryAction: () => void;
 };
 
 type StyleProps = {
@@ -31,8 +31,8 @@ export type TreeNameProps = OwnProps & StyleProps;
 export function TreeName({
   path,
   isOpen,
-  setIsOpen,
   onClick,
+  onClickSecondaryAction,
   fileTypeIconClass,
 }: TreeNameProps) {
   return (
@@ -42,7 +42,7 @@ export function TreeName({
       </ListItemIcon>
       <ListItemText primary={path} />
       <ListItemSecondaryAction>
-        <IconButton edge="end" onClick={() => setIsOpen(!isOpen)}>
+        <IconButton edge="end" onClick={onClickSecondaryAction}>
           <ChevronIcon isOpen={isOpen} />
         </IconButton>
       </ListItemSecondaryAction>

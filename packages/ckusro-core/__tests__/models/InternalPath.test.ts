@@ -1,4 +1,8 @@
-import { basename, compareInternalPath } from '../../src/models/InternalPath';
+import {
+  basename,
+  compareInternalPath,
+  join,
+} from '../../src/models/InternalPath';
 import { buildInternalPath, buildRepoPath } from '../__fixtures__';
 
 describe(compareInternalPath, () => {
@@ -31,5 +35,16 @@ describe(basename, () => {
     const internalPath = buildInternalPath({ path: '/foo/bar.md' });
 
     expect(basename(internalPath)).toBe('bar.md');
+  });
+});
+
+describe(join, () => {
+  it('returns InternalPath', () => {
+    const internalPath = buildInternalPath({ path: '/foo' });
+
+    expect(join(internalPath, 'bar', 'baz.md')).toMatchObject({
+      repoPath: internalPath.repoPath,
+      path: '/foo/bar/baz.md',
+    });
   });
 });

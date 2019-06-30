@@ -1,6 +1,8 @@
 import {
   TreeEntry as TreeEntryType,
   TreeObject as TreeObjectType,
+  InternalPath,
+  createInternalPath,
 } from '@ckusro/ckusro-core';
 import { List } from '@material-ui/core';
 import React from 'react';
@@ -11,11 +13,18 @@ import FetchObjects from '../../FetchObject';
 import TreeEntry from './TreeEntry';
 import useTreeViewStyles from './useTreeViewStyles';
 
-export type TreeEntriesProps = { treeEntries: TreeEntryType[] };
+export type TreeEntriesProps = {
+  internalPath: InternalPath;
+  treeEntries: TreeEntryType[];
+};
 
-export function TreeEntries({ treeEntries }: TreeEntriesProps) {
+export function TreeEntries({ treeEntries, internalPath }: TreeEntriesProps) {
   const entries = treeEntries.map((item) => (
-    <TreeEntry key={item.oid + item.path} treeEntry={item} />
+    <TreeEntry
+      key={item.oid + item.path}
+      internalPath={createInternalPath(internalPath).join(item.path)}
+      treeEntry={item}
+    />
   ));
   const styles = useTreeViewStyles();
 
@@ -31,7 +40,13 @@ export function TreeEntries({ treeEntries }: TreeEntriesProps) {
   );
 }
 
-export default function({ oid }: { oid: string }) {
+export default function({
+  oid,
+  internalPath,
+}: {
+  internalPath: InternalPath;
+  oid: string;
+}) {
   const gitObject = useSelector((state: State) =>
     createObjectManager(state.domain.objectManager).fetch<TreeObjectType>(oid),
   );
@@ -41,7 +56,10 @@ export default function({ oid }: { oid: string }) {
 
   return (
     <FetchObjects oids={gitObject.content.map(({ oid }) => oid)}>
-      <TreeEntries treeEntries={gitObject.content} />
+      <TreeEntries
+        internalPath={internalPath}
+        treeEntries={gitObject.content}
+      />
     </FetchObjects>
   );
 }

@@ -1,8 +1,12 @@
 import { UpdateState, updateState } from '../../actions/shared';
-import { InternalPath } from '@ckusro/ckusro-core';
+import { InternalPath, compareInternalPath } from '@ckusro/ckusro-core';
+import {
+  createOpenedInternalPathManager,
+  OpenedInternalPathManager,
+} from '../../../models/OpenedInternalPathManager';
 
 export type TreeViewState = {
-  opened: InternalPath[];
+  opened: OpenedInternalPathManager;
 };
 
 export function initialTreeViewState(): TreeViewState {
@@ -13,11 +17,11 @@ export function initialTreeViewState(): TreeViewState {
 
 const UpdateOpened = 'UI/FileMenu/TreeView/UpdateOpened' as const;
 
-export function updateOpened(path: string, value: boolean) {
+export function updateOpened(internalPath: InternalPath, value: boolean) {
   return {
     type: UpdateOpened,
     payload: {
-      path,
+      internalPath,
       value,
     },
   };
@@ -32,14 +36,17 @@ export default function treeViewReducer(
   action: TreeViewActions,
 ): TreeViewState {
   switch (action.type) {
-    case UpdateOpened:
-      return {
-        ...state,
-        opened: {
-          ...state.opened,
-          [action.payload.path]: action.payload.value,
-        },
-      };
+    case UpdateOpened: {
+      const newState = createOpenedInternalPathManager(state.opened).update(
+        action.payload.internalPath,
+        action.payload.value,
+      );
+      if (state.opened === newState) {
+        return state;
+      }
+
+      return { ...state, opened: newState };
+    }
     case UpdateState:
       if (
         action.payload.ui == null ||

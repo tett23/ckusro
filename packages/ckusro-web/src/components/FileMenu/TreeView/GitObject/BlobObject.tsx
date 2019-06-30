@@ -5,10 +5,11 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { updateCurrentOid } from '../../../../modules/thunkActions';
 import useTreeViewStyles from '../useTreeViewStyles';
+import { InternalPath, createInternalPath } from '@ckusro/ckusro-core';
 
 type OwnProps = {
   oid: string;
-  path: string;
+  internalPath: InternalPath;
 };
 
 type DispatchProps = {
@@ -22,7 +23,7 @@ type StyleProps = {
 export type BlobObjectProps = OwnProps & DispatchProps & StyleProps;
 
 export function BlobObject({
-  path,
+  internalPath,
   onClick,
   fileTypeIconClass,
 }: BlobObjectProps) {
@@ -31,7 +32,7 @@ export function BlobObject({
       <ListItemIcon className={fileTypeIconClass}>
         <FontAwesomeIcon icon={faFile} />
       </ListItemIcon>
-      <ListItemText primary={path} />
+      <ListItemText primary={createInternalPath(internalPath).basename()} />
     </ListItem>
   );
 }
