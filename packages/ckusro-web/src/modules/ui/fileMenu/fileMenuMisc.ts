@@ -1,10 +1,10 @@
-import { updateState, UpdateState } from '../actions/shared';
+import { updateState, UpdateState } from '../../actions/shared';
 
-export type FileMenuState = {
+export type FileMenuMiscState = {
   isDrawerOpen: boolean;
 };
 
-export function initialFileMenuState(): FileMenuState {
+export function initialFileMenuMiscState(): FileMenuMiscState {
   return {
     isDrawerOpen: true,
   };
@@ -19,14 +19,14 @@ export function updateIsDrawerOpen(value: boolean) {
   };
 }
 
-export type FileMenuActions =
+export type FileMenuMiscActions =
   | ReturnType<typeof updateIsDrawerOpen>
   | ReturnType<typeof updateState>;
 
-export function fileMenuReducer(
-  state: FileMenuState = initialFileMenuState(),
-  action: FileMenuActions,
-): FileMenuState {
+export function fileMenuMiscReducer(
+  state: FileMenuMiscState = initialFileMenuMiscState(),
+  action: FileMenuMiscActions,
+): FileMenuMiscState {
   switch (action.type) {
     case UpdateIsDrawerOpen:
       return {

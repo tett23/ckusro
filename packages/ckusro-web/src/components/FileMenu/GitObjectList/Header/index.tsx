@@ -4,7 +4,7 @@ import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../../../../modules';
-import { updateIsDrawerOpen } from '../../../../modules/ui/fileMenu';
+import { updateIsDrawerOpen } from '../../../../modules/ui/fileMenu/fileMenuMisc';
 import useFileMenuStyles from '../../useFileMenuStyles';
 import useGitObjectListStyles from '../useGitObjectListStyles';
 
@@ -58,7 +58,7 @@ export default function() {
   const styles = useGitObjectListStyles();
   const fileMenuStyles = useFileMenuStyles();
   const stateProps = useSelector((state: State) => ({
-    isDrawerOpen: state.ui.fileMenu.isDrawerOpen,
+    isDrawerOpen: state.ui.fileMenu.misc.isDrawerOpen,
   }));
   const dispatch = useDispatch();
   const dispatchProps = {
