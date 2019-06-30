@@ -7,6 +7,7 @@ import {
   FileSystemOpened,
 } from '../../../../modules/ui/mainView/settingsView/fileSystem';
 import FileSystemTreeView from './FileSystemTreeView';
+import Preview from './Preview';
 
 type OwnProps = {};
 
@@ -33,11 +34,14 @@ export function FileSystem({
   updatePreview,
 }: ConfigViewProps) {
   return (
-    <FileSystemTreeView
-      opened={opened}
-      onClickDirectory={updateOpened}
-      onClickFile={updatePreview}
-    />
+    <>
+      <FileSystemTreeView
+        opened={opened}
+        onClickDirectory={updateOpened}
+        onClickFile={updatePreview}
+      />
+      <Preview />
+    </>
   );
 }
 

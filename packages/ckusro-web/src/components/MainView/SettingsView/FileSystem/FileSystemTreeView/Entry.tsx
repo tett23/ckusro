@@ -48,7 +48,7 @@ export function Entry({
         />
       );
     case 'File':
-      return <File path={entry.name} onClick={onClickFile} />;
+      return <File path={join(path, entry.name)} onClick={onClickFile} />;
     default:
       return null;
   }

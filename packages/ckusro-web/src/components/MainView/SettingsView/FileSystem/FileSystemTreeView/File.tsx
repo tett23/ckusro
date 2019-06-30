@@ -2,6 +2,7 @@ import React from 'react';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { basename } from 'path';
 
 type OwnProps = {
   path: string;
@@ -28,7 +29,7 @@ export default function FileSystemTreeView({
       <ListItemIcon>
         <FontAwesomeIcon icon={faFile} />
       </ListItemIcon>
-      <ListItemText primary={path} />
+      <ListItemText primary={basename(path)} />
     </ListItem>
   );
 }
