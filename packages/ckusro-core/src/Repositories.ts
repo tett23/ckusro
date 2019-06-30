@@ -12,6 +12,7 @@ import {
   repository,
 } from './Repository';
 import { promisify, callbackify } from 'util';
+import { InternalPath } from './models/InternalPath';
 
 export type Repositories = ReturnType<typeof repositories>;
 
@@ -22,6 +23,8 @@ export function repositories(config: CkusroConfig, fs: typeof FS) {
     fetchRepository: (repoPath: RepoPath) =>
       fetchRepository(config, fs, repoPath),
     fetchObject: (oid: string) => fetchObject(config, fs, oid),
+    fetchObjectByInternalPath: (internalPath: InternalPath) =>
+      fetchObjectByInternalPath(config, fs, internalPath),
     headOids: () => headOids(config, fs),
   };
 }
@@ -157,6 +160,19 @@ export async function fetchObject(
   }
 
   return ret;
+}
+
+export async function fetchObjectByInternalPath(
+  config: CkusroConfig,
+  fs: typeof FS,
+  internalPath: InternalPath,
+): Promise<GitObject | Error> {
+  const repo = await fetchRepository(config, fs, internalPath.repoPath);
+  if (repo instanceof Error) {
+    return repo;
+  }
+
+  return repo.fetchObjectByPath(internalPath.path);
 }
 
 export async function headOids(

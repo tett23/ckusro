@@ -5,6 +5,7 @@ import {
   CommitObject,
   GitObject,
   TreeObject,
+  isBlobObject,
 } from './models/GitObject';
 import { gitDir, RepoPath, toPath } from './models/RepoPath';
 
@@ -17,6 +18,8 @@ export function repository(config: CkusroConfig, repoPath: RepoPath) {
     headRootTree: () => headRootTree(config, repoPath),
     readTree: (oid: string) => readTree(config, repoPath, oid),
     fetch: (ref?: string) => fetch(config, repoPath, ref),
+    fetchObjectByPath: (path: string) =>
+      fetchObjectByPath(config, repoPath, path),
     pull: () => pull(config, repoPath),
     checkout: (ref: string) => checkout(config, repoPath, ref),
   };
@@ -145,6 +148,54 @@ export async function fetchObject(
     default:
       return new Error('Invalid object type.');
   }
+}
+
+export async function fetchObjectByPath(
+  config: CkusroConfig,
+  repoPath: RepoPath,
+  path: string,
+): Promise<GitObject | Error> {
+  const head = await headCommitObject(config, repoPath);
+  if (head instanceof Error) {
+    return head;
+  }
+
+  const root = await fetchObject(config, repoPath, head.content.tree);
+  if (root instanceof Error) {
+    return root;
+  }
+
+  const paths = path.split('/').slice(1);
+
+  return fetchItem(config, root as TreeObject, repoPath, paths);
+}
+
+export async function fetchItem(
+  config: CkusroConfig,
+  tree: TreeObject,
+  repoPath: RepoPath,
+  paths: string[],
+): Promise<GitObject | Error> {
+  const [head, ...tail] = paths;
+  if (head == null) {
+    return new Error('Invalid paths.');
+  }
+
+  const entry = tree.content.find((item) => item.path === head);
+  if (entry == null) {
+    return new Error('Invalid entry.');
+  }
+
+  const newTreeOrBlob = await fetchObject(config, repoPath, entry.oid);
+  if (newTreeOrBlob instanceof Error) {
+    return newTreeOrBlob;
+  }
+
+  if (isBlobObject(newTreeOrBlob) || tail.length === 0) {
+    return newTreeOrBlob;
+  }
+
+  return fetchItem(config, newTreeOrBlob as TreeObject, repoPath, tail);
 }
 
 export async function fetch(

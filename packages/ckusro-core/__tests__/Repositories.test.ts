@@ -1,12 +1,13 @@
 import * as Git from 'isomorphic-git';
 import { join } from 'path';
-import { GitObject } from '../src/models/GitObject';
+import { GitObject, BlobObject } from '../src/models/GitObject';
 import {
   allRepositories,
   clone,
   fetchObject,
   headOids,
   repositories,
+  fetchObjectByInternalPath,
 } from '../src/Repositories';
 import { headOid } from '../src/Repository';
 import { buildCkusroConfig, buildRepoPath } from './__fixtures__';
@@ -75,6 +76,57 @@ describe(repositories.name, () => {
       const config = buildCkusroConfig();
       const fs = pfs(config);
       const expected = await fetchObject(config, fs, 'hoge');
+
+      expect(expected).toBeInstanceOf(Error);
+    });
+  });
+
+  describe(fetchObjectByInternalPath, () => {
+    const config = buildCkusroConfig();
+    const repoPath = buildRepoPath();
+    const fs = pfs(config);
+
+    beforeAll(async () => {
+      const core = Git.cores.create(config.coreId);
+      core.set('fs', fs);
+      const commits = [
+        {
+          message: 'init',
+          tree: {
+            'README.md': 'read me',
+            foo: {
+              bar: {
+                'baz.md': 'baz.md',
+              },
+            },
+          },
+        },
+      ];
+      await dummyRepo(config, fs, repoPath, commits);
+    });
+    it('returns GitObject', async () => {
+      const expected = await fetchObjectByInternalPath(config, fs, {
+        repoPath,
+        path: '/foo/bar/baz.md',
+      });
+
+      expect((expected as BlobObject).content.toString()).toBe('baz.md');
+    });
+
+    it('returns Error when object does not exist', async () => {
+      const expected = await fetchObjectByInternalPath(config, fs, {
+        repoPath: { ...repoPath, name: 'does_not_exist' },
+        path: '/does_not_exist',
+      });
+
+      expect(expected).toBeInstanceOf(Error);
+    });
+
+    it('returns Error when object does not exist', async () => {
+      const expected = await fetchObjectByInternalPath(config, fs, {
+        repoPath,
+        path: '/does_not_exist',
+      });
 
       expect(expected).toBeInstanceOf(Error);
     });
