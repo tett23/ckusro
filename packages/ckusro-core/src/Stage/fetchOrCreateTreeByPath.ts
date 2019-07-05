@@ -1,9 +1,9 @@
-import { join, basename } from 'path';
+import { basename } from 'path';
 import { CkusroConfig } from '../models/CkusroConfig';
 import { fetchByPath } from './fetchByPath';
 import { TreeObject, TreeEntry, compareTreeEntry } from '../models/GitObject';
 import { writeObject } from './writeObject';
-import normalizePath from '../utils/normalizePath';
+import splitPath from '../utils/splitPath';
 
 export type PathTreeObject = readonly [string, TreeObject];
 
@@ -11,19 +11,7 @@ export async function fetchOrCreateTreeByPath(
   config: CkusroConfig,
   path: string,
 ) {
-  const paths = normalizePath(path)
-    .split('/')
-    .slice(1)
-    .filter((item) => item.length !== 0)
-    .reduce(
-      (acc: string[], item) => {
-        acc.push(join('/', ...acc.slice(-1), item));
-
-        return acc;
-      },
-      ['/'],
-    );
-
+  const paths = splitPath(path);
   const result = paths.reduce(
     async (
       acc: Promise<PathTreeObject[] | Error>,
