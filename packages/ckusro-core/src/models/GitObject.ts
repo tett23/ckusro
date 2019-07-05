@@ -40,6 +40,8 @@ export type LookUpGitObjectType<N> = N extends CommitObject['type']
   ? TagObject
   : never;
 
+export type UnPersistedGitObject = Omit<GitObject, 'oid'>;
+
 export function isCommitObject(obj: GitObject): obj is CommitObject {
   return obj.type === 'commit';
 }
@@ -54,4 +56,13 @@ export function isBlobObject(obj: GitObject): obj is BlobObject {
 
 export function isTagObject(obj: GitObject): obj is TagObject {
   return obj.type === 'tag';
+}
+
+export function compareTreeEntry(left: TreeEntry, right: TreeEntry): boolean {
+  return (
+    left.oid === right.oid &&
+    left.path === right.path &&
+    left.mode === right.mode &&
+    left.type === right.type
+  );
 }

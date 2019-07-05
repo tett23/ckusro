@@ -12,6 +12,7 @@ export function createInternalPath(internalPath: InternalPath) {
       compareInternalPath(internalPath, b),
     basename: () => basename(internalPath),
     join: (...paths: string[]) => join(internalPath, ...paths),
+    split: () => split(internalPath),
   };
 }
 
@@ -39,4 +40,16 @@ export function join(
     repoPath: internalPath.repoPath,
     path: _join(internalPath.path, ...paths),
   };
+}
+
+export function split(internalPath: InternalPath): string[] {
+  return [
+    internalPath.repoPath.domain,
+    internalPath.repoPath.user,
+    internalPath.repoPath.name,
+    ...internalPath.path
+      .trim()
+      .slice(1)
+      .split('/'),
+  ];
 }

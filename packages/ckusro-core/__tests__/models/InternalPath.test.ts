@@ -2,6 +2,7 @@ import {
   basename,
   compareInternalPath,
   join,
+  split,
 } from '../../src/models/InternalPath';
 import { buildInternalPath, buildRepoPath } from '../__fixtures__';
 
@@ -52,5 +53,25 @@ describe(join, () => {
       repoPath: internalPath.repoPath,
       path: '/foo/bar/baz.md',
     });
+  });
+});
+
+describe(split, () => {
+  it('returns string[]', () => {
+    const internalPath = buildInternalPath({
+      repoPath: buildRepoPath({
+        domain: 'example.com',
+        user: 'test',
+        name: 'repo',
+      }),
+      path: '/foo',
+    });
+
+    expect(split(internalPath)).toMatchObject([
+      'example.com',
+      'test',
+      'repo',
+      'foo',
+    ]);
   });
 });

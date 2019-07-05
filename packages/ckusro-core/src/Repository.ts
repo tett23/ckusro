@@ -212,7 +212,7 @@ export async function fetch(
   const result = await Git.fetch({
     core: config.coreId,
     token: config.authentication.github || undefined,
-    dir: toPath(config.base, repoPath),
+    gitdir: gitDir(config.base, repoPath),
     ref: ref || 'master',
     singleBranch: true,
   }).catch((err: Error) => err);
