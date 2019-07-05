@@ -4,9 +4,7 @@ import { fetchByPath } from './fetchByPath';
 import { TreeObject } from '../models/GitObject';
 import { writeObject } from './writeObject';
 import splitPath from '../utils/splitPath';
-import updateOrAppendTreeObject, {
-  PathTreeObject,
-} from './updateOrAppendTreeObject';
+import updateOrAppendObject, { PathTreeObject } from './updateOrAppendObject';
 
 export async function fetchOrCreateTreeByPath(
   config: CkusroConfig,
@@ -40,10 +38,7 @@ export async function fetchOrCreateTreeByPath(
         return writeResult;
       }
 
-      return updateOrAppendTreeObject(config, left, [
-        basename(path),
-        writeResult,
-      ]);
+      return updateOrAppendObject(config, left, [basename(path), writeResult]);
     },
     Promise.resolve([]),
   );

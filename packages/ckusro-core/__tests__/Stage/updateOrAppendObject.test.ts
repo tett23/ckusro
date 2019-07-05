@@ -2,14 +2,14 @@ import * as Git from 'isomorphic-git';
 import { initRepository } from '../../src/Stage/prepare';
 import { buildCkusroConfig, buildTreeEntry } from '../__fixtures__';
 import { pfs } from '../__helpers__';
-import updateOrAppendTreeObject, {
+import updateOrAppendObject, {
   PathTreeObject,
-} from '../../src/Stage/updateOrAppendTreeObject';
+} from '../../src/Stage/updateOrAppendObject';
 import { fetchOrCreateTreeByPath } from '../../src/Stage/fetchOrCreateTreeByPath';
 import { writeObject } from '../../src/Stage/writeObject';
 import { TreeObject, BlobObject } from '../../src';
 
-describe(updateOrAppendTreeObject, () => {
+describe(updateOrAppendObject, () => {
   const config = buildCkusroConfig();
   beforeEach(async () => {
     const core = Git.cores.create(config.coreId);
@@ -39,7 +39,7 @@ describe(updateOrAppendTreeObject, () => {
       type: 'tree',
       content: tree,
     })) as TreeObject;
-    const actual = (await updateOrAppendTreeObject(config, parents, [
+    const actual = (await updateOrAppendObject(config, parents, [
       'bar',
       treeObject,
     ])) as PathTreeObject[];
@@ -68,7 +68,7 @@ describe(updateOrAppendTreeObject, () => {
       type: 'tree',
       content: tree,
     })) as TreeObject;
-    await updateOrAppendTreeObject(config, parents, ['bar', treeObject]);
+    await updateOrAppendObject(config, parents, ['bar', treeObject]);
 
     const newBlob = (await writeObject(config, {
       type: 'blob',
@@ -87,7 +87,7 @@ describe(updateOrAppendTreeObject, () => {
       content: newTree,
     })) as TreeObject;
 
-    const actual = (await updateOrAppendTreeObject(config, parents, [
+    const actual = (await updateOrAppendObject(config, parents, [
       'bar',
       newTreeObject,
     ])) as PathTreeObject[];

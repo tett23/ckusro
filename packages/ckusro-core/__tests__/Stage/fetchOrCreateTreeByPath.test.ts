@@ -3,7 +3,7 @@ import { initRepository } from '../../src/Stage/prepare';
 import { buildCkusroConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
 import { fetchOrCreateTreeByPath } from '../../src/Stage/fetchOrCreateTreeByPath';
-import { PathTreeObject } from '../../src/Stage/updateOrAppendTreeObject';
+import { PathTreeObject } from '../../src/Stage/updateOrAppendObject';
 
 describe(fetchOrCreateTreeByPath, () => {
   const config = buildCkusroConfig();

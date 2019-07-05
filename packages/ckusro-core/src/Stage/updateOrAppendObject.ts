@@ -10,7 +10,7 @@ type LookupPathTreeObjectOrMixed<
   T extends PathTreeOrBlobObject
 > = T extends PathTreeObject ? PathTreeObject : PathTreeOrBlobObject;
 
-export default async function updateOrAppendTreeObject<
+export default async function updateOrAppendObject<
   T extends PathTreeOrBlobObject
 >(
   config: CkusroConfig,

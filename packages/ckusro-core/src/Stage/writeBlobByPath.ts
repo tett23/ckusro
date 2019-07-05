@@ -3,9 +3,9 @@ import { CkusroConfig } from '../models/CkusroConfig';
 import { writeObject } from './writeObject';
 import normalizePath from '../utils/normalizePath';
 import { fetchOrCreateTreeByPath } from './fetchOrCreateTreeByPath';
-import updateOrAppendTreeObject, {
+import updateOrAppendObject, {
   PathTreeOrBlobObject,
-} from './updateOrAppendTreeObject';
+} from './updateOrAppendObject';
 import { UnpersistedBlobObject } from '../models/GitObject';
 
 export async function writeBlobByPath(
@@ -31,5 +31,5 @@ export async function writeBlobByPath(
     return persistedBlob;
   }
 
-  return updateOrAppendTreeObject(config, parents, [blobName, persistedBlob]);
+  return updateOrAppendObject(config, parents, [blobName, persistedBlob]);
 }

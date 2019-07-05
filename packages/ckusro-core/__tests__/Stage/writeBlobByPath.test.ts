@@ -4,7 +4,7 @@ import { buildCkusroConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
 import { fetchOrCreateTreeByPath } from '../../src/Stage/fetchOrCreateTreeByPath';
 import { writeBlobByPath } from '../../src/Stage/writeBlobByPath';
-import { PathTreeOrBlobObject } from '../../src/Stage/updateOrAppendTreeObject';
+import { PathTreeOrBlobObject } from '../../src/Stage/updateOrAppendObject';
 import { fetchByOid } from '../../src/Stage/fetchByOid';
 import { BlobObject } from '../../src';
 
