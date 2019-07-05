@@ -8,7 +8,7 @@ import { fetchByOid } from '../../src/Stage/fetchByOid';
 import { TreeObject } from '../../src/models/GitObject';
 import { updateOrAppendTreeEntry } from '../../src/Stage/fetchOrCreateTreeByPath';
 
-describe(writeTree, () => {
+describe.skip(writeTree, () => {
   const config = buildCkusroConfig();
   beforeEach(() => {
     const core = Git.cores.create(config.coreId);

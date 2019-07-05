@@ -1,4 +1,5 @@
 import { CommitDescription, TagDescription, TreeEntry } from 'isomorphic-git';
+import typeToMode from '../utils/typeToMode';
 
 export type CommitObject = {
   oid: string;
@@ -40,7 +41,16 @@ export type LookUpGitObjectType<N> = N extends CommitObject['type']
   ? TagObject
   : never;
 
-export type UnPersistedGitObject = Omit<GitObject, 'oid'>;
+export type UnpersistedCommitObject = Omit<CommitObject, 'oid'>;
+export type UnpersistedTreeObject = Omit<TreeObject, 'oid'>;
+export type UnpersistedBlobObject = Omit<BlobObject, 'oid'>;
+export type UnpersistedTagObject = Omit<TagObject, 'oid'>;
+
+export type UnpersistedGitObject =
+  | UnpersistedCommitObject
+  | UnpersistedTreeObject
+  | UnpersistedBlobObject
+  | UnpersistedTagObject;
 
 export function isCommitObject(obj: GitObject): obj is CommitObject {
   return obj.type === 'commit';
@@ -65,4 +75,16 @@ export function compareTreeEntry(left: TreeEntry, right: TreeEntry): boolean {
     left.mode === right.mode &&
     left.type === right.type
   );
+}
+
+export function toTreeEntry(
+  path: string,
+  object: TreeObject | BlobObject,
+): TreeEntry {
+  return {
+    type: object.type,
+    oid: object.oid,
+    mode: typeToMode(object.type),
+    path,
+  };
 }

@@ -1,8 +1,8 @@
 import * as Git from 'isomorphic-git';
 import { CkusroConfig } from '../models/CkusroConfig';
-import { LookUpGitObjectType, UnPersistedGitObject } from '../models/GitObject';
+import { LookUpGitObjectType, UnpersistedGitObject } from '../models/GitObject';
 
-export async function writeObject<T extends UnPersistedGitObject>(
+export async function writeObject<T extends UnpersistedGitObject>(
   config: CkusroConfig,
   object: T,
 ): Promise<LookUpGitObjectType<T['type']> | Error> {
