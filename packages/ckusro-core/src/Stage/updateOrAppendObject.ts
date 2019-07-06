@@ -1,14 +1,22 @@
 import { CkusroConfig } from '../models/CkusroConfig';
-import { TreeObject, toTreeEntry, BlobObject } from '../models/GitObject';
+import {
+  TreeObject,
+  toTreeEntry,
+  BlobObject,
+  GitObjectTypes,
+} from '../models/GitObject';
 import { writeObject } from './writeObject';
 import updateOrAppendTreeEntries from './updateOrAppendTreeEntries';
 
 export type PathTreeObject = readonly [string, TreeObject];
 export type PathTreeOrBlobObject = readonly [string, TreeObject | BlobObject];
-
-type LookupPathTreeObjectOrMixed<
-  T extends PathTreeOrBlobObject
-> = T extends PathTreeObject ? PathTreeObject : PathTreeOrBlobObject;
+export type LookupPathTreeObjectOrMixed<
+  T extends GitObjectTypes
+> = T extends 'tree'
+  ? PathTreeObject
+  : T extends 'blob'
+  ? PathTreeOrBlobObject
+  : never;
 
 export default async function updateOrAppendObject<
   T extends PathTreeOrBlobObject
@@ -16,7 +24,7 @@ export default async function updateOrAppendObject<
   config: CkusroConfig,
   parents: PathTreeObject[],
   init: T,
-): Promise<Array<LookupPathTreeObjectOrMixed<T>> | Error> {
+): Promise<Array<LookupPathTreeObjectOrMixed<T[1]['type']>> | Error> {
   const result = await parents
     .reverse()
     .reduce(
@@ -55,5 +63,5 @@ export default async function updateOrAppendObject<
     return result;
   }
 
-  return result as Array<LookupPathTreeObjectOrMixed<T>> | Error;
+  return result as Array<LookupPathTreeObjectOrMixed<T[1]['type']>> | Error;
 }

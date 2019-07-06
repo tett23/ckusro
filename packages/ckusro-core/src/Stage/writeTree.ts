@@ -1,86 +1,54 @@
-import * as Git from 'isomorphic-git';
 import { CkusroConfig } from '../models/CkusroConfig';
-import { TreeObject, TreeEntry } from '../models/GitObject';
+import { TreeWriteInfo } from '../models/writeInfo';
+import updateOrAppendObject, { PathTreeObject } from './updateOrAppendObject';
+import { fetchOrCreateTreeByPath } from './fetchOrCreateTreeByPath';
+import { createInternalPath } from '../models/InternalPath';
+import updateOrAppendTreeEntries from './updateOrAppendTreeEntries';
+import {
+  compareTreeEntries,
+  UnpersistedTreeObject,
+  TreeObject,
+} from '../models/GitObject';
+import { writeObject } from './writeObject';
 
 export async function writeTree(
   config: CkusroConfig,
-  parents: Array<[string, TreeObject]>,
-  name: string,
-  content: TreeEntry[],
-): Promise<string | Error> {
-  const treeOid = await Git.writeObject({
-    core: config.coreId,
-    gitdir: config.stage,
+  currentTree: TreeObject,
+  writeInfo: TreeWriteInfo,
+): Promise<PathTreeObject[] | Error> {
+  const path = createInternalPath(writeInfo.internalPath).flat();
+  const tree = await fetchOrCreateTreeByPath(config, currentTree, path);
+  if (tree instanceof Error) {
+    return tree;
+  }
+
+  const [[leafPath, leaf]] = tree.slice(-1);
+  const isSameEntries = compareTreeEntries(writeInfo.content, leaf.content);
+  if (isSameEntries) {
+    return tree;
+  }
+
+  const newEntries = writeInfo.content.reduce((acc, entry) => {
+    if (acc instanceof Error) {
+      return acc;
+    }
+
+    return updateOrAppendTreeEntries(acc, entry);
+  }, leaf.content);
+  if (newEntries instanceof Error) {
+    return newEntries;
+  }
+
+  const unpersistedTree: UnpersistedTreeObject = {
     type: 'tree',
-    object: { entries: content },
-  }).catch((err: Error) => err);
-  if (treeOid instanceof Error) {
-    return treeOid;
+    content: newEntries,
+  };
+  const persistedTree = await writeObject(config, unpersistedTree);
+  if (persistedTree instanceof Error) {
+    return persistedTree;
   }
 
-  const [[, parentTree]] = parents.slice(-1);
-  const parentEntries = [
-    ...parentTree.content,
-    {
-      type: 'tree',
-      mode: '040000',
-      path: name,
-      oid: treeOid,
-    },
-  ];
-  const parentOid = await Git.writeObject({
-    core: config.coreId,
-    gitdir: config.stage,
-    type: 'tree',
-    object: {
-      entries: parentEntries,
-    },
-  }).catch((err: Error) => err);
-  if (parentOid instanceof Error) {
-    return parentOid;
-  }
+  const parents = tree.slice(0, -1);
 
-  const head = parents.slice(0, -1);
-  const rootTree = await head
-    .reverse()
-    .reduce(async (acc: Promise<string | Error>, [changedName, tree]): Promise<
-      string | Error
-    > => {
-      const prev = await acc;
-      if (prev instanceof Error) {
-        return prev;
-      }
-      const [changedOid] = prev;
-
-      const idx = tree.content.findIndex((item) => item.path === changedName);
-      const newEntries = [
-        ...tree.content.slice(0, idx - 1),
-        {
-          type: 'tree',
-          mode: '100644',
-          path: changedName,
-          oid: changedOid,
-        },
-        ...tree.content.slice(idx),
-      ];
-
-      const parentOid = await Git.writeObject({
-        core: config.coreId,
-        gitdir: config.stage,
-        type: 'tree',
-        object: {
-          entries: newEntries,
-        },
-      }).catch((err: Error) => err);
-      if (parentOid instanceof Error) {
-        return parentOid;
-      }
-
-      return parentOid;
-    }, Promise.resolve(parentOid));
-  if (rootTree instanceof Error) {
-    return rootTree;
-  }
-
-  return rootTree;
+  return updateOrAppendObject(config, parents, [leafPath, persistedTree]);
 }

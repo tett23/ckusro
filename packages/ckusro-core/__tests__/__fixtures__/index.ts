@@ -6,6 +6,7 @@ import { InternalPath } from '../../src/models/InternalPath';
 import { Plugins } from '../../src/models/plugins';
 import { RepoPath } from '../../src/models/RepoPath';
 import { TreeEntry } from '../../src';
+import { createHash } from 'crypto';
 
 export function fixtureBuilder<T>(base: T): (override?: Partial<T>) => T {
   return (override: Partial<T> = {}) => {
@@ -50,7 +51,16 @@ export const buildInternalPath = fixtureBuilder<InternalPath>({
 
 export const buildTreeEntry = fixtureBuilder<TreeEntry>({
   type: 'tree',
-  oid: '4b825dc642cb6eb9a060e54bf8d69288fbee4904',
-  mode: '100644',
+  oid: randomOid(),
+  mode: '040000',
   path: 'test',
 });
+
+export function randomOid(): string {
+  const currentDate = new Date().valueOf().toString();
+  const random = Math.random().toString();
+
+  return createHash('sha1')
+    .update(currentDate + random)
+    .digest('hex');
+}

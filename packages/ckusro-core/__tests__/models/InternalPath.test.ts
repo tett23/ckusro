@@ -3,6 +3,7 @@ import {
   compareInternalPath,
   join,
   split,
+  flat,
 } from '../../src/models/InternalPath';
 import { buildInternalPath, buildRepoPath } from '../__fixtures__';
 
@@ -73,5 +74,20 @@ describe(split, () => {
       'repo',
       'foo',
     ]);
+  });
+});
+
+describe(flat, () => {
+  it('returns string', () => {
+    const internalPath = buildInternalPath({
+      repoPath: buildRepoPath({
+        domain: 'example.com',
+        user: 'test',
+        name: 'repo',
+      }),
+      path: '/foo/bar',
+    });
+
+    expect(flat(internalPath)).toBe('/example.com/test/repo/foo/bar');
   });
 });

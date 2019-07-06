@@ -1,25 +1,24 @@
 import { CkusroConfig } from '../models/CkusroConfig';
 import { TreeObject, GitObject, isBlobObject } from '../models/GitObject';
-import { headTree } from './head';
 import { fetchByOid } from './fetchByOid';
 import normalizePath from '../utils/normalizePath';
 
-export async function fetchByPath(config: CkusroConfig, path: string) {
-  const root = await headTree(config);
-  if (root instanceof Error) {
-    return root;
-  }
+export async function fetchByPath(
+  config: CkusroConfig,
+  tree: TreeObject,
+  path: string,
+): Promise<GitObject | null | Error> {
   const normalized = normalizePath(path);
   if (normalized === '/') {
-    return root;
+    return tree;
   }
 
   const paths = normalized.split('/').slice(1);
   if (paths.length === 0) {
-    return root;
+    return tree;
   }
 
-  return fetchItem(config, root as TreeObject, paths);
+  return fetchItem(config, tree, paths);
 }
 
 async function fetchItem(

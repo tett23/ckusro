@@ -1,87 +1,115 @@
 import * as Git from 'isomorphic-git';
 import { initRepository } from '../../src/Stage/prepare';
-import { buildCkusroConfig } from '../__fixtures__';
+import {
+  buildCkusroConfig,
+  buildInternalPath,
+  buildTreeEntry,
+  randomOid,
+} from '../__fixtures__';
 import { pfs } from '../__helpers__';
 import { writeTree } from '../../src/Stage/writeTree';
-import { headTree } from '../../src/Stage/head';
 import { fetchByOid } from '../../src/Stage/fetchByOid';
 import { TreeObject } from '../../src/models/GitObject';
-import { updateOrAppendTreeEntry } from '../../src/Stage/fetchOrCreateTreeByPath';
+import { createWriteInfo } from '../../src/models/writeInfo';
+import { PathTreeObject } from '../../src/Stage/updateOrAppendObject';
+import { createInternalPath } from '../../src';
+import { headTree } from '../../src/Stage/head';
 
-describe.skip(writeTree, () => {
+describe(writeTree, () => {
   const config = buildCkusroConfig();
-  beforeEach(() => {
+  beforeEach(async () => {
     const core = Git.cores.create(config.coreId);
     const fs = pfs(config);
     core.set('fs', fs);
-  });
-
-  it('returns TreeObject', async () => {
     await initRepository(config);
-    const root = await headTree(config);
-    const actual = await writeTree(
-      config,
-      [['/', root as TreeObject]],
-      'foo',
-      [],
-    );
-
-    expect(typeof actual).toBe('string');
-
-    const newRoot = await fetchByOid(config, actual as string);
-    expect((newRoot as TreeObject).oid).toBe(actual);
-    expect((newRoot as TreeObject).content.map((item) => item.path)).toContain(
-      'foo',
-    );
   });
 
-  it('returns TreeObject', async () => {
-    await initRepository(config);
-    let root = await headTree(config);
-    await writeTree(config, [['/', root as TreeObject]], 'foo', []);
-    root = await headTree(config);
-    const actual = await writeTree(
+  it('returns PathTreeObject[]', async () => {
+    const root = (await headTree(config)) as TreeObject;
+    const writeInfo = createWriteInfo('tree', buildInternalPath(), []);
+    const actual = (await writeTree(
       config,
-      [['/', root as TreeObject]],
-      'bar',
-      [],
-    );
+      root,
+      writeInfo,
+    )) as PathTreeObject[];
 
-    const newRoot = await fetchByOid(config, actual as string);
-    expect((newRoot as TreeObject).content.map((item) => item.path)).toContain(
-      'foo',
-    );
-    expect((newRoot as TreeObject).content.map((item) => item.path)).toContain(
-      'bar',
-    );
-  });
-});
+    const expectedPath = createInternalPath(writeInfo.internalPath)
+      .flat()
+      .split('/');
+    expect(actual.map(([item]) => item)).toMatchObject(expectedPath);
 
-describe(updateOrAppendTreeEntry, () => {
-  const config = buildCkusroConfig();
-  beforeEach(() => {
-    const core = Git.cores.create(config.coreId);
-    const fs = pfs(config);
-    core.set('fs', fs);
+    const actualOid = actual[actual.length - 1][1].oid;
+    const leaf = (await fetchByOid(config, actualOid)) as TreeObject;
+    expect(leaf.oid).toBe(actualOid);
+    expect(leaf.content).toMatchObject(writeInfo.content);
   });
 
-  it('returns TreeObject', async () => {
-    await initRepository(config);
-    const root = headTree(config);
-    const root = await updateOrAppendTreeEntry(config, [['.', root]], ['foo']);
-    const actual = await writeTree(
+  it('returns PathTreeObject[]', async () => {
+    const root = (await headTree(config)) as TreeObject;
+    const writeInfo = createWriteInfo('tree', buildInternalPath(), [
+      buildTreeEntry(),
+    ]);
+    const actual = (await writeTree(
       config,
-      [['/', root as TreeObject]],
-      'foo',
-      [],
-    );
+      root,
+      writeInfo,
+    )) as PathTreeObject[];
 
-    expect(typeof actual).toBe('string');
+    const leafOid = actual[actual.length - 1][1].oid;
+    const leaf = (await fetchByOid(config, leafOid)) as TreeObject;
+    expect(leaf.content).toMatchObject(writeInfo.content);
+  });
 
-    const newRoot = await fetchByOid(config, actual as string);
-    expect((newRoot as TreeObject).oid).toBe(actual);
-    expect((newRoot as TreeObject).content.map((item) => item.path)).toContain(
-      'foo',
-    );
+  it('returns PathTreeObject[] when append TreeEntry', async () => {
+    const root = (await headTree(config)) as TreeObject;
+    const internalPath = buildInternalPath();
+    const currentTreeEntries = [buildTreeEntry({ path: 'foo' })];
+    const firstWriteResult = (await writeTree(
+      config,
+      root,
+      createWriteInfo('tree', internalPath, currentTreeEntries),
+    )) as PathTreeObject[];
+    const [[, newRoot]] = firstWriteResult;
+
+    const updateTreeEntries = [buildTreeEntry()];
+    const writeInfo = createWriteInfo('tree', internalPath, updateTreeEntries);
+    const actual = (await writeTree(
+      config,
+      newRoot,
+      writeInfo,
+    )) as PathTreeObject[];
+
+    const leafOid = actual[actual.length - 1][1].oid;
+    const leaf = (await fetchByOid(config, leafOid)) as TreeObject;
+    expect(leaf.content).toMatchObject([
+      ...currentTreeEntries,
+      ...updateTreeEntries,
+    ]);
+  });
+
+  it('returns PathTreeObject[] when update TreeEntry', async () => {
+    const root = (await headTree(config)) as TreeObject;
+    const internalPath = buildInternalPath();
+    const currentTreeEntries = [
+      buildTreeEntry({ oid: randomOid(), path: 'foo' }),
+    ];
+    const firstWriteResult = (await writeTree(
+      config,
+      root,
+      createWriteInfo('tree', internalPath, currentTreeEntries),
+    )) as PathTreeObject[];
+    const [[, newRoot]] = firstWriteResult;
+
+    const updateTreeEntries = [{ ...currentTreeEntries[0], oid: randomOid() }];
+    const writeInfo = createWriteInfo('tree', internalPath, updateTreeEntries);
+    const actual = (await writeTree(
+      config,
+      newRoot,
+      writeInfo,
+    )) as PathTreeObject[];
+
+    const leafOid = actual[actual.length - 1][1].oid;
+    const leaf = (await fetchByOid(config, leafOid)) as TreeObject;
+    expect(leaf.content).toMatchObject([...updateTreeEntries]);
   });
 });

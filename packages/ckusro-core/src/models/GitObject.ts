@@ -29,7 +29,15 @@ export type TagObject = {
 
 export type GitObject = CommitObject | TreeObject | BlobObject | TagObject;
 
-export type GitObjectTypes = 'commit' | 'tree' | 'blob' | 'tag';
+export type GitObjectTypeCommit = 'commit';
+export type GitObjectTyepTree = 'tree';
+export type GitObjectTypeBlob = 'blob';
+export type GitObjectTypeTag = 'tag';
+export type GitObjectTypes =
+  | GitObjectTypeCommit
+  | GitObjectTyepTree
+  | GitObjectTypeBlob
+  | GitObjectTypeTag;
 
 export type LookUpGitObjectType<N> = N extends CommitObject['type']
   ? CommitObject
@@ -69,11 +77,31 @@ export function isTagObject(obj: GitObject): obj is TagObject {
 }
 
 export function compareTreeEntry(left: TreeEntry, right: TreeEntry): boolean {
+  if (left === right) {
+    return true;
+  }
+
   return (
     left.oid === right.oid &&
     left.path === right.path &&
     left.mode === right.mode &&
     left.type === right.type
+  );
+}
+
+export function compareTreeEntries(
+  left: TreeEntry[],
+  right: TreeEntry[],
+): boolean {
+  if (left === right) {
+    return true;
+  }
+  if (left.length !== right.length) {
+    return false;
+  }
+
+  return left.every((leftItem) =>
+    right.some((rightItem) => compareTreeEntry(leftItem, rightItem)),
   );
 }
 

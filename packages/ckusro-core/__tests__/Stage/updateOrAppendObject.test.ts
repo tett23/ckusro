@@ -8,6 +8,7 @@ import updateOrAppendObject, {
 import { fetchOrCreateTreeByPath } from '../../src/Stage/fetchOrCreateTreeByPath';
 import { writeObject } from '../../src/Stage/writeObject';
 import { TreeObject, BlobObject } from '../../src';
+import { headTree } from '../../src/Stage/head';
 
 describe(updateOrAppendObject, () => {
   const config = buildCkusroConfig();
@@ -19,8 +20,10 @@ describe(updateOrAppendObject, () => {
   });
 
   it('returns TreeEntry[]', async () => {
+    const root = (await headTree(config)) as TreeObject;
     const parents = (await fetchOrCreateTreeByPath(
       config,
+      root,
       '/',
     )) as PathTreeObject[];
     const blob = (await writeObject(config, {
@@ -48,8 +51,10 @@ describe(updateOrAppendObject, () => {
   });
 
   it('returns TreeEntry[]', async () => {
+    const root = (await headTree(config)) as TreeObject;
     const parents = (await fetchOrCreateTreeByPath(
       config,
+      root,
       '/',
     )) as PathTreeObject[];
     const blob = (await writeObject(config, {

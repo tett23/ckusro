@@ -8,9 +8,10 @@ import updateOrAppendObject, { PathTreeObject } from './updateOrAppendObject';
 
 export async function fetchOrCreateTreeByPath(
   config: CkusroConfig,
+  root: TreeObject,
   path: string,
-) {
-  const paths = splitPath(path);
+): Promise<PathTreeObject[] | Error> {
+  const paths = splitPath(path).slice(1);
   const result = paths.reduce(
     async (
       acc: Promise<PathTreeObject[] | Error>,
@@ -21,7 +22,8 @@ export async function fetchOrCreateTreeByPath(
         return left;
       }
 
-      const fetchResult = await fetchByPath(config, path);
+      const [[, parent]] = left;
+      const fetchResult = await fetchByPath(config, parent, path);
       if (fetchResult instanceof Error) {
         return fetchResult;
       }
@@ -40,7 +42,7 @@ export async function fetchOrCreateTreeByPath(
 
       return updateOrAppendObject(config, left, [basename(path), writeResult]);
     },
-    Promise.resolve([]),
+    Promise.resolve([['', root] as const]),
   );
 
   return result;

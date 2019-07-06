@@ -1,5 +1,6 @@
 import { basename as _basename, join as _join } from 'path';
 import { compareRepoPath, RepoPath } from './RepoPath';
+import normalizePath from '../utils/normalizePath';
 
 export type InternalPath = {
   repoPath: RepoPath;
@@ -13,6 +14,7 @@ export function createInternalPath(internalPath: InternalPath) {
     basename: () => basename(internalPath),
     join: (...paths: string[]) => join(internalPath, ...paths),
     split: () => split(internalPath),
+    flat: () => flat(internalPath),
   };
 }
 
@@ -25,7 +27,7 @@ export function compareInternalPath(a: InternalPath, b: InternalPath): boolean {
 }
 
 export function basename(internalPath: InternalPath): string {
-  if (internalPath.path.trim() === '/') {
+  if (normalizePath(internalPath.path) === '/') {
     return internalPath.repoPath.name;
   }
 
@@ -47,9 +49,12 @@ export function split(internalPath: InternalPath): string[] {
     internalPath.repoPath.domain,
     internalPath.repoPath.user,
     internalPath.repoPath.name,
-    ...internalPath.path
-      .trim()
+    ...normalizePath(internalPath.path)
       .slice(1)
       .split('/'),
   ];
+}
+
+export function flat(internalPath: InternalPath): string {
+  return _join('/', ...split(internalPath));
 }
