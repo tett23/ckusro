@@ -1,4 +1,4 @@
-import { RepoPath, url2RepoPath } from '@ckusro/ckusro-core';
+import { RepoPath, RepositoryInfo } from '@ckusro/ckusro-core';
 import { faBars, faDatabase } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -12,7 +12,6 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { Repository } from '../../../../models/Repository';
 import {
   cloneRepository,
   pullRepository,
@@ -100,7 +99,7 @@ function RepositoryName({
 }
 
 export default function(ownProps: {
-  repository: Repository;
+  repository: RepositoryInfo;
   headOid: string | null;
   onClick: () => void;
 }) {
@@ -109,7 +108,9 @@ export default function(ownProps: {
     repository: { url },
     headOid,
   } = ownProps;
-  const repoPath = url2RepoPath(url) as RepoPath;
+  const {
+    repository: { repoPath },
+  } = ownProps;
 
   return (
     <RepositoryName

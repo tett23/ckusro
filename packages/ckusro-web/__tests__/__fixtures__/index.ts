@@ -15,6 +15,7 @@ export function fixtureBuilder<T>(base: T): (override?: Partial<T>) => T {
 
 export const buildCkusroConfig = fixtureBuilder<CkusroConfig>({
   base: '/repositories',
+  stage: '/stage',
   coreId: 'ckusro-web__test',
   corsProxy: null,
   authentication: {
@@ -31,13 +32,14 @@ export const buildCkusroConfig = fixtureBuilder<CkusroConfig>({
     parsers: [],
     components: [],
   },
+  repositories: [],
 });
 
 export const buildState = fixtureBuilder<State>({
   domain: initialDomainState(),
   config: buildCkusroConfig(),
   misc: initialMiscState(),
-  ui: uiReducer(undefined, null as any), // eslint-disable-line @typescript-eslint/no-explicit-any
+  ui: uiReducer(undefined, {} as any), // eslint-disable-line @typescript-eslint/no-explicit-any
   workers: initialWorkerState(),
 });
 

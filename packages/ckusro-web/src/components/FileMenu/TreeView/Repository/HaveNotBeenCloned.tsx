@@ -1,9 +1,9 @@
 import React from 'react';
-import { Repository as RepositoryType } from '../../../../models/Repository';
 import RepositoryName from './RepositoryName';
+import { RepositoryInfo } from '@ckusro/ckusro-core';
 
 export type HaveNotBeenClonedProps = {
-  repository: RepositoryType;
+  repository: RepositoryInfo;
 };
 
 export default function HaveNotBeenCloned({

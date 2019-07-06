@@ -154,6 +154,9 @@ async function updateByInternalPathHandler(
   if (result instanceof Error) {
     return result;
   }
+  if (result == null) {
+    return new Error('Object not found.');
+  }
 
   const bufferInfo = createBufferInfo(
     result.type as 'tree' | 'blob',

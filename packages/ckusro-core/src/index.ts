@@ -10,5 +10,8 @@ export * from './models/FileBuffer';
 export * from './models/Plugins';
 export * from './models/ComponentPlugin';
 export * from './models/ParserPlugin';
+export * from './models/BufferInfo';
+export * from './models/RepositoryInfo';
+export * from './models/WriteInfo';
 
 export default ckusroCore;

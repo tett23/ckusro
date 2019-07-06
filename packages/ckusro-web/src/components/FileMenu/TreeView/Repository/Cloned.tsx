@@ -1,12 +1,10 @@
 import {
   CommitObject,
-  url2RepoPath,
-  RepoPath,
   InternalPath,
+  RepositoryInfo,
 } from '@ckusro/ckusro-core';
 import { Collapse, Box } from '@material-ui/core';
 import React from 'react';
-import { Repository } from '../../../../models/Repository';
 import TreeEntries from '../TreeEntries';
 import RepositoryName from './RepositoryName';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,7 +13,7 @@ import { State } from '../../../../modules';
 import { createOpenedInternalPathManager } from '../../../../models/OpenedInternalPathManager';
 
 type OwnProps = {
-  repository: Repository;
+  repository: RepositoryInfo;
   commitObject: CommitObject;
 };
 
@@ -52,7 +50,7 @@ export function Cloned({
 
 export default function(props: OwnProps) {
   const state = useSelector((state: State) => {
-    const repoPath = url2RepoPath(props.repository.url) as RepoPath;
+    const repoPath = props.repository.repoPath;
     const internalPath = { repoPath, path: '/' };
 
     return {

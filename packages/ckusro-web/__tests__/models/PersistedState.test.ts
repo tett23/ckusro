@@ -1,4 +1,4 @@
-import { GitObject, RepoPath, url2RepoPath } from '@ckusro/ckusro-core';
+import { GitObject, RepoPath } from '@ckusro/ckusro-core';
 import FS from 'fs';
 import merge from 'lodash.merge';
 import { join } from 'path';
@@ -19,7 +19,18 @@ import { pfs } from '../__helpers__/pfs';
 describe('PersistedState', () => {
   describe(readPersistedState, () => {
     it('returns DeepPartial<State>', async () => {
-      const config = buildCkusroConfig();
+      const config = buildCkusroConfig({
+        repositories: [
+          {
+            url: 'http://example.com',
+            repoPath: {
+              domain: 'example.com',
+              user: 'test',
+              name: 'hoge',
+            },
+          },
+        ],
+      });
       const state = buildState({ config });
       const fs = pfs();
 
@@ -28,7 +39,7 @@ describe('PersistedState', () => {
       await writeGitObject(
         fs,
         config.base,
-        url2RepoPath(state.domain.repositories[0].url) as RepoPath,
+        state.config.repositories[0].repoPath,
         blobObject,
       );
       const serialized = serializeState(state);

@@ -1,44 +1,19 @@
 import { GitObject } from '@ckusro/ckusro-core';
 import { createObjectManager, ObjectManager } from '../models/ObjectManager';
 import { createRefManager, Ref, RefManager } from '../models/RefManager';
-import { Repository } from '../models/Repository';
 import { updateState, UpdateState } from './actions/shared';
 
 export type DomainState = {
-  repositories: Repository[];
   refManager: RefManager;
   objectManager: ObjectManager;
 };
 
 export function initialDomainState(): DomainState {
   return {
-    repositories: [
-      {
-        type: 'git',
-        name: 'ckusro-web',
-        url: 'https://github.com/tett23/ckusro.git',
-        directory: '/packages/ckusro-web',
-      },
-      {
-        type: 'git',
-        name: 'trapahi',
-        url: 'https://github.com/tett23/trapahi.git',
-        directory: '/',
-      },
-    ],
     refManager: {
       refs: {},
     },
     objectManager: {},
-  };
-}
-
-const AddRepository = 'Domain/AddRepository' as const;
-
-export function addRepository(repository: Repository) {
-  return {
-    type: AddRepository,
-    payload: repository,
   };
 }
 
@@ -61,7 +36,6 @@ export function addObjects(objects: GitObject[]) {
 }
 
 export type DomainActions =
-  | ReturnType<typeof addRepository>
   | ReturnType<typeof addRef>
   | ReturnType<typeof addObjects>
   | ReturnType<typeof updateState>;
@@ -71,11 +45,6 @@ export function domainReducer(
   action: DomainActions,
 ): DomainState {
   switch (action.type) {
-    case AddRepository:
-      return {
-        ...state,
-        repositories: [...state.repositories, action.payload],
-      };
     case AddRef:
       // TODO: optimization
       return {

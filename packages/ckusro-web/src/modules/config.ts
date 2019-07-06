@@ -6,6 +6,7 @@ export type ConfigState = CkusroConfig;
 export function initialConfigState(): CkusroConfig {
   return {
     base: '/repositories',
+    stage: '/stage',
     coreId: 'ckusro-web__dev',
     corsProxy: 'https://cors.isomorphic-git.org',
     authentication: {
@@ -23,6 +24,24 @@ export function initialConfigState(): CkusroConfig {
       parsers: [],
       components: [],
     },
+    repositories: [
+      {
+        url: 'https://github.com/tett23/ckusro.git',
+        repoPath: {
+          domain: 'github.com',
+          user: 'tett23',
+          name: 'ckusro',
+        },
+      },
+      {
+        url: 'https://github.com/tett23/trapahi.git',
+        repoPath: {
+          domain: 'github.com',
+          user: 'tett23',
+          name: 'trapahi',
+        },
+      },
+    ],
   };
 }
 

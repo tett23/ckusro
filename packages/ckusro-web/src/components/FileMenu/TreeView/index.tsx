@@ -1,4 +1,4 @@
-import { RepoPath, url2RepoPath } from '@ckusro/ckusro-core';
+import { RepoPath, url2RepoPath, RepositoryInfo } from '@ckusro/ckusro-core';
 import { List, ListSubheader, Theme } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import React from 'react';
@@ -8,13 +8,12 @@ import {
   ObjectManager,
 } from '../../../models/ObjectManager';
 import { createRefManager, RefManager } from '../../../models/RefManager';
-import { Repository } from '../../../models/Repository';
 import { State } from '../../../modules';
 import FetchObjects from '../../FetchObject';
 import RepositoryComponent from './Repository';
 
 type TreeViewStates = {
-  repositories: Repository[];
+  repositories: RepositoryInfo[];
   objectManager: ObjectManager;
   refManager: RefManager;
 };
@@ -63,7 +62,10 @@ export function TreeView({
 
 export default function() {
   const state = useSelector(
-    ({ domain: { repositories, objectManager, refManager } }: State) => {
+    ({
+      config: { repositories },
+      domain: { objectManager, refManager },
+    }: State) => {
       return { repositories, objectManager, refManager };
     },
   );
