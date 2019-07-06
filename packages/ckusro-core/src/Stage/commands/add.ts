@@ -1,12 +1,12 @@
 import { CkusroConfig } from '../../models/CkusroConfig';
-import { writeBlob } from '../writeBlob';
-import { PathTreeOrBlobObject } from '../updateOrAppendObject';
+import { writeBlob } from '../../RepositoryPrimitives/writeBlob';
+import { PathTreeOrBlobObject } from '../../RepositoryPrimitives/updateOrAppendObject';
 import {
   WriteInfo,
   BlobWriteInfo,
   TreeWriteInfo,
 } from '../../models/WriteInfo';
-import { writeTree } from '../writeTree';
+import { writeTree } from '../../RepositoryPrimitives/writeTree';
 import { TreeObject } from '../../models/GitObject';
 
 export default async function add<T extends WriteInfo>(

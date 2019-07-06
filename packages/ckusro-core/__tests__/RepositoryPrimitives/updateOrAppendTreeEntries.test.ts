@@ -1,5 +1,5 @@
 import { buildTreeEntry } from '../__fixtures__';
-import updateOrAppendTreeEntries from '../../src/Stage/updateOrAppendTreeEntries';
+import updateOrAppendTreeEntries from '../../src/RepositoryPrimitives/updateOrAppendTreeEntries';
 
 describe(updateOrAppendTreeEntries, () => {
   it('returns TreeEntry[]', async () => {

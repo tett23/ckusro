@@ -12,7 +12,7 @@ import {
   isTagObject,
   TagObject,
 } from '../../src';
-import { writeObject } from '../../src/Stage/writeObject';
+import { writeObject } from '../../src/RepositoryPrimitives/writeObject';
 
 describe(writeObject, () => {
   const config = buildCkusroConfig();

@@ -39,6 +39,16 @@ export type GitObjectTypes =
   | GitObjectTypeBlob
   | GitObjectTypeTag;
 
+export type LookUpGitObject<N> = N extends CommitObject['type']
+  ? CommitObject
+  : N extends TreeObject['type']
+  ? TreeObject
+  : N extends BlobObject['type']
+  ? BlobObject
+  : N extends TagObject['type']
+  ? TagObject
+  : never;
+
 export type LookUpGitObjectType<N> = N extends CommitObject['type']
   ? CommitObject
   : N extends TreeObject['type']

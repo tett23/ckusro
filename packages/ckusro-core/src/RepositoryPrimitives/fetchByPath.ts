@@ -40,7 +40,7 @@ export async function fetchByPath(
   if (object == null || object instanceof Error) {
     return object;
   }
-  if (!isTreeObject(object) || !isBlobObject(object)) {
+  if (!(isTreeObject(object) || isBlobObject(object))) {
     return new Error('Invalid object type.');
   }
 
@@ -54,7 +54,7 @@ async function fetchItem(
 ): Promise<TreeObject | null | Error> {
   const [head, ...tail] = paths;
   if (head == null) {
-    return new Error('Invalid paths.');
+    return tree;
   }
 
   const entry = tree.content.find((item) => item.path === head);
@@ -68,9 +68,6 @@ async function fetchItem(
   }
   if (!isTreeObject(newTreeOrBlob)) {
     return new Error('Invalid object type.');
-  }
-  if (tail.length === 0) {
-    return newTreeOrBlob;
   }
 
   return fetchItem(config, newTreeOrBlob as TreeObject, tail);

@@ -2,16 +2,16 @@ import * as Git from 'isomorphic-git';
 import { initRepository } from '../../src/Stage/prepare';
 import { buildCkusroConfig, buildInternalPath } from '../__fixtures__';
 import { pfs } from '../__helpers__';
-import { fetchOrCreateTreeByPath } from '../../src/Stage/fetchOrCreateTreeByPath';
-import { writeBlob } from '../../src/Stage/writeBlob';
+import { fetchOrCreateTreeByPath } from '../../src/RepositoryPrimitives/fetchOrCreateTreeByPath';
+import { writeBlob } from '../../src/RepositoryPrimitives/writeBlob';
 import {
   PathTreeOrBlobObject,
   PathTreeObject,
-} from '../../src/Stage/updateOrAppendObject';
-import { fetchByOid } from '../../src/Stage/fetchByOid';
+} from '../../src/RepositoryPrimitives/updateOrAppendObject';
+import { fetchByOid } from '../../src/RepositoryPrimitives/fetchByOid';
 import { BlobObject, createInternalPath, TreeObject } from '../../src';
 import { createWriteInfo, BlobWriteInfo } from '../../src/models/WriteInfo';
-import { headTree } from '../../src/Stage/headTree';
+import { headTree } from '../../src/RepositoryPrimitives/headTree';
 
 describe(writeBlob, () => {
   const config = buildCkusroConfig();

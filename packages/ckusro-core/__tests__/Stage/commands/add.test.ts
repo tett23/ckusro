@@ -5,10 +5,10 @@ import { pfs } from '../../__helpers__';
 import add from '../../../src/Stage/commands/add';
 import { createWriteInfo } from '../../../src/models/writeInfo';
 import { buildInternalPath } from '../../__fixtures__';
-import { PathTreeObject } from '../../../src/Stage/updateOrAppendObject';
+import { PathTreeObject } from '../../../src/RepositoryPrimitives/updateOrAppendObject';
 import { createInternalPath, BlobObject, TreeObject } from '../../../src';
-import { fetchByOid } from '../../../src/Stage/fetchByOid';
-import { headTree } from '../../../src/Stage/headTree';
+import { fetchByOid } from '../../../src/RepositoryPrimitives/fetchByOid';
+import { headTree } from '../../../src/RepositoryPrimitives/headTree';
 
 describe(add, () => {
   const config = buildCkusroConfig();

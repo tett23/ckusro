@@ -4,11 +4,11 @@ import { buildCkusroConfig, buildTreeEntry } from '../__fixtures__';
 import { pfs } from '../__helpers__';
 import updateOrAppendObject, {
   PathTreeObject,
-} from '../../src/Stage/updateOrAppendObject';
-import { fetchOrCreateTreeByPath } from '../../src/Stage/fetchOrCreateTreeByPath';
-import { writeObject } from '../../src/Stage/writeObject';
+} from '../../src/RepositoryPrimitives/updateOrAppendObject';
+import { fetchOrCreateTreeByPath } from '../../src/RepositoryPrimitives/fetchOrCreateTreeByPath';
+import { writeObject } from '../../src/RepositoryPrimitives/writeObject';
 import { TreeObject, BlobObject } from '../../src';
-import { headTree } from '../../src/Stage/headTree';
+import { headTree } from '../../src/RepositoryPrimitives/headTree';
 
 describe(updateOrAppendObject, () => {
   const config = buildCkusroConfig();

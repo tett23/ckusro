@@ -1,9 +1,9 @@
 import * as Git from 'isomorphic-git';
-import { headOid } from '../../src/Stage/headTree';
+import { headOid } from '../../src/RepositoryPrimitives/headTree';
 import { initRepository } from '../../src/Stage/prepare';
 import { buildCkusroConfig, randomOid } from '../__fixtures__';
 import { pfs } from '../__helpers__';
-import { fetchByOid } from '../../src/Stage/fetchByOid';
+import { fetchByOid } from '../../src/RepositoryPrimitives/fetchByOid';
 
 describe(fetchByOid, () => {
   const config = buildCkusroConfig();

@@ -7,13 +7,13 @@ import {
   randomOid,
 } from '../__fixtures__';
 import { pfs } from '../__helpers__';
-import { writeTree } from '../../src/Stage/writeTree';
-import { fetchByOid } from '../../src/Stage/fetchByOid';
+import { writeTree } from '../../src/RepositoryPrimitives/writeTree';
+import { fetchByOid } from '../../src/RepositoryPrimitives/fetchByOid';
 import { TreeObject } from '../../src/models/GitObject';
 import { createWriteInfo } from '../../src/models/writeInfo';
-import { PathTreeObject } from '../../src/Stage/updateOrAppendObject';
+import { PathTreeObject } from '../../src/RepositoryPrimitives/updateOrAppendObject';
 import { createInternalPath } from '../../src';
-import { headTree } from '../../src/Stage/headTree';
+import { headTree } from '../../src/RepositoryPrimitives/headTree';
 
 describe(writeTree, () => {
   const config = buildCkusroConfig();

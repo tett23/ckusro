@@ -2,9 +2,9 @@ import * as Git from 'isomorphic-git';
 import { initRepository } from '../../src/Stage/prepare';
 import { buildCkusroConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
-import { fetchOrCreateTreeByPath } from '../../src/Stage/fetchOrCreateTreeByPath';
-import { PathTreeObject } from '../../src/Stage/updateOrAppendObject';
-import { headTree } from '../../src/Stage/headTree';
+import { fetchOrCreateTreeByPath } from '../../src/RepositoryPrimitives/fetchOrCreateTreeByPath';
+import { PathTreeObject } from '../../src/RepositoryPrimitives/updateOrAppendObject';
+import { headTree } from '../../src/RepositoryPrimitives/headTree';
 import { TreeObject } from '../../src';
 
 describe(fetchOrCreateTreeByPath, () => {

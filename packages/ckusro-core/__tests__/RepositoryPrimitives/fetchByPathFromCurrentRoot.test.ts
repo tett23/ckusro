@@ -3,7 +3,7 @@ import { initRepository } from '../../src/Stage/prepare';
 import { buildCkusroConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
 import { isBlobObject, GitObject } from '../../src';
-import fetchByPathFromCurrentRoot from '../../src/Stage/fetchByPathFromCurrentRoot';
+import fetchByPathFromCurrentRoot from '../../src/RepositoryPrimitives/fetchByPathFromCurrentRoot';
 
 describe(fetchByPathFromCurrentRoot, () => {
   const config = buildCkusroConfig();
