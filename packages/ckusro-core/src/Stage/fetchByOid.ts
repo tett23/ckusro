@@ -1,11 +1,16 @@
 import * as Git from 'isomorphic-git';
 import { CkusroConfig } from '../models/CkusroConfig';
-import { GitObject } from '../models/GitObject';
+import {
+  GitObjectTypes,
+  LookUpGitObjectType,
+  GitObject,
+} from '../models/GitObject';
 
-export async function fetchByOid(
+export async function fetchByOid<T extends GitObjectTypes>(
   config: CkusroConfig,
   oid: string,
-): Promise<GitObject | null | Error> {
+  objectType?: T,
+): Promise<LookUpGitObjectType<T> | null | Error> {
   const objectDescription = await Git.readObject({
     core: config.coreId,
     gitdir: config.stage,
@@ -20,9 +25,34 @@ export async function fetchByOid(
   }
 
   const { type, object } = objectDescription;
+  if (type == null) {
+    return new Error('Invalid object type.');
+  }
+  if (objectType != null && type !== objectType) {
+    return new Error(
+      `Object type does not matched. expected=${objectType} actual=${type}`,
+    );
+  }
+
+  return toGitObject(oid, type, object) as LookUpGitObjectType<T>;
+}
+
+function toGitObject(
+  oid: string,
+  type: GitObjectTypes,
+  object:
+    | Buffer
+    | Git.CommitDescription
+    | Git.TreeDescription
+    | Git.TagDescription,
+): GitObject {
   switch (type) {
     case 'commit':
-      return { oid, type: 'commit', content: object as Git.CommitDescription };
+      return {
+        oid,
+        type: 'commit',
+        content: object as Git.CommitDescription,
+      };
     case 'tree':
       return {
         oid,
@@ -33,7 +63,5 @@ export async function fetchByOid(
       return { oid, type: 'blob', content: object as Buffer };
     case 'tag':
       return { oid, type: 'tag', content: object as Git.TagDescription };
-    default:
-      return new Error('Invalid object type.');
   }
 }
