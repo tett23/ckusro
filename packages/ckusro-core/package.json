@@ -23,7 +23,9 @@
     "build:parcel": "parcel build src/index.ts --target browser --bundle-node-modules --no-minify -d lib",
     "build:dts": "tsc --declaration true --emitDeclarationOnly true --declarationDir lib --allowJs false",
     "prepare": "yarn test && yarn run build",
-    "lint": "yarn run lint:prettier && yarn run lint:eslint",
+    "preflight": "yarn lint && yarn run test",
+    "lint": "yarn run lint:ts && yarn run lint:eslint && yarn run lint:prettier",
+    "lint:ts": "tsc -b --clean",
     "lint:eslint": "eslint --ignore-path ../../.eslintignore --ext .js,.jsx,.ts,.tsx src __tests__",
     "lint:prettier": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --write --no-editorconfig -c '**/*.@(js|jsx|ts|tsx|md|json|yml|yaml|toml|html)'",
     "test": "jest",
@@ -45,6 +47,7 @@
     },
     "globals": {
       "ts-jest": {
+        "diagnostics": false,
         "tsConfig": "./tsconfig.json"
       }
     },
