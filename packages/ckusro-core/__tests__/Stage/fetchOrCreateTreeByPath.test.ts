@@ -4,7 +4,7 @@ import { buildCkusroConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
 import { fetchOrCreateTreeByPath } from '../../src/Stage/fetchOrCreateTreeByPath';
 import { PathTreeObject } from '../../src/Stage/updateOrAppendObject';
-import { headTree } from '../../src/Stage/head';
+import { headTree } from '../../src/Stage/headTree';
 import { TreeObject } from '../../src';
 
 describe(fetchOrCreateTreeByPath, () => {

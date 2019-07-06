@@ -57,7 +57,7 @@ export const buildTreeEntry = fixtureBuilder<TreeEntry>({
 });
 
 export function randomOid(): string {
-  const currentDate = new Date().valueOf().toString();
+  const currentDate = new Date().getTime().toString();
   const random = Math.random().toString();
 
   return createHash('sha1')

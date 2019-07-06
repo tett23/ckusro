@@ -1,5 +1,5 @@
 import { CkusroConfig } from '../../models/CkusroConfig';
-import { writeBlobByPath } from '../writeBlobByPath';
+import { writeBlob } from '../writeBlob';
 import { PathTreeOrBlobObject } from '../updateOrAppendObject';
 import {
   WriteInfo,
@@ -18,7 +18,7 @@ export default async function add<T extends WriteInfo>(
     case 'tree':
       return writeTree(config, root, writeInfo as TreeWriteInfo);
     case 'blob':
-      return writeBlobByPath(config, root, writeInfo as BlobWriteInfo);
+      return writeBlob(config, root, writeInfo as BlobWriteInfo);
     default:
       return new Error('');
   }

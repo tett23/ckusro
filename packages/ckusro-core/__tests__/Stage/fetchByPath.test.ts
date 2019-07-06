@@ -4,7 +4,7 @@ import { buildCkusroConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
 import { isBlobObject, GitObject, TreeObject, isTreeObject } from '../../src';
 import { fetchByPath } from '../../src/Stage/fetchByPath';
-import { headTree } from '../../src/Stage/head';
+import { headTree } from '../../src/Stage/headTree';
 import { fetchOrCreateTreeByPath } from '../../src/Stage/fetchOrCreateTreeByPath';
 import { PathTreeObject } from '../../src/Stage/updateOrAppendObject';
 

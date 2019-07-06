@@ -8,7 +8,7 @@ import updateOrAppendObject, {
 import { fetchOrCreateTreeByPath } from '../../src/Stage/fetchOrCreateTreeByPath';
 import { writeObject } from '../../src/Stage/writeObject';
 import { TreeObject, BlobObject } from '../../src';
-import { headTree } from '../../src/Stage/head';
+import { headTree } from '../../src/Stage/headTree';
 
 describe(updateOrAppendObject, () => {
   const config = buildCkusroConfig();

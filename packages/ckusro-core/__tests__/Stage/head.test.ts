@@ -1,5 +1,5 @@
 import * as Git from 'isomorphic-git';
-import { headOid, headTree } from '../../src/Stage/head';
+import { headOid, headTree } from '../../src/Stage/headTree';
 import { initRepository } from '../../src/Stage/prepare';
 import { buildCkusroConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';

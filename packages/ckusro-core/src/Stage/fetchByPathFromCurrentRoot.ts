@@ -1,4 +1,4 @@
-import { headTree } from './head';
+import { headTree } from './headTree';
 import { CkusroConfig } from '../models/CkusroConfig';
 import { fetchByPath } from './fetchByPath';
 import { GitObject } from '../models/GitObject';

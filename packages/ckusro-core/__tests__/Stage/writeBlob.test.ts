@@ -3,7 +3,7 @@ import { initRepository } from '../../src/Stage/prepare';
 import { buildCkusroConfig, buildInternalPath } from '../__fixtures__';
 import { pfs } from '../__helpers__';
 import { fetchOrCreateTreeByPath } from '../../src/Stage/fetchOrCreateTreeByPath';
-import { writeBlobByPath } from '../../src/Stage/writeBlobByPath';
+import { writeBlob } from '../../src/Stage/writeBlob';
 import {
   PathTreeOrBlobObject,
   PathTreeObject,
@@ -11,9 +11,9 @@ import {
 import { fetchByOid } from '../../src/Stage/fetchByOid';
 import { BlobObject, createInternalPath, TreeObject } from '../../src';
 import { createWriteInfo, BlobWriteInfo } from '../../src/models/WriteInfo';
-import { headTree } from '../../src/Stage/head';
+import { headTree } from '../../src/Stage/headTree';
 
-describe(writeBlobByPath, () => {
+describe(writeBlob, () => {
   const config = buildCkusroConfig();
   beforeEach(async () => {
     const core = Git.cores.create(config.coreId);
@@ -29,7 +29,7 @@ describe(writeBlobByPath, () => {
       buildInternalPath({ path: '/foo/bar/baz.txt' }),
       new Buffer('test', 'utf8'),
     );
-    const actual = (await writeBlobByPath(
+    const actual = (await writeBlob(
       config,
       root,
       writeInfo,
@@ -54,7 +54,7 @@ describe(writeBlobByPath, () => {
       buildInternalPath({ path: '/foo/bar/baz.txt' }),
       new Buffer('test', 'utf8'),
     );
-    const treeResult = (await writeBlobByPath(
+    const treeResult = (await writeBlob(
       config,
       root,
       writeInfo,
@@ -66,7 +66,7 @@ describe(writeBlobByPath, () => {
       ...writeInfo,
       content: new Buffer('updated'),
     };
-    const actual = (await writeBlobByPath(
+    const actual = (await writeBlob(
       config,
       newRoot,
       newWriteInfo,
@@ -100,7 +100,7 @@ describe(writeBlobByPath, () => {
       new Buffer('updated', 'utf8'),
     );
 
-    const actual = (await writeBlobByPath(
+    const actual = (await writeBlob(
       config,
       newRoot,
       writeInfo,

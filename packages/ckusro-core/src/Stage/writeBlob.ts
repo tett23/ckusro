@@ -9,7 +9,7 @@ import { UnpersistedBlobObject, TreeObject } from '../models/GitObject';
 import { BlobWriteInfo } from '../models/WriteInfo';
 import { createInternalPath } from '../models/InternalPath';
 
-export async function writeBlobByPath(
+export async function writeBlob(
   config: CkusroConfig,
   currentTree: TreeObject,
   writeInfo: BlobWriteInfo,

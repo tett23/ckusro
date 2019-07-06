@@ -8,7 +8,7 @@ import { buildInternalPath } from '../../__fixtures__';
 import { PathTreeObject } from '../../../src/Stage/updateOrAppendObject';
 import { createInternalPath, BlobObject, TreeObject } from '../../../src';
 import { fetchByOid } from '../../../src/Stage/fetchByOid';
-import { headTree } from '../../../src/Stage/head';
+import { headTree } from '../../../src/Stage/headTree';
 
 describe(add, () => {
   const config = buildCkusroConfig();

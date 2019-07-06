@@ -13,7 +13,7 @@ import { TreeObject } from '../../src/models/GitObject';
 import { createWriteInfo } from '../../src/models/writeInfo';
 import { PathTreeObject } from '../../src/Stage/updateOrAppendObject';
 import { createInternalPath } from '../../src';
-import { headTree } from '../../src/Stage/head';
+import { headTree } from '../../src/Stage/headTree';
 
 describe(writeTree, () => {
   const config = buildCkusroConfig();
