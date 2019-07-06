@@ -1,4 +1,3 @@
-import { CkusroConfig } from '../../models/CkusroConfig';
 import { writeBlob } from '../../RepositoryPrimitives/writeBlob';
 import { PathTreeOrBlobObject } from '../../RepositoryPrimitives/updateOrAppendObject';
 import {
@@ -8,9 +7,10 @@ import {
 } from '../../models/WriteInfo';
 import { writeTree } from '../../RepositoryPrimitives/writeTree';
 import { TreeObject } from '../../models/GitObject';
+import { IsomorphicGitConfig } from '../../models/IsomorphicGitConfig';
 
 export default async function add<T extends WriteInfo>(
-  config: CkusroConfig,
+  config: IsomorphicGitConfig,
   root: TreeObject,
   writeInfo: T,
 ): Promise<PathTreeOrBlobObject[] | Error> {

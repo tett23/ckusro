@@ -1,9 +1,9 @@
 import FS from 'fs';
 import * as Git from 'isomorphic-git';
-import { CkusroConfig } from '../models/CkusroConfig';
+import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 
 export async function prepare(
-  config: CkusroConfig,
+  config: IsomorphicGitConfig,
   fs: typeof FS,
 ): Promise<true | Error> {
   const result = await prepareStageDirectory(config, fs);
@@ -25,11 +25,10 @@ export async function prepare(
 }
 
 export async function initRepository(
-  config: CkusroConfig,
+  config: IsomorphicGitConfig,
 ): Promise<true | Error> {
   const blobOid = await Git.writeObject({
-    core: config.coreId,
-    gitdir: config.stage,
+    ...config,
     type: 'blob',
     object: '',
   }).catch((err: Error) => err);
@@ -38,8 +37,7 @@ export async function initRepository(
   }
 
   const treeOid = await Git.writeObject({
-    core: config.coreId,
-    gitdir: config.stage,
+    ...config,
     type: 'tree',
     object: {
       entries: [
@@ -64,8 +62,7 @@ export async function initRepository(
   };
 
   const commitOid = await Git.writeObject({
-    core: config.coreId,
-    gitdir: config.stage,
+    ...config,
     type: 'commit',
     object: {
       message: 'test',
@@ -80,8 +77,7 @@ export async function initRepository(
   }
 
   const writeRefResult = await Git.writeRef({
-    core: config.coreId,
-    gitdir: config.stage,
+    ...config,
     ref: 'HEAD',
     value: commitOid,
     force: true,
@@ -94,18 +90,18 @@ export async function initRepository(
 }
 
 export async function prepareStageDirectory(
-  config: CkusroConfig,
+  config: IsomorphicGitConfig,
   fs: typeof FS,
 ): Promise<true | Error> {
   const statResult = await fs.promises
-    .stat(config.stage)
+    .stat(config.gitdir)
     .catch((err: Error) => err);
   if (!(statResult instanceof Error)) {
     return true;
   }
 
   const mkdirResult = await fs.promises
-    .mkdir(config.stage)
+    .mkdir(config.gitdir, { recursive: true })
     .catch((err: Error) => err);
   if (mkdirResult instanceof Error) {
     return mkdirResult;
@@ -115,11 +111,10 @@ export async function prepareStageDirectory(
 }
 
 export async function prepareStageRepository(
-  config: CkusroConfig,
+  config: IsomorphicGitConfig,
 ): Promise<true | Error> {
   const initResult = await Git.init({
-    core: config.coreId,
-    gitdir: config.stage,
+    ...config,
     bare: true,
   }).catch((err: Error) => err);
   if (initResult instanceof Error) {

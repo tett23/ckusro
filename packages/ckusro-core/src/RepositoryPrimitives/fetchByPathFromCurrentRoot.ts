@@ -1,10 +1,10 @@
 import { headTree } from './headTree';
-import { CkusroConfig } from '../models/CkusroConfig';
 import { fetchByPath } from './fetchByPath';
 import { GitObject } from '../models/GitObject';
+import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 
 export default async function fetchByPathFromCurrentRoot(
-  config: CkusroConfig,
+  config: IsomorphicGitConfig,
   path: string,
 ): Promise<GitObject | null | Error> {
   const root = await headTree(config);

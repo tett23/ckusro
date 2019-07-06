@@ -1,4 +1,3 @@
-import { CkusroConfig } from '../models/CkusroConfig';
 import {
   TreeObject,
   toTreeEntry,
@@ -7,6 +6,7 @@ import {
 } from '../models/GitObject';
 import { writeObject } from './writeObject';
 import updateOrAppendTreeEntries from './updateOrAppendTreeEntries';
+import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 
 export type PathTreeObject = readonly [string, TreeObject];
 export type PathTreeOrBlobObject = readonly [string, TreeObject | BlobObject];
@@ -21,7 +21,7 @@ export type LookupPathTreeObjectOrMixed<
 export default async function updateOrAppendObject<
   T extends PathTreeOrBlobObject
 >(
-  config: CkusroConfig,
+  config: IsomorphicGitConfig,
   parents: PathTreeObject[],
   init: T,
 ): Promise<Array<LookupPathTreeObjectOrMixed<T[1]['type']>> | Error> {

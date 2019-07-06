@@ -17,7 +17,7 @@ describe(repository.name, () => {
   it(headOid.name, async () => {
     const config = buildCkusroConfig();
     const core = Git.cores.create(config.coreId);
-    const fs = pfs(config);
+    const fs = pfs();
     core.set('fs', fs);
     const repoPath = buildRepoPath();
     await dummyRepo(config, fs, repoPath);
@@ -30,7 +30,7 @@ describe(repository.name, () => {
   it(headCommitObject.name, async () => {
     const config = buildCkusroConfig();
     const core = Git.cores.create(config.coreId);
-    const fs = pfs(config);
+    const fs = pfs();
     core.set('fs', fs);
     const repoPath = buildRepoPath();
     await dummyRepo(config, fs, repoPath);
@@ -43,7 +43,7 @@ describe(repository.name, () => {
   it(headRootTree.name, async () => {
     const config = buildCkusroConfig();
     const core = Git.cores.create(config.coreId);
-    const fs = pfs(config);
+    const fs = pfs();
     core.set('fs', fs);
     const repoPath = buildRepoPath();
     await dummyRepo(config, fs, repoPath);
@@ -56,7 +56,7 @@ describe(repository.name, () => {
   it(readTree.name, async () => {
     const config = buildCkusroConfig();
     const core = Git.cores.create(config.coreId);
-    const fs = pfs(config);
+    const fs = pfs();
     core.set('fs', fs);
     const repoPath = buildRepoPath();
     const commits = [
@@ -82,7 +82,7 @@ describe(repository.name, () => {
   it(fetch.name, async () => {
     const config = buildCkusroConfig();
     const core = Git.cores.create(config.coreId);
-    const fs = pfs(config);
+    const fs = pfs();
     core.set('fs', fs);
     const repoPath = buildRepoPath();
     const commits = [
@@ -111,7 +111,7 @@ describe(repository.name, () => {
 
     beforeAll(async () => {
       const core = Git.cores.create(config.coreId);
-      const fs = pfs(config);
+      const fs = pfs();
       core.set('fs', fs);
       const commits = [
         {
@@ -153,7 +153,7 @@ describe(repository.name, () => {
   it(checkout.name, async () => {
     const config = buildCkusroConfig();
     const core = Git.cores.create(config.coreId);
-    const fs = pfs(config);
+    const fs = pfs();
     core.set('fs', fs);
     const repoPath = buildRepoPath();
     const commits = [

@@ -1,13 +1,13 @@
 import { basename } from 'path';
-import { CkusroConfig } from '../models/CkusroConfig';
 import { fetchByPath } from './fetchByPath';
 import { TreeObject } from '../models/GitObject';
 import { writeObject } from './writeObject';
 import splitPath from '../utils/splitPath';
 import updateOrAppendObject, { PathTreeObject } from './updateOrAppendObject';
+import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 
 export async function fetchOrCreateTreeByPath(
-  config: CkusroConfig,
+  config: IsomorphicGitConfig,
   root: TreeObject,
   path: string,
 ): Promise<PathTreeObject[] | Error> {

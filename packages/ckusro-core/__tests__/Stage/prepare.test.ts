@@ -6,15 +6,15 @@ import {
   prepareStageDirectory,
   prepareStageRepository,
 } from '../../src/Stage/prepare';
-import { buildCkusroConfig } from '../__fixtures__';
+import { buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
 
 describe(prepare, () => {
-  const config = buildCkusroConfig();
+  const config = buildIsomorphicGitConfig();
   let fs: typeof FS;
   beforeEach(() => {
-    const core = Git.cores.create(config.coreId);
-    fs = pfs(config);
+    const core = Git.cores.create(config.core);
+    fs = pfs();
     core.set('fs', fs);
   });
 
@@ -33,10 +33,10 @@ describe(prepare, () => {
 });
 
 describe(initRepository, () => {
-  const config = buildCkusroConfig();
+  const config = buildIsomorphicGitConfig();
   beforeEach(() => {
-    const core = Git.cores.create(config.coreId);
-    const fs = pfs(config);
+    const core = Git.cores.create(config.core);
+    const fs = pfs();
     core.set('fs', fs);
   });
 
@@ -55,11 +55,11 @@ describe(initRepository, () => {
 });
 
 describe(prepareStageDirectory, () => {
-  const config = buildCkusroConfig();
+  const config = buildIsomorphicGitConfig({ gitdir: '/stage' });
   let fs: typeof FS;
   beforeEach(() => {
-    const core = Git.cores.create(config.coreId);
-    fs = pfs(config);
+    const core = Git.cores.create(config.core);
+    fs = pfs();
     core.set('fs', fs);
   });
 
@@ -67,11 +67,11 @@ describe(prepareStageDirectory, () => {
     const actual = await prepareStageDirectory(config, fs);
 
     expect(actual).toBe(true);
-    expect(() => fs.statSync(config.stage)).not.toBeInstanceOf(Error);
+    expect(() => fs.statSync(config.gitdir)).not.toBeInstanceOf(Error);
   });
 
   it('returns true', async () => {
-    fs.mkdirSync(config.stage);
+    fs.mkdirSync(config.gitdir);
     const actual = await prepareStageDirectory(config, fs);
 
     expect(actual).toBe(true);
@@ -79,10 +79,10 @@ describe(prepareStageDirectory, () => {
 });
 
 describe(prepareStageRepository, () => {
-  const config = buildCkusroConfig();
+  const config = buildIsomorphicGitConfig();
   beforeEach(() => {
-    const core = Git.cores.create(config.coreId);
-    const fs = pfs(config);
+    const core = Git.cores.create(config.core);
+    const fs = pfs();
     core.set('fs', fs);
   });
 

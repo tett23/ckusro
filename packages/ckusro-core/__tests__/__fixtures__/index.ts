@@ -7,6 +7,10 @@ import { Plugins } from '../../src/models/plugins';
 import { RepoPath } from '../../src/models/RepoPath';
 import { TreeEntry } from '../../src';
 import { createHash } from 'crypto';
+import {
+  IsomorphicGitConfig,
+  toIsomorphicGitConfig,
+} from '../../src/models/IsomorphicGitConfig';
 
 export function fixtureBuilder<T>(base: T): (override?: Partial<T>) => T {
   return (override: Partial<T> = {}) => {
@@ -47,6 +51,10 @@ export const buildRepoPath = fixtureBuilder<RepoPath>({
 export const buildInternalPath = fixtureBuilder<InternalPath>({
   repoPath: buildRepoPath(),
   path: 'foo.md',
+});
+
+export const buildIsomorphicGitConfig = fixtureBuilder<IsomorphicGitConfig>({
+  ...toIsomorphicGitConfig(buildCkusroConfig(), buildRepoPath()),
 });
 
 export const buildTreeEntry = fixtureBuilder<TreeEntry>({

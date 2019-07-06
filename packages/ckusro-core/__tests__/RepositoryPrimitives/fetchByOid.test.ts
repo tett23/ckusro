@@ -1,20 +1,20 @@
 import * as Git from 'isomorphic-git';
 import { headOid } from '../../src/RepositoryPrimitives/headTree';
 import { initRepository } from '../../src/Stage/prepare';
-import { buildCkusroConfig, randomOid } from '../__fixtures__';
+import { randomOid, buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
 import { fetchByOid } from '../../src/RepositoryPrimitives/fetchByOid';
 
 describe(fetchByOid, () => {
-  const config = buildCkusroConfig();
-  beforeEach(() => {
-    const core = Git.cores.create(config.coreId);
-    const fs = pfs(config);
+  const config = buildIsomorphicGitConfig();
+  beforeEach(async () => {
+    const core = Git.cores.create(config.core);
+    const fs = pfs();
     core.set('fs', fs);
+    await initRepository(config);
   });
 
   it('returns TreeObject', async () => {
-    await initRepository(config);
     const oid = (await headOid(config)) as string;
     const actual = await fetchByOid(config, oid);
 

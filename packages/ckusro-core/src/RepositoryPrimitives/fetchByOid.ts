@@ -1,19 +1,18 @@
 import * as Git from 'isomorphic-git';
-import { CkusroConfig } from '../models/CkusroConfig';
 import {
   GitObjectTypes,
   LookUpGitObjectType,
   GitObject,
 } from '../models/GitObject';
+import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 
 export async function fetchByOid<T extends GitObjectTypes>(
-  config: CkusroConfig,
+  config: IsomorphicGitConfig,
   oid: string,
   objectType?: T,
 ): Promise<LookUpGitObjectType<T> | null | Error> {
   const objectDescription = await Git.readObject({
-    core: config.coreId,
-    gitdir: config.stage,
+    ...config,
     oid,
   }).catch((err: Error) => err);
   if (objectDescription instanceof Error) {

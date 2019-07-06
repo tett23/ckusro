@@ -1,5 +1,4 @@
 import { basename, dirname } from 'path';
-import { CkusroConfig } from '../models/CkusroConfig';
 import { writeObject } from './writeObject';
 import { fetchOrCreateTreeByPath } from './fetchOrCreateTreeByPath';
 import updateOrAppendObject, {
@@ -8,9 +7,10 @@ import updateOrAppendObject, {
 import { UnpersistedBlobObject, TreeObject } from '../models/GitObject';
 import { BlobWriteInfo } from '../models/WriteInfo';
 import { createInternalPath } from '../models/InternalPath';
+import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 
 export async function writeBlob(
-  config: CkusroConfig,
+  config: IsomorphicGitConfig,
   currentTree: TreeObject,
   writeInfo: BlobWriteInfo,
 ): Promise<PathTreeOrBlobObject[] | Error> {

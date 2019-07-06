@@ -17,7 +17,7 @@ describe(repositories.name, () => {
   it.skip(clone.name, async () => {
     const config = buildCkusroConfig();
     const core = Git.cores.create(config.coreId);
-    const fs = pfs(config);
+    const fs = pfs();
     core.set('fs', fs);
     const url = 'https://github.com/tett23/ckusro.git';
 
@@ -28,7 +28,7 @@ describe(repositories.name, () => {
 
   it(allRepositories.name, async () => {
     const config = buildCkusroConfig();
-    const fs = pfs(config);
+    const fs = pfs();
 
     fs.mkdirSync(join(config.base, 'example.com', 'test_user1', 'foo'), {
       recursive: true,
@@ -48,7 +48,7 @@ describe(repositories.name, () => {
     it('returns GitObject', async () => {
       const config = buildCkusroConfig();
       const core = Git.cores.create(config.coreId);
-      const fs = pfs(config);
+      const fs = pfs();
       core.set('fs', fs);
       const repoPath = buildRepoPath();
       const commits = [
@@ -74,7 +74,7 @@ describe(repositories.name, () => {
 
     it('returns Error when object does not exists', async () => {
       const config = buildCkusroConfig();
-      const fs = pfs(config);
+      const fs = pfs();
       const expected = await fetchObject(config, fs, 'hoge');
 
       expect(expected).toBeInstanceOf(Error);
@@ -84,7 +84,7 @@ describe(repositories.name, () => {
   describe(fetchObjectByInternalPath, () => {
     const config = buildCkusroConfig();
     const repoPath = buildRepoPath();
-    const fs = pfs(config);
+    const fs = pfs();
 
     beforeAll(async () => {
       const core = Git.cores.create(config.coreId);
@@ -135,7 +135,7 @@ describe(repositories.name, () => {
   it(headOids.name, async () => {
     const config = buildCkusroConfig();
     const core = Git.cores.create(config.coreId);
-    const fs = pfs(config);
+    const fs = pfs();
     core.set('fs', fs);
     const repoPath = buildRepoPath();
     const commits = [

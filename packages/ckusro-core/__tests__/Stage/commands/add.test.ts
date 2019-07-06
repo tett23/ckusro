@@ -1,6 +1,6 @@
 import * as Git from 'isomorphic-git';
 import { initRepository } from '../../../src/Stage/prepare';
-import { buildCkusroConfig, buildTreeEntry } from '../../__fixtures__';
+import { buildTreeEntry, buildIsomorphicGitConfig } from '../../__fixtures__';
 import { pfs } from '../../__helpers__';
 import add from '../../../src/Stage/commands/add';
 import { createWriteInfo } from '../../../src/models/writeInfo';
@@ -11,10 +11,10 @@ import { fetchByOid } from '../../../src/RepositoryPrimitives/fetchByOid';
 import { headTree } from '../../../src/RepositoryPrimitives/headTree';
 
 describe(add, () => {
-  const config = buildCkusroConfig();
+  const config = buildIsomorphicGitConfig();
   beforeEach(async () => {
-    const core = Git.cores.create(config.coreId);
-    const fs = pfs(config);
+    const core = Git.cores.create(config.core);
+    const fs = pfs();
     core.set('fs', fs);
     await initRepository(config);
   });

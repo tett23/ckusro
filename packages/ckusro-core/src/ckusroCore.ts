@@ -3,7 +3,7 @@ import * as Git from 'isomorphic-git';
 import { CkusroConfig } from './models/CkusroConfig';
 import { parser } from './Parser';
 import { repositories } from './Repositories';
-import { stage } from './Stage';
+import stage from './Stage';
 
 export default function ckusroCore(config: CkusroConfig, fs: typeof FS) {
   const core = Git.cores.create(config.coreId);

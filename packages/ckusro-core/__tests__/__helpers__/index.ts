@@ -7,9 +7,8 @@ import { Union } from 'unionfs';
 import { CkusroConfig } from '../../src/models/CkusroConfig';
 import { RepoPath, toPath } from '../../src/models/RepoPath';
 
-export function pfs(config: CkusroConfig): typeof FS {
+export function pfs(): typeof FS {
   const volume = Volume.fromJSON({});
-  volume.mkdirSync(config.base);
 
   const ufs = new Union();
   ufs.use(volume);

@@ -1,4 +1,3 @@
-import { CkusroConfig } from '../models/CkusroConfig';
 import {
   TreeObject,
   isTreeObject,
@@ -7,9 +6,10 @@ import {
 } from '../models/GitObject';
 import { fetchByOid } from './fetchByOid';
 import normalizePath from '../utils/normalizePath';
+import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 
 export async function fetchByPath(
-  config: CkusroConfig,
+  config: IsomorphicGitConfig,
   tree: TreeObject,
   path: string,
 ): Promise<TreeObject | BlobObject | null | Error> {
@@ -48,7 +48,7 @@ export async function fetchByPath(
 }
 
 async function fetchItem(
-  config: CkusroConfig,
+  config: IsomorphicGitConfig,
   tree: TreeObject,
   paths: string[],
 ): Promise<TreeObject | null | Error> {

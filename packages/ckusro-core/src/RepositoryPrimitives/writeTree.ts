@@ -1,4 +1,3 @@
-import { CkusroConfig } from '../models/CkusroConfig';
 import { TreeWriteInfo } from '../models/writeInfo';
 import updateOrAppendObject, { PathTreeObject } from './updateOrAppendObject';
 import { fetchOrCreateTreeByPath } from './fetchOrCreateTreeByPath';
@@ -10,9 +9,10 @@ import {
   TreeObject,
 } from '../models/GitObject';
 import { writeObject } from './writeObject';
+import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 
 export async function writeTree(
-  config: CkusroConfig,
+  config: IsomorphicGitConfig,
   currentTree: TreeObject,
   writeInfo: TreeWriteInfo,
 ): Promise<PathTreeObject[] | Error> {
