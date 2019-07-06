@@ -6,7 +6,7 @@ import {
 } from '../models/GitObject';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 
-export async function fetchByOid<T extends GitObjectTypes>(
+export default async function fetchByOid<T extends GitObjectTypes>(
   config: IsomorphicGitConfig,
   oid: string,
   objectType?: T,

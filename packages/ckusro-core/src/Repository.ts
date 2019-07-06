@@ -1,218 +1,28 @@
 import * as Git from 'isomorphic-git';
-import { CkusroConfig } from './models/CkusroConfig';
-import {
-  BlobObject,
-  CommitObject,
-  GitObject,
-  TreeObject,
-  isBlobObject,
-} from './models/GitObject';
-import { gitDir, RepoPath, toPath } from './models/RepoPath';
+import { IsomorphicGitConfig } from './models/IsomorphicGitConfig';
+import repositoryPrimitives from './RepositoryPrimitives';
+import headOid from './RepositoryPrimitives/headOid';
+import { dirname } from 'path';
 
 export type Repository = ReturnType<typeof repository>;
 
-export function repository(config: CkusroConfig, repoPath: RepoPath) {
+export function repository(config: IsomorphicGitConfig) {
   return {
-    headOid: () => headOid(config, repoPath),
-    headCommitObject: () => headCommitObject(config, repoPath),
-    headRootTree: () => headRootTree(config, repoPath),
-    readTree: (oid: string) => readTree(config, repoPath, oid),
-    fetch: (ref?: string) => fetch(config, repoPath, ref),
-    fetchObjectByPath: (path: string) =>
-      fetchObjectByPath(config, repoPath, path),
-    pull: () => pull(config, repoPath),
-    checkout: (ref: string) => checkout(config, repoPath, ref),
+    ...repositoryPrimitives(config),
+    fetch: (ref?: string) => fetch(config, ref),
+    pull: () => pull(config),
+    checkout: (ref: string) => checkout(config, ref),
   };
 }
 
-export async function headOid(
-  config: CkusroConfig,
-  repoPath: RepoPath,
-): Promise<string | Error> {
-  const path = gitDir(config.base, repoPath);
-  const headOid = await (async () =>
-    Git.resolveRef({
-      core: config.coreId,
-      gitdir: path,
-      ref: 'HEAD',
-    }))().catch((err: Error) => err);
-  if (headOid instanceof Error) {
-    return headOid;
-  }
-
-  return headOid;
-}
-
-export async function headCommitObject(
-  config: CkusroConfig,
-  repoPath: RepoPath,
-): Promise<CommitObject | Error> {
-  const oid = await headOid(config, repoPath);
-  if (oid instanceof Error) {
-    return oid;
-  }
-
-  const commit = await fetchObject(config, repoPath, oid);
-  if (commit instanceof Error) {
-    return commit;
-  }
-  if (commit.type !== 'commit') {
-    return new Error('Invalid object type.');
-  }
-
-  return commit;
-}
-
-export async function headRootTree(
-  config: CkusroConfig,
-  repoPath: RepoPath,
-): Promise<TreeObject | Error> {
-  const commit = await headCommitObject(config, repoPath);
-  if (commit instanceof Error) {
-    return commit;
-  }
-
-  const tree = await fetchObject(config, repoPath, commit.content.tree);
-  if (tree instanceof Error) {
-    return tree;
-  }
-  if (tree.type !== 'tree') {
-    return new Error('Invalid object type.');
-  }
-
-  return tree;
-}
-
-export async function readTree(
-  config: CkusroConfig,
-  repoPath: RepoPath,
-  oid: string,
-): Promise<Array<TreeObject | BlobObject> | Error> {
-  const tree = await fetchObject(config, repoPath, oid);
-  if (tree instanceof Error) {
-    return tree;
-  }
-  if (tree.type !== 'tree') {
-    return new Error('Invalid object type.');
-  }
-
-  const entries = await (async () => {
-    const ps = tree.content.map(async (item) => {
-      const entry = await fetchObject(config, repoPath, item.oid);
-      if (entry instanceof Error) {
-        throw Error;
-      }
-      if (entry.type === 'commit' || entry.type === 'tag') {
-        throw new Error('Invalid object type.');
-      }
-
-      return entry;
-    });
-
-    return await Promise.all(ps);
-  })().catch((err: Error) => err);
-
-  return entries;
-}
-
-export async function fetchObject(
-  config: CkusroConfig,
-  repoPath: RepoPath,
-  oid: string,
-): Promise<GitObject | Error> {
-  const path = gitDir(config.base, repoPath);
-  const objectDescription = await (async () =>
-    Git.readObject({
-      core: config.coreId,
-      gitdir: path,
-      oid,
-    }))().catch((err: Error) => err);
-  if (objectDescription instanceof Error) {
-    return objectDescription;
-  }
-
-  const { type, object } = objectDescription;
-  switch (type) {
-    case 'commit':
-      return { oid, type: 'commit', content: object as Git.CommitDescription };
-    case 'tree':
-      return {
-        oid,
-        type: 'tree',
-        content: (object as Git.TreeDescription).entries,
-      };
-    case 'blob':
-      return { oid, type: 'blob', content: object as Buffer };
-    case 'tag':
-      return { oid, type: 'tag', content: object as Git.TagDescription };
-    default:
-      return new Error('Invalid object type.');
-  }
-}
-
-export async function fetchObjectByPath(
-  config: CkusroConfig,
-  repoPath: RepoPath,
-  path: string,
-): Promise<GitObject | Error> {
-  const head = await headCommitObject(config, repoPath);
-  if (head instanceof Error) {
-    return head;
-  }
-
-  const root = await fetchObject(config, repoPath, head.content.tree);
-  if (root instanceof Error) {
-    return root;
-  }
-  if (path.trim() === '/') {
-    return root;
-  }
-
-  const paths = path
-    .trim()
-    .split('/')
-    .slice(1);
-
-  return fetchItem(config, root as TreeObject, repoPath, paths);
-}
-
-export async function fetchItem(
-  config: CkusroConfig,
-  tree: TreeObject,
-  repoPath: RepoPath,
-  paths: string[],
-): Promise<GitObject | Error> {
-  const [head, ...tail] = paths;
-  if (head == null) {
-    return new Error('Invalid paths.');
-  }
-
-  const entry = tree.content.find((item) => item.path === head);
-  if (entry == null) {
-    return new Error('Invalid entry.');
-  }
-
-  const newTreeOrBlob = await fetchObject(config, repoPath, entry.oid);
-  if (newTreeOrBlob instanceof Error) {
-    return newTreeOrBlob;
-  }
-
-  if (isBlobObject(newTreeOrBlob) || tail.length === 0) {
-    return newTreeOrBlob;
-  }
-
-  return fetchItem(config, newTreeOrBlob as TreeObject, repoPath, tail);
-}
-
 export async function fetch(
-  config: CkusroConfig,
-  repoPath: RepoPath,
+  config: IsomorphicGitConfig,
   ref?: string,
-) {
+): Promise<true | Error> {
   const result = await Git.fetch({
-    core: config.coreId,
+    ...config,
+    corsProxy: config.corsProxy || undefined,
     token: config.authentication.github || undefined,
-    gitdir: gitDir(config.base, repoPath),
     ref: ref || 'master',
     singleBranch: true,
   }).catch((err: Error) => err);
@@ -221,37 +31,35 @@ export async function fetch(
   }
 
   if (result.fetchHead == null) {
-    return;
+    return true;
   }
 
-  const checkoutResult = await checkout(config, repoPath, result.fetchHead);
+  const checkoutResult = await checkout(config, result.fetchHead);
   if (checkoutResult instanceof Error) {
     return checkoutResult;
   }
 
-  return;
+  return true;
 }
 
 export async function pull(
-  config: CkusroConfig,
-  repoPath: RepoPath,
+  config: IsomorphicGitConfig,
 ): Promise<string | Error> {
-  const result = await fetch(config, repoPath);
+  const result = await fetch(config);
   if (result instanceof Error) {
     return result;
   }
 
-  return headOid(config, repoPath);
+  return headOid(config);
 }
 
 export async function checkout(
-  config: CkusroConfig,
-  repoPath: RepoPath,
+  config: IsomorphicGitConfig,
   ref: string,
 ): Promise<void | Error> {
   const checkoutResult = await Git.checkout({
-    core: config.coreId,
-    dir: toPath(config.base, repoPath),
+    ...config,
+    dir: dirname(config.gitdir),
     ref,
   }).catch((err: Error) => err);
   if (checkoutResult instanceof Error) {

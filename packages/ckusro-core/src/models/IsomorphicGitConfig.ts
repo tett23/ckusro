@@ -4,7 +4,7 @@ import { RepoPath, gitDir } from './RepoPath';
 export type IsomorphicGitConfig = {
   core: string;
   gitdir: string;
-  corsProxy: string | null;
+  corsProxy?: string | null;
   authentication: {
     github: string | null;
   };

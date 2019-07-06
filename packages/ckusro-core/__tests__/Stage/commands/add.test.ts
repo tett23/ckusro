@@ -7,8 +7,8 @@ import { createWriteInfo } from '../../../src/models/writeInfo';
 import { buildInternalPath } from '../../__fixtures__';
 import { PathTreeObject } from '../../../src/RepositoryPrimitives/updateOrAppendObject';
 import { createInternalPath, BlobObject, TreeObject } from '../../../src';
-import { fetchByOid } from '../../../src/RepositoryPrimitives/fetchByOid';
-import { headTree } from '../../../src/RepositoryPrimitives/headTree';
+import fetchByOid from '../../../src/RepositoryPrimitives/fetchByOid';
+import headTree from '../../../src/RepositoryPrimitives/headTree';
 
 describe(add, () => {
   const config = buildIsomorphicGitConfig();

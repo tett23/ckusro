@@ -1,4 +1,4 @@
-import { headTree } from './headTree';
+import headTree from './headTree';
 import { fetchByPath } from './fetchByPath';
 import { GitObject } from '../models/GitObject';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';

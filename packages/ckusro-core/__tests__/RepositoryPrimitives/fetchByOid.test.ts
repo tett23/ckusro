@@ -1,9 +1,9 @@
 import * as Git from 'isomorphic-git';
-import { headOid } from '../../src/RepositoryPrimitives/headTree';
+import headOid from '../../src/RepositoryPrimitives/headOid';
 import { initRepository } from '../../src/Stage/prepare';
 import { randomOid, buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
-import { fetchByOid } from '../../src/RepositoryPrimitives/fetchByOid';
+import fetchByOid from '../../src/RepositoryPrimitives/fetchByOid';
 
 describe(fetchByOid, () => {
   const config = buildIsomorphicGitConfig();

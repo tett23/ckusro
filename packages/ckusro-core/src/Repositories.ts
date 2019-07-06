@@ -1,18 +1,13 @@
 import FS from 'fs';
 import * as Git from 'isomorphic-git';
 import rimraf from 'rimraf';
-import { join } from 'path';
 import { CkusroConfig } from './models/CkusroConfig';
 import { GitObject } from './models/GitObject';
-import { gitDir, RepoPath, toPath, url2RepoPath } from './models/RepoPath';
-import {
-  fetchObject as repositoryFetchObject,
-  headOid,
-  Repository,
-  repository,
-} from './Repository';
+import { RepoPath, toPath, url2RepoPath } from './models/RepoPath';
+import { Repository, repository } from './Repository';
 import { promisify, callbackify } from 'util';
 import { InternalPath } from './models/InternalPath';
+import { toIsomorphicGitConfig } from './models/IsomorphicGitConfig';
 
 export type Repositories = ReturnType<typeof repositories>;
 
@@ -55,9 +50,10 @@ export async function clone(
     return mkdirResult;
   }
 
+  const gitConfig = toIsomorphicGitConfig(config, repoPath);
   const result = await (async () => {
     await Git.clone({
-      core: config.coreId,
+      ...gitConfig,
       corsProxy: config.corsProxy || undefined,
       token: config.authentication.github || undefined,
       dir: dirPath,
@@ -70,7 +66,7 @@ export async function clone(
     return result;
   }
 
-  const repo = repository(config, repoPath);
+  const repo = repository(gitConfig);
   const checkoutResult = await repo.checkout('origin/master');
   if (checkoutResult instanceof Error) {
     return checkoutResult;
@@ -82,48 +78,18 @@ export async function clone(
 export async function allRepositories(
   config: CkusroConfig,
   fs: typeof FS,
-): Promise<RepoPath[] | Error> {
-  const domains = await readdir(fs, config.base);
-  if (domains instanceof Error) {
-    return domains;
-  }
-
-  const ps = domains.map(async (domain) => {
-    const users = await readdir(fs, join(config.base, domain));
-    if (users instanceof Error) {
-      return users;
-    }
-
-    const usersPs = users.map(async (user) => {
-      const names = await readdir(fs, join(config.base, domain, user));
-      if (names instanceof Error) {
-        return names;
-      }
-
-      return names.map((name) => ({
-        domain,
-        user,
-        name,
-      }));
-    });
-
-    return Promise.all(usersPs);
+): Promise<Repository[] | Error> {
+  const ps = config.repositories.map(async ({ repoPath }) => {
+    return fetchRepository(config, fs, repoPath);
   });
+  const repos = await Promise.all(ps);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const ret: Array<RepoPath | Error> = (await Promise.all(ps)).flat(3) as any;
-  const errorIndex = ret.findIndex((item) => item instanceof Error);
-  if (errorIndex !== -1) {
-    return ret[errorIndex] as Error;
+  const error = repos.find((item): item is Error => item instanceof Error);
+  if (error != null) {
+    return error;
   }
 
-  return ret as RepoPath[];
-}
-
-async function readdir(fs: typeof FS, path: string): Promise<string[] | Error> {
-  return await (async () => fs.promises.readdir(path))().catch(
-    (err: Error) => err,
-  );
+  return repos.filter((item): item is Repository => !(item instanceof Error));
 }
 
 export async function fetchRepository(
@@ -131,14 +97,14 @@ export async function fetchRepository(
   fs: typeof FS,
   repoPath: RepoPath,
 ): Promise<Repository | Error> {
-  const isExist = await fs.promises
-    .stat(gitDir(config.base, repoPath))
-    .catch((err: Error) => err);
+  const gitConfig = toIsomorphicGitConfig(config, repoPath);
+  const isExist = await (async () =>
+    fs.promises.stat(gitConfig.gitdir))().catch((err: Error) => err);
   if (isExist instanceof Error) {
     return isExist;
   }
 
-  return repository(config, repoPath);
+  return repository(gitConfig);
 }
 
 export async function fetchObject(
@@ -146,15 +112,15 @@ export async function fetchObject(
   fs: typeof FS,
   oid: string,
 ): Promise<GitObject | Error> {
-  const repoPaths = await allRepositories(config, fs);
-  if (repoPaths instanceof Error) {
-    return repoPaths;
+  const repositories = await allRepositories(config, fs);
+  if (repositories instanceof Error) {
+    return repositories;
   }
 
-  const ps = repoPaths.map(async (repoPath) =>
-    repositoryFetchObject(config, repoPath, oid),
+  const ps = repositories.map((repo) => repo.fetchByOid(oid));
+  const ret = (await Promise.all(ps)).find(
+    (item): item is GitObject => !(item instanceof Error),
   );
-  const ret = (await Promise.all(ps)).find((item) => !(item instanceof Error));
   if (ret == null || ret instanceof Error) {
     return new Error(`Object not found. oid=${oid}`);
   }
@@ -166,37 +132,42 @@ export async function fetchObjectByInternalPath(
   config: CkusroConfig,
   fs: typeof FS,
   internalPath: InternalPath,
-): Promise<GitObject | Error> {
+): Promise<GitObject | null | Error> {
   const repo = await fetchRepository(config, fs, internalPath.repoPath);
   if (repo instanceof Error) {
     return repo;
   }
 
-  return repo.fetchObjectByPath(internalPath.path);
+  const root = await repo.headTreeObject();
+  if (root instanceof Error) {
+    return root;
+  }
+
+  return repo.fetchByPath(root, internalPath.path);
 }
 
 export async function headOids(
   config: CkusroConfig,
   fs: typeof FS,
 ): Promise<Array<[string, RepoPath]> | Error> {
-  const repositories = await allRepositories(config, fs);
-  if (repositories instanceof Error) {
-    return repositories;
-  }
-
-  const ps = repositories.map(async (repoPath) => {
-    const oid = await headOid(config, repoPath);
-    if (oid instanceof Error) {
-      return oid;
+  const ps = config.repositories.map(async ({ repoPath }) => {
+    const repo = await fetchRepository(config, fs, repoPath);
+    if (repo instanceof Error) {
+      return repo;
     }
 
-    return [oid, repoPath] as const;
-  });
+    const headOid = await repo.headOid();
+    if (headOid instanceof Error) {
+      return headOid;
+    }
 
+    return [headOid, repoPath] as const;
+  });
   const headOids = await Promise.all(ps);
-  const errorIndex = headOids.findIndex((item) => item instanceof Error);
-  if (errorIndex !== -1) {
-    return headOids[errorIndex] as Error;
+
+  const error = headOids.find((item): item is Error => item instanceof Error);
+  if (error instanceof Error) {
+    return error;
   }
 
   return headOids as Array<[string, RepoPath]>;

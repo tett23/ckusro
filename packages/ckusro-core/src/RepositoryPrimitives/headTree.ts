@@ -1,9 +1,9 @@
-import * as Git from 'isomorphic-git';
 import { TreeObject } from '../models/GitObject';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
-import { fetchByOid } from './fetchByOid';
+import fetchByOid from './fetchByOid';
+import headOid from './headOid';
 
-export async function headTree(
+export default async function headTree(
   config: IsomorphicGitConfig,
 ): Promise<TreeObject | Error> {
   const oid = await headOid(config);
@@ -32,19 +32,4 @@ export async function headTree(
     oid: treeObject.oid,
     content: treeObject.content,
   };
-}
-
-export async function headOid(
-  config: IsomorphicGitConfig,
-): Promise<string | Error> {
-  const headOid = await (async () =>
-    Git.resolveRef({
-      ...config,
-      ref: 'HEAD',
-    }))().catch((err: Error) => err);
-  if (headOid instanceof Error) {
-    return headOid;
-  }
-
-  return headOid;
 }

@@ -8,10 +8,10 @@ import {
   PathTreeOrBlobObject,
   PathTreeObject,
 } from '../../src/RepositoryPrimitives/updateOrAppendObject';
-import { fetchByOid } from '../../src/RepositoryPrimitives/fetchByOid';
+import fetchByOid from '../../src/RepositoryPrimitives/fetchByOid';
 import { BlobObject, createInternalPath, TreeObject } from '../../src';
 import { createWriteInfo, BlobWriteInfo } from '../../src/models/WriteInfo';
-import { headTree } from '../../src/RepositoryPrimitives/headTree';
+import headTree from '../../src/RepositoryPrimitives/headTree';
 
 describe(writeBlob, () => {
   const config = buildIsomorphicGitConfig();

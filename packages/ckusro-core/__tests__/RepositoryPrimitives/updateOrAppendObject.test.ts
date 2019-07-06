@@ -8,7 +8,7 @@ import updateOrAppendObject, {
 import { fetchOrCreateTreeByPath } from '../../src/RepositoryPrimitives/fetchOrCreateTreeByPath';
 import { writeObject } from '../../src/RepositoryPrimitives/writeObject';
 import { TreeObject, BlobObject } from '../../src';
-import { headTree } from '../../src/RepositoryPrimitives/headTree';
+import headTree from '../../src/RepositoryPrimitives/headTree';
 
 describe(updateOrAppendObject, () => {
   const config = buildIsomorphicGitConfig();

@@ -1,4 +1,5 @@
 import { Plugins } from './plugins';
+import { RepositoryInfo } from './RepositoryInfo';
 
 export type CkusroConfig = {
   base: string;
@@ -11,6 +12,7 @@ export type CkusroConfig = {
   authentication: {
     github: string | null;
   };
+  repositories: RepositoryInfo[];
 };
 
 export type ColorScheme = {

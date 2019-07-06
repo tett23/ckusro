@@ -4,7 +4,7 @@ import {
   BlobObject,
   isBlobObject,
 } from '../models/GitObject';
-import { fetchByOid } from './fetchByOid';
+import fetchByOid from './fetchByOid';
 import normalizePath from '../utils/normalizePath';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 

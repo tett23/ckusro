@@ -11,6 +11,7 @@ import {
   IsomorphicGitConfig,
   toIsomorphicGitConfig,
 } from '../../src/models/IsomorphicGitConfig';
+import { RepositoryInfo } from '../../src/models/RepositoryInfo';
 
 export function fixtureBuilder<T>(base: T): (override?: Partial<T>) => T {
   return (override: Partial<T> = {}) => {
@@ -22,6 +23,22 @@ export function fixtureBuilder<T>(base: T): (override?: Partial<T>) => T {
 export const buildPlugins = fixtureBuilder<Plugins<any, any>>({
   parsers: [],
   components: [],
+});
+
+export const buildRepoPath = fixtureBuilder<RepoPath>({
+  domain: 'example.com',
+  user: 'tett23',
+  name: 'test',
+});
+
+export const buildInternalPath = fixtureBuilder<InternalPath>({
+  repoPath: buildRepoPath(),
+  path: 'foo.md',
+});
+
+export const buildRepositoryInfo = fixtureBuilder<RepositoryInfo>({
+  url: 'http://example.com',
+  repoPath: buildRepoPath(),
 });
 
 export const buildCkusroConfig = fixtureBuilder<CkusroConfig>({
@@ -40,17 +57,7 @@ export const buildCkusroConfig = fixtureBuilder<CkusroConfig>({
     github: null,
   },
   plugins: buildPlugins(),
-});
-
-export const buildRepoPath = fixtureBuilder<RepoPath>({
-  domain: 'example.com',
-  user: 'tett23',
-  name: 'test',
-});
-
-export const buildInternalPath = fixtureBuilder<InternalPath>({
-  repoPath: buildRepoPath(),
-  path: 'foo.md',
+  repositories: [buildRepositoryInfo()],
 });
 
 export const buildIsomorphicGitConfig = fixtureBuilder<IsomorphicGitConfig>({

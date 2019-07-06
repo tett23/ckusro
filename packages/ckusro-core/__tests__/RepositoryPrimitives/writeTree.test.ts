@@ -8,12 +8,12 @@ import {
 } from '../__fixtures__';
 import { pfs } from '../__helpers__';
 import { writeTree } from '../../src/RepositoryPrimitives/writeTree';
-import { fetchByOid } from '../../src/RepositoryPrimitives/fetchByOid';
+import fetchByOid from '../../src/RepositoryPrimitives/fetchByOid';
 import { TreeObject } from '../../src/models/GitObject';
 import { createWriteInfo } from '../../src/models/writeInfo';
 import { PathTreeObject } from '../../src/RepositoryPrimitives/updateOrAppendObject';
 import { createInternalPath } from '../../src';
-import { headTree } from '../../src/RepositoryPrimitives/headTree';
+import headTree from '../../src/RepositoryPrimitives/headTree';
 
 describe(writeTree, () => {
   const config = buildIsomorphicGitConfig();

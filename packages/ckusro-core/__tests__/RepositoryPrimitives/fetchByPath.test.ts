@@ -4,7 +4,7 @@ import { buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
 import { isBlobObject, GitObject, TreeObject, isTreeObject } from '../../src';
 import { fetchByPath } from '../../src/RepositoryPrimitives/fetchByPath';
-import { headTree } from '../../src/RepositoryPrimitives/headTree';
+import headTree from '../../src/RepositoryPrimitives/headTree';
 import { fetchOrCreateTreeByPath } from '../../src/RepositoryPrimitives/fetchOrCreateTreeByPath';
 import { PathTreeObject } from '../../src/RepositoryPrimitives/updateOrAppendObject';
 

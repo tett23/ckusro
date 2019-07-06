@@ -1,11 +1,10 @@
 import * as Git from 'isomorphic-git';
-import headTree from '../../src/RepositoryPrimitives/headTree';
 import { initRepository } from '../../src/Stage/prepare';
 import { buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
-import { isTreeObject, TreeObject } from '../../src';
+import headOid from '../../src/RepositoryPrimitives/headOid';
 
-describe(headTree, () => {
+describe(headOid, () => {
   const config = buildIsomorphicGitConfig();
   beforeEach(async () => {
     const core = Git.cores.create(config.core);
@@ -14,9 +13,9 @@ describe(headTree, () => {
     await initRepository(config);
   });
 
-  it('returns TreeObject', async () => {
-    const actual = await headTree(config);
+  it('returns string', async () => {
+    const actual = await headOid(config);
 
-    expect(isTreeObject(actual as TreeObject)).toBe(true);
+    expect(typeof actual).toBe('string');
   });
 });
