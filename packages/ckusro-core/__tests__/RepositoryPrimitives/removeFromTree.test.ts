@@ -49,7 +49,7 @@ describe(removeFromTree, () => {
     const actual = (await removeFromTree(
       config,
       parents,
-      removeEntry,
+      removeEntry.path,
     )) as PathTreeObject[];
     expect(actual).not.toBeInstanceOf(Error);
 
@@ -69,7 +69,7 @@ describe(removeFromTree, () => {
       path: createInternalPath(internalPath).basename(),
     });
 
-    const actual = await removeFromTree(config, [], removeEntry);
+    const actual = await removeFromTree(config, [], removeEntry.path);
     expect(actual).toBeInstanceOf(Error);
   });
 
@@ -86,7 +86,7 @@ describe(removeFromTree, () => {
       path: 'does_not_exist',
     });
 
-    const actual = await removeFromTree(config, parents, removeEntry);
+    const actual = await removeFromTree(config, parents, removeEntry.path);
     expect(actual).toBeInstanceOf(Error);
   });
 });

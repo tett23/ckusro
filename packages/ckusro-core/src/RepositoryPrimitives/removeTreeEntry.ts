@@ -2,9 +2,9 @@ import { TreeEntry } from '../models/GitObject';
 
 export default function removeTreeEntry(
   entries: TreeEntry[],
-  entry: TreeEntry,
+  name: string,
 ): TreeEntry[] | Error {
-  const idx = entries.findIndex((item) => item.path === entry.path);
+  const idx = entries.findIndex((item) => item.path === name);
   if (idx === -1) {
     return new Error('');
   }

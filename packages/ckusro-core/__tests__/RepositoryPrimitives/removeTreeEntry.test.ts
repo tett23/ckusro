@@ -7,14 +7,14 @@ describe(updateOrAppendTreeEntries, () => {
   it('returns TreeEntry[]', async () => {
     const entry = buildTreeEntry();
     const entries = [entry];
-    const actual = removeTreeEntry(entries, entry) as TreeEntry[];
+    const actual = removeTreeEntry(entries, entry.path) as TreeEntry[];
 
     expect(actual.length).toBe(0);
   });
 
   it('returns TreeEntry[]', async () => {
     const entry = buildTreeEntry();
-    const actual = removeTreeEntry([], entry) as Error;
+    const actual = removeTreeEntry([], entry.path) as Error;
 
     expect(actual).toBeInstanceOf(Error);
   });

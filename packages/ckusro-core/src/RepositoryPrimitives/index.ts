@@ -4,7 +4,6 @@ import {
   TreeObject,
   UnpersistedGitObject,
   CommitObject,
-  TreeEntry,
 } from '../models/GitObject';
 import { BlobWriteInfo, TreeWriteInfo } from '../models/writeInfo';
 import { writeTree } from './writeTree';
@@ -18,6 +17,7 @@ import headTree from './headTree';
 import writeRef, { WriteRefOptions } from './writeRef';
 import { removeFromTree } from './removeFromTree';
 import { PathTreeObject } from './updateOrAppendObject';
+import { removeFromTreeByPath } from './removeFromTreeByPath';
 
 export default function repositoryPrimitives(config: IsomorphicGitConfig) {
   return {
@@ -39,7 +39,9 @@ export default function repositoryPrimitives(config: IsomorphicGitConfig) {
       commitObject: CommitObject,
       options: Partial<WriteRefOptions>,
     ) => writeRef(config, ref, commitObject, options),
-    removeFromTree: (parents: PathTreeObject[], entry: TreeEntry) =>
-      removeFromTree(config, parents, entry),
+    removeFromTree: (parents: PathTreeObject[], name: string) =>
+      removeFromTree(config, parents, name),
+    removeFromTreeByPath: (root: TreeObject, path: string) =>
+      removeFromTreeByPath(config, root, path),
   };
 }

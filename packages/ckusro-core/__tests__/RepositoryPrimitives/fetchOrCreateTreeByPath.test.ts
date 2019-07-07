@@ -24,7 +24,6 @@ describe(fetchOrCreateTreeByPath, () => {
       '/foo/bar/baz',
     )) as PathTreeObject[];
 
-    expect(actual.length).toBe(4);
     expect(actual.map(([item]) => item)).toMatchObject([
       '',
       'foo',

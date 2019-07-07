@@ -1,49 +1,71 @@
-import { basename } from 'path';
-import { fetchByPath } from './fetchByPath';
-import { TreeObject } from '../models/GitObject';
+import { TreeObject, isTreeObject } from '../models/GitObject';
 import { writeObject } from './writeObject';
-import splitPath from '../utils/splitPath';
 import updateOrAppendObject, { PathTreeObject } from './updateOrAppendObject';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
+import fetchParents from './internal/fetchParents';
+import fetchByOid from './fetchByOid';
+import { basename } from 'path';
+import normalizePath from '../utils/normalizePath';
 
 export async function fetchOrCreateTreeByPath(
   config: IsomorphicGitConfig,
   root: TreeObject,
   path: string,
 ): Promise<PathTreeObject[] | Error> {
-  const paths = splitPath(path).slice(1);
-  const result = paths.reduce(
-    async (
-      acc: Promise<PathTreeObject[] | Error>,
-      path,
-    ): Promise<PathTreeObject[] | Error> => {
-      const left = await acc;
-      if (left instanceof Error) {
-        return left;
-      }
+  const normalized = normalizePath(path);
+  const parents = await fetchParents(config, root, normalized, {
+    create: true,
+  });
+  if (parents instanceof Error) {
+    return parents;
+  }
+  if (normalized === '/') {
+    return parents;
+  }
 
-      const [[, parent]] = left;
-      const fetchResult = await fetchByPath(config, parent, path);
-      if (fetchResult instanceof Error) {
-        return fetchResult;
-      }
+  const name = basename(normalized);
 
-      if (fetchResult != null) {
-        return [...left, [basename(path), fetchResult as TreeObject] as const];
-      }
+  return fetchOrCreate(config, parents, name);
+}
 
-      const writeResult = await writeObject(config, {
-        type: 'tree',
-        content: [],
-      });
-      if (writeResult instanceof Error) {
-        return writeResult;
-      }
+async function fetchOrCreate(
+  config: IsomorphicGitConfig,
+  parents: PathTreeObject[],
+  name: string,
+): Promise<PathTreeObject[] | Error> {
+  const [[, parentObject]] = parents.slice(-1);
+  if (parent == null || !isTreeObject(parentObject)) {
+    return new Error('');
+  }
 
-      return updateOrAppendObject(config, left, [basename(path), writeResult]);
-    },
-    Promise.resolve([['', root] as const]),
-  );
+  const leafEntry = parentObject.content.find((item) => item.path === name);
+  if (leafEntry == null) {
+    return appendAndUpdate(config, parents, name);
+  }
 
-  return result;
+  const leaf = await fetchByOid(config, leafEntry.oid, 'tree');
+  if (leaf instanceof Error) {
+    return leaf;
+  }
+  if (leaf != null) {
+    return [...parents, [name, leaf]];
+  }
+
+  return appendAndUpdate(config, parents, name);
+}
+
+async function appendAndUpdate(
+  config: IsomorphicGitConfig,
+  parents: PathTreeObject[],
+  name: string,
+): Promise<PathTreeObject[] | Error> {
+  const writeResult = await writeObject(config, {
+    type: 'tree',
+    content: [],
+  });
+  if (writeResult instanceof Error) {
+    return writeResult;
+  }
+
+  return updateOrAppendObject(config, parents, [name, writeResult]);
 }
