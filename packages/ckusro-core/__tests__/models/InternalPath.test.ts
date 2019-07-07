@@ -90,4 +90,17 @@ describe(flat, () => {
 
     expect(flat(internalPath)).toBe('/example.com/test/repo/foo/bar');
   });
+
+  it('returns string', () => {
+    const internalPath = buildInternalPath({
+      repoPath: buildRepoPath({
+        domain: 'example.com',
+        user: 'test',
+        name: 'repo',
+      }),
+      path: 'foo/bar',
+    });
+
+    expect(flat(internalPath)).toBe('/example.com/test/repo/foo/bar');
+  });
 });

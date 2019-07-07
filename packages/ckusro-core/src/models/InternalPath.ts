@@ -45,13 +45,16 @@ export function join(
 }
 
 export function split(internalPath: InternalPath): string[] {
+  const normalized = normalizePath(internalPath.path);
+  const rootSlashTrimed = normalized.startsWith('/')
+    ? normalized.slice(1)
+    : normalized;
+
   return [
     internalPath.repoPath.domain,
     internalPath.repoPath.user,
     internalPath.repoPath.name,
-    ...normalizePath(internalPath.path)
-      .slice(1)
-      .split('/'),
+    ...rootSlashTrimed.split('/'),
   ];
 }
 
