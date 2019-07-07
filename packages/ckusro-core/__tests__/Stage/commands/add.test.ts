@@ -1,14 +1,17 @@
 import * as Git from 'isomorphic-git';
 import { initRepository } from '../../../src/Stage/prepare';
-import { buildTreeEntry, buildIsomorphicGitConfig } from '../../__fixtures__';
+import {
+  buildTreeEntry,
+  buildIsomorphicGitConfig,
+  buildInternalPath,
+} from '../../__fixtures__';
 import { pfs } from '../../__helpers__';
 import add from '../../../src/Stage/commands/add';
-import { createWriteInfo } from '../../../src/models/writeInfo';
-import { buildInternalPath } from '../../__fixtures__';
 import { PathTreeObject } from '../../../src/RepositoryPrimitives/updateOrAppendObject';
-import { createInternalPath, BlobObject, TreeObject } from '../../../src';
+import { BlobObject, TreeObject, createInternalPath } from '../../../src';
 import fetchByOid from '../../../src/RepositoryPrimitives/fetchByOid';
 import headTree from '../../../src/RepositoryPrimitives/headTree';
+import { createGlobalWriteInfo } from '../../../src/models/GlobalWriteInfo';
 
 describe(add, () => {
   const config = buildIsomorphicGitConfig();
@@ -21,17 +24,20 @@ describe(add, () => {
 
   it('returns TreeObject', async () => {
     const root = (await headTree(config)) as TreeObject;
-    const writeInfo = createWriteInfo(
+    const globalWriteInfo = createGlobalWriteInfo(
       'blob',
       buildInternalPath({ path: '/foo/bar/baz.txt' }),
       new Buffer('test', 'utf8'),
     );
 
-    const actual = (await add(config, root, writeInfo)) as PathTreeObject[];
-    const expected = createInternalPath(writeInfo.internalPath)
+    const actual = (await add(
+      config,
+      root,
+      globalWriteInfo,
+    )) as PathTreeObject[];
+    const expected = createInternalPath(globalWriteInfo.internalPath)
       .flat()
       .split('/');
-
     expect(actual.map(([item]) => item)).toMatchObject(expected);
 
     const content = ((await fetchByOid(
@@ -43,14 +49,18 @@ describe(add, () => {
 
   it('returns TreeObject', async () => {
     const root = (await headTree(config)) as TreeObject;
-    const writeInfo = createWriteInfo(
+    const globalWriteInfo = createGlobalWriteInfo(
       'tree',
       buildInternalPath({ path: '/foo/bar' }),
       [buildTreeEntry()],
     );
 
-    const actual = (await add(config, root, writeInfo)) as PathTreeObject[];
-    const expected = createInternalPath(writeInfo.internalPath)
+    const actual = (await add(
+      config,
+      root,
+      globalWriteInfo,
+    )) as PathTreeObject[];
+    const expected = createInternalPath(globalWriteInfo.internalPath)
       .flat()
       .split('/');
 
@@ -60,6 +70,6 @@ describe(add, () => {
       config,
       actual[actual.length - 1][1].oid,
     )) as TreeObject).content;
-    expect(content).toMatchObject(writeInfo.content);
+    expect(content).toMatchObject(globalWriteInfo.content);
   });
 });

@@ -1,12 +1,12 @@
 import * as Git from 'isomorphic-git';
 import { initRepository } from '../../src/Stage/prepare';
-import { buildIsomorphicGitConfig, buildInternalPath } from '../__fixtures__';
+import { buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
 import {
   PathTreeObject,
   PathTreeOrBlobObject,
 } from '../../src/RepositoryPrimitives/updateOrAppendObject';
-import { TreeObject, createInternalPath } from '../../src';
+import { TreeObject } from '../../src';
 import headTree from '../../src/RepositoryPrimitives/headTree';
 import { writeBlob } from '../../src/RepositoryPrimitives/writeBlob';
 import { removeFromTreeByPath } from '../../src/RepositoryPrimitives/removeFromTreeByPath';
@@ -24,13 +24,12 @@ describe(removeFromTreeByPath, () => {
     const root = (await headTree(config)) as TreeObject;
     const tmp = (await writeBlob(config, root, {
       type: 'blob',
-      internalPath: buildInternalPath({ path: 'exists' }),
+      path: '/test/exists',
       content: Buffer.from(''),
     })) as PathTreeObject[];
-    const internalPath = buildInternalPath({ path: 'remove' });
     const writeResult = (await writeBlob(config, tmp[0][1], {
       type: 'blob',
-      internalPath,
+      path: '/test/remove',
       content: Buffer.from(''),
     })) as PathTreeOrBlobObject[];
     const [[, newRoot]] = writeResult.slice(0, -1) as PathTreeObject[];
@@ -44,7 +43,7 @@ describe(removeFromTreeByPath, () => {
     const actual = (await removeFromTreeByPath(
       config,
       newRoot,
-      createInternalPath(internalPath).flat(),
+      '/test/remove',
     )) as PathTreeObject[];
     expect(actual).not.toBeInstanceOf(Error);
 

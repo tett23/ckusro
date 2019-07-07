@@ -1,7 +1,6 @@
 import { TreeWriteInfo } from '../models/writeInfo';
 import updateOrAppendObject, { PathTreeObject } from './updateOrAppendObject';
 import { fetchOrCreateTreeByPath } from './fetchOrCreateTreeByPath';
-import { createInternalPath } from '../models/InternalPath';
 import updateOrAppendTreeEntries from './updateOrAppendTreeEntries';
 import {
   compareTreeEntries,
@@ -10,13 +9,14 @@ import {
 } from '../models/GitObject';
 import { writeObject } from './writeObject';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
+import normalizePath from '../utils/normalizePath';
 
 export async function writeTree(
   config: IsomorphicGitConfig,
   currentTree: TreeObject,
   writeInfo: TreeWriteInfo,
 ): Promise<PathTreeObject[] | Error> {
-  const path = createInternalPath(writeInfo.internalPath).flat();
+  const path = normalizePath(writeInfo.path);
   const tree = await fetchOrCreateTreeByPath(config, currentTree, path);
   if (tree instanceof Error) {
     return tree;

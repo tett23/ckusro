@@ -1,16 +1,12 @@
 import * as Git from 'isomorphic-git';
 import { initRepository } from '../../src/Stage/prepare';
-import {
-  buildTreeEntry,
-  buildIsomorphicGitConfig,
-  buildInternalPath,
-} from '../__fixtures__';
+import { buildTreeEntry, buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
 import {
   PathTreeObject,
   PathTreeOrBlobObject,
 } from '../../src/RepositoryPrimitives/updateOrAppendObject';
-import { TreeObject, createInternalPath } from '../../src';
+import { TreeObject, createWriteInfo } from '../../src';
 import headTree from '../../src/RepositoryPrimitives/headTree';
 import { removeFromTree } from '../../src/RepositoryPrimitives/removeFromTree';
 import { writeBlob } from '../../src/RepositoryPrimitives/writeBlob';
@@ -28,18 +24,17 @@ describe(removeFromTree, () => {
     const root = (await headTree(config)) as TreeObject;
     const tmp = (await writeBlob(config, root, {
       type: 'blob',
-      internalPath: buildInternalPath({ path: 'exists' }),
+      path: '/foo/exists',
       content: Buffer.from(''),
     })) as PathTreeObject[];
-    const internalPath = buildInternalPath({ path: 'remove' });
     const writeResult = (await writeBlob(config, tmp[0][1], {
       type: 'blob',
-      internalPath,
+      path: '/foo/remove',
       content: Buffer.from(''),
     })) as PathTreeOrBlobObject[];
     const parents = writeResult.slice(0, -1) as PathTreeObject[];
     const removeEntry = buildTreeEntry({
-      path: createInternalPath(internalPath).basename(),
+      path: 'remove',
     });
 
     expect(
@@ -58,15 +53,8 @@ describe(removeFromTree, () => {
   });
 
   it('returns Error when parents is empty', async () => {
-    const root = (await headTree(config)) as TreeObject;
-    const internalPath = buildInternalPath();
-    await writeBlob(config, root, {
-      type: 'blob',
-      internalPath: internalPath,
-      content: Buffer.from(''),
-    });
     const removeEntry = buildTreeEntry({
-      path: createInternalPath(internalPath).basename(),
+      path: '/test',
     });
 
     const actual = await removeFromTree(config, [], removeEntry.path);
@@ -75,12 +63,11 @@ describe(removeFromTree, () => {
 
   it('returns Error when TreeEntry does not exists', async () => {
     const root = (await headTree(config)) as TreeObject;
-    const internalPath = buildInternalPath();
-    const writeResult = (await writeBlob(config, root, {
-      type: 'blob',
-      internalPath: internalPath,
-      content: Buffer.from(''),
-    })) as PathTreeOrBlobObject[];
+    const writeResult = (await writeBlob(
+      config,
+      root,
+      createWriteInfo('blob', '/test', Buffer.from('')),
+    )) as PathTreeOrBlobObject[];
     const parents = writeResult.slice(0, -1) as PathTreeObject[];
     const removeEntry = buildTreeEntry({
       path: 'does_not_exist',

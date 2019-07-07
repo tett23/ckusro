@@ -6,16 +6,15 @@ import updateOrAppendObject, {
 } from './updateOrAppendObject';
 import { UnpersistedBlobObject, TreeObject } from '../models/GitObject';
 import { BlobWriteInfo } from '../models/WriteInfo';
-import { createInternalPath } from '../models/InternalPath';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
+import normalizePath from '../utils/normalizePath';
 
 export async function writeBlob(
   config: IsomorphicGitConfig,
   currentTree: TreeObject,
   writeInfo: BlobWriteInfo,
 ): Promise<PathTreeOrBlobObject[] | Error> {
-  const path = createInternalPath(writeInfo.internalPath).flat();
-  const normalized = path;
+  const normalized = normalizePath(writeInfo.path);
   const blobName = basename(normalized);
   const parentPath = dirname(normalized);
 

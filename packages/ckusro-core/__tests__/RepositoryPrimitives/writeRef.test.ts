@@ -3,14 +3,13 @@ import { initRepository } from '../../src/Stage/prepare';
 import { buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
 import { createWriteInfo } from '../../src/models/writeInfo';
-import { buildInternalPath } from '../__fixtures__';
 import { PathTreeObject } from '../../src/RepositoryPrimitives/updateOrAppendObject';
 import { TreeObject, CommitObject } from '../../src';
 import headTree from '../../src/RepositoryPrimitives/headTree';
 import commit from '../../src/Stage/commands/commit';
 import writeRef from '../../src/RepositoryPrimitives/writeRef';
 import headOid from '../../src/RepositoryPrimitives/headOid';
-import add from '../../src/Stage/commands/add';
+import { writeBlob } from '../../src/RepositoryPrimitives/writeBlob';
 
 describe(writeRef, () => {
   const config = buildIsomorphicGitConfig();
@@ -25,10 +24,10 @@ describe(writeRef, () => {
     const root = (await headTree(config)) as TreeObject;
     const writeInfo = createWriteInfo(
       'blob',
-      buildInternalPath({ path: '/foo/bar/baz.txt' }),
+      '/foo/bar/baz.txt',
       new Buffer('test', 'utf8'),
     );
-    const [[, newRoot]] = (await add(
+    const [[, newRoot]] = (await writeBlob(
       config,
       root,
       writeInfo,
@@ -53,10 +52,10 @@ describe(writeRef, () => {
     const root = (await headTree(config)) as TreeObject;
     const writeInfo = createWriteInfo(
       'blob',
-      buildInternalPath({ path: '/foo/bar/baz.txt' }),
+      '/foo/bar/baz.txt',
       new Buffer('test', 'utf8'),
     );
-    const [[, newRoot]] = (await add(
+    const [[, newRoot]] = (await writeBlob(
       config,
       root,
       writeInfo,

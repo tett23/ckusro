@@ -1,7 +1,6 @@
 import * as Git from 'isomorphic-git';
 import { initRepository } from '../../src/Stage/prepare';
 import {
-  buildInternalPath,
   buildTreeEntry,
   randomOid,
   buildIsomorphicGitConfig,
@@ -12,7 +11,6 @@ import fetchByOid from '../../src/RepositoryPrimitives/fetchByOid';
 import { TreeObject } from '../../src/models/GitObject';
 import { createWriteInfo } from '../../src/models/writeInfo';
 import { PathTreeObject } from '../../src/RepositoryPrimitives/updateOrAppendObject';
-import { createInternalPath } from '../../src';
 import headTree from '../../src/RepositoryPrimitives/headTree';
 
 describe(writeTree, () => {
@@ -26,16 +24,14 @@ describe(writeTree, () => {
 
   it('returns PathTreeObject[]', async () => {
     const root = (await headTree(config)) as TreeObject;
-    const writeInfo = createWriteInfo('tree', buildInternalPath(), []);
+    const writeInfo = createWriteInfo('tree', '/test', []);
     const actual = (await writeTree(
       config,
       root,
       writeInfo,
     )) as PathTreeObject[];
 
-    const expectedPath = createInternalPath(writeInfo.internalPath)
-      .flat()
-      .split('/');
+    const expectedPath = writeInfo.path.split('/');
     expect(actual.map(([item]) => item)).toMatchObject(expectedPath);
 
     const actualOid = actual[actual.length - 1][1].oid;
@@ -46,9 +42,7 @@ describe(writeTree, () => {
 
   it('returns PathTreeObject[]', async () => {
     const root = (await headTree(config)) as TreeObject;
-    const writeInfo = createWriteInfo('tree', buildInternalPath(), [
-      buildTreeEntry(),
-    ]);
+    const writeInfo = createWriteInfo('tree', '/test', [buildTreeEntry()]);
     const actual = (await writeTree(
       config,
       root,
@@ -62,17 +56,16 @@ describe(writeTree, () => {
 
   it('returns PathTreeObject[] when append TreeEntry', async () => {
     const root = (await headTree(config)) as TreeObject;
-    const internalPath = buildInternalPath();
     const currentTreeEntries = [buildTreeEntry({ path: 'foo' })];
     const firstWriteResult = (await writeTree(
       config,
       root,
-      createWriteInfo('tree', internalPath, currentTreeEntries),
+      createWriteInfo('tree', '/test', currentTreeEntries),
     )) as PathTreeObject[];
     const [[, newRoot]] = firstWriteResult;
 
     const updateTreeEntries = [buildTreeEntry()];
-    const writeInfo = createWriteInfo('tree', internalPath, updateTreeEntries);
+    const writeInfo = createWriteInfo('tree', '/test', updateTreeEntries);
     const actual = (await writeTree(
       config,
       newRoot,
@@ -89,19 +82,18 @@ describe(writeTree, () => {
 
   it('returns PathTreeObject[] when update TreeEntry', async () => {
     const root = (await headTree(config)) as TreeObject;
-    const internalPath = buildInternalPath();
     const currentTreeEntries = [
       buildTreeEntry({ oid: randomOid(), path: 'foo' }),
     ];
     const firstWriteResult = (await writeTree(
       config,
       root,
-      createWriteInfo('tree', internalPath, currentTreeEntries),
+      createWriteInfo('tree', '/test', currentTreeEntries),
     )) as PathTreeObject[];
     const [[, newRoot]] = firstWriteResult;
 
     const updateTreeEntries = [{ ...currentTreeEntries[0], oid: randomOid() }];
-    const writeInfo = createWriteInfo('tree', internalPath, updateTreeEntries);
+    const writeInfo = createWriteInfo('tree', '/test', updateTreeEntries);
     const actual = (await writeTree(
       config,
       newRoot,

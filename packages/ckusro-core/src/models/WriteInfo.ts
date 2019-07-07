@@ -1,4 +1,3 @@
-import { InternalPath } from './InternalPath';
 import {
   CommitObject,
   TagObject,
@@ -6,29 +5,28 @@ import {
   BlobObject,
   TreeEntry,
 } from './GitObject';
-import { RepoPath } from './RepoPath';
 
 export type CommitWriteInfo = {
   type: 'commit';
-  internalPath: RepoPath;
+  path: string;
   content: CommitObject['content'];
 };
 
 export type TreeWriteInfo = {
   type: 'tree';
-  internalPath: InternalPath;
+  path: string;
   content: TreeObject['content'];
 };
 
 export type BlobWriteInfo = {
   type: 'blob';
-  internalPath: InternalPath;
+  path: string;
   content: BlobObject['content'];
 };
 
 export type TagWriteInfo = {
   type: 'blob';
-  internalPath: RepoPath;
+  path: string;
   content: TagObject['content'];
 };
 
@@ -45,14 +43,14 @@ export type LookupWriteInfo<T extends WriteInfo['type']> = T extends 'tree'
 
 export function createWriteInfo<T extends WriteInfo['type']>(
   type: T,
-  internalPath: InternalPath,
+  path: string,
   content: LookupWriteInfo<T>['content'],
 ): LookupWriteInfo<T> {
   switch (type) {
     case 'tree': {
       const ret: TreeWriteInfo = {
         type: 'tree',
-        internalPath,
+        path,
         content: content as TreeEntry[],
       };
 
@@ -61,7 +59,7 @@ export function createWriteInfo<T extends WriteInfo['type']>(
     case 'blob': {
       const ret: BlobWriteInfo = {
         type: 'blob',
-        internalPath,
+        path,
         content: content as Buffer,
       };
 

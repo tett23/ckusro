@@ -2,14 +2,13 @@ import * as Git from 'isomorphic-git';
 import { initRepository } from '../../../src/Stage/prepare';
 import { buildIsomorphicGitConfig } from '../../__fixtures__';
 import { pfs } from '../../__helpers__';
-import add from '../../../src/Stage/commands/add';
 import { createWriteInfo } from '../../../src/models/writeInfo';
-import { buildInternalPath } from '../../__fixtures__';
 import { PathTreeObject } from '../../../src/RepositoryPrimitives/updateOrAppendObject';
-import { createInternalPath, BlobObject, TreeObject } from '../../../src';
+import { BlobObject, TreeObject } from '../../../src';
 import fetchByOid from '../../../src/RepositoryPrimitives/fetchByOid';
 import headTree from '../../../src/RepositoryPrimitives/headTree';
 import commit from '../../../src/Stage/commands/commit';
+import { writeBlob } from '../../../src/RepositoryPrimitives/writeBlob';
 
 describe(commit, () => {
   const config = buildIsomorphicGitConfig();
@@ -24,14 +23,16 @@ describe(commit, () => {
     const root = (await headTree(config)) as TreeObject;
     const writeInfo = createWriteInfo(
       'blob',
-      buildInternalPath({ path: '/foo/bar/baz.txt' }),
+      '/foo/bar/baz.txt',
       new Buffer('test', 'utf8'),
     );
 
-    const actual = (await add(config, root, writeInfo)) as PathTreeObject[];
-    const expected = createInternalPath(writeInfo.internalPath)
-      .flat()
-      .split('/');
+    const actual = (await writeBlob(
+      config,
+      root,
+      writeInfo,
+    )) as PathTreeObject[];
+    const expected = writeInfo.path.split('/');
 
     expect(actual.map(([item]) => item)).toMatchObject(expected);
 
