@@ -1,6 +1,9 @@
 import FS from 'fs';
 import * as Git from 'isomorphic-git';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
+import writeRef from '../RepositoryPrimitives/writeRef';
+import { UnpersistedCommitObject, toTreeEntry } from '../models/GitObject';
+import { writeObject } from '../RepositoryPrimitives/writeObject';
 
 export async function prepare(
   config: IsomorphicGitConfig,
@@ -27,61 +30,48 @@ export async function prepare(
 export async function initRepository(
   config: IsomorphicGitConfig,
 ): Promise<true | Error> {
-  const blobOid = await Git.writeObject({
-    ...config,
+  const blob = await writeObject(config, {
     type: 'blob',
-    object: '',
+    content: Buffer.from(''),
   }).catch((err: Error) => err);
-  if (blobOid instanceof Error) {
-    return blobOid;
+  if (blob instanceof Error) {
+    return blob;
   }
 
-  const treeOid = await Git.writeObject({
-    ...config,
+  const tree = await writeObject(config, {
     type: 'tree',
-    object: {
-      entries: [
-        {
-          mode: '100644',
-          path: '.gitkeep',
-          oid: blobOid,
-          type: 'blob',
-        },
-      ],
-    },
+    content: [toTreeEntry('.gitkeep', blob)],
   }).catch((err: Error) => err);
-  if (treeOid instanceof Error) {
-    return treeOid;
+  if (tree instanceof Error) {
+    return tree;
   }
 
   const author = {
-    name: 'test',
-    email: 'test@example.com',
+    ...config.git.user,
     timestamp: 1,
     timezoneOffset: 0,
   };
-
-  const commitOid = await Git.writeObject({
-    ...config,
+  const unpersistedCommitObject: UnpersistedCommitObject = {
     type: 'commit',
-    object: {
+    content: {
       message: 'test',
-      tree: treeOid,
+      tree: tree.oid,
       parent: [],
       author,
       committer: author,
     },
-  }).catch((err: Error) => err);
-  if (commitOid instanceof Error) {
-    return commitOid;
+  };
+
+  const commit = await writeObject(config, unpersistedCommitObject).catch(
+    (err: Error) => err,
+  );
+  if (commit instanceof Error) {
+    return commit;
   }
 
-  const writeRefResult = await Git.writeRef({
-    ...config,
-    ref: 'HEAD',
-    value: commitOid,
+  const writeRefResult = await writeRef(config, 'HEAD', commit, {
     force: true,
-  }).catch((err: Error) => err);
+  });
   if (writeRefResult instanceof Error) {
     return writeRefResult;
   }

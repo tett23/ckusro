@@ -58,6 +58,12 @@ export const buildCkusroConfig = fixtureBuilder<CkusroConfig>({
   },
   plugins: buildPlugins(),
   repositories: [buildRepositoryInfo()],
+  git: {
+    user: {
+      name: 'test_user',
+      email: 'test_user@example.com',
+    },
+  },
 });
 
 export const buildIsomorphicGitConfig = fixtureBuilder<IsomorphicGitConfig>({

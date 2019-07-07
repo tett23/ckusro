@@ -1,6 +1,10 @@
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import { writeBlob } from './writeBlob';
-import { TreeObject, UnpersistedGitObject } from '../models/GitObject';
+import {
+  TreeObject,
+  UnpersistedGitObject,
+  CommitObject,
+} from '../models/GitObject';
 import { BlobWriteInfo, TreeWriteInfo } from '../models/writeInfo';
 import { writeTree } from './writeTree';
 import { writeObject } from './writeObject';
@@ -10,6 +14,7 @@ import fetchByOid from './fetchByOid';
 import { fetchTreeEntries } from './fetchTreeEntries';
 import headCommitObject from './headCommitObject';
 import headTree from './headTree';
+import writeRef, { WriteRefOptions } from './writeRef';
 
 export default function repositoryPrimitives(config: IsomorphicGitConfig) {
   return {
@@ -26,5 +31,10 @@ export default function repositoryPrimitives(config: IsomorphicGitConfig) {
       writeTree(config, currentTree, writeInfo),
     writeObject: (unpersistedObject: UnpersistedGitObject) =>
       writeObject(config, unpersistedObject),
+    writeRef: (
+      ref: string,
+      commitObject: CommitObject,
+      options: Partial<WriteRefOptions>,
+    ) => writeRef(config, ref, commitObject, options),
   };
 }

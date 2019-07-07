@@ -1,4 +1,4 @@
-import { CkusroConfig } from './CkusroConfig';
+import { CkusroConfig, GitConfig } from './CkusroConfig';
 import { RepoPath, gitDir } from './RepoPath';
 
 export type IsomorphicGitConfig = {
@@ -8,6 +8,7 @@ export type IsomorphicGitConfig = {
   authentication: {
     github: string | null;
   };
+  git: GitConfig;
 };
 
 export function toIsomorphicGitConfig(
@@ -21,6 +22,7 @@ export function toIsomorphicGitConfig(
     authentication: {
       github: config.authentication.github,
     },
+    git: config.git,
   };
 }
 
@@ -34,5 +36,6 @@ export function stageIsomorphicGitConfig(
     authentication: {
       github: config.authentication.github,
     },
+    git: config.git,
   };
 }

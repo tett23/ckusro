@@ -13,6 +13,14 @@ export type CkusroConfig = {
     github: string | null;
   };
   repositories: RepositoryInfo[];
+  git: GitConfig;
+};
+
+export type GitConfig = {
+  user: {
+    name: string;
+    email: string;
+  };
 };
 
 export type ColorScheme = {

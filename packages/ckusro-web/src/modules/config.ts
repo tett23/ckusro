@@ -42,6 +42,12 @@ export function initialConfigState(): CkusroConfig {
         },
       },
     ],
+    git: {
+      user: {
+        name: 'test_user',
+        email: 'test_user@example.com',
+      },
+    },
   };
 }
 

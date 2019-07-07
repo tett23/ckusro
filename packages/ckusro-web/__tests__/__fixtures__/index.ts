@@ -33,6 +33,12 @@ export const buildCkusroConfig = fixtureBuilder<CkusroConfig>({
     components: [],
   },
   repositories: [],
+  git: {
+    user: {
+      name: 'test_user',
+      email: 'test_user@example.com',
+    },
+  },
 });
 
 export const buildState = fixtureBuilder<State>({
