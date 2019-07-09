@@ -1,5 +1,8 @@
+type Flat<T> = T extends Array<infer U> ? U : T;
+
 declare interface Array<T> {
-  flat(): T[];
+  flat(): Flat<T>;
+  flat<U>(): Flat<U>;
   flatMap(func: (x: T, i?: number) => T | T[] | []): T[];
   flatMap<U>(func: (x: T, i?: number) => U | U[] | []): U[];
 }

@@ -18,6 +18,10 @@ import writeRef, { WriteRefOptions } from './writeRef';
 import { removeFromTree } from './removeFromTree';
 import { PathTreeObject } from './updateOrAppendObject';
 import removeFromTreeByPath from './removeFromTreeByPath';
+import lsFilesByRef from './lsFilesByRef';
+import lsFilesByTree from './lsFilesByTree';
+import revParse from './revParse';
+import fetchObjectByRef from './fetchObjectByRef';
 
 export default function repositoryPrimitives(config: IsomorphicGitConfig) {
   return {
@@ -27,6 +31,7 @@ export default function repositoryPrimitives(config: IsomorphicGitConfig) {
     fetchByOid: (oid: string) => fetchByOid(config, oid),
     fetchByPath: (root: TreeObject, path: string) =>
       fetchByPath(config, root, path),
+    fetchByRef: (ref: string) => fetchObjectByRef(config, ref),
     fetchTreeEntries: (oid: string) => fetchTreeEntries(config, oid),
     writeBlob: (currentTree: TreeObject, writeInfo: BlobWriteInfo) =>
       writeBlob(config, currentTree, writeInfo),
@@ -43,5 +48,8 @@ export default function repositoryPrimitives(config: IsomorphicGitConfig) {
       removeFromTree(config, parents, name),
     removeFromTreeByPath: (root: TreeObject, path: string) =>
       removeFromTreeByPath(config, root, path),
+    revParse: (ref: string) => revParse(config, ref),
+    lsFilesByRef: (ref: string) => lsFilesByRef(config, ref),
+    lsFilesByTree: (tree: TreeObject) => lsFilesByTree(config, tree),
   };
 }
