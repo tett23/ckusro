@@ -17,7 +17,7 @@ import headTree from './headTree';
 import writeRef, { WriteRefOptions } from './writeRef';
 import { removeFromTree } from './removeFromTree';
 import { PathTreeObject } from './updateOrAppendObject';
-import { removeFromTreeByPath } from './removeFromTreeByPath';
+import removeFromTreeByPath from './removeFromTreeByPath';
 
 export default function repositoryPrimitives(config: IsomorphicGitConfig) {
   return {

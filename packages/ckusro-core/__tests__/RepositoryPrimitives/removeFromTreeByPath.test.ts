@@ -9,7 +9,7 @@ import {
 import { TreeObject } from '../../src';
 import headTree from '../../src/RepositoryPrimitives/headTree';
 import { writeBlob } from '../../src/RepositoryPrimitives/writeBlob';
-import { removeFromTreeByPath } from '../../src/RepositoryPrimitives/removeFromTreeByPath';
+import removeFromTreeByPath from '../../src/RepositoryPrimitives/removeFromTreeByPath';
 
 describe(removeFromTreeByPath, () => {
   const config = buildIsomorphicGitConfig();

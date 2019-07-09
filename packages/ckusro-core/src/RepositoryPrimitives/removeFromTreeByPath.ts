@@ -6,7 +6,7 @@ import { PathTreeObject } from './updateOrAppendObject';
 import { basename } from 'path';
 import normalizePath from '../utils/normalizePath';
 
-export async function removeFromTreeByPath(
+export default async function removeFromTreeByPath(
   config: IsomorphicGitConfig,
   root: TreeObject,
   path: string,
