@@ -13,7 +13,7 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import React from 'react';
-import useTreeViewStyles from '../../useTreeViewStyles';
+import useFileMenuStyles from '../../../useFileMenuStyles';
 
 type OwnProps = {
   path: string;
@@ -23,7 +23,7 @@ type OwnProps = {
 };
 
 type StyleProps = {
-  fileTypeIconClass: ReturnType<typeof useTreeViewStyles>['fileTypeIcon'];
+  fileTypeIconClass: ReturnType<typeof useFileMenuStyles>['fileTypeIcon'];
 };
 
 export type TreeNameProps = OwnProps & StyleProps;
@@ -75,7 +75,7 @@ function FolderClosed() {
 }
 
 export default function(props: OwnProps) {
-  const styles = useTreeViewStyles();
+  const styles = useFileMenuStyles();
 
   return <TreeName {...props} fileTypeIconClass={styles.fileTypeIcon} />;
 }

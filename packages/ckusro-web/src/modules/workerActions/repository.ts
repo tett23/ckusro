@@ -1,4 +1,5 @@
 import { RepoPath, InternalPath } from '@ckusro/ckusro-core';
+import { GlobalBlobWriteInfo } from '@ckusro/ckusro-core/lib/src/models/GlobalWriteInfo';
 
 export const CloneRepository = 'RepositoryWorker/Clone' as const;
 
@@ -45,9 +46,19 @@ export function fetchHeadOids() {
   };
 }
 
+export const UpdateBlobBuffer = 'RepositoryWorker/UpdateBlobBuffer' as const;
+
+export function updateBlobBuffer(writeInfo: GlobalBlobWriteInfo) {
+  return {
+    type: UpdateBlobBuffer,
+    payload: writeInfo,
+  };
+}
+
 export type RepositoryWorkerActions =
   | ReturnType<typeof cloneRepository>
   | ReturnType<typeof pullRepository>
   | ReturnType<typeof fetchObjects>
   | ReturnType<typeof updateByInternalPath>
-  | ReturnType<typeof fetchHeadOids>;
+  | ReturnType<typeof fetchHeadOids>
+  | ReturnType<typeof updateBlobBuffer>;

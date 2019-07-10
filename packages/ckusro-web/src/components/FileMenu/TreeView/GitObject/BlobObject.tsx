@@ -4,9 +4,9 @@ import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { updateByBufferInfo } from '../../../../modules/thunkActions';
-import useTreeViewStyles from '../useTreeViewStyles';
 import { InternalPath, createInternalPath } from '@ckusro/ckusro-core';
 import { createBufferInfo } from '../../../../models/BufferInfo';
+import useFileMenuStyles from '../../useFileMenuStyles';
 
 type OwnProps = {
   oid: string;
@@ -18,7 +18,7 @@ type DispatchProps = {
 };
 
 type StyleProps = {
-  fileTypeIconClass: ReturnType<typeof useTreeViewStyles>['fileTypeIcon'];
+  fileTypeIconClass: ReturnType<typeof useFileMenuStyles>['fileTypeIcon'];
 };
 
 export type BlobObjectProps = OwnProps & DispatchProps & StyleProps;
@@ -48,7 +48,7 @@ export default function(props: OwnProps) {
         ),
       ),
   };
-  const styles = useTreeViewStyles();
+  const styles = useFileMenuStyles();
 
   return (
     <BlobObject

@@ -1,13 +1,13 @@
 import FS from 'fs';
-import * as Git from 'isomorphic-git';
-import rimraf from 'rimraf';
-import { CkusroConfig } from './models/CkusroConfig';
-import { GitObject } from './models/GitObject';
-import { RepoPath, toPath, url2RepoPath } from './models/RepoPath';
-import { Repository, repository } from './Repository';
-import { promisify, callbackify } from 'util';
-import { InternalPath } from './models/InternalPath';
-import { toIsomorphicGitConfig } from './models/IsomorphicGitConfig';
+import { CkusroConfig } from '../models/CkusroConfig';
+import { GitObject } from '../models/GitObject';
+import { RepoPath } from '../models/RepoPath';
+import { Repository, repository } from '../Repository';
+import { InternalPath } from '../models/InternalPath';
+import { toIsomorphicGitConfig } from '../models/IsomorphicGitConfig';
+import isExistFileOrDirectory from '../utils/isExistFileOrDirectory';
+import clone from './clone';
+import separateErrors from '../utils/separateErrors';
 
 export type Repositories = ReturnType<typeof repositories>;
 
@@ -22,57 +22,6 @@ export function repositories(config: CkusroConfig, fs: typeof FS) {
       fetchObjectByInternalPath(config, fs, internalPath),
     headOids: () => headOids(config, fs),
   };
-}
-
-export async function clone(
-  config: CkusroConfig,
-  fs: typeof FS,
-  url: string,
-): Promise<Repository | Error> {
-  const repoPath = url2RepoPath(url);
-  if (repoPath instanceof Error) {
-    return repoPath;
-  }
-
-  const dirPath = toPath(config.base, repoPath);
-  const rmrfResult = await promisify(rimraf)(dirPath, {
-    ...fs,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    lstat: callbackify(fs.promises.stat) as any,
-  }).catch((err: Error) => err);
-  if (rmrfResult instanceof Error) {
-    return rmrfResult;
-  }
-  const mkdirResult = await fs.promises
-    .mkdir(dirPath, { recursive: true })
-    .catch((err: Error) => err);
-  if (mkdirResult instanceof Error) {
-    return mkdirResult;
-  }
-
-  const gitConfig = toIsomorphicGitConfig(config, repoPath);
-  const result = await (async () => {
-    await Git.clone({
-      ...gitConfig,
-      corsProxy: config.corsProxy || undefined,
-      token: config.authentication.github || undefined,
-      dir: dirPath,
-      url,
-      singleBranch: true,
-      depth: 2,
-    });
-  })().catch((err: Error) => err);
-  if (result instanceof Error) {
-    return result;
-  }
-
-  const repo = repository(gitConfig);
-  const checkoutResult = await repo.checkout('origin/master');
-  if (checkoutResult instanceof Error) {
-    return checkoutResult;
-  }
-
-  return repo;
 }
 
 export async function allRepositories(
@@ -98,10 +47,9 @@ export async function fetchRepository(
   repoPath: RepoPath,
 ): Promise<Repository | Error> {
   const gitConfig = toIsomorphicGitConfig(config, repoPath);
-  const isExist = await (async () =>
-    fs.promises.stat(gitConfig.gitdir))().catch((err: Error) => err);
-  if (isExist instanceof Error) {
-    return isExist;
+  const isExist = await isExistFileOrDirectory(fs, gitConfig.gitdir);
+  if (!isExist) {
+    return new Error('Repository have not been cloned.');
   }
 
   return repository(gitConfig);
@@ -149,11 +97,11 @@ export async function fetchObjectByInternalPath(
 export async function headOids(
   config: CkusroConfig,
   fs: typeof FS,
-): Promise<Array<[string, RepoPath]> | Error> {
+): Promise<Array<readonly [string, RepoPath]> | Error> {
   const ps = config.repositories.map(async ({ repoPath }) => {
     const repo = await fetchRepository(config, fs, repoPath);
     if (repo instanceof Error) {
-      return repo;
+      return null;
     }
 
     const headOid = await repo.headOid();
@@ -163,12 +111,14 @@ export async function headOids(
 
     return [headOid, repoPath] as const;
   });
-  const headOids = await Promise.all(ps);
-
-  const error = headOids.find((item): item is Error => item instanceof Error);
-  if (error instanceof Error) {
-    return error;
+  const [result, errors] = separateErrors(await Promise.all(ps));
+  if (errors.length !== 0) {
+    return errors[0];
   }
 
-  return headOids as Array<[string, RepoPath]>;
+  const ret = result.filter(
+    (item): item is readonly [string, RepoPath] => item != null,
+  );
+
+  return ret;
 }

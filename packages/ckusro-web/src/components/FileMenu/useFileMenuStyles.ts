@@ -76,6 +76,11 @@ const useFileMenuStyles = makeStyles((theme: Theme) => {
       }),
       marginLeft: 0,
     },
+    fileTypeIcon: {
+      width: '2rem',
+      minWidth: '2rem',
+      maxWidth: '2rem',
+    },
   });
 });
 

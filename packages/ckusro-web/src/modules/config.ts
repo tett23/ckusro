@@ -26,7 +26,7 @@ export function initialConfigState(): CkusroConfig {
     },
     repositories: [
       {
-        url: 'https://github.com/tett23/ckusro.git',
+        url: 'https://github.com/tett23/ckusro',
         repoPath: {
           domain: 'github.com',
           user: 'tett23',
@@ -34,7 +34,7 @@ export function initialConfigState(): CkusroConfig {
         },
       },
       {
-        url: 'https://github.com/tett23/trapahi.git',
+        url: 'https://github.com/tett23/trapahi',
         repoPath: {
           domain: 'github.com',
           user: 'tett23',

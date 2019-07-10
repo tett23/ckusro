@@ -1,38 +1,25 @@
 import * as Git from 'isomorphic-git';
-import { GitObject, BlobObject } from '../src/models/GitObject';
+import { GitObject, BlobObject } from '../../src/models/GitObject';
 import {
   allRepositories,
-  clone,
   fetchObject,
   headOids,
   repositories,
   fetchObjectByInternalPath,
-} from '../src/Repositories';
-import headOid from '../src/RepositoryPrimitives/headOid';
+} from '../../src/Repositories';
+import headOid from '../../src/RepositoryPrimitives/headOid';
 import {
   buildCkusroConfig,
   buildRepoPath,
   buildRepositoryInfo,
-} from './__fixtures__';
-import { dummyRepo, pfs } from './__helpers__';
-import { toIsomorphicGitConfig } from '../src/models/IsomorphicGitConfig';
-import { initRepository } from '../src/Stage/prepare';
-import { gitDir } from '../src';
-import { Repository } from '../src/Repository';
+} from '../__fixtures__';
+import { dummyRepo, pfs } from '../__helpers__';
+import { toIsomorphicGitConfig } from '../../src/models/IsomorphicGitConfig';
+import { initRepository } from '../../src/Stage/prepare';
+import { gitDir } from '../../src';
+import { Repository } from '../../src/Repository';
 
 describe(repositories.name, () => {
-  it.skip(clone.name, async () => {
-    const config = buildCkusroConfig();
-    const core = Git.cores.create(config.coreId);
-    const fs = pfs();
-    core.set('fs', fs);
-    const url = 'https://github.com/tett23/ckusro.git';
-
-    const expected = await clone(config, fs, url);
-
-    expect(expected).not.toBeInstanceOf(Error);
-  });
-
   it(allRepositories.name, async () => {
     const config = buildCkusroConfig({ repositories: [buildRepositoryInfo()] });
     const fs = pfs();

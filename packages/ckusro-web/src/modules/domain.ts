@@ -1,4 +1,4 @@
-import { GitObject } from '@ckusro/ckusro-core';
+import { GitObject, PathTreeEntry } from '@ckusro/ckusro-core';
 import { createObjectManager, ObjectManager } from '../models/ObjectManager';
 import { createRefManager, Ref, RefManager } from '../models/RefManager';
 import { updateState, UpdateState } from './actions/shared';
@@ -6,6 +6,8 @@ import { updateState, UpdateState } from './actions/shared';
 export type DomainState = {
   refManager: RefManager;
   objectManager: ObjectManager;
+  stageHead: string | null;
+  stageEntries: PathTreeEntry[];
 };
 
 export function initialDomainState(): DomainState {
@@ -14,6 +16,8 @@ export function initialDomainState(): DomainState {
       refs: {},
     },
     objectManager: {},
+    stageHead: null,
+    stageEntries: [],
   };
 }
 
@@ -35,9 +39,29 @@ export function addObjects(objects: GitObject[]) {
   };
 }
 
+const UpdateStageHead = 'Domain/UpdateStageHead' as const;
+
+export function updateStageHead(oid: string) {
+  return {
+    type: UpdateStageHead,
+    payload: oid,
+  };
+}
+
+const UpdateStageEntries = 'Domain/UpdateStageEntries' as const;
+
+export function updateStageEntries(entries: PathTreeEntry[]) {
+  return {
+    type: UpdateStageEntries,
+    payload: entries,
+  };
+}
+
 export type DomainActions =
   | ReturnType<typeof addRef>
   | ReturnType<typeof addObjects>
+  | ReturnType<typeof updateStageHead>
+  | ReturnType<typeof updateStageEntries>
   | ReturnType<typeof updateState>;
 
 export function domainReducer(
@@ -60,6 +84,18 @@ export function domainReducer(
       return {
         ...state,
         objectManager: manager.addObjects(action.payload),
+      };
+    }
+    case UpdateStageHead: {
+      return {
+        ...state,
+        stageHead: action.payload,
+      };
+    }
+    case UpdateStageEntries: {
+      return {
+        ...state,
+        stageEntries: action.payload,
       };
     }
     case UpdateState:

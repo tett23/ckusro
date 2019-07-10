@@ -10,6 +10,12 @@ import { TreeObject } from '../models/GitObject';
 
 export default async function stage(config: CkusroConfig, fs: typeof FS) {
   const gitConfig = stageIsomorphicGitConfig(config);
+
+  const prepareResult = await prepare(gitConfig, fs);
+  if (prepareResult instanceof Error) {
+    return prepareResult;
+  }
+
   const root = await headTree(gitConfig);
   if (root instanceof Error) {
     return root;
@@ -17,9 +23,7 @@ export default async function stage(config: CkusroConfig, fs: typeof FS) {
 
   return {
     prepare: () => prepare(gitConfig, fs),
-    add: (writeInfo: GlobalWriteInfo) => {
-      add(gitConfig, root, writeInfo);
-    },
+    add: (writeInfo: GlobalWriteInfo) => add(gitConfig, root, writeInfo),
     commit: (root: TreeObject, message: string) =>
       commit(gitConfig, root, message),
   };

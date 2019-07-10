@@ -2,12 +2,19 @@ import ckusroCore, {
   CkusroConfig,
   toInternalPath,
   url2RepoPath,
+  isTreeObject,
+  toPathTreeEntry,
 } from '@ckusro/ckusro-core';
 import 'core-js/stable';
 import FS from 'fs';
 import 'regenerator-runtime/runtime';
 import { Actions } from '../modules';
-import { addObjects, addRef } from '../modules/domain';
+import {
+  addObjects,
+  addRef,
+  updateStageHead,
+  updateStageEntries,
+} from '../modules/domain';
 import {
   CommonWorkerActions,
   errorMessage,
@@ -23,6 +30,8 @@ import {
   RepositoryWorkerActions,
   UpdateByInternalPath,
   updateByInternalPath,
+  UpdateBlobBuffer,
+  updateBlobBuffer,
 } from '../modules/workerActions/repository';
 import { splitError } from '../utils';
 import { Handler, HandlerResult, newHandler, PayloadType } from './util';
@@ -70,6 +79,9 @@ function actionHandlers(
       return updateByInternalPathHandler as any;
     case FetchHeadOids:
       return fetchHeadOidsHandler;
+    case UpdateBlobBuffer:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return updateBlobBufferHandler as any;
     default:
       return null;
   }
@@ -184,4 +196,41 @@ async function fetchHeadOidsHandler(
       oid,
     });
   });
+}
+
+async function updateBlobBufferHandler(
+  config: CkusroConfig,
+  fs: typeof FS,
+  writeInfo: PayloadType<ReturnType<typeof updateBlobBuffer>>,
+): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
+  const core = ckusroCore(config, fs);
+  const stage = await core.stage;
+  if (stage instanceof Error) {
+    return stage;
+  }
+
+  const prepareResult = await stage.prepare();
+  if (prepareResult instanceof Error) {
+    return prepareResult;
+  }
+
+  const addResult = await stage.add(writeInfo);
+  if (addResult instanceof Error) {
+    return addResult;
+  }
+
+  const [[, newRoot]] = addResult;
+  if (!isTreeObject(newRoot)) {
+    return new Error('');
+  }
+  const commitResult = await stage.commit(newRoot, 'update');
+  if (commitResult instanceof Error) {
+    return commitResult;
+  }
+
+  return [
+    addObjects([...addResult.map(([, item]) => item), commitResult]),
+    updateStageHead(commitResult.oid),
+    updateStageEntries(addResult.map(toPathTreeEntry)),
+  ];
 }

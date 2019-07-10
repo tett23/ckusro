@@ -9,6 +9,7 @@ import { HastRoot } from '../../../Markdown/Hast';
 import rehypeRemoveBlankTextNode from '../../../Markdown/rehype-remove-blank-text-node';
 import { Box } from '@material-ui/core';
 import { BlobBufferInfo } from '../../../../models/BufferInfo';
+import Editor from '../../../Editor';
 
 type OwnProps = {
   gitObject: BlobObjectType;
@@ -21,7 +22,7 @@ type StateProps = {
 
 export type BlobObjectProps = OwnProps & StateProps;
 
-export function BlobObject({ ast }: BlobObjectProps) {
+export function BlobObject({ ast, blobBufferInfo }: BlobObjectProps) {
   const [content, setContent] = useState(null as ReactNode);
   useEffect(() => {
     const processor = unified()
@@ -40,7 +41,12 @@ export function BlobObject({ ast }: BlobObjectProps) {
     })();
   }, [ast]);
 
-  return <Box>{content}</Box>;
+  return (
+    <Box>
+      {content}
+      <Editor blobBufferInfo={blobBufferInfo} />
+    </Box>
+  );
 }
 
 const Memoized = React.memo(BlobObject, (prev, next) => prev.ast === next.ast);

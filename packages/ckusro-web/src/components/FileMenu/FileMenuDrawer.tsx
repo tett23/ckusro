@@ -9,6 +9,7 @@ import { updateIsDrawerOpen } from '../../modules/ui/fileMenu/fileMenuMisc';
 import TreeView from './TreeView';
 import useFileMenuStyles from './useFileMenuStyles';
 import DrawerFab from './DrawerFab';
+import Stage from './Stage';
 
 type OwnProps = {};
 
@@ -57,6 +58,7 @@ export function FileMenuDrawer({
               <FontAwesomeIcon icon={faChevronRight} />
             </Button>
           </ListSubheader>
+          <Stage />
           <TreeView />
           <DrawerFab />
         </Drawer>

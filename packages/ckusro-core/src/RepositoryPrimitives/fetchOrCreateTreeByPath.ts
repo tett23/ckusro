@@ -35,7 +35,7 @@ async function fetchOrCreate(
   name: string,
 ): Promise<PathTreeObject[] | Error> {
   const [[, parentObject]] = parents.slice(-1);
-  if (parent == null || !isTreeObject(parentObject)) {
+  if (parentObject == null || !isTreeObject(parentObject)) {
     return new Error('');
   }
 

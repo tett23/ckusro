@@ -9,10 +9,12 @@ import {
   fetchObjects as fetchObjectsAction,
   updateByInternalPath as updateByInternalPathAction,
   pullRepository as pullRepositoryAction,
+  updateBlobBuffer as updateBlobBufferAction,
 } from './workerActions/repository';
 import { updateMainViewType } from './ui/mainView/mainViewMisc';
 import { BufferInfo } from '../models/BufferInfo';
 import { selectBufferInfo } from './actions/shared';
+import { GlobalBlobWriteInfo } from '@ckusro/ckusro-core/lib/src/models/GlobalWriteInfo';
 
 export function updateByBufferInfo(bufferInfo: BufferInfo | null) {
   return async (dispatch: Dispatch<Actions>) => {
@@ -97,5 +99,15 @@ export function parseMarkdown(md: string) {
     } = getState();
 
     parserWorkerDispatcher(parseMarkdownAction(md));
+  };
+}
+
+export function updateBlobBuffer(writeInfo: GlobalBlobWriteInfo) {
+  return async (_: Dispatch<Actions>, getState: () => State) => {
+    const {
+      workers: { repositoryWorkerDispatcher },
+    } = getState();
+
+    repositoryWorkerDispatcher(updateBlobBufferAction(writeInfo));
   };
 }
