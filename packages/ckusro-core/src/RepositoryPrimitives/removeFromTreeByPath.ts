@@ -2,7 +2,7 @@ import { TreeObject } from '../models/GitObject';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import fetchParents from './internal/fetchParents';
 import { removeFromTree } from './removeFromTree';
-import { PathTreeObject } from './updateOrAppendObject';
+import { PathTreeObject } from '../models/PathTreeObject';
 import { basename } from 'path';
 import normalizePath from '../utils/normalizePath';
 

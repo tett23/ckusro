@@ -10,7 +10,7 @@ import { writeTree } from '../../src/RepositoryPrimitives/writeTree';
 import fetchByOid from '../../src/RepositoryPrimitives/fetchByOid';
 import { TreeObject } from '../../src/models/GitObject';
 import { createWriteInfo } from '../../src/models/writeInfo';
-import { PathTreeObject } from '../../src/RepositoryPrimitives/updateOrAppendObject';
+import { PathTreeObject } from '../../src/models/PathTreeObject';
 import headTree from '../../src/RepositoryPrimitives/headTree';
 
 describe(writeTree, () => {

@@ -1,9 +1,8 @@
 import { basename, dirname } from 'path';
 import { writeObject } from './writeObject';
 import { fetchOrCreateTreeByPath } from './fetchOrCreateTreeByPath';
-import updateOrAppendObject, {
-  PathTreeOrBlobObject,
-} from './updateOrAppendObject';
+import updateOrAppendObject from './updateOrAppendObject';
+import { PathTreeOrBlobObject } from '../models/PathTreeObject';
 import { UnpersistedBlobObject, TreeObject } from '../models/GitObject';
 import { BlobWriteInfo } from '../models/WriteInfo';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';

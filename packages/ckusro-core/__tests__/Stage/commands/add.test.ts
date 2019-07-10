@@ -7,7 +7,7 @@ import {
 } from '../../__fixtures__';
 import { pfs } from '../../__helpers__';
 import add from '../../../src/Stage/commands/add';
-import { PathTreeObject } from '../../../src/RepositoryPrimitives/updateOrAppendObject';
+import { PathTreeObject } from '../../../src/models/PathTreeObject';
 import { BlobObject, TreeObject, createInternalPath } from '../../../src';
 import fetchByOid from '../../../src/RepositoryPrimitives/fetchByOid';
 import headTree from '../../../src/RepositoryPrimitives/headTree';

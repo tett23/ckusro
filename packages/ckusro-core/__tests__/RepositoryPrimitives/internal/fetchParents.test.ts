@@ -5,7 +5,7 @@ import { pfs } from '../../__helpers__';
 import { initRepository } from '../../../src/Stage/prepare';
 import headTree from '../../../src/RepositoryPrimitives/headTree';
 import { TreeObject } from '../../../src';
-import { PathTreeObject } from '../../../src/RepositoryPrimitives/updateOrAppendObject';
+import { PathTreeObject } from '../../../src/models/PathTreeObject';
 
 describe(fetchParents, () => {
   const config = buildIsomorphicGitConfig();

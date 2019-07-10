@@ -1,4 +1,4 @@
-import { TreeEntry } from '../models/GitObject';
+import { TreeEntry } from '../models/TreeEntry';
 
 export default function removeTreeEntry(
   entries: TreeEntry[],

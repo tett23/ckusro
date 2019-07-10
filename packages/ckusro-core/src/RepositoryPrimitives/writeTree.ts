@@ -1,5 +1,6 @@
 import { TreeWriteInfo } from '../models/writeInfo';
-import updateOrAppendObject, { PathTreeObject } from './updateOrAppendObject';
+import updateOrAppendObject from './updateOrAppendObject';
+import { PathTreeObject } from '../models/PathTreeObject';
 import { fetchOrCreateTreeByPath } from './fetchOrCreateTreeByPath';
 import updateOrAppendTreeEntries from './updateOrAppendTreeEntries';
 import {

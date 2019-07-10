@@ -5,7 +5,7 @@ import { pfs } from '../__helpers__';
 import {
   PathTreeObject,
   PathTreeOrBlobObject,
-} from '../../src/RepositoryPrimitives/updateOrAppendObject';
+} from '../../src/models/PathTreeObject';
 import { TreeObject } from '../../src';
 import headTree from '../../src/RepositoryPrimitives/headTree';
 import { writeBlob } from '../../src/RepositoryPrimitives/writeBlob';

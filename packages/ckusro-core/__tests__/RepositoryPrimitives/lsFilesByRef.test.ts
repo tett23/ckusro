@@ -5,10 +5,10 @@ import { pfs } from '../__helpers__';
 import lsFilesByRef from '../../src/RepositoryPrimitives/lsFilesByRef';
 import headTree from '../../src/RepositoryPrimitives/headTree';
 import { TreeObject, createWriteInfo } from '../../src';
-import { PathTreeObject } from '../../src/RepositoryPrimitives/updateOrAppendObject';
+import { PathTreeObject } from '../../src/models/PathTreeObject';
 import commit from '../../src/Stage/commands/commit';
 import { writeBlob } from '../../src/RepositoryPrimitives/writeBlob';
-import { PathTreeEntry } from '../../src/RepositoryPrimitives/lsFilesByTree';
+import { PathTreeEntry } from '../../src/models/PathTreeEntry';
 
 describe(lsFilesByRef, () => {
   const config = buildIsomorphicGitConfig();

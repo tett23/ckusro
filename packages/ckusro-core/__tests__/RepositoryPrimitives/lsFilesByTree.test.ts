@@ -4,11 +4,10 @@ import { buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
 import headTree from '../../src/RepositoryPrimitives/headTree';
 import { TreeObject, createWriteInfo } from '../../src';
-import { PathTreeObject } from '../../src/RepositoryPrimitives/updateOrAppendObject';
+import { PathTreeObject } from '../../src/models/PathTreeObject';
 import { writeBlob } from '../../src/RepositoryPrimitives/writeBlob';
-import lsFilesByTree, {
-  PathTreeEntry,
-} from '../../src/RepositoryPrimitives/lsFilesByTree';
+import lsFilesByTree from '../../src/RepositoryPrimitives/lsFilesByTree';
+import { PathTreeEntry } from '../../src/models/PathTreeEntry';
 
 describe(lsFilesByTree, () => {
   const config = buildIsomorphicGitConfig();

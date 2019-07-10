@@ -1,17 +1,16 @@
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import fetchByOid from './fetchByOid';
 import {
-  TreeEntry,
   isBlobObject,
   isCommitObject,
   isTagObject,
   TreeObject,
 } from '../models/GitObject';
+import { TreeEntry } from '../models/TreeEntry';
 import { join } from 'path';
 import separateErrors from '../utils/separateErrors';
 import typeToMode from '../utils/typeToMode';
-
-export type PathTreeEntry = readonly [string, TreeEntry];
+import { PathTreeEntry } from '../models/PathTreeEntry';
 
 export default async function lsFilesByTree(
   config: IsomorphicGitConfig,

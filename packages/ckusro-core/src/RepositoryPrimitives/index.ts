@@ -16,7 +16,7 @@ import headCommitObject from './headCommitObject';
 import headTree from './headTree';
 import writeRef, { WriteRefOptions } from './writeRef';
 import { removeFromTree } from './removeFromTree';
-import { PathTreeObject } from './updateOrAppendObject';
+import { PathTreeObject } from '../models/PathTreeObject';
 import removeFromTreeByPath from './removeFromTreeByPath';
 import lsFilesByRef from './lsFilesByRef';
 import lsFilesByTree from './lsFilesByTree';

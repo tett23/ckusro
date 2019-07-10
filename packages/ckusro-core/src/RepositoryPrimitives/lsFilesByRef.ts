@@ -1,6 +1,7 @@
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import fetchByOid from './fetchByOid';
-import lsFilesByTree, { PathTreeEntry } from './lsFilesByTree';
+import lsFilesByTree from './lsFilesByTree';
+import { PathTreeEntry } from '../models/PathTreeEntry';
 import fetchObjectByRef from './fetchObjectByRef';
 
 export default async function lsFilesByRef(

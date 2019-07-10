@@ -13,5 +13,8 @@ export * from './models/ParserPlugin';
 export * from './models/BufferInfo';
 export * from './models/RepositoryInfo';
 export * from './models/WriteInfo';
+export * from './models/TreeEntry';
+export * from './models/PathTreeObject';
+export * from './models/PathTreeEntry';
 
 export default ckusroCore;

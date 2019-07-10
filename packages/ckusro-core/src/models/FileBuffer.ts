@@ -1,4 +1,4 @@
-import { TreeEntry } from './GitObject';
+import { TreeEntry } from './TreeEntry';
 import { basename, InternalPath } from './InternalPath';
 
 export type FileBuffer = {

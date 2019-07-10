@@ -6,7 +6,7 @@ import { isBlobObject, GitObject, TreeObject, isTreeObject } from '../../src';
 import { fetchByPath } from '../../src/RepositoryPrimitives/fetchByPath';
 import headTree from '../../src/RepositoryPrimitives/headTree';
 import { fetchOrCreateTreeByPath } from '../../src/RepositoryPrimitives/fetchOrCreateTreeByPath';
-import { PathTreeObject } from '../../src/RepositoryPrimitives/updateOrAppendObject';
+import { PathTreeObject } from '../../src/models/PathTreeObject';
 
 describe(fetchByPath, () => {
   const config = buildIsomorphicGitConfig();

@@ -1,6 +1,7 @@
 import { TreeObject, isTreeObject } from '../models/GitObject';
 import { writeObject } from './writeObject';
-import updateOrAppendObject, { PathTreeObject } from './updateOrAppendObject';
+import updateOrAppendObject from './updateOrAppendObject';
+import { PathTreeObject } from '../models/PathTreeObject';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import fetchParents from './internal/fetchParents';
 import fetchByOid from './fetchByOid';

@@ -1,5 +1,5 @@
 import { writeBlob } from '../../RepositoryPrimitives/writeBlob';
-import { PathTreeOrBlobObject } from '../../RepositoryPrimitives/updateOrAppendObject';
+import { PathTreeOrBlobObject } from '../../models/PathTreeObject';
 import { BlobWriteInfo, TreeWriteInfo } from '../../models/WriteInfo';
 import { writeTree } from '../../RepositoryPrimitives/writeTree';
 import { TreeObject } from '../../models/GitObject';

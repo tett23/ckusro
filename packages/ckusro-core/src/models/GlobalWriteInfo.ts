@@ -1,11 +1,6 @@
 import { InternalPath, createInternalPath } from './InternalPath';
-import {
-  CommitObject,
-  TagObject,
-  TreeObject,
-  BlobObject,
-  TreeEntry,
-} from './GitObject';
+import { CommitObject, TagObject, TreeObject, BlobObject } from './GitObject';
+import { TreeEntry } from './TreeEntry';
 import { RepoPath } from './RepoPath';
 import { LookupWriteInfo } from './writeInfo';
 

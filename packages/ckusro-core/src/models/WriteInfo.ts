@@ -1,10 +1,5 @@
-import {
-  CommitObject,
-  TagObject,
-  TreeObject,
-  BlobObject,
-  TreeEntry,
-} from './GitObject';
+import { CommitObject, TagObject, TreeObject, BlobObject } from './GitObject';
+import { TreeEntry } from './TreeEntry';
 
 export type CommitWriteInfo = {
   type: 'commit';

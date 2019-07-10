@@ -1,4 +1,5 @@
-import { TreeEntry, compareTreeEntry } from '../models/GitObject';
+import { compareTreeEntry } from '../models/GitObject';
+import { TreeEntry } from '../models/TreeEntry';
 
 export default function updateOrAppendTreeEntries(
   entries: TreeEntry[],

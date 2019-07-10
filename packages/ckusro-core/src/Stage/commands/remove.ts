@@ -1,4 +1,4 @@
-import { PathTreeObject } from '../../RepositoryPrimitives/updateOrAppendObject';
+import { PathTreeObject } from '../../models/PathTreeObject';
 import { TreeObject } from '../../models/GitObject';
 import { IsomorphicGitConfig } from '../../models/IsomorphicGitConfig';
 import { toWriteInfo, GlobalWriteInfo } from '../../models/GlobalWriteInfo';

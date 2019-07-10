@@ -2,9 +2,8 @@ import * as Git from 'isomorphic-git';
 import { initRepository } from '../../src/Stage/prepare';
 import { buildTreeEntry, buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
-import updateOrAppendObject, {
-  PathTreeObject,
-} from '../../src/RepositoryPrimitives/updateOrAppendObject';
+import updateOrAppendObject from '../../src/RepositoryPrimitives/updateOrAppendObject';
+import { PathTreeObject } from '../../src/models/PathTreeObject';
 import { fetchOrCreateTreeByPath } from '../../src/RepositoryPrimitives/fetchOrCreateTreeByPath';
 import { writeObject } from '../../src/RepositoryPrimitives/writeObject';
 import { TreeObject, BlobObject } from '../../src';

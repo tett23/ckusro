@@ -7,7 +7,7 @@ import { writeBlob } from '../../src/RepositoryPrimitives/writeBlob';
 import {
   PathTreeOrBlobObject,
   PathTreeObject,
-} from '../../src/RepositoryPrimitives/updateOrAppendObject';
+} from '../../src/models/PathTreeObject';
 import fetchByOid from '../../src/RepositoryPrimitives/fetchByOid';
 import { BlobObject, TreeObject } from '../../src';
 import { createWriteInfo, BlobWriteInfo } from '../../src/models/WriteInfo';

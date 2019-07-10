@@ -1,22 +1,12 @@
-import {
-  TreeObject,
-  toTreeEntry,
-  BlobObject,
-  GitObjectTypes,
-} from '../models/GitObject';
+import { toTreeEntry } from '../models/GitObject';
 import { writeObject } from './writeObject';
 import updateOrAppendTreeEntries from './updateOrAppendTreeEntries';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
-
-export type PathTreeObject = readonly [string, TreeObject];
-export type PathTreeOrBlobObject = readonly [string, TreeObject | BlobObject];
-export type LookupPathTreeObjectOrMixed<
-  T extends GitObjectTypes
-> = T extends 'tree'
-  ? PathTreeObject
-  : T extends 'blob'
-  ? PathTreeOrBlobObject
-  : never;
+import {
+  PathTreeOrBlobObject,
+  PathTreeObject,
+  LookupPathTreeObjectOrMixed,
+} from '../models/PathTreeObject';
 
 export default async function updateOrAppendObject<
   T extends PathTreeOrBlobObject
