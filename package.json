@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/tett23/typescript-boilerplate#readme",
   "private": true,
+  "workspaces": ["packages/ckusro-core", "packages/cksuro-web"],
   "jest": {
     "moduleFileExtensions": [
       "ts",

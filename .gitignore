@@ -64,3 +64,4 @@ typings/
 lib
 /out
 ckusroConfig.yml
+.rpt2_cache
