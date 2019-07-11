@@ -19,7 +19,7 @@
     "url": "git+https://github.com/tett23/ckusro.git"
   },
   "scripts": {
-    "start": "rm -rf lib/ && parcel serve src/index.html --global '@ckusro/ckusro-core' --target browser -d lib --no-autoinstall --port 3001",
+    "start": "rm -rf lib/ && parcel serve src/index.html --target browser -d lib --no-autoinstall --port 3001",
     "build": "rm -rf lib/ && parcel build src/index.html --target browser -d lib",
     "build:dts": "tsc --declaration true --emitDeclarationOnly true --declarationDir lib --allowJs false",
     "preflight": "yarn lint && yarn run test",
@@ -107,9 +107,6 @@
     ],
     "testURL": "http://localhost/"
   },
-  "alias": {
-    "react": "./node_modules/react"
-  },
   "babel": {
     "presets": [
       [
@@ -136,7 +133,10 @@
       ],
       [
         "@babel/plugin-proposal-object-rest-spread",
-        {},
+        {
+          "loose": true,
+          "useBuiltIns": true
+        },
         "foo"
       ],
       "babel-plugin-styled-components"

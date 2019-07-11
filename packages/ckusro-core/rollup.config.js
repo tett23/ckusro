@@ -9,10 +9,11 @@ export default {
   output: [
     {
       file: './lib/index.js',
+      map: true,
       format: 'esm',
     },
   ],
-  external: ['core-js', 'react', 'react-dom'],
+  external: ['react', 'react-dom'],
   plugins: [
     json(),
     nodeResolve({
@@ -51,7 +52,14 @@ export default {
       ],
       plugins: [
         '@babel/plugin-proposal-class-properties',
-        '@babel/plugin-proposal-object-rest-spread',
+        ['@babel/plugin-transform-spread', { loose: false }],
+        [
+          '@babel/plugin-proposal-object-rest-spread',
+          {
+            loose: true,
+            useBuiltIns: true,
+          },
+        ],
       ],
     }),
   ],
