@@ -23,6 +23,7 @@ export type PersistStateWorkerRequestActions = PersistStateWorkerActions;
 export type PersistStateWorkerResponseActions = Actions;
 
 self.addEventListener('message', async (e) => {
+  console.info('[persist state]');
   const action: PersistStateWorkerRequestActions = e.data;
 
   const handler = actionHandlers(action);

@@ -51,6 +51,7 @@ async function handler<
 ): Promise<WithRequestId<ResponseActions>> {
   const { config, requestId } = action.meta;
   const fs: typeof FS = new LightningFs(config.coreId);
+  console.info(`[worker]:${requestId}`, action);
 
   const response = await process<RequestActions, ResponseActions>(
     handlers,

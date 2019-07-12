@@ -3,12 +3,15 @@ import { Store } from 'redux';
 import { Actions, State } from './index';
 import { ParserWorkerActions } from './workerActions/parser';
 import { RepositoryWorkerActions } from './workerActions/repository';
+import { batch } from 'react-redux';
+import sequenceGenerator from '../utils/sequenceGenerator';
 
 export type WorkerDispatcher<WorkerActions extends FSAction> = (
   action: WorkerActions,
 ) => void;
 
-export type WorkerResponse = FSAction<Actions[]>;
+export type WorkerResponse = FSAction<Actions[]> &
+  WithRequestId<FSAction<undefined>>;
 
 export function newWorkerDispatcher<WorkerActions extends FSAction>(
   worker: Worker,
@@ -16,7 +19,6 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
 ): WorkerDispatcher<WorkerActions> {
   worker.addEventListener('message', (message: MessageEvent) => {
     const res: WorkerResponse = message.data;
-    console.info(res);
 
     if (res.payload == null) {
       return;
@@ -25,13 +27,13 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
       return;
     }
 
-    if (Array.isArray(res.payload)) {
+    batch(() => {
+      Array.isArray(res.payload) ? res.payload : [res];
       res.payload.forEach((action) => {
+        console.info(`[ui]:${res.meta.requestId} receive message`, action);
         store.dispatch(action);
       });
-    } else {
-      store.dispatch(res);
-    }
+    });
   });
 
   worker.addEventListener('error', (err: ErrorEvent) => {
@@ -68,23 +70,16 @@ function withConfig<T extends FSAction>(
   };
 }
 
+const requestIdGen = sequenceGenerator();
+
 function withRequestId<T extends FSAction>(action: T): WithRequestId<T> {
   return {
     ...action,
     meta: {
       ...(action.meta || {}),
-      requestId: generateRequestId().next().value,
+      requestId: requestIdGen.next().value,
     },
   };
-}
-
-function* generateRequestId(): IterableIterator<number> {
-  let n = 0;
-
-  while (true) {
-    n++;
-    yield n;
-  }
 }
 
 function newDummyWorkerDispatcher<

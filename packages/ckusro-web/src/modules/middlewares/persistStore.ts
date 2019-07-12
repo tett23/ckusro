@@ -1,6 +1,12 @@
+import debounce from 'lodash.debounce';
 import { serializeState } from '../../models/PersistedState';
 import { Actions, State, ThunkStore } from '../index';
 import { writePersistedState } from '../workerActions/persistedState';
+
+const debounced = debounce((worker: Worker, state: State) => {
+  const persistedState = writePersistedState(serializeState(state));
+  worker.postMessage(persistedState);
+}, 3000);
 
 export default function() {
   const worker = new Worker('../../workers/persistState.ts');
@@ -13,8 +19,7 @@ export default function() {
 
     const state = store.getState();
     if (state.misc.isEnablePersistedState) {
-      const persistedState = writePersistedState(serializeState(state));
-      worker.postMessage(persistedState);
+      debounced(worker, state);
     }
 
     return result;
