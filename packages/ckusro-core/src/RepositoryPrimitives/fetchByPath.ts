@@ -1,8 +1,8 @@
 import {
   TreeObject,
   isTreeObject,
-  BlobObject,
   isBlobObject,
+  BlobObject,
 } from '../models/GitObject';
 import fetchByOid from './fetchByOid';
 import normalizePath from '../utils/normalizePath';

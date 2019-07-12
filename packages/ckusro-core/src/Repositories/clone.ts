@@ -33,7 +33,7 @@ export default async function clone(
       dir: toPath(config.base, repoPath),
       url,
       singleBranch: true,
-      depth: 2,
+      depth: 1,
       noCheckout: true,
     }))().catch((err: Error) => err);
   if (result instanceof Error) {

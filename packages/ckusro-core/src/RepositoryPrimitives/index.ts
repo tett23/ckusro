@@ -4,6 +4,7 @@ import {
   TreeObject,
   UnpersistedGitObject,
   CommitObject,
+  GitObjectTypes,
 } from '../models/GitObject';
 import { BlobWriteInfo, TreeWriteInfo } from '../models/writeInfo';
 import { writeTree } from './writeTree';
@@ -28,7 +29,8 @@ export default function repositoryPrimitives(config: IsomorphicGitConfig) {
     headOid: () => headOid(config),
     headCommitObject: () => headCommitObject(config),
     headTreeObject: () => headTree(config),
-    fetchByOid: (oid: string) => fetchByOid(config, oid),
+    fetchByOid: <T extends GitObjectTypes>(oid: string, objectType?: T) =>
+      fetchByOid(config, oid, objectType),
     fetchByPath: (root: TreeObject, path: string) =>
       fetchByPath(config, root, path),
     fetchByRef: (ref: string) => fetchObjectByRef(config, ref),

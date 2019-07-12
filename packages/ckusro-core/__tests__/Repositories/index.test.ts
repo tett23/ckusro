@@ -1,12 +1,8 @@
 import * as Git from 'isomorphic-git';
 import { GitObject, BlobObject } from '../../src/models/GitObject';
-import {
-  allRepositories,
-  fetchObject,
-  headOids,
-  repositories,
-  fetchObjectByInternalPath,
-} from '../../src/Repositories';
+import { repositories } from '../../src/Repositories';
+import fetchByOid from '../../src/Repositories/fetchByOid';
+import fetchObjectByInternalPath from '../../src/Repositories/fetchObjectByInternalPath';
 import headOid from '../../src/RepositoryPrimitives/headOid';
 import {
   buildCkusroConfig,
@@ -16,25 +12,9 @@ import {
 import { dummyRepo, pfs } from '../__helpers__';
 import { toIsomorphicGitConfig } from '../../src/models/IsomorphicGitConfig';
 import { initRepository } from '../../src/Stage/prepare';
-import { gitDir } from '../../src';
-import { Repository } from '../../src/Repository';
 
 describe(repositories.name, () => {
-  it(allRepositories.name, async () => {
-    const config = buildCkusroConfig({ repositories: [buildRepositoryInfo()] });
-    const fs = pfs();
-
-    config.repositories.forEach(({ repoPath }) => {
-      fs.mkdirSync(gitDir(config.base, repoPath), {
-        recursive: true,
-      });
-    });
-    const expected = (await allRepositories(config, fs)) as Repository[];
-
-    expect(expected.length).toBe(1);
-  });
-
-  describe(fetchObject.name, () => {
+  describe(fetchByOid.name, () => {
     it('returns GitObject', async () => {
       const config = buildCkusroConfig();
       const core = Git.cores.create(config.coreId);
@@ -59,7 +39,7 @@ describe(repositories.name, () => {
       const oid = (await headOid(
         toIsomorphicGitConfig(config, repoPath),
       )) as string;
-      const expected = await fetchObject(config, fs, oid);
+      const expected = await fetchByOid(config, fs, oid);
 
       expect((expected as GitObject).oid).toBe(oid);
     });
@@ -67,7 +47,7 @@ describe(repositories.name, () => {
     it('returns Error when object does not exists', async () => {
       const config = buildCkusroConfig();
       const fs = pfs();
-      const expected = await fetchObject(config, fs, 'hoge');
+      const expected = await fetchByOid(config, fs, 'hoge');
 
       expect(expected).toBeInstanceOf(Error);
     });
@@ -115,34 +95,5 @@ describe(repositories.name, () => {
 
       expect(expected).toBe(null);
     });
-  });
-
-  it(headOids.name, async () => {
-    const config = buildCkusroConfig();
-    const core = Git.cores.create(config.coreId);
-    const fs = pfs();
-    core.set('fs', fs);
-    const repoPath = buildRepoPath();
-    const commits = [
-      {
-        message: 'init',
-        tree: {
-          'README.md': 'read me',
-          foo: {
-            bar: {
-              'baz.md': 'baz.md',
-            },
-          },
-        },
-      },
-    ];
-    await dummyRepo(config, fs, repoPath, commits);
-
-    const oid = (await headOid(
-      toIsomorphicGitConfig(config, repoPath),
-    )) as string;
-    const expected = await headOids(config, fs);
-
-    expect(expected).toMatchObject([[oid, repoPath]]);
   });
 });
