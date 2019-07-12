@@ -16,5 +16,9 @@ export * from './models/WriteInfo';
 export * from './models/TreeEntry';
 export * from './models/PathTreeObject';
 export * from './models/PathTreeEntry';
+export * from './models/OidRepoPath';
+
+import _separateErrors from './utils/separateErrors';
+export const separateErrors = _separateErrors;
 
 export default ckusroCore;

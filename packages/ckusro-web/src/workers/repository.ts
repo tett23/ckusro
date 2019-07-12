@@ -4,6 +4,8 @@ import ckusroCore, {
   url2RepoPath,
   isTreeObject,
   toPathTreeEntry,
+  OidRepoPath,
+  separateErrors,
 } from '@ckusro/ckusro-core';
 import 'core-js/stable';
 import FS from 'fs';
@@ -184,9 +186,10 @@ async function fetchHeadOidsHandler(
   fs: typeof FS,
 ): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
   const core = ckusroCore(config, fs);
-  const heads = await core.repositories.headOids();
-  if (heads instanceof Error) {
-    return heads;
+  const results = await core.repositories.headOids();
+  const [heads, errors] = separateErrors(results as Array<OidRepoPath | Error>);
+  if (errors.length !== 0) {
+    return errors[0];
   }
 
   return heads.map(([oid, repoPath]) => {
