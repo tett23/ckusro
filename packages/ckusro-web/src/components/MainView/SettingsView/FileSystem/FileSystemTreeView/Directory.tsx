@@ -9,7 +9,7 @@ import {
   Collapse,
 } from '@material-ui/core';
 import { join, basename } from 'path';
-import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
+import { faFolderOpen, faFolder } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Entries from './Entries';
 import { useSelector } from 'react-redux';
@@ -56,7 +56,7 @@ export function Directory({
     <>
       <ListItem button onClick={() => onClickDirectory(join(path), !isOpen)}>
         <ListItemIcon>
-          <FontAwesomeIcon icon={faFolderOpen} />
+          <FontAwesomeIcon icon={isOpen ? faFolderOpen : faFolder} />
         </ListItemIcon>
         <ListItemText primary={basename(path)} />
       </ListItem>
