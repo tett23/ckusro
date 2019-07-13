@@ -26,6 +26,11 @@ const useGitObjectListStyles = makeStyles((theme: Theme) =>
     headerText: {
       width: '100%',
     },
+    filename: {
+      height: '2em',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    },
   }),
 );
 

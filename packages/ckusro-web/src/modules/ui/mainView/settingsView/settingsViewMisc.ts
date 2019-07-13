@@ -1,6 +1,11 @@
 import { updateState, UpdateState } from '../../../actions/shared';
 
-export type SettingsViewTypes = 'Config' | 'FileSystem';
+export type SettingsViewTypes =
+  | 'Config'
+  | 'FileSystem'
+  | 'RawPersistedState'
+  | 'RawUIConfig'
+  | 'RawUIDomain';
 
 export type SettingsViewMiscState = {
   settingsViewTypes: SettingsViewTypes;

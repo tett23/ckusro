@@ -22,10 +22,9 @@ type StateProps = {
   blobObject: BlobObjectType;
 };
 
-type StyleProps = Pick<
-  ReturnType<typeof useGitObjectListStyles>,
-  'borderBottomClass'
->;
+type StyleProps = {
+  classes: ReturnType<typeof useGitObjectListStyles>;
+};
 
 export type BlobObjectProps = OwnProps & StateProps & StyleProps;
 
@@ -33,7 +32,7 @@ export function BlobObject({
   oid,
   internalPath,
   blobObject,
-  borderBottomClass,
+  classes,
 }: BlobObjectProps) {
   if (blobObject == null) {
     return null;
@@ -41,11 +40,13 @@ export function BlobObject({
   const content = new TextDecoder().decode(blobObject.content);
   const headline = content.slice(0, 200).replace(/(\r\n|\r|\n)/g, ' ');
   const primary = (
-    <Typography>{createInternalPath(internalPath).basename()}</Typography>
+    <Typography noWrap variant="subtitle1" className={classes.filename}>
+      {createInternalPath(internalPath).basename()}
+    </Typography>
   );
   const secondary = (
     <Typography
-      style={{ height: '3em', overflow: 'hidden' }}
+      style={{ height: '3em', overflow: 'hidden', textOverflow: 'ellipsis' }}
       color="textSecondary"
       variant="body2"
     >
@@ -54,7 +55,7 @@ export function BlobObject({
   );
 
   return (
-    <ListItem className={borderBottomClass}>
+    <ListItem className={classes.borderBottomClass}>
       <ObjectLinkView bufferInfo={createBufferInfo('blob', oid, internalPath)}>
         <ListItemText primary={primary} secondary={secondary} />
       </ObjectLinkView>
@@ -74,5 +75,5 @@ export default function(ownProps: OwnProps) {
     return <FetchObjects oids={[ownProps.oid]} />;
   }
 
-  return <Memoized {...ownProps} blobObject={gitObject} {...styles} />;
+  return <Memoized {...ownProps} blobObject={gitObject} classes={styles} />;
 }

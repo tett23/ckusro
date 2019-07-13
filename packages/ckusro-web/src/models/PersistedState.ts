@@ -10,7 +10,7 @@ export type PersistedState = Pick<State, 'config' | 'ui'> & {
   oids: string[];
 };
 
-const PersistedStatePath = '/state.json';
+export const PersistedStatePath = '/state.json';
 
 const DefaultConfig = {
   base: '/repositories',

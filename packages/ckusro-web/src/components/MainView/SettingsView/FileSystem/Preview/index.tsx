@@ -32,7 +32,7 @@ export default function() {
       const a = await fs.promises.readFile(state.preview, 'utf8');
       setContent(a);
     })().catch((err) => err);
-  });
+  }, [state.preview]);
 
   return <Preview content={content} />;
 }

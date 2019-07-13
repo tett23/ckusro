@@ -8,6 +8,9 @@ import {
 } from '../../../modules/ui/mainView/settingsView/settingsViewMisc';
 import ConfigView from './ConfigView';
 import FileSystem from './FileSystem';
+import RawPersistedConfig from './RawPersistedConfig';
+import RawUIConfig from './RawUIConfig';
+import RawUIDomain from './RawUIDomain';
 
 type OwnProps = {};
 
@@ -30,7 +33,13 @@ export function SettingsView({
   settingsViewType,
   updateSettingsViewType,
 }: SettingsViewProps) {
-  const tabTypes: SettingsViewTypes[] = ['Config', 'FileSystem'];
+  const tabTypes: SettingsViewTypes[] = [
+    'Config',
+    'FileSystem',
+    'RawPersistedState',
+    'RawUIConfig',
+    'RawUIDomain',
+  ];
   const tabs = tabTypes.map((value) => (
     <Tab key={value} value={value} label={value} />
   ));
@@ -46,7 +55,7 @@ export function SettingsView({
         {tabs}
       </Tabs>
       <Box>
-        <Content settingsViewType={settingsViewType}></Content>
+        <Content settingsViewType={settingsViewType} />
       </Box>
     </>
   );
@@ -74,6 +83,12 @@ export function Content({ settingsViewType }: ContentProps) {
       return <ConfigView />;
     case 'FileSystem':
       return <FileSystem />;
+    case 'RawPersistedState':
+      return <RawPersistedConfig />;
+    case 'RawUIConfig':
+      return <RawUIConfig />;
+    case 'RawUIDomain':
+      return <RawUIDomain />;
     default:
       return null;
   }
