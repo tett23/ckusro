@@ -7,6 +7,7 @@ import headTree from '../RepositoryPrimitives/headTree';
 import commit from './commands/commit';
 import { GlobalWriteInfo } from '../models/GlobalWriteInfo';
 import { TreeObject } from '../models/GitObject';
+import repositoryPrimitives from '../RepositoryPrimitives';
 
 export default async function stage(config: CkusroConfig, fs: typeof FS) {
   const gitConfig = stageIsomorphicGitConfig(config);
@@ -22,6 +23,7 @@ export default async function stage(config: CkusroConfig, fs: typeof FS) {
   }
 
   return {
+    ...repositoryPrimitives(gitConfig),
     prepare: () => prepare(gitConfig, fs),
     add: (writeInfo: GlobalWriteInfo) => add(gitConfig, root, writeInfo),
     commit: (root: TreeObject, message: string) =>
