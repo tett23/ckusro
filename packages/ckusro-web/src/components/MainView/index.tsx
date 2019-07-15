@@ -2,20 +2,37 @@ import { Paper } from '@material-ui/core';
 import React from 'react';
 import MainViewComponent from './MainViewComponent';
 import ObjectViewFab from './ObjectViewFab';
+import ObjectMenus from './ObjectMenus';
+import useMainViewStyles from './useMainViewStyles';
 
-export default function MainView() {
+type StyleProps = {
+  classes: ReturnType<typeof useMainViewStyles>;
+};
+
+export type MainViewProps = StyleProps;
+
+export function MainView({ classes }: MainViewProps) {
   return (
-    <Paper
-      style={{
-        width: '100%',
-        height: '100vh',
-        overflowY: 'scroll',
-      }}
-    >
-      <div style={{ height: 'calc(100% - 2rem)', padding: '2rem' }}>
-        <MainViewComponent />
-      </div>
+    <>
+      <Paper className={classes.wrapper}>
+        <div className={classes.contentWrapper}>
+          <div className={classes.mainViewContent}>
+            <MainViewComponent />
+          </div>
+        </div>
+        <div className={classes.objectMenus}>
+          <ObjectMenus />
+        </div>
+      </Paper>
       <ObjectViewFab />
-    </Paper>
+    </>
   );
+}
+
+export default function() {
+  const styleProps: StyleProps = {
+    classes: useMainViewStyles(),
+  };
+
+  return <MainView {...styleProps} />;
 }

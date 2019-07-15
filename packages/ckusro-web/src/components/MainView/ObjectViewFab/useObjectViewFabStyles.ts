@@ -1,6 +1,6 @@
 import { makeStyles, createStyles } from '@material-ui/styles';
 
-const objectViewFabStyles = makeStyles(() =>
+const useObjectViewFabStyles = makeStyles(() =>
   createStyles({
     fabWrapper: {
       position: 'sticky',
@@ -15,4 +15,4 @@ const objectViewFabStyles = makeStyles(() =>
   }),
 );
 
-export default objectViewFabStyles;
+export default useObjectViewFabStyles;
