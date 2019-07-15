@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
     exampleWrapper: {
       position: 'sticky',
       bottom: 0,
-      height: 380,
+      height: '95%',
     },
     speedDial: {
       position: 'absolute',

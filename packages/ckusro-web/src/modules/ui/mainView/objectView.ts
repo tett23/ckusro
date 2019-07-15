@@ -8,15 +8,19 @@ import {
 } from '../../actions/shared';
 import { BufferInfo, compareBufferInfo } from '../../../models/BufferInfo';
 
+export type ViewModes = 'View' | 'Edit';
+
 export type ObjectViewState = {
   bufferInfo: BufferInfo | null;
   currentAst: HastRoot | null;
+  viewMode: ViewModes;
 };
 
 export function initialObjectViewState(): ObjectViewState {
   return {
     bufferInfo: null,
     currentAst: null,
+    viewMode: 'View',
   };
 }
 
@@ -29,10 +33,20 @@ export function updateCurrentAst(ast: HastRoot | null) {
   };
 }
 
+const UpdateViewMode = 'ObjectView/UpdateViewMode' as const;
+
+export function updateViewMode(value: ViewModes) {
+  return {
+    type: UpdateViewMode,
+    payload: value,
+  };
+}
+
 export type ObjectViewActions =
   | ReturnType<typeof selectBufferInfo>
   | ReturnType<typeof updateCurrentAst>
   | ReturnType<typeof updateState>
+  | ReturnType<typeof updateViewMode>
   | SharedActions;
 
 export default function objectViewReducer(
@@ -60,6 +74,15 @@ export default function objectViewReducer(
       return {
         ...state,
         currentAst: action.payload,
+      };
+    case UpdateViewMode:
+      if (state.viewMode === action.payload) {
+        return state;
+      }
+
+      return {
+        ...state,
+        viewMode: action.payload,
       };
     case UpdateState:
       if (

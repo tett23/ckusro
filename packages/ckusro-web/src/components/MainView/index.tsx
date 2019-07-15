@@ -11,7 +11,7 @@ export default function MainView() {
         overflowY: 'scroll',
       }}
     >
-      <div style={{ padding: '2rem' }}>
+      <div style={{ height: '100%', padding: '2rem' }}>
         <MainViewComponent />
       </div>
     </Paper>
