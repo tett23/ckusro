@@ -1,6 +1,7 @@
 import { Paper } from '@material-ui/core';
 import React from 'react';
 import MainViewComponent from './MainViewComponent';
+import ObjectViewFab from './ObjectViewFab';
 
 export default function MainView() {
   return (
@@ -11,9 +12,10 @@ export default function MainView() {
         overflowY: 'scroll',
       }}
     >
-      <div style={{ height: '100%', padding: '2rem' }}>
+      <div style={{ height: 'calc(100% - 2rem)', padding: '2rem' }}>
         <MainViewComponent />
       </div>
+      <ObjectViewFab />
     </Paper>
   );
 }

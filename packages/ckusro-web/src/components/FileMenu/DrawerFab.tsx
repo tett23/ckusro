@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
 import { SpeedDial, SpeedDialAction } from '@material-ui/lab';
-import { Theme } from '@material-ui/core';
 import { faCog, faEllipsisH, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch } from 'react-redux';
 import { updateMainViewType } from '../../modules/ui/mainView/mainViewMisc';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
-    exampleWrapper: {
+    fabWrapper: {
       position: 'sticky',
+      right: 0,
       bottom: 0,
-      height: '95%',
     },
-    speedDial: {
+    fab: {
       position: 'absolute',
-      bottom: theme.spacing(2),
-      right: theme.spacing(3),
+      right: '1rem',
+      bottom: '2rem',
     },
   }),
 );
@@ -61,10 +60,10 @@ export function DrawerFab({
   };
 
   return (
-    <div className={classes.exampleWrapper}>
+    <div className={classes.fabWrapper}>
       <SpeedDial
         ariaLabel="Repositories menu"
-        className={classes.speedDial}
+        className={classes.fab}
         icon={<FontAwesomeIcon icon={faEllipsisH} />}
         onBlur={handleClose}
         onClick={() => handleClick(null)}

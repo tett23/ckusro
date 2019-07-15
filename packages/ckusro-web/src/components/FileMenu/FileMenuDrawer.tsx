@@ -60,9 +60,9 @@ export function FileMenuDrawer({
           </ListSubheader>
           <Stage />
           <TreeView />
-          <DrawerFab />
         </Drawer>
       )}
+      <DrawerFab />
     </div>
   );
 }

@@ -8,6 +8,7 @@ import { updateBlobBuffer } from '../../modules/thunkActions';
 import debounce from 'lodash.debounce';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import useEditorStyles from './useEditorStyles';
 
 type OwnProps = {
   blobBufferInfo: BlobBufferInfo;
@@ -23,18 +24,21 @@ type DispatchProps = {
   onBlur: (value: string) => void;
 };
 
-export type EditorProps = OwnProps & StateProps & DispatchProps;
+type StyleProps = {
+  classes: ReturnType<typeof useEditorStyles>;
+};
 
-export function Editor({ content, onChange, onBlur }: EditorProps) {
+export type EditorProps = OwnProps & StateProps & DispatchProps & StyleProps;
+
+export function Editor({ content, onChange, onBlur, classes }: EditorProps) {
   if (content == null) {
     return null;
   }
 
   return (
     <textarea
+      className={classes.editor}
       value={content}
-      rows={100}
-      cols={100}
       onChange={(e) => onChange(e.target.value)}
       onBlur={(e) => onBlur(e.target.value)}
     />
@@ -76,6 +80,9 @@ export default function(props: OwnProps) {
     onChange: onChange,
     onBlur: updateBuffer,
   };
+  const styleProps = {
+    classes: useEditorStyles(),
+  };
 
   if (blobObject == null) {
     return <FetchObjects oids={[props.blobBufferInfo.oid]} />;
@@ -86,7 +93,9 @@ export default function(props: OwnProps) {
     content: content,
   };
 
-  return <Editor {...props} {...stateProps} {...dispatchProps} />;
+  return (
+    <Editor {...props} {...stateProps} {...dispatchProps} {...styleProps} />
+  );
 }
 
 function buildUpdateBlobBuffer(

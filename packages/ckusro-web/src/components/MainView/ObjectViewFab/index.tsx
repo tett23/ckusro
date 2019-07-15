@@ -3,11 +3,11 @@ import { SpeedDial } from '@material-ui/lab';
 import { faEdit, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
-import { State } from '../../../../modules';
+import { State } from '../../../modules';
 import {
   updateViewMode,
   ViewModes,
-} from '../../../../modules/ui/mainView/objectView';
+} from '../../../modules/ui/mainView/objectView';
 import useObjectViewFabStyles from './useObjectViewFabStyles';
 
 type StateProps = {
@@ -37,10 +37,10 @@ export function ObjectViewFab({
   const icon = viewMode === 'View' ? faEdit : faFile;
 
   return (
-    <div className={classes.exampleWrapper}>
+    <div className={classes.fabWrapper}>
       <SpeedDial
         ariaLabel="ObjectView menu"
-        className={classes.speedDial}
+        className={classes.fab}
         icon={<FontAwesomeIcon icon={icon} />}
         onClick={onClick}
         open={false}
