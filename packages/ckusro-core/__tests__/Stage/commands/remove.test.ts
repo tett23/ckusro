@@ -7,7 +7,13 @@ import {
 import { pfs } from '../../__helpers__';
 import add from '../../../src/Stage/commands/add';
 import { PathTreeObject } from '../../../src/models/PathTreeObject';
-import { BlobObject, TreeObject, createInternalPath } from '../../../src';
+import {
+  BlobObject,
+  TreeObject,
+  createInternalPath,
+  InternalPathGitObject,
+  InternalPathTreeObject,
+} from '../../../src';
 import fetchByOid from '../../../src/RepositoryPrimitives/fetchByOid';
 import headTree from '../../../src/RepositoryPrimitives/headTree';
 import { createGlobalWriteInfo } from '../../../src/models/GlobalWriteInfo';
@@ -33,7 +39,7 @@ describe(add, () => {
       config,
       root,
       globalWriteInfo,
-    )) as PathTreeObject[];
+    )) as InternalPathGitObject[];
 
     const content = ((await fetchByOid(
       config,
@@ -41,7 +47,7 @@ describe(add, () => {
     )) as BlobObject).content;
     expect(content.toString()).toBe('test');
 
-    const [[, newRoot]] = writeResult;
+    const [[, newRoot]] = writeResult as InternalPathTreeObject[];
 
     const actual = (await remove(
       config,

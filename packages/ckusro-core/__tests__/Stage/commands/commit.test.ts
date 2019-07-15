@@ -1,14 +1,20 @@
 import * as Git from 'isomorphic-git';
 import { initRepository } from '../../../src/Stage/prepare';
-import { buildIsomorphicGitConfig } from '../../__fixtures__';
+import {
+  buildIsomorphicGitConfig,
+  buildInternalPath,
+} from '../../__fixtures__';
 import { pfs } from '../../__helpers__';
-import { createWriteInfo } from '../../../src/models/writeInfo';
-import { PathTreeObject } from '../../../src/models/PathTreeObject';
-import { BlobObject, TreeObject } from '../../../src';
-import fetchByOid from '../../../src/RepositoryPrimitives/fetchByOid';
+import {
+  TreeObject,
+  CommitObject,
+  isCommitObject,
+  InternalPathTreeObject,
+} from '../../../src';
 import headTree from '../../../src/RepositoryPrimitives/headTree';
 import commit from '../../../src/Stage/commands/commit';
-import { writeBlob } from '../../../src/RepositoryPrimitives/writeBlob';
+import add from '../../../src/Stage/commands/add';
+import { createGlobalWriteInfo } from '../../../src/models/GlobalWriteInfo';
 
 describe(commit, () => {
   const config = buildIsomorphicGitConfig();
@@ -21,25 +27,21 @@ describe(commit, () => {
 
   it('returns CommitObject', async () => {
     const root = (await headTree(config)) as TreeObject;
-    const writeInfo = createWriteInfo(
+    const globalWriteInfo = createGlobalWriteInfo(
       'blob',
-      '/foo/bar/baz.txt',
-      new Buffer('test', 'utf8'),
+      buildInternalPath({ path: '/foo/bar/baz.txt' }),
+      Buffer.from('test', 'utf8'),
     );
 
-    const actual = (await writeBlob(
+    const addResult = (await add(
       config,
       root,
-      writeInfo,
-    )) as PathTreeObject[];
-    const expected = writeInfo.path.split('/');
+      globalWriteInfo,
+    )) as InternalPathTreeObject[];
+    const [[, newRoot]] = addResult as InternalPathTreeObject[];
 
-    expect(actual.map(([item]) => item)).toMatchObject(expected);
+    const actual = (await commit(config, newRoot, 'test')) as CommitObject;
 
-    const content = ((await fetchByOid(
-      config,
-      actual[actual.length - 1][1].oid,
-    )) as BlobObject).content;
-    expect(content.toString()).toBe('test');
+    expect(isCommitObject(actual)).toBe(true);
   });
 });

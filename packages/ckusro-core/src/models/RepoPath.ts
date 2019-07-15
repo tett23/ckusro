@@ -6,6 +6,12 @@ export type RepoPath = {
   name: string;
 };
 
+export function createRepoPath(repoPath: RepoPath) {
+  return {
+    join: () => joinRepoPath(repoPath),
+  };
+}
+
 export function toPath(base: string, { domain, user, name }: RepoPath) {
   return join('/', base, domain, user, name);
 }
@@ -34,8 +40,8 @@ export function url2RepoPath(url: string): RepoPath | Error {
   return ret;
 }
 
-export function toInternalPath(repoPath: RepoPath): string {
-  return join(repoPath.domain, repoPath.user, repoPath.name);
+export function joinRepoPath(repoPath: RepoPath): string {
+  return join('/', repoPath.domain, repoPath.user, repoPath.name);
 }
 
 export function compareRepoPath(a: RepoPath, b: RepoPath): boolean {

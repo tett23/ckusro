@@ -8,6 +8,7 @@ import commit from './commands/commit';
 import { GlobalWriteInfo } from '../models/GlobalWriteInfo';
 import { TreeObject } from '../models/GitObject';
 import repositoryPrimitives from '../RepositoryPrimitives';
+import lsFiles from './lsFiles';
 
 export default async function stage(config: CkusroConfig, fs: typeof FS) {
   const gitConfig = stageIsomorphicGitConfig(config);
@@ -22,9 +23,12 @@ export default async function stage(config: CkusroConfig, fs: typeof FS) {
     return root;
   }
 
+  const repoPaths = config.repositories.map((item) => item.repoPath);
+
   return {
     ...repositoryPrimitives(gitConfig),
     prepare: () => prepare(gitConfig, fs),
+    lsFiles: () => lsFiles(gitConfig, repoPaths),
     add: (writeInfo: GlobalWriteInfo) => add(gitConfig, root, writeInfo),
     commit: (root: TreeObject, message: string) =>
       commit(gitConfig, root, message),

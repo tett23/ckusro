@@ -10,6 +10,7 @@ import {
   updateByInternalPath as updateByInternalPathAction,
   pullRepository as pullRepositoryAction,
   updateBlobBuffer as updateBlobBufferAction,
+  fetchStageInfo as fetchStageInfoAction,
 } from './workerActions/repository';
 import { updateMainViewType } from './ui/mainView/mainViewMisc';
 import { BufferInfo } from '../models/BufferInfo';
@@ -109,5 +110,15 @@ export function updateBlobBuffer(writeInfo: GlobalBlobWriteInfo) {
     } = getState();
 
     repositoryWorkerDispatcher(updateBlobBufferAction(writeInfo));
+  };
+}
+
+export function fetchStageInfo() {
+  return async (_: Dispatch<Actions>, getState: () => State) => {
+    const {
+      workers: { repositoryWorkerDispatcher },
+    } = getState();
+
+    repositoryWorkerDispatcher(fetchStageInfoAction());
   };
 }

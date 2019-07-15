@@ -5,6 +5,7 @@ import {
   initRepository,
   prepareStageDirectory,
   prepareStageRepository,
+  isInitialized,
 } from '../../src/Stage/prepare';
 import { buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
@@ -27,6 +28,31 @@ describe(prepare, () => {
   it('returns true', async () => {
     await prepare(config, fs);
     const actual = await prepare(config, fs);
+
+    expect(actual).toBe(true);
+  });
+});
+
+describe(isInitialized, () => {
+  const config = buildIsomorphicGitConfig();
+  let fs: typeof FS;
+  beforeEach(() => {
+    const core = Git.cores.create(config.core);
+    fs = pfs();
+    core.set('fs', fs);
+  });
+
+  it('returns false when stage does not initialized', async () => {
+    const actual = await isInitialized(config, fs);
+
+    expect(actual).toBe(false);
+  });
+
+  it('returns true when stage initialized', async () => {
+    const prepareResult = await prepare(config, fs);
+    expect(prepareResult).not.toBeInstanceOf(Error);
+
+    const actual = await isInitialized(config, fs);
 
     expect(actual).toBe(true);
   });

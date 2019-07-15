@@ -28,8 +28,8 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
     }
 
     batch(() => {
-      Array.isArray(res.payload) ? res.payload : [res];
-      res.payload.forEach((action) => {
+      const actions = Array.isArray(res.payload) ? res.payload : [res.payload];
+      actions.forEach((action) => {
         console.info(`[ui]:${res.meta.requestId} receive message`, action);
         store.dispatch(action);
       });

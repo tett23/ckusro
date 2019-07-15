@@ -4,6 +4,7 @@ import {
   join,
   split,
   flat,
+  tree,
 } from '../../src/models/InternalPath';
 import { buildInternalPath, buildRepoPath } from '../__fixtures__';
 
@@ -73,6 +74,27 @@ describe(split, () => {
       'test',
       'repo',
       'foo',
+    ]);
+  });
+});
+
+describe(tree, () => {
+  it('returns string[]', () => {
+    const internalPath = buildInternalPath({
+      repoPath: buildRepoPath({
+        domain: 'example.com',
+        user: 'test',
+        name: 'repo',
+      }),
+      path: '/foo',
+    });
+
+    expect(tree(internalPath)).toMatchObject([
+      '/',
+      '/example.com',
+      '/example.com/test',
+      '/example.com/test/repo',
+      '/example.com/test/repo/foo',
     ]);
   });
 });

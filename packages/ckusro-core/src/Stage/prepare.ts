@@ -4,11 +4,16 @@ import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import writeRef from '../RepositoryPrimitives/writeRef';
 import { UnpersistedCommitObject, toTreeEntry } from '../models/GitObject';
 import { writeObject } from '../RepositoryPrimitives/writeObject';
+import isExistFileOrDirectory from '../utils/isExistFileOrDirectory';
 
 export async function prepare(
   config: IsomorphicGitConfig,
   fs: typeof FS,
 ): Promise<true | Error> {
+  if (await isInitialized(config, fs)) {
+    return true;
+  }
+
   const result = await prepareStageDirectory(config, fs);
   if (result instanceof Error) {
     return result;
@@ -25,6 +30,13 @@ export async function prepare(
   }
 
   return true;
+}
+
+export async function isInitialized(
+  config: IsomorphicGitConfig,
+  fs: typeof FS,
+) {
+  return isExistFileOrDirectory(fs, config.gitdir);
 }
 
 export async function initRepository(

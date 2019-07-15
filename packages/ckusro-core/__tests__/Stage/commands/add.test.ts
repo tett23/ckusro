@@ -7,8 +7,12 @@ import {
 } from '../../__fixtures__';
 import { pfs } from '../../__helpers__';
 import add from '../../../src/Stage/commands/add';
-import { PathTreeObject } from '../../../src/models/PathTreeObject';
-import { BlobObject, TreeObject, createInternalPath } from '../../../src';
+import {
+  BlobObject,
+  TreeObject,
+  createInternalPath,
+  InternalPathGitObject,
+} from '../../../src';
 import fetchByOid from '../../../src/RepositoryPrimitives/fetchByOid';
 import headTree from '../../../src/RepositoryPrimitives/headTree';
 import { createGlobalWriteInfo } from '../../../src/models/GlobalWriteInfo';
@@ -24,21 +28,20 @@ describe(add, () => {
 
   it('returns TreeObject', async () => {
     const root = (await headTree(config)) as TreeObject;
+    const internalPath = buildInternalPath({ path: '/foo/bar/baz.txt' });
     const globalWriteInfo = createGlobalWriteInfo(
       'blob',
-      buildInternalPath({ path: '/foo/bar/baz.txt' }),
-      new Buffer('test', 'utf8'),
+      internalPath,
+      Buffer.from('test', 'utf8'),
     );
 
     const actual = (await add(
       config,
       root,
       globalWriteInfo,
-    )) as PathTreeObject[];
-    const expected = createInternalPath(globalWriteInfo.internalPath)
-      .flat()
-      .split('/');
-    expect(actual.map(([item]) => item)).toMatchObject(expected);
+    )) as InternalPathGitObject[];
+    const expected = createInternalPath(internalPath).tree();
+    expect(actual.map(([item]) => item.path)).toMatchObject(expected);
 
     const content = ((await fetchByOid(
       config,
@@ -49,22 +52,19 @@ describe(add, () => {
 
   it('returns TreeObject', async () => {
     const root = (await headTree(config)) as TreeObject;
-    const globalWriteInfo = createGlobalWriteInfo(
-      'tree',
-      buildInternalPath({ path: '/foo/bar' }),
-      [buildTreeEntry()],
-    );
+    const internalPath = buildInternalPath({ path: '/foo/bar' });
+    const globalWriteInfo = createGlobalWriteInfo('tree', internalPath, [
+      buildTreeEntry(),
+    ]);
 
     const actual = (await add(
       config,
       root,
       globalWriteInfo,
-    )) as PathTreeObject[];
-    const expected = createInternalPath(globalWriteInfo.internalPath)
-      .flat()
-      .split('/');
+    )) as InternalPathGitObject[];
+    const expected = createInternalPath(internalPath).tree();
 
-    expect(actual.map(([item]) => item)).toMatchObject(expected);
+    expect(actual.map(([item]) => item.path)).toMatchObject(expected);
 
     const content = ((await fetchByOid(
       config,

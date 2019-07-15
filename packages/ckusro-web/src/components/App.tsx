@@ -4,16 +4,16 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import initializeStore from '../modules';
 import { enablePersistedState } from '../modules/misc';
-import { fetchHeadOids } from '../modules/thunkActions';
+import { fetchHeadOids, fetchStageInfo } from '../modules/thunkActions';
 import FileMenu from './FileMenu';
 import MainView from './MainView';
 
-const store = initializeStore({});
-
 export default function App() {
+  const store = initializeStore({});
+
   store.dispatch(enablePersistedState());
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  store.dispatch(fetchHeadOids() as any);
+  store.dispatch(fetchHeadOids());
+  store.dispatch(fetchStageInfo());
 
   const theme = createMuiTheme();
 

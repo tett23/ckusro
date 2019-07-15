@@ -1,11 +1,13 @@
-import React, { useMemo, useState } from 'react';
-import { BlobObject, BlobBufferInfo } from '@ckusro/ckusro-core';
+import React, { useMemo, useState, useEffect } from 'react';
+import { BlobObject, BlobBufferInfo, InternalPath } from '@ckusro/ckusro-core';
 import { useSelector, useDispatch } from 'react-redux';
 import { State } from '../../modules';
 import { createObjectManager } from '../../models/ObjectManager';
 import FetchObjects from '../FetchObject';
 import { updateBlobBuffer } from '../../modules/thunkActions';
 import debounce from 'lodash.debounce';
+import { Action } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 type OwnProps = {
   blobBufferInfo: BlobBufferInfo;
@@ -13,7 +15,7 @@ type OwnProps = {
 
 type StateProps = {
   blobObject: BlobObject;
-  content: string;
+  content: string | null;
 };
 
 type DispatchProps = {
@@ -24,6 +26,10 @@ type DispatchProps = {
 export type EditorProps = OwnProps & StateProps & DispatchProps;
 
 export function Editor({ content, onChange, onBlur }: EditorProps) {
+  if (content == null) {
+    return null;
+  }
+
   return (
     <textarea
       value={content}
@@ -42,34 +48,33 @@ export default function(props: OwnProps) {
       'blob',
     ),
   }));
-  const [content, setContent] = useState(
-    new TextDecoder().decode(
-      (blobObject || { content: Buffer.from('') }).content,
-    ),
-  );
-  const dispatch = useDispatch();
-  const debounced = useMemo(
-    () =>
-      debounce(
-        (value: string) =>
-          dispatch(
-            updateBlobBuffer({
-              type: 'blob',
-              internalPath: props.blobBufferInfo.internalPath,
-              content: Buffer.from(value),
-            }),
-          ),
-        5000,
+  const [content, setContent] = useState<string | null>(null);
+  const { internalPath, oid } = props.blobBufferInfo;
+  useEffect(() => {
+    setContent(
+      new TextDecoder().decode(
+        (blobObject || { content: Buffer.from('') }).content,
       ),
-    [],
-  );
-  const update = (value: string) => {
+    );
+
+    return () => {
+      if (content == null) {
+        return;
+      }
+
+      onChange(content);
+    };
+  }, [oid]);
+  const dispatch = useDispatch();
+  const updateBuffer = buildUpdateBlobBuffer(dispatch, internalPath);
+  const debounced = useMemo(() => debounce(updateBuffer, 5000), [oid]);
+  const onChange = (value: string) => {
     setContent(value);
     debounced(value);
   };
   const dispatchProps = {
-    onChange: update,
-    onBlur: update,
+    onChange: onChange,
+    onBlur: updateBuffer,
   };
 
   if (blobObject == null) {
@@ -82,4 +87,18 @@ export default function(props: OwnProps) {
   };
 
   return <Editor {...props} {...stateProps} {...dispatchProps} />;
+}
+
+function buildUpdateBlobBuffer(
+  dispatch: ThunkDispatch<State, unknown, Action>,
+  internalPath: InternalPath,
+) {
+  return (content: string) =>
+    dispatch(
+      updateBlobBuffer({
+        type: 'blob',
+        internalPath,
+        content: Buffer.from(content),
+      }),
+    );
 }

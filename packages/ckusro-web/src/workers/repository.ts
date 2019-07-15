@@ -1,11 +1,12 @@
 import ckusroCore, {
   CkusroConfig,
-  toInternalPath,
   url2RepoPath,
   isTreeObject,
-  toPathTreeEntry,
   OidRepoPath,
   separateErrors,
+  GitObject,
+  toTreeEntry,
+  createRepoPath,
 } from '@ckusro/ckusro-core';
 import 'core-js/stable';
 import FS from 'fs';
@@ -34,11 +35,14 @@ import {
   updateByInternalPath,
   UpdateBlobBuffer,
   updateBlobBuffer,
+  FetchStageInfo,
+  fetchStageInfo,
 } from '../modules/workerActions/repository';
 import { splitError } from '../utils';
 import { Handler, HandlerResult, newHandler, PayloadType } from './util';
 import { selectBufferInfo } from '../modules/actions/shared';
 import { createBufferInfo } from '../models/BufferInfo';
+import { basename } from 'path';
 
 export const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
 
@@ -84,6 +88,9 @@ function actionHandlers(
     case UpdateBlobBuffer:
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return updateBlobBufferHandler as any;
+    case FetchStageInfo:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return fetchStageInfoHandler as any;
     default:
       return null;
   }
@@ -112,7 +119,7 @@ async function cloneHandler(
 
   return [
     addRef({
-      repository: toInternalPath(repoPath),
+      repository: createRepoPath(repoPath).join(),
       name: 'HEAD',
       oid,
     }),
@@ -137,7 +144,7 @@ async function pullRepositoryHandler(
 
   return [
     addRef({
-      repository: toInternalPath(repoPath),
+      repository: createRepoPath(repoPath).join(),
       name: 'HEAD',
       oid: result,
     }),
@@ -194,7 +201,7 @@ async function fetchHeadOidsHandler(
 
   return heads.map(([oid, repoPath]) => {
     return addRef({
-      repository: toInternalPath(repoPath),
+      repository: createRepoPath(repoPath).join(),
       name: 'HEAD',
       oid,
     });
@@ -210,11 +217,6 @@ async function updateBlobBufferHandler(
   const stage = await core.stage;
   if (stage instanceof Error) {
     return stage;
-  }
-
-  const prepareResult = await stage.prepare();
-  if (prepareResult instanceof Error) {
-    return prepareResult;
   }
 
   const addResult = await stage.add(writeInfo);
@@ -234,6 +236,47 @@ async function updateBlobBufferHandler(
   return [
     addObjects([...addResult.map(([, item]) => item), commitResult]),
     updateStageHead(commitResult.oid),
-    updateStageEntries(addResult.map(toPathTreeEntry)),
+    updateStageEntries(
+      addResult.map(([internalPath, blobOrTree]) => [
+        internalPath,
+        toTreeEntry(basename(internalPath.path), blobOrTree),
+      ]),
+    ),
+  ];
+}
+
+async function fetchStageInfoHandler(
+  config: CkusroConfig,
+  fs: typeof FS,
+  _: PayloadType<ReturnType<typeof fetchStageInfo>>,
+): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
+  const core = ckusroCore(config, fs);
+  const stage = await core.stage;
+  if (stage instanceof Error) {
+    return stage;
+  }
+
+  const tree = await stage.headTreeObject();
+  if (tree instanceof Error) {
+    return tree;
+  }
+
+  const result = await stage.lsFiles();
+  if (result instanceof Error) {
+    return result;
+  }
+
+  const ps = result.map(([, item]) => stage.fetchByOid(item.oid));
+  const results = await Promise.all(ps);
+  const [maybeNull, errors] = separateErrors(results);
+  if (errors.length !== 0) {
+    return errors[0];
+  }
+  const objects = maybeNull.filter((item): item is GitObject => item != null);
+
+  return [
+    addObjects(objects),
+    updateStageHead(tree.oid),
+    updateStageEntries(result),
   ];
 }

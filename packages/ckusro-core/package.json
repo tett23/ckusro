@@ -19,7 +19,7 @@
     "url": "git+https://github.com/tett23/ckusro.git"
   },
   "scripts": {
-    "build": "rm -rf lib/ && yarn run build:rollup",
+    "build": "rm -rf lib/ && yarn run build:rollup && yarn run build:dts",
     "build:rollup": "rollup -c",
     "build:dts": "tsc --declaration true --emitDeclarationOnly true --declarationDir lib --allowJs false",
     "prepare": "yarn test && yarn run build",

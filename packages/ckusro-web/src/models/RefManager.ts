@@ -1,4 +1,4 @@
-import { RepoPath, toInternalPath } from '@ckusro/ckusro-core';
+import { RepoPath, createRepoPath } from '@ckusro/ckusro-core';
 
 export type Ref = {
   readonly repository: string;
@@ -33,7 +33,7 @@ export function headOid(
   refManager: RefManager,
   repoPath: RepoPath,
 ): string | null {
-  const refs = refManager[toInternalPath(repoPath)];
+  const refs = refManager[createRepoPath(repoPath).join()];
   if (refs == null) {
     return null;
   }

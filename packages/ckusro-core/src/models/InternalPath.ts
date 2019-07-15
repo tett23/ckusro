@@ -2,6 +2,7 @@ import { basename as _basename, join as _join } from 'path';
 import { compareRepoPath, RepoPath } from './RepoPath';
 import normalizePath from '../utils/normalizePath';
 import trimRootSlash from '../utils/trimRootSlash';
+import splitPath from '../utils/splitPath';
 
 export type InternalPath = {
   repoPath: RepoPath;
@@ -15,6 +16,7 @@ export function createInternalPath(internalPath: InternalPath) {
     basename: () => basename(internalPath),
     join: (...paths: string[]) => join(internalPath, ...paths),
     split: () => split(internalPath),
+    tree: () => tree(internalPath),
     flat: () => flat(internalPath),
   };
 }
@@ -52,6 +54,10 @@ export function split(internalPath: InternalPath): string[] {
     internalPath.repoPath.name,
     ...trimRootSlash(internalPath.path).split('/'),
   ];
+}
+
+export function tree(internalPath: InternalPath): string[] {
+  return splitPath(flat(internalPath));
 }
 
 export function flat(internalPath: InternalPath): string {

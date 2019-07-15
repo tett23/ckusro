@@ -55,10 +55,20 @@ export function updateBlobBuffer(writeInfo: GlobalBlobWriteInfo) {
   };
 }
 
+export const FetchStageInfo = 'RepositoryWorker/FetchStageInfo' as const;
+
+export function fetchStageInfo() {
+  return {
+    type: FetchStageInfo,
+    payload: null,
+  };
+}
+
 export type RepositoryWorkerActions =
   | ReturnType<typeof cloneRepository>
   | ReturnType<typeof pullRepository>
   | ReturnType<typeof fetchObjects>
   | ReturnType<typeof updateByInternalPath>
   | ReturnType<typeof fetchHeadOids>
-  | ReturnType<typeof updateBlobBuffer>;
+  | ReturnType<typeof updateBlobBuffer>
+  | ReturnType<typeof fetchStageInfo>;
