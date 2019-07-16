@@ -2,8 +2,8 @@ import { Paper } from '@material-ui/core';
 import React from 'react';
 import MainViewComponent from './MainViewComponent';
 import ObjectViewFab from './ObjectViewFab';
-import ObjectMenus from './ObjectMenus';
 import useMainViewStyles from './useMainViewStyles';
+import SideMenus from './SideMenus';
 
 type StyleProps = {
   classes: ReturnType<typeof useMainViewStyles>;
@@ -21,7 +21,7 @@ export function MainView({ classes }: MainViewProps) {
           </div>
         </div>
         <div className={classes.objectMenus}>
-          <ObjectMenus />
+          <SideMenus />
         </div>
       </Paper>
       <ObjectViewFab />

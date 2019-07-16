@@ -1,7 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
-import { IconButton, Icon } from '@material-ui/core';
+import { Icon } from '@material-ui/core';
 import useObjectMenusStyles from '../useObjectMenusStyles';
 
 type StyleProps = {
