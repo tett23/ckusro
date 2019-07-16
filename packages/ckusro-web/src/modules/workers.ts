@@ -10,15 +10,14 @@ export type WorkerDispatcher<WorkerActions extends FSAction> = (
   action: WorkerActions,
 ) => void;
 
-export type WorkerResponse = FSAction<Actions[]> &
-  WithRequestId<FSAction<undefined>>;
+export type WorkerResponse<T> = WithRequestId<FSAction<T[] | T>>;
 
 export function newWorkerDispatcher<WorkerActions extends FSAction>(
   worker: Worker,
   store: Store,
 ): WorkerDispatcher<WorkerActions> {
   worker.addEventListener('message', (message: MessageEvent) => {
-    const res: WorkerResponse = message.data;
+    const res: WorkerResponse<Actions> = message.data;
 
     if (res.payload == null) {
       return;
@@ -28,8 +27,16 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
     }
 
     batch(() => {
+      if (res.payload == null) {
+        return;
+      }
+
       const actions = Array.isArray(res.payload) ? res.payload : [res.payload];
       actions.forEach((action) => {
+        if (action == null) {
+          return;
+        }
+
         console.info(`[ui]:${res.meta.requestId} receive message`, action);
         store.dispatch(action);
       });
