@@ -1,12 +1,19 @@
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core';
 
-const useObjectMenusStyles = makeStyles((theme: Theme) =>
+const useSideMenusStyles = makeStyles((theme: Theme) =>
   createStyles({
     wrapper: {
       display: 'flex',
       flexDirection: 'column',
+      justifyContent: 'space-between',
+      height: '100%',
+    },
+    menuWrapper: {
+      display: 'flex',
+      flexDirection: 'column',
       textAlign: 'center',
+      padding: '1rem 0',
     },
     iconWrapper: {
       padding: '1rem',
@@ -23,4 +30,4 @@ const useObjectMenusStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default useObjectMenusStyles;
+export default useSideMenusStyles;

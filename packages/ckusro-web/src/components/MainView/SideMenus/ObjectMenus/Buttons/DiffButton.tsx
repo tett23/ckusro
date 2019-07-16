@@ -2,10 +2,10 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
 import { Icon } from '@material-ui/core';
-import useObjectMenusStyles from '../useObjectMenusStyles';
+import useSideMenusStyles from '../../useSideMenusStyles';
 
 type StyleProps = {
-  classes: ReturnType<typeof useObjectMenusStyles>;
+  classes: ReturnType<typeof useSideMenusStyles>;
 };
 
 export type DiffButtonProps = StyleProps;
@@ -20,7 +20,7 @@ export function DiffButton({ classes }: DiffButtonProps) {
 
 export default function() {
   const styleProps: StyleProps = {
-    classes: useObjectMenusStyles(),
+    classes: useSideMenusStyles(),
   };
 
   return <DiffButton {...styleProps} />;

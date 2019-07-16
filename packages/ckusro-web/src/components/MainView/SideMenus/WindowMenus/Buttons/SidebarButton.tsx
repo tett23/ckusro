@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faColumns } from '@fortawesome/free-solid-svg-icons';
 import { Icon } from '@material-ui/core';
 import useSideMenusStyles from '../../useSideMenusStyles';
 
@@ -10,10 +10,10 @@ type StyleProps = {
 
 export type ObjectMenusProps = StyleProps;
 
-export function InfoButton({ classes }: StyleProps) {
+export function SidebarButton({ classes }: StyleProps) {
   return (
     <Icon className={classes.iconWrapper}>
-      <FontAwesomeIcon icon={faInfoCircle} className={classes.icon} />
+      <FontAwesomeIcon icon={faColumns} className={classes.icon} />
     </Icon>
   );
 }
@@ -23,5 +23,5 @@ export default function() {
     classes: useSideMenusStyles(),
   };
 
-  return <InfoButton {...styleProps} />;
+  return <SidebarButton {...styleProps} />;
 }

@@ -17,10 +17,10 @@ const useMainViewStyles = makeStyles(() =>
       padding: '2rem 0 2rem 2rem',
     },
     objectMenus: {
-      padding: '1rem',
+      padding: '0 1rem',
       width: 'auto',
       margin: 'auto',
-      marginTop: '1rem',
+      height: '100%',
     },
   }),
 );
