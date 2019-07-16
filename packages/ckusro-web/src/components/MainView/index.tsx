@@ -1,7 +1,6 @@
 import { Paper } from '@material-ui/core';
 import React from 'react';
 import MainViewComponent from './MainViewComponent';
-import ObjectViewFab from './ObjectViewFab';
 import useMainViewStyles from './useMainViewStyles';
 import SideMenus from './SideMenus';
 
@@ -24,7 +23,6 @@ export function MainView({ classes }: MainViewProps) {
           <SideMenus />
         </div>
       </Paper>
-      <ObjectViewFab />
     </>
   );
 }

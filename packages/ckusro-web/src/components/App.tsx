@@ -21,9 +21,22 @@ export default function App() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <Provider store={store as any}>
       <ThemeProvider theme={theme}>
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
-          <FileMenu />
-          <MainView />
+        <div
+          style={{
+            display: 'flex',
+            flexFlow: 'row nowrap',
+            width: '100vw',
+            height: '100vh',
+            justifyContent: 'stretch',
+            alignItems: 'stretch',
+          }}
+        >
+          <div style={{ flexGrow: 0 }}>
+            <FileMenu />
+          </div>
+          <div style={{ flexGrow: 3 }}>
+            <MainView />
+          </div>
         </div>
       </ThemeProvider>
     </Provider>

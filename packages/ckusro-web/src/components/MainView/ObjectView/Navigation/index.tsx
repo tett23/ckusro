@@ -29,11 +29,7 @@ export function Navigation({ bufferInfo }: NavigationProps) {
     return null;
   }
 
-  return (
-    <InternalPathNavigation
-      internalPath={internalPath}
-    ></InternalPathNavigation>
-  );
+  return <InternalPathNavigation internalPath={internalPath} />;
 }
 
 export default function() {

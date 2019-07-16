@@ -5,18 +5,20 @@ const useMainViewStyles = makeStyles(() =>
     wrapper: {
       display: 'flex',
       flexDirection: 'row',
-      width: '100%',
-      height: '100vh',
+      height: '100%',
     },
     contentWrapper: {
-      width: 'calc(100% - 4rem)',
+      flexGrow: 3,
+      width: '100%',
       height: '100%',
-      overflowY: 'scroll',
     },
     mainViewContent: {
-      padding: '2rem 0 2rem 2rem',
+      height: '100%',
+      overflow: 'scroll',
+      padding: 0,
     },
     objectMenus: {
+      flexGrow: 0,
       padding: '0 1rem',
       width: 'auto',
       margin: 'auto',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { State } from '../../../modules';
-import { Tabs, Tab, Box } from '@material-ui/core';
+import { Tabs, Tab } from '@material-ui/core';
 import {
   SettingsViewTypes,
   updateSettingsViewType,
@@ -11,6 +11,7 @@ import FileSystem from './FileSystem';
 import RawPersistedConfig from './RawPersistedConfig';
 import RawUIConfig from './RawUIConfig';
 import RawUIDomain from './RawUIDomain';
+import useSettingsViewStyles from './useSettingsViewStyles';
 
 type OwnProps = {};
 
@@ -22,7 +23,9 @@ type DispatchProps = {
   updateSettingsViewType: (value: SettingsViewTypes) => void;
 };
 
-type StyleProps = {};
+type StyleProps = {
+  classes: ReturnType<typeof useSettingsViewStyles>;
+};
 
 export type SettingsViewProps = OwnProps &
   StateProps &
@@ -32,6 +35,7 @@ export type SettingsViewProps = OwnProps &
 export function SettingsView({
   settingsViewType,
   updateSettingsViewType,
+  classes,
 }: SettingsViewProps) {
   const tabTypes: SettingsViewTypes[] = [
     'Config',
@@ -45,19 +49,22 @@ export function SettingsView({
   ));
 
   return (
-    <>
-      <Tabs
-        value={settingsViewType}
-        indicatorColor="primary"
-        textColor="primary"
-        onChange={(_, value) => updateSettingsViewType(value)}
-      >
-        {tabs}
-      </Tabs>
-      <Box>
+    <div className={classes.wrapper}>
+      <div className={classes.tabs}>
+        <Tabs
+          variant="scrollable"
+          value={settingsViewType}
+          indicatorColor="primary"
+          textColor="primary"
+          onChange={(_, value) => updateSettingsViewType(value)}
+        >
+          {tabs}
+        </Tabs>
+      </div>
+      <div>
         <Content settingsViewType={settingsViewType} />
-      </Box>
-    </>
+      </div>
+    </div>
   );
 }
 
@@ -70,8 +77,11 @@ export default function() {
     updateSettingsViewType: (value: SettingsViewTypes) =>
       dispatch(updateSettingsViewType(value)),
   };
+  const styleProps: StyleProps = {
+    classes: useSettingsViewStyles(),
+  };
 
-  return <SettingsView {...state} {...dispatchProps} />;
+  return <SettingsView {...state} {...dispatchProps} {...styleProps} />;
 }
 
 export type ContentProps = {
