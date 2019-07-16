@@ -37,7 +37,8 @@ const Memoized = React.memo(
   BlobObject,
   (prev, next) =>
     prev.gitObject.oid === next.gitObject.oid &&
-    prev.viewMode === next.viewMode,
+    prev.viewMode === next.viewMode &&
+    prev.ast === next.ast,
 );
 
 export default function(props: OwnProps) {
