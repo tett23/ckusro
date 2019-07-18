@@ -11,10 +11,10 @@ export function writePersistedState(state: PersistedState) {
 
 export const ReadPersistedState = 'PersistWorkerWorker/ReadPersistedState' as const;
 
-export function readPersistedState(coreId: string) {
+export function readPersistedState() {
   return {
     type: ReadPersistedState,
-    payload: coreId,
+    payload: null,
   };
 }
 

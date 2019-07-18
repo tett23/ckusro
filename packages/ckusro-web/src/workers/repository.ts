@@ -30,7 +30,6 @@ import {
   fetchObjects,
   PullRepository,
   pullRepository,
-  RepositoryWorkerActions,
   UpdateByInternalPath,
   updateByInternalPath,
   UpdateBlobBuffer,
@@ -38,15 +37,30 @@ import {
   FetchStageInfo,
   fetchStageInfo,
 } from '../modules/workerActions/repository';
+import {
+  ReadPersistedState,
+  readPersistedState as readPersistedStateAction,
+  WritePersistedState,
+  writePersistedState as writePersistedStateAction,
+} from '../modules/workerActions/persistedState';
+import { ParseMarkdown, parseMarkdown } from '../modules/workerActions/parser';
 import { splitError } from '../utils';
 import { Handler, HandlerResult, newHandler, PayloadType } from './util';
-import { selectBufferInfo } from '../modules/actions/shared';
+import { selectBufferInfo, updateState } from '../modules/actions/shared';
 import { createBufferInfo } from '../models/BufferInfo';
 import { basename } from 'path';
+import {
+  writePersistedState,
+  readPersistedState,
+} from '../models/PersistedState';
+import { HastRoot } from '../components/Markdown/Hast';
+import { updateCurrentAst } from '../modules/ui/mainView/objectView';
+import registerPromiseWorker from 'promise-worker/register';
+import { MainWorkerActions } from '../modules/workers';
 
 export const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
 
-export type RepositoryWorkerRequestActions = RepositoryWorkerActions;
+export type RepositoryWorkerRequestActions = MainWorkerActions;
 export type RepositoryWorkerResponseActions = Actions | CommonWorkerActions;
 
 const eventHandler = newHandler<
@@ -54,14 +68,13 @@ const eventHandler = newHandler<
   RepositoryWorkerResponseActions
 >(actionHandlers, WorkerResponseRepository);
 
-self.addEventListener('message', async (e) => {
-  const response = await eventHandler(e.data);
+registerPromiseWorker(async (message) => {
+  const response = await eventHandler(message);
   if (response == null) {
     return;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (postMessage as any)(response);
+  return response;
 });
 
 function actionHandlers(
@@ -91,6 +104,15 @@ function actionHandlers(
     case FetchStageInfo:
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return fetchStageInfoHandler as any;
+    case WritePersistedState:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return writeStateHandler as any;
+    case ReadPersistedState:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return readStateHandler as any;
+    case ParseMarkdown:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return parseMarkdownHandler as any;
     default:
       return null;
   }
@@ -107,7 +129,7 @@ async function cloneHandler(
   }
 
   const core = ckusroCore(config, fs);
-  const repo = await core.repositories.clone(url);
+  const repo = await core.repositories().clone(url);
   if (repo instanceof Error) {
     return repo;
   }
@@ -132,7 +154,7 @@ async function pullRepositoryHandler(
   repoPath: PayloadType<ReturnType<typeof pullRepository>>,
 ): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
   const core = ckusroCore(config, fs);
-  const repo = await core.repositories.fetchRepository(repoPath);
+  const repo = await core.repositories().fetchRepository(repoPath);
   if (repo instanceof Error) {
     return repo;
   }
@@ -157,7 +179,7 @@ async function fetchObjectsHandler(
   oids: PayloadType<ReturnType<typeof fetchObjects>>,
 ): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
   const core = ckusroCore(config, fs);
-  const ps = oids.map((oid) => core.repositories.fetchObject(oid));
+  const ps = oids.map((oid) => core.repositories().fetchObject(oid));
   const [objects, errors] = splitError(await Promise.all(ps));
 
   return [addObjects(objects), ...errors.map(errorMessage)];
@@ -169,9 +191,9 @@ async function updateByInternalPathHandler(
   internalPath: PayloadType<ReturnType<typeof updateByInternalPath>>,
 ): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
   const core = ckusroCore(config, fs);
-  const result = await core.repositories.fetchObjectByInternalPath(
-    internalPath,
-  );
+  const result = await core
+    .repositories()
+    .fetchObjectByInternalPath(internalPath);
   if (result instanceof Error) {
     return result;
   }
@@ -193,7 +215,7 @@ async function fetchHeadOidsHandler(
   fs: typeof FS,
 ): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
   const core = ckusroCore(config, fs);
-  const results = await core.repositories.headOids();
+  const results = await core.repositories().headOids();
   const [heads, errors] = separateErrors(results as Array<OidRepoPath | Error>);
   if (errors.length !== 0) {
     return errors[0];
@@ -214,7 +236,7 @@ async function updateBlobBufferHandler(
   writeInfo: PayloadType<ReturnType<typeof updateBlobBuffer>>,
 ): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
   const core = ckusroCore(config, fs);
-  const stage = await core.stage;
+  const stage = await core.stage();
   if (stage instanceof Error) {
     return stage;
   }
@@ -251,7 +273,7 @@ async function fetchStageInfoHandler(
   _: PayloadType<ReturnType<typeof fetchStageInfo>>,
 ): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
   const core = ckusroCore(config, fs);
-  const stage = await core.stage;
+  const stage = await core.stage();
   if (stage instanceof Error) {
     return stage;
   }
@@ -279,4 +301,44 @@ async function fetchStageInfoHandler(
     updateStageHead(tree.oid),
     updateStageEntries(result),
   ];
+}
+
+async function writeStateHandler(
+  _: CkusroConfig,
+  fs: typeof FS,
+  state: PayloadType<ReturnType<typeof writePersistedStateAction>>,
+): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
+  const result = await writePersistedState(fs, state);
+  if (result instanceof Error) {
+    return result;
+  }
+
+  return [];
+}
+
+async function readStateHandler(
+  config: CkusroConfig,
+  fs: typeof FS,
+  _: PayloadType<ReturnType<typeof readPersistedStateAction>>,
+): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
+  const result = await readPersistedState(config.coreId, fs);
+  if (result instanceof Error) {
+    return result;
+  }
+
+  return [updateState(result)];
+}
+
+async function parseMarkdownHandler(
+  config: CkusroConfig,
+  fs: typeof FS,
+  { md }: PayloadType<ReturnType<typeof parseMarkdown>>,
+): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
+  const core = ckusroCore(config, fs);
+  const ast = await core.parser().buildAst(md);
+  if (ast instanceof Error) {
+    return ast;
+  }
+
+  return [updateCurrentAst(ast as HastRoot)];
 }

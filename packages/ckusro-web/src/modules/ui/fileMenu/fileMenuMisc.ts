@@ -34,13 +34,17 @@ export function fileMenuMiscReducer(
         isDrawerOpen: action.payload,
       };
     case UpdateState:
-      if (action.payload.ui == null || action.payload.ui.fileMenu == null) {
+      if (
+        action.payload.ui == null ||
+        action.payload.ui.fileMenu == null ||
+        action.payload.ui.fileMenu.misc == null
+      ) {
         return state;
       }
 
       return {
         ...state,
-        ...action.payload.ui.fileMenu,
+        ...action.payload.ui.fileMenu.misc,
       };
     default:
       return state;

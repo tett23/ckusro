@@ -46,6 +46,7 @@
     "core-js": "^3.1.2",
     "lodash.debounce": "^4.0.8",
     "lodash.merge": "^4.6.1",
+    "promise-worker": "^2.0.1",
     "react": "~16.8.6",
     "react-contextmenu": "^2.11.0",
     "react-dom": "~16.8.6",
@@ -96,6 +97,7 @@
     },
     "globals": {
       "ts-jest": {
+        "diagnostics": false,
         "tsConfig": "./tsconfig.json"
       }
     },

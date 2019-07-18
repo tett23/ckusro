@@ -1,14 +1,21 @@
 import { CkusroConfig } from '@ckusro/ckusro-core';
 import { Store } from 'redux';
 import { Actions, State } from './index';
-import { ParserWorkerActions } from './workerActions/parser';
 import { RepositoryWorkerActions } from './workerActions/repository';
 import { batch } from 'react-redux';
 import sequenceGenerator from '../utils/sequenceGenerator';
+import PromiseWorker from 'promise-worker';
+import { ParserWorkerActions } from './workerActions/parser';
+import { PersistStateWorkerActions } from './workerActions/persistedState';
 
 export type WorkerDispatcher<WorkerActions extends FSAction> = (
   action: WorkerActions,
-) => void;
+) => Promise<true | Error>;
+
+export type MainWorkerActions =
+  | RepositoryWorkerActions
+  | ParserWorkerActions
+  | PersistStateWorkerActions;
 
 export type WorkerResponse<T> = WithRequestId<FSAction<T[] | T>>;
 
@@ -16,39 +23,43 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
   worker: Worker,
   store: Store,
 ): WorkerDispatcher<WorkerActions> {
-  worker.addEventListener('message', (message: MessageEvent) => {
-    const res: WorkerResponse<Actions> = message.data;
-
-    if (res.payload == null) {
-      return;
-    }
-    if (res.error) {
-      return;
-    }
-
-    batch(() => {
-      if (res.payload == null) {
-        return;
-      }
-
-      const actions = Array.isArray(res.payload) ? res.payload : [res.payload];
-      actions.forEach((action) => {
-        if (action == null) {
-          return;
-        }
-
-        console.info(`[ui]:${res.meta.requestId} receive message`, action);
-        store.dispatch(action);
-      });
-    });
-  });
+  const promiseWorker = new PromiseWorker(worker);
 
   worker.addEventListener('error', (err: ErrorEvent) => {
     console.error('on error', err);
   });
 
-  return (action: WorkerActions) => {
-    worker.postMessage(withConfig(withRequestId(action), store.getState));
+  return async (action: WorkerActions) => {
+    const req = withConfig(withRequestId(action), store.getState);
+
+    const result = await promiseWorker
+      .postMessage<WorkerResponse<Actions>>(req)
+      .catch((err: Error) => err);
+    if (result instanceof Error) {
+      return result;
+    }
+    if (result == null) {
+      return new Error('');
+    }
+    if (result.payload == null) {
+      return new Error('');
+    }
+
+    batch(() => {
+      const actions = Array.isArray(result.payload)
+        ? result.payload
+        : [result.payload];
+      actions.forEach((action) => {
+        if (action == null) {
+          return;
+        }
+
+        console.info(`[ui]:${result.meta.requestId} receive message`, action);
+        store.dispatch(action);
+      });
+    });
+
+    return true;
   };
 }
 
@@ -98,23 +109,19 @@ function newDummyWorkerDispatcher<
 }
 
 export type WorkersState = {
-  repositoryWorkerDispatcher: WorkerDispatcher<RepositoryWorkerActions>;
-  parserWorkerDispatcher: WorkerDispatcher<ParserWorkerActions>;
+  repositoryWorkerDispatcher: WorkerDispatcher<MainWorkerActions>;
 };
 
 export function initialWorkerState(): WorkersState {
   return {
-    repositoryWorkerDispatcher: newDummyWorkerDispatcher<
-      RepositoryWorkerActions
-    >(),
-    parserWorkerDispatcher: newDummyWorkerDispatcher<ParserWorkerActions>(),
+    repositoryWorkerDispatcher: newDummyWorkerDispatcher<MainWorkerActions>(),
   };
 }
 
 const ReplaceRepositoryWorkerDispatcher = 'Workers/ReplaceRepositoryWorkerDispatcher' as const;
 
 export function replaceRepositoryWorkerDispatcher(
-  dispatcher: WorkerDispatcher<RepositoryWorkerActions>,
+  dispatcher: WorkerDispatcher<MainWorkerActions>,
 ) {
   return {
     type: ReplaceRepositoryWorkerDispatcher,
@@ -122,20 +129,9 @@ export function replaceRepositoryWorkerDispatcher(
   };
 }
 
-const ReplaceParserWorkerDispatcher = 'Workers/ReplaceParserWorkerDispatcher' as const;
-
-export function replaceParserWorkerDispatcher(
-  dispatcher: WorkerDispatcher<ParserWorkerActions>,
-) {
-  return {
-    type: ReplaceParserWorkerDispatcher,
-    payload: dispatcher,
-  };
-}
-
-export type WorkersActions =
-  | ReturnType<typeof replaceRepositoryWorkerDispatcher>
-  | ReturnType<typeof replaceParserWorkerDispatcher>;
+export type WorkersActions = ReturnType<
+  typeof replaceRepositoryWorkerDispatcher
+>;
 
 export function workersReducer(
   state: WorkersState = initialWorkerState(),
@@ -146,11 +142,6 @@ export function workersReducer(
       return {
         ...state,
         repositoryWorkerDispatcher: action.payload,
-      };
-    case ReplaceParserWorkerDispatcher:
-      return {
-        ...state,
-        parserWorkerDispatcher: action.payload,
       };
     default:
       return state;

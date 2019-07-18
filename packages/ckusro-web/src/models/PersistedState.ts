@@ -97,7 +97,7 @@ export async function toState(
   persistedState: PersistedState,
 ): Promise<DeepPartial<State> | Error> {
   const core = ckusroCore(persistedState.config, fs);
-  const ps = persistedState.oids.map(core.repositories.fetchObject);
+  const ps = persistedState.oids.map(core.repositories().fetchObject);
   const objects = await Promise.all(ps).catch((err: Error) => err);
   if (objects instanceof Error) {
     return objects;

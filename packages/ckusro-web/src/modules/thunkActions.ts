@@ -16,6 +16,11 @@ import { updateMainViewType } from './ui/mainView/mainViewMisc';
 import { BufferInfo } from '../models/BufferInfo';
 import { selectBufferInfo } from './actions/shared';
 import { GlobalBlobWriteInfo } from '@ckusro/ckusro-core/lib/src/models/GlobalWriteInfo';
+import {
+  readPersistedState as readPersistedStateAction,
+  writePersistedState as writePersistedStateAction,
+} from './workerActions/persistedState';
+import { serializeState } from '../models/PersistedState';
 
 export function updateByBufferInfo(bufferInfo: BufferInfo | null) {
   return async (dispatch: Dispatch<Actions>) => {
@@ -39,7 +44,8 @@ export function updateByInternalPath(internalPath: InternalPath) {
     } = getState();
 
     dispatch(updateMainViewType('object'));
-    repositoryWorkerDispatcher(updateByInternalPathAction(internalPath));
+
+    return repositoryWorkerDispatcher(updateByInternalPathAction(internalPath));
   };
 }
 
@@ -49,7 +55,7 @@ export function cloneRepository(url: string) {
       workers: { repositoryWorkerDispatcher },
     } = getState();
 
-    repositoryWorkerDispatcher(cloneRepositoryAction(url));
+    return repositoryWorkerDispatcher(cloneRepositoryAction(url));
   };
 }
 
@@ -59,7 +65,7 @@ export function pullRepository(repoPath: RepoPath) {
       workers: { repositoryWorkerDispatcher },
     } = getState();
 
-    repositoryWorkerDispatcher(pullRepositoryAction(repoPath));
+    return repositoryWorkerDispatcher(pullRepositoryAction(repoPath));
   };
 }
 
@@ -79,7 +85,7 @@ export function fetchObjects(oids: string[]) {
     }
     dispatch(addFetchingOids(fetchOids));
 
-    repositoryWorkerDispatcher(fetchObjectsAction(fetchOids));
+    return repositoryWorkerDispatcher(fetchObjectsAction(fetchOids));
   };
 }
 
@@ -89,17 +95,17 @@ export function fetchHeadOids() {
       workers: { repositoryWorkerDispatcher },
     } = getState();
 
-    repositoryWorkerDispatcher(fetchHeadOidsAction());
+    return repositoryWorkerDispatcher(fetchHeadOidsAction());
   };
 }
 
 export function parseMarkdown(md: string) {
   return async (_: Dispatch<Actions>, getState: () => State) => {
     const {
-      workers: { parserWorkerDispatcher },
+      workers: { repositoryWorkerDispatcher },
     } = getState();
 
-    parserWorkerDispatcher(parseMarkdownAction(md));
+    return repositoryWorkerDispatcher(parseMarkdownAction(md));
   };
 }
 
@@ -109,7 +115,7 @@ export function updateBlobBuffer(writeInfo: GlobalBlobWriteInfo) {
       workers: { repositoryWorkerDispatcher },
     } = getState();
 
-    repositoryWorkerDispatcher(updateBlobBufferAction(writeInfo));
+    return repositoryWorkerDispatcher(updateBlobBufferAction(writeInfo));
   };
 }
 
@@ -119,6 +125,29 @@ export function fetchStageInfo() {
       workers: { repositoryWorkerDispatcher },
     } = getState();
 
-    repositoryWorkerDispatcher(fetchStageInfoAction());
+    return repositoryWorkerDispatcher(fetchStageInfoAction());
+  };
+}
+
+export function readPersistedState() {
+  return async (_: Dispatch<Actions>, getState: () => State) => {
+    const {
+      workers: { repositoryWorkerDispatcher },
+    } = getState();
+
+    return repositoryWorkerDispatcher(readPersistedStateAction());
+  };
+}
+
+export function writePersistedState() {
+  return async (_: Dispatch<Actions>, getState: () => State) => {
+    const state = getState();
+    const {
+      workers: { repositoryWorkerDispatcher },
+    } = state;
+
+    return repositoryWorkerDispatcher(
+      writePersistedStateAction(serializeState(state)),
+    );
   };
 }

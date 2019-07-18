@@ -1,4 +1,3 @@
-import { batch } from 'react-redux';
 import {
   applyMiddleware,
   combineReducers,
@@ -19,11 +18,9 @@ import persistStore from './middlewares/persistStore';
 import { MiscActions, miscReducer, MiscState } from './misc';
 import uiReducer, { UIActions, UIState } from './ui';
 import { CommonWorkerActions } from './workerActions/common';
-import { readPersistedState } from './workerActions/persistedState';
 import {
   initialWorkerState,
   newWorkerDispatcher,
-  replaceParserWorkerDispatcher,
   replaceRepositoryWorkerDispatcher,
   WorkersActions,
   workersReducer,
@@ -68,7 +65,7 @@ export default function initializeStore(
     workers: initialWorkerState(),
   };
 
-  const [persistedStateWorker, persistedStateMiddleware] = persistStore();
+  const persistedStateMiddleware = persistStore();
 
   const store = createStore(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -81,28 +78,12 @@ export default function initializeStore(
     ),
   );
 
-  persistedStateWorker.addEventListener('message', (message: MessageEvent) => {
-    batch(() => {
-      message.data.forEach(store.dispatch);
-    });
-  });
-  persistedStateWorker.addEventListener('error', (err: ErrorEvent) => {
-    console.error('on error', err);
-  });
-  persistedStateWorker.postMessage(
-    readPersistedState(store.getState().config.coreId),
-  );
-
   const repositoryWorker = new Worker('../workers/repository.ts');
   const repositoryWorkerDispatcher = newWorkerDispatcher(
     repositoryWorker,
     store,
   );
   store.dispatch(replaceRepositoryWorkerDispatcher(repositoryWorkerDispatcher));
-
-  const parserWorker = new Worker('../workers/parser.ts');
-  const parserWorkerDispatcher = newWorkerDispatcher(parserWorker, store);
-  store.dispatch(replaceParserWorkerDispatcher(parserWorkerDispatcher));
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return store as any;

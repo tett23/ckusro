@@ -10,8 +10,8 @@ export default function ckusroCore(config: CkusroConfig, fs: typeof FS) {
   core.set('fs', fs);
 
   return {
-    repositories: (() => repositories(config, fs))(),
-    parser: (() => parser(config))(),
-    stage: (() => stage(config, fs))(),
+    repositories: () => repositories(config, fs),
+    parser: () => parser(config),
+    stage: () => stage(config, fs),
   };
 }
