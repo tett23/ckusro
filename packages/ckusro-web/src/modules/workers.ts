@@ -31,10 +31,12 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
 
   return async (action: WorkerActions) => {
     const req = withConfig(withRequestId(action), store.getState);
+    console.time(`[ui]:${req.meta.requestId}`); // eslint-disable-line no-console
 
     const result = await promiseWorker
       .postMessage<WorkerResponse<Actions>>(req)
       .catch((err: Error) => err);
+    console.timeEnd(`[ui]:${req.meta.requestId}`); // eslint-disable-line no-console
     if (result instanceof Error) {
       return result;
     }
@@ -55,6 +57,7 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
         }
 
         console.info(`[ui]:${result.meta.requestId} receive message`, action);
+
         store.dispatch(action);
       });
     });
