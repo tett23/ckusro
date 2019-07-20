@@ -39,12 +39,16 @@ import {
   fetchStageInfo,
   ClearStageData,
   clearStageData,
+  RemoveAllRepositories,
+  removeAllRepositories,
 } from '../modules/workerActions/repository';
 import {
   ReadPersistedState,
   readPersistedState as readPersistedStateAction,
   WritePersistedState,
   writePersistedState as writePersistedStateAction,
+  InitializePersistedState,
+  initializePersistedState,
 } from '../modules/workerActions/persistedState';
 import { ParseMarkdown, parseMarkdown } from '../modules/workerActions/parser';
 import { splitError } from '../utils';
@@ -55,11 +59,13 @@ import { basename } from 'path';
 import {
   writePersistedState,
   readPersistedState,
+  removePersistedState,
 } from '../models/PersistedState';
 import { HastRoot } from '../components/Markdown/Hast';
 import { updateCurrentAst } from '../modules/ui/mainView/objectView';
 import registerPromiseWorker from 'promise-worker/register';
 import { MainWorkerActions } from '../modules/workers';
+import { clearRepositories } from '../modules/config';
 
 export const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
 
@@ -119,6 +125,12 @@ function actionHandlers(
     case ClearStageData:
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return clearStageDataHandler as any;
+    case RemoveAllRepositories:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return removeAllRepositoriesHandler as any;
+    case InitializePersistedState:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return initializePersistedStateHandler as any;
     default:
       return null;
   }
@@ -366,4 +378,33 @@ async function clearStageDataHandler(
   }
 
   return [clearStageManager()];
+}
+
+async function removeAllRepositoriesHandler(
+  config: CkusroConfig,
+  fs: typeof FS,
+  _: PayloadType<ReturnType<typeof removeAllRepositories>>,
+): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
+  const core = ckusroCore(config, fs);
+  const stage = await core.repositories();
+  if (stage instanceof Error) {
+    return stage;
+  }
+
+  const clearResult = await stage.removeAllRepositories();
+  if (clearResult instanceof Error) {
+    return clearResult;
+  }
+
+  return [clearRepositories()];
+}
+
+async function initializePersistedStateHandler(
+  _: CkusroConfig,
+  fs: typeof FS,
+  __: PayloadType<ReturnType<typeof initializePersistedState>>,
+): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
+  await removePersistedState(fs);
+
+  return [];
 }

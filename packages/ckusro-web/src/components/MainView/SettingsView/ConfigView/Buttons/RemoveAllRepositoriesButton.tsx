@@ -2,25 +2,27 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import DangerButton from '../../../../shared/DangerButton';
 import { Typography } from '@material-ui/core';
-import { clearStageData } from '../../../../../modules/thunkActions';
+import { removeAllRepositories } from '../../../../../modules/thunkActions';
 
 type DispatchProps = {
   onClick: () => void;
 };
 
-export type ClearStageButtonProps = DispatchProps;
+export type RemoveAllRepositoriesButtonProps = DispatchProps;
 
-export function ClearStageButton({ onClick }: ClearStageButtonProps) {
+export function RemoveAllRepositoriesButton({
+  onClick,
+}: RemoveAllRepositoriesButtonProps) {
   const confirmBody = (
     <Typography>
-      All editing data is discarded. This operation can not be undone.
+      All repositories will be deleted. This operation can not be undone.
     </Typography>
   );
 
   return (
     <DangerButton
       onOk={onClick}
-      buttonContent="Clear staging data"
+      buttonContent="Remove all repositories"
       confirmTitle="Are you sure?"
       confirmBody={confirmBody}
     />
@@ -30,8 +32,8 @@ export function ClearStageButton({ onClick }: ClearStageButtonProps) {
 export default function() {
   const dispatch = useDispatch();
   const dispatchProps = {
-    onClick: () => dispatch(clearStageData()),
+    onClick: () => dispatch(removeAllRepositories()),
   };
 
-  return <ClearStageButton {...dispatchProps} />;
+  return <RemoveAllRepositoriesButton {...dispatchProps} />;
 }

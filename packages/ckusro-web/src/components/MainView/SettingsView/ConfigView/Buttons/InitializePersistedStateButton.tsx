@@ -2,25 +2,27 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import DangerButton from '../../../../shared/DangerButton';
 import { Typography } from '@material-ui/core';
-import { clearStageData } from '../../../../../modules/thunkActions';
+import { initializePersistedState } from '../../../../../modules/thunkActions';
 
 type DispatchProps = {
   onClick: () => void;
 };
 
-export type ClearStageButtonProps = DispatchProps;
+export type InitializePersistedStateButtonProps = DispatchProps;
 
-export function ClearStageButton({ onClick }: ClearStageButtonProps) {
+export function InitializePersistedStateButton({
+  onClick,
+}: InitializePersistedStateButtonProps) {
   const confirmBody = (
     <Typography>
-      All editing data is discarded. This operation can not be undone.
+      Initialize the settings. This operation can not be undone.
     </Typography>
   );
 
   return (
     <DangerButton
       onOk={onClick}
-      buttonContent="Clear staging data"
+      buttonContent="Initialize config"
       confirmTitle="Are you sure?"
       confirmBody={confirmBody}
     />
@@ -30,8 +32,8 @@ export function ClearStageButton({ onClick }: ClearStageButtonProps) {
 export default function() {
   const dispatch = useDispatch();
   const dispatchProps = {
-    onClick: () => dispatch(clearStageData()),
+    onClick: () => dispatch(initializePersistedState()),
   };
 
-  return <ClearStageButton {...dispatchProps} />;
+  return <InitializePersistedStateButton {...dispatchProps} />;
 }

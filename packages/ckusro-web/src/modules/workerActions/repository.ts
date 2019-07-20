@@ -73,6 +73,15 @@ export function clearStageData() {
   };
 }
 
+export const RemoveAllRepositories = 'RepositoryWorker/RemoveAllRepositories' as const;
+
+export function removeAllRepositories() {
+  return {
+    type: RemoveAllRepositories,
+    payload: null,
+  };
+}
+
 export type RepositoryWorkerActions =
   | ReturnType<typeof cloneRepository>
   | ReturnType<typeof pullRepository>
@@ -81,4 +90,5 @@ export type RepositoryWorkerActions =
   | ReturnType<typeof fetchHeadOids>
   | ReturnType<typeof updateBlobBuffer>
   | ReturnType<typeof fetchStageInfo>
-  | ReturnType<typeof clearStageData>;
+  | ReturnType<typeof clearStageData>
+  | ReturnType<typeof removeAllRepositories>;

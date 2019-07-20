@@ -76,6 +76,16 @@ export async function writePersistedState(
   return true;
 }
 
+export async function removePersistedState(
+  fs: typeof FS,
+): Promise<true | Error> {
+  await (async () => fs.promises.unlink(PersistedStatePath))().catch(
+    (err: Error) => err,
+  );
+
+  return true;
+}
+
 export async function getFsInstance(
   coreId: string,
 ): Promise<typeof FS | Error> {

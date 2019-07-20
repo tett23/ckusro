@@ -69,9 +69,19 @@ export function updateAuthenticationGithub(value: string | null) {
   };
 }
 
+const ClearRepositories = 'Config/ClearRepositories' as const;
+
+export function clearRepositories() {
+  return {
+    type: ClearRepositories,
+    payload: null,
+  };
+}
+
 export type ConfigActions =
   | ReturnType<typeof updateCorsProxy>
   | ReturnType<typeof updateAuthenticationGithub>
+  | ReturnType<typeof clearRepositories>
   | ReturnType<typeof updateState>;
 
 export function configReducer(
@@ -88,6 +98,11 @@ export function configReducer(
           ...state.authentication,
           github: action.payload,
         },
+      };
+    case ClearRepositories:
+      return {
+        ...state,
+        repositories: [],
       };
     case UpdateState:
       if (action.payload.config == null) {

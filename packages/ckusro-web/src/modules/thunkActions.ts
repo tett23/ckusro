@@ -12,6 +12,7 @@ import {
   updateBlobBuffer as updateBlobBufferAction,
   fetchStageInfo as fetchStageInfoAction,
   clearStageData as clearStageDataAction,
+  removeAllRepositories as removeAllRepositoriesAction,
 } from './workerActions/repository';
 import { updateMainViewType } from './ui/mainView/mainViewMisc';
 import { BufferInfo } from '../models/BufferInfo';
@@ -20,6 +21,7 @@ import { GlobalBlobWriteInfo } from '@ckusro/ckusro-core/lib/src/models/GlobalWr
 import {
   readPersistedState as readPersistedStateAction,
   writePersistedState as writePersistedStateAction,
+  initializePersistedState as initializePersistedStateAction,
 } from './workerActions/persistedState';
 import { serializeState } from '../models/PersistedState';
 
@@ -161,5 +163,27 @@ export function clearStageData() {
     } = state;
 
     return repositoryWorkerDispatcher(clearStageDataAction());
+  };
+}
+
+export function removeAllRepositories() {
+  return async (_: Dispatch<Actions>, getState: () => State) => {
+    const state = getState();
+    const {
+      workers: { repositoryWorkerDispatcher },
+    } = state;
+
+    return repositoryWorkerDispatcher(removeAllRepositoriesAction());
+  };
+}
+
+export function initializePersistedState() {
+  return async (_: Dispatch<Actions>, getState: () => State) => {
+    const state = getState();
+    const {
+      workers: { repositoryWorkerDispatcher },
+    } = state;
+
+    return repositoryWorkerDispatcher(initializePersistedStateAction());
   };
 }

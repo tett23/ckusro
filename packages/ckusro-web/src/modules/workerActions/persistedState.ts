@@ -18,6 +18,16 @@ export function readPersistedState() {
   };
 }
 
+export const InitializePersistedState = 'PersistWorkerWorker/InitializePersistedState' as const;
+
+export function initializePersistedState() {
+  return {
+    type: InitializePersistedState,
+    payload: null,
+  };
+}
+
 export type PersistStateWorkerActions =
   | ReturnType<typeof writePersistedState>
-  | ReturnType<typeof readPersistedState>;
+  | ReturnType<typeof readPersistedState>
+  | ReturnType<typeof initializePersistedState>;
