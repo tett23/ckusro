@@ -1,80 +1,44 @@
-import ckusroCore, {
-  CkusroConfig,
-  url2RepoPath,
-  isTreeObject,
-  OidRepoPath,
-  separateErrors,
-  GitObject,
-  toTreeEntry,
-  createRepoPath,
-  InternalPathEntry,
-} from '@ckusro/ckusro-core';
 import 'core-js/stable';
-import FS from 'fs';
 import 'regenerator-runtime/runtime';
 import { Actions } from '../../modules';
 import {
-  addObjects,
-  addRef,
-  updateStageHead,
-  updateStageEntries,
-  clearStageManager,
-} from '../../modules/domain';
-import {
-  CommonWorkerActions,
-  errorMessage,
-} from '../../modules/workerActions/common';
-import {
   CloneRepository,
-  cloneRepository,
   FetchHeadOids,
   FetchObjects,
-  fetchObjects,
   PullRepository,
-  pullRepository,
   UpdateByInternalPath,
-  updateByInternalPath,
   UpdateBlobBuffer,
-  updateBlobBuffer,
   FetchStageInfo,
-  fetchStageInfo,
   ClearStageData,
-  clearStageData,
   RemoveAllRepositories,
-  removeAllRepositories,
 } from '../../modules/workerActions/repository';
 import {
   ReadPersistedState,
-  readPersistedState as readPersistedStateAction,
   WritePersistedState,
-  writePersistedState as writePersistedStateAction,
   InitializePersistedState,
-  initializePersistedState,
 } from '../../modules/workerActions/persistedState';
-import {
-  ParseMarkdown,
-  parseMarkdown,
-} from '../../modules/workerActions/parser';
-import { splitError } from '../../utils';
-import { Handler, HandlerResult, newHandler, PayloadType } from '../util';
-import { selectBufferInfo, updateState } from '../../modules/actions/shared';
-import { createBufferInfo } from '../../models/BufferInfo';
-import { basename } from 'path';
-import {
-  writePersistedState,
-  readPersistedState,
-  removePersistedState,
-} from '../../models/PersistedState';
-import { HastRoot } from '../../components/Markdown/Hast';
-import { updateCurrentAst } from '../../modules/ui/mainView/objectView';
+import { ParseMarkdown } from '../../modules/workerActions/parser';
+import { Handler, newHandler } from '../util';
 import registerPromiseWorker from 'promise-worker/register';
 import { MainWorkerActions } from '../../modules/workers';
-import { clearRepositories } from '../../modules/config';
+import initializePersistedStateHandler from './handlers/initializePersistedStateHandler';
+import removeAllRepositoriesHandler from './handlers/removeAllRepositoriesHandler';
+import clearStageDataHandler from './handlers/clearStageDataHandler';
+import parseMarkdownHandler from './handlers/parseMarkdownHandler';
+import readStateHandler from './handlers/readStateHandler';
+import writeStateHandler from './handlers/writeStateHandler';
+import fetchStageInfoHandler from './handlers/fetchStageInfoHandler';
+import updateBlobBufferHandler from './handlers/updateBlobBufferHandler';
+import fetchHeadOidsHandler from './handlers/fetchHeadOidsHandler';
+import updateByInternalPathHandler from './handlers/updateByInternalPathHandler';
+import fetchObjectsHandler from './handlers/fetchObjectsHandler';
+import pullRepositoryHandler from './handlers/pullRepositoryHandler';
+import cloneHandler from './handlers/cloneHandler';
 
 export const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
 
 export type RepositoryWorkerRequestActions = MainWorkerActions;
-export type RepositoryWorkerResponseActions = Actions | CommonWorkerActions;
+export type RepositoryWorkerResponseActions = Actions;
 
 const eventHandler = newHandler<
   RepositoryWorkerRequestActions,
@@ -138,288 +102,4 @@ function actionHandlers(
     default:
       return null;
   }
-}
-
-async function cloneHandler(
-  config: CkusroConfig,
-  fs: typeof FS,
-  { url }: PayloadType<ReturnType<typeof cloneRepository>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
-  const repoPath = url2RepoPath(url);
-  if (repoPath instanceof Error) {
-    return repoPath;
-  }
-
-  const core = ckusroCore(config, fs);
-  const repo = await core.repositories().clone(url);
-  if (repo instanceof Error) {
-    return repo;
-  }
-
-  const oid = await repo.headOid();
-  if (oid instanceof Error) {
-    return oid;
-  }
-
-  return [
-    addRef({
-      repository: createRepoPath(repoPath).join(),
-      name: 'HEAD',
-      oid,
-    }),
-  ];
-}
-
-async function pullRepositoryHandler(
-  config: CkusroConfig,
-  fs: typeof FS,
-  repoPath: PayloadType<ReturnType<typeof pullRepository>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
-  const core = ckusroCore(config, fs);
-  const repo = await core.repositories().fetchRepository(repoPath);
-  if (repo instanceof Error) {
-    return repo;
-  }
-
-  const result = await repo.pull();
-  if (result instanceof Error) {
-    return result;
-  }
-
-  return [
-    addRef({
-      repository: createRepoPath(repoPath).join(),
-      name: 'HEAD',
-      oid: result,
-    }),
-  ];
-}
-
-async function fetchObjectsHandler(
-  config: CkusroConfig,
-  fs: typeof FS,
-  oids: PayloadType<ReturnType<typeof fetchObjects>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
-  const core = ckusroCore(config, fs);
-  const ps = oids.map((oid) => core.repositories().fetchObject(oid));
-  const [objects, errors] = splitError(await Promise.all(ps));
-
-  return [addObjects(objects), ...errors.map(errorMessage)];
-}
-
-async function updateByInternalPathHandler(
-  config: CkusroConfig,
-  fs: typeof FS,
-  internalPath: PayloadType<ReturnType<typeof updateByInternalPath>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
-  const core = ckusroCore(config, fs);
-  const result = await core
-    .repositories()
-    .fetchObjectByInternalPath(internalPath);
-  if (result instanceof Error) {
-    return result;
-  }
-  if (result == null) {
-    return new Error('Object not found.');
-  }
-
-  const bufferInfo = createBufferInfo(
-    result.type as 'tree' | 'blob',
-    result.oid,
-    internalPath,
-  );
-
-  return [addObjects([result]), selectBufferInfo(bufferInfo)];
-}
-
-async function fetchHeadOidsHandler(
-  config: CkusroConfig,
-  fs: typeof FS,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
-  const core = ckusroCore(config, fs);
-  const results = await core.repositories().headOids();
-  const [heads, errors] = separateErrors(results as Array<OidRepoPath | Error>);
-  if (errors.length !== 0) {
-    return errors[0];
-  }
-
-  return heads.map(([oid, repoPath]) => {
-    return addRef({
-      repository: createRepoPath(repoPath).join(),
-      name: 'HEAD',
-      oid,
-    });
-  });
-}
-
-async function updateBlobBufferHandler(
-  config: CkusroConfig,
-  fs: typeof FS,
-  writeInfo: PayloadType<ReturnType<typeof updateBlobBuffer>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
-  const core = ckusroCore(config, fs);
-  const stage = await core.stage();
-  if (stage instanceof Error) {
-    return stage;
-  }
-
-  const addResult = await stage.add(writeInfo);
-  if (addResult instanceof Error) {
-    return addResult;
-  }
-
-  const [[, newRoot]] = addResult;
-  if (!isTreeObject(newRoot)) {
-    return new Error('');
-  }
-  const commitResult = await stage.commit(newRoot, 'update');
-  if (commitResult instanceof Error) {
-    return commitResult;
-  }
-
-  const parentPath = createRepoPath(writeInfo.internalPath.repoPath).join();
-  const updates = addResult
-    .map(([internalPath, blobOrTree]) => {
-      if (internalPath.path.length <= parentPath.length) {
-        return null;
-      }
-
-      return [
-        {
-          path: internalPath.path.slice(parentPath.length),
-          repoPath: internalPath.repoPath,
-        },
-        toTreeEntry(basename(internalPath.path), blobOrTree),
-      ] as const;
-    })
-    .filter((item): item is InternalPathEntry => item != null);
-  return [
-    addObjects([...addResult.map(([, item]) => item), commitResult]),
-    updateStageHead(commitResult.oid),
-    updateStageEntries(updates),
-  ];
-}
-
-async function fetchStageInfoHandler(
-  config: CkusroConfig,
-  fs: typeof FS,
-  _: PayloadType<ReturnType<typeof fetchStageInfo>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
-  const core = ckusroCore(config, fs);
-  const stage = await core.stage();
-  if (stage instanceof Error) {
-    return stage;
-  }
-
-  const tree = await stage.headTreeObject();
-  if (tree instanceof Error) {
-    return tree;
-  }
-
-  const result = await stage.lsFiles();
-  if (result instanceof Error) {
-    return result;
-  }
-
-  const ps = result.map(([, item]) => stage.fetchByOid(item.oid));
-  const results = await Promise.all(ps);
-  const [maybeNull, errors] = separateErrors(results);
-  if (errors.length !== 0) {
-    return errors[0];
-  }
-  const objects = maybeNull.filter((item): item is GitObject => item != null);
-
-  return [
-    addObjects(objects),
-    updateStageHead(tree.oid),
-    updateStageEntries(result),
-  ];
-}
-
-async function writeStateHandler(
-  _: CkusroConfig,
-  fs: typeof FS,
-  state: PayloadType<ReturnType<typeof writePersistedStateAction>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
-  const result = await writePersistedState(fs, state);
-  if (result instanceof Error) {
-    return result;
-  }
-
-  return [];
-}
-
-async function readStateHandler(
-  config: CkusroConfig,
-  fs: typeof FS,
-  _: PayloadType<ReturnType<typeof readPersistedStateAction>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
-  const result = await readPersistedState(config.coreId, fs);
-  if (result instanceof Error) {
-    return result;
-  }
-
-  return [updateState(result)];
-}
-
-async function parseMarkdownHandler(
-  config: CkusroConfig,
-  fs: typeof FS,
-  { md }: PayloadType<ReturnType<typeof parseMarkdown>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
-  const core = ckusroCore(config, fs);
-  const ast = await core.parser().buildAst(md);
-  if (ast instanceof Error) {
-    return ast;
-  }
-
-  return [updateCurrentAst(ast as HastRoot)];
-}
-
-async function clearStageDataHandler(
-  config: CkusroConfig,
-  fs: typeof FS,
-  _: PayloadType<ReturnType<typeof clearStageData>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
-  const core = ckusroCore(config, fs);
-  const stage = await core.stage();
-  if (stage instanceof Error) {
-    return stage;
-  }
-
-  const clearResult = await stage.clear();
-  if (clearResult instanceof Error) {
-    return clearResult;
-  }
-
-  return [clearStageManager()];
-}
-
-async function removeAllRepositoriesHandler(
-  config: CkusroConfig,
-  fs: typeof FS,
-  _: PayloadType<ReturnType<typeof removeAllRepositories>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
-  const core = ckusroCore(config, fs);
-  const stage = await core.repositories();
-  if (stage instanceof Error) {
-    return stage;
-  }
-
-  const clearResult = await stage.removeAllRepositories();
-  if (clearResult instanceof Error) {
-    return clearResult;
-  }
-
-  return [clearRepositories()];
-}
-
-async function initializePersistedStateHandler(
-  _: CkusroConfig,
-  fs: typeof FS,
-  __: PayloadType<ReturnType<typeof initializePersistedState>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
-  await removePersistedState(fs);
-
-  return [];
 }
