@@ -78,7 +78,7 @@ export default function initializeStore(
     ),
   );
 
-  const repositoryWorker = new Worker('../workers/repository.ts');
+  const repositoryWorker = new Worker('../workers/repository/index.ts');
   const repositoryWorkerDispatcher = newWorkerDispatcher(
     repositoryWorker,
     store,

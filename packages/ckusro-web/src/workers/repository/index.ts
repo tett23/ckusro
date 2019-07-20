@@ -12,18 +12,18 @@ import ckusroCore, {
 import 'core-js/stable';
 import FS from 'fs';
 import 'regenerator-runtime/runtime';
-import { Actions } from '../modules';
+import { Actions } from '../../modules';
 import {
   addObjects,
   addRef,
   updateStageHead,
   updateStageEntries,
   clearStageManager,
-} from '../modules/domain';
+} from '../../modules/domain';
 import {
   CommonWorkerActions,
   errorMessage,
-} from '../modules/workerActions/common';
+} from '../../modules/workerActions/common';
 import {
   CloneRepository,
   cloneRepository,
@@ -42,7 +42,7 @@ import {
   clearStageData,
   RemoveAllRepositories,
   removeAllRepositories,
-} from '../modules/workerActions/repository';
+} from '../../modules/workerActions/repository';
 import {
   ReadPersistedState,
   readPersistedState as readPersistedStateAction,
@@ -50,23 +50,26 @@ import {
   writePersistedState as writePersistedStateAction,
   InitializePersistedState,
   initializePersistedState,
-} from '../modules/workerActions/persistedState';
-import { ParseMarkdown, parseMarkdown } from '../modules/workerActions/parser';
-import { splitError } from '../utils';
-import { Handler, HandlerResult, newHandler, PayloadType } from './util';
-import { selectBufferInfo, updateState } from '../modules/actions/shared';
-import { createBufferInfo } from '../models/BufferInfo';
+} from '../../modules/workerActions/persistedState';
+import {
+  ParseMarkdown,
+  parseMarkdown,
+} from '../../modules/workerActions/parser';
+import { splitError } from '../../utils';
+import { Handler, HandlerResult, newHandler, PayloadType } from '../util';
+import { selectBufferInfo, updateState } from '../../modules/actions/shared';
+import { createBufferInfo } from '../../models/BufferInfo';
 import { basename } from 'path';
 import {
   writePersistedState,
   readPersistedState,
   removePersistedState,
-} from '../models/PersistedState';
-import { HastRoot } from '../components/Markdown/Hast';
-import { updateCurrentAst } from '../modules/ui/mainView/objectView';
+} from '../../models/PersistedState';
+import { HastRoot } from '../../components/Markdown/Hast';
+import { updateCurrentAst } from '../../modules/ui/mainView/objectView';
 import registerPromiseWorker from 'promise-worker/register';
-import { MainWorkerActions } from '../modules/workers';
-import { clearRepositories } from '../modules/config';
+import { MainWorkerActions } from '../../modules/workers';
+import { clearRepositories } from '../../modules/config';
 
 export const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
 
