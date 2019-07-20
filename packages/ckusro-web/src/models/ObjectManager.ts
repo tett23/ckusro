@@ -9,8 +9,16 @@ import {
 } from '@ckusro/ckusro-core';
 
 export type ObjectManager = {
-  [oid: string]: GitObject;
+  originalObjects: {
+    [oid: string]: GitObject;
+  };
 };
+
+export function createEmptyObjectManager(): ObjectManager {
+  return {
+    originalObjects: {},
+  };
+}
 
 export function createObjectManager(manager: ObjectManager) {
   return {
@@ -19,6 +27,7 @@ export function createObjectManager(manager: ObjectManager) {
       fetch(manager, oid, type),
     includes: (objects: GitObject[]) => includes(manager, objects),
     difference: (oids: string[]) => difference(manager, oids),
+    serialize: () => serialize(manager),
   };
 }
 
@@ -26,12 +35,12 @@ export function addObjects(
   manager: ObjectManager,
   objects: GitObject[],
 ): ObjectManager {
-  const ret = {
+  const ret: ObjectManager = {
     ...manager,
   };
 
   objects.forEach((item) => {
-    ret[item.oid] = item;
+    ret.originalObjects[item.oid] = item;
   });
 
   return ret;
@@ -41,7 +50,7 @@ export function includes(
   manager: ObjectManager,
   gitObjects: GitObject[],
 ): boolean {
-  return gitObjects.some(({ oid }) => manager[oid] != null);
+  return gitObjects.some(({ oid }) => manager.originalObjects[oid] != null);
 }
 
 type NameOrGitObject<
@@ -53,7 +62,7 @@ export function fetch<N extends GitObjectTypes | undefined>(
   oid: string,
   type?: N,
 ): NameOrGitObject<N> | null {
-  const object: GitObject | null = manager[oid];
+  const object: GitObject | null = manager.originalObjects[oid];
   if (object == null) {
     return null;
   }
@@ -76,7 +85,19 @@ export function fetch<N extends GitObjectTypes | undefined>(
 }
 
 export function difference(manager: ObjectManager, oids: string[]): string[] {
-  const keys = Object.keys(manager);
+  const keys = Object.keys(manager.originalObjects);
 
   return oids.filter((item) => !keys.includes(item));
+}
+
+export type SerializedObjectManager = {
+  oids: string[];
+};
+
+export function serialize(manager: ObjectManager): SerializedObjectManager {
+  const keys = Object.keys(manager.originalObjects);
+
+  return {
+    oids: keys,
+  };
 }

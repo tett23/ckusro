@@ -15,6 +15,7 @@ import {
   buildState,
 } from '../__fixtures__';
 import { pfs } from '../__helpers__/pfs';
+import { createObjectManager } from '../../src/models/ObjectManager';
 
 describe('PersistedState', () => {
   describe(readPersistedState, () => {
@@ -35,7 +36,7 @@ describe('PersistedState', () => {
       const fs = pfs();
 
       const blobObject = buildBlobObject('');
-      state.domain.objectManager[blobObject.oid] = blobObject;
+      createObjectManager(state.domain.objectManager).addObjects([blobObject]);
       await writeGitObject(
         fs,
         config.base,

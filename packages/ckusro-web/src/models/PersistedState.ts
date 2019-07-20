@@ -4,10 +4,14 @@ import { ENOENT } from 'constants';
 import FS from 'fs';
 import { State } from '../modules/index';
 import { splitError } from '../utils';
-import { ObjectManager } from './ObjectManager';
+import {
+  createObjectManager,
+  createEmptyObjectManager,
+  SerializedObjectManager,
+} from './ObjectManager';
 
 export type PersistedState = Pick<State, 'config' | 'ui'> & {
-  oids: string[];
+  objectManager: SerializedObjectManager;
 };
 
 export const PersistedStatePath = '/state.json';
@@ -93,12 +97,10 @@ export async function getFsInstance(
 }
 
 export function serializeState(state: State): PersistedState {
-  const oids = Object.keys(state.domain.objectManager);
-
   return {
     config: state.config,
     ui: state.ui,
-    oids,
+    objectManager: createObjectManager(state.domain.objectManager).serialize(),
   };
 }
 
@@ -107,17 +109,18 @@ export async function toState(
   persistedState: PersistedState,
 ): Promise<DeepPartial<State> | Error> {
   const core = ckusroCore(persistedState.config, fs);
-  const ps = persistedState.oids.map(core.repositories().fetchObject);
+  const ps = persistedState.objectManager.oids.map(
+    core.repositories().fetchObject,
+  );
   const objects = await Promise.all(ps).catch((err: Error) => err);
   if (objects instanceof Error) {
     return objects;
   }
-  const [gitObjects] = splitError(objects);
 
-  const objectManager = gitObjects.reduce((acc: ObjectManager, item) => {
-    acc[item.oid] = item;
-    return acc;
-  }, {});
+  const [gitObjects] = splitError(objects);
+  const objectManager = createObjectManager(
+    createEmptyObjectManager(),
+  ).addObjects(gitObjects);
 
   return {
     config: persistedState.config,

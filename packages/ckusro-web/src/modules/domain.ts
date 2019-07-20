@@ -1,5 +1,9 @@
 import { GitObject, InternalPathEntry } from '@ckusro/ckusro-core';
-import { createObjectManager, ObjectManager } from '../models/ObjectManager';
+import {
+  createObjectManager,
+  ObjectManager,
+  createEmptyObjectManager,
+} from '../models/ObjectManager';
 import { createRefManager, Ref, RefManager } from '../models/RefManager';
 import { updateState, UpdateState } from './actions/shared';
 import { createStageManager, StageManager } from '../models/StageEntryManager';
@@ -15,7 +19,7 @@ export function initialDomainState(): DomainState {
     refManager: {
       refs: {},
     },
-    objectManager: {},
+    objectManager: createEmptyObjectManager(),
     stageManager: {
       headOid: null,
       internalPathEntries: [],

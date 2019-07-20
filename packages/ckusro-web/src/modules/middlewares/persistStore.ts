@@ -18,7 +18,7 @@ export default function() {
       debounced(state);
     }
 
-    const result = next(action);
+    next(action);
     return action;
   };
 

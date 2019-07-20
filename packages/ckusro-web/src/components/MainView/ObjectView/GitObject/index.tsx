@@ -15,6 +15,7 @@ import {
   TreeBufferInfo,
   BlobBufferInfo,
 } from '../../../../models/BufferInfo';
+import { createObjectManager } from '../../../../models/ObjectManager';
 
 export type GitObjectProps = {
   gitObject: GitObjectType | null;
@@ -85,7 +86,10 @@ export default function() {
     return {
       oid,
       bufferInfo: state.ui.mainView.objectView.bufferInfo,
-      gitObject: oid == null ? null : state.domain.objectManager[oid],
+      gitObject:
+        oid == null
+          ? null
+          : createObjectManager(state.domain.objectManager).fetch(oid),
     };
   });
   if (gitObject == null || bufferInfo == null) {

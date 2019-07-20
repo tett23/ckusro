@@ -24,6 +24,7 @@ import {
   initializePersistedState as initializePersistedStateAction,
 } from './workerActions/persistedState';
 import { serializeState } from '../models/PersistedState';
+import { createObjectManager } from '../models/ObjectManager';
 
 export function updateByBufferInfo(bufferInfo: BufferInfo | null) {
   return async (dispatch: Dispatch<Actions>) => {
@@ -81,7 +82,9 @@ export function fetchObjects(oids: string[]) {
     } = getState();
 
     const fetchOids = oids.filter(
-      (oid) => objectManager[oid] == null && !fetchingOids.includes(oid),
+      (oid) =>
+        createObjectManager(objectManager).fetch(oid) == null &&
+        !fetchingOids.includes(oid),
     );
     if (fetchOids.length === 0) {
       return;
