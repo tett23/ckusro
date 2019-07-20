@@ -41,10 +41,10 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
       return result;
     }
     if (result == null) {
-      return new Error('');
+      return new Error('result is null');
     }
     if (result.payload == null) {
-      return new Error('');
+      return new Error('payload is null');
     }
 
     batch(() => {
@@ -52,7 +52,7 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
         ? result.payload
         : [result.payload];
       actions.forEach((action) => {
-        if (action == null) {
+        if (action === '' || action == null) {
           return;
         }
 

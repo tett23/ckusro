@@ -13,14 +13,13 @@ export default function() {
   const middleware = (store: ThunkStore<State, Actions>) => (
     next: (action: Actions) => Actions,
   ) => (action: Actions) => {
-    const result = next(action);
-
     const state = store.getState();
     if (state.misc.isEnablePersistedState) {
       debounced(state);
     }
 
-    return result;
+    const result = next(action);
+    return action;
   };
 
   return middleware;

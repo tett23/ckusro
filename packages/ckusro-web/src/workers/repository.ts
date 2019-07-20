@@ -71,7 +71,7 @@ const eventHandler = newHandler<
 registerPromiseWorker(async (message) => {
   const response = await eventHandler(message);
   if (response == null) {
-    return;
+    return [];
   }
 
   return response;

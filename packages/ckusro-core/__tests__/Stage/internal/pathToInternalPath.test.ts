@@ -14,6 +14,37 @@ describe(pathToInternalPath, () => {
     });
   });
 
+  it('returns InternalPath', async () => {
+    const repoPath = buildRepoPath();
+    const path = createRepoPath(repoPath).join() + '/foo/bar';
+    const actual = pathToInternalPath([repoPath], path);
+
+    expect(actual).toMatchObject({
+      repoPath,
+      path: '/foo/bar',
+    });
+  });
+
+  it('returns InternalPath', async () => {
+    const repoPath = buildRepoPath();
+    const actual = pathToInternalPath([repoPath], '/foo');
+
+    expect(actual).toBe(null);
+  });
+
+  it('returns InternalPath', async () => {
+    const repoPath = buildRepoPath();
+    const actual = pathToInternalPath(
+      [repoPath],
+      createRepoPath(repoPath).join(),
+    );
+
+    expect(actual).toMatchObject({
+      repoPath,
+      path: '/',
+    });
+  });
+
   it('returns null', async () => {
     const repoPath = buildRepoPath();
     const path =

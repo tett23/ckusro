@@ -15,7 +15,7 @@ describe(repository.name, () => {
   });
 
   describe(fetch, () => {
-    it.skip('returns true', async () => {
+    it('returns true', async () => {
       const expected = await fetch(config, 'master');
 
       expect(expected).not.toBe(Error);
@@ -23,11 +23,11 @@ describe(repository.name, () => {
   });
 
   describe(pull, () => {
-    it.skip('returns string', async () => {});
+    it('returns string', async () => {});
   });
 
   describe(checkout, () => {
-    it.skip('returns void', async () => {
+    it('returns void', async () => {
       const expected = await checkout(config, 'master');
 
       expect(expected).not.toBe(Error);

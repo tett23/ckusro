@@ -32,10 +32,6 @@ export default async function updateOrAppendObject<
           parentTree.content,
           toTreeEntry(childPath, childTree),
         );
-        const isUpdated = parentTree.content !== newEntries;
-        if (!isUpdated) {
-          return left;
-        }
 
         const newTree = await writeObject(config, {
           type: 'tree',
