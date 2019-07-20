@@ -1,29 +1,28 @@
 import React from 'react';
-import { RepoPath } from '@ckusro/ckusro-core';
 import { useSelector } from 'react-redux';
 import { State } from '../../../modules';
+import { Paper } from '@material-ui/core';
+import RepositoryHeader from './RepositoryHeader';
+import RepositoryViewContent from './RepositoryViewContent';
+import RepositoryViewTabs from './RepositoryViewTabs';
 
-type StateProps = {
-  repoPath: RepoPath;
-};
-
-export type RepositoryView = StateProps;
-
-export function RepositoryView({ repoPath }: RepositoryView) {
-  return <div>{repoPath.name}</div>;
+export function RepositoryView() {
+  return (
+    <Paper>
+      <RepositoryHeader />
+      <RepositoryViewTabs />
+      <RepositoryViewContent />
+    </Paper>
+  );
 }
 
 export default function() {
-  const { repoPath } = useSelector((state: State) => ({
-    repoPath: state.ui.mainView.repositoryView.repoPath,
+  const { repositoryInfo } = useSelector((state: State) => ({
+    repositoryInfo: state.ui.mainView.repositoryView.repositoryInfo,
   }));
-  if (repoPath == null) {
+  if (repositoryInfo == null) {
     return null;
   }
 
-  const stateProps: StateProps = {
-    repoPath,
-  };
-
-  return <RepositoryView {...stateProps} />;
+  return <RepositoryView />;
 }

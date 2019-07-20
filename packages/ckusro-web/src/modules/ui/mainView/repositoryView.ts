@@ -1,27 +1,41 @@
 import { SharedActions, UpdateState } from '../../actions/shared';
-import { RepoPath } from '@ckusro/ckusro-core';
+import { RepositoryInfo } from '@ckusro/ckusro-core';
+
+export type RepositoryViewTabTypes = 'Stage' | 'CommitLogs';
 
 export type RepositoryViewState = {
-  repoPath: RepoPath | null;
+  repositoryInfo: RepositoryInfo | null;
+  selectedTab: RepositoryViewTabTypes;
 };
 
 export function initialRepoPathState(): RepositoryViewState {
   return {
-    repoPath: null,
+    repositoryInfo: null,
+    selectedTab: 'Stage',
   };
 }
 
-const UpdateRepoPath = 'ObjectView/UpdateCurrentAst' as const;
+const UpdateRepoPath = 'UI/MainView/RepositoryView/UpdateCurrentAst' as const;
 
-export function updateRepoPath(repoPath: RepoPath | null) {
+export function updateRepoPath(value: RepositoryInfo | null) {
   return {
     type: UpdateRepoPath,
-    payload: repoPath,
+    payload: value,
+  };
+}
+
+const UpdateSelectedTab = 'UI/MainView/RepositoryView/UpdateSelectedTab' as const;
+
+export function updateSelectedTab(value: RepositoryViewTabTypes) {
+  return {
+    type: UpdateSelectedTab,
+    payload: value,
   };
 }
 
 export type RepositoryViewActions =
   | ReturnType<typeof updateRepoPath>
+  | ReturnType<typeof updateSelectedTab>
   | SharedActions;
 
 export default function repositoryViewReducer(
@@ -32,7 +46,12 @@ export default function repositoryViewReducer(
     case UpdateRepoPath:
       return {
         ...state,
-        repoPath: action.payload,
+        repositoryInfo: action.payload,
+      };
+    case UpdateSelectedTab:
+      return {
+        ...state,
+        selectedTab: action.payload,
       };
     case UpdateState:
       if (

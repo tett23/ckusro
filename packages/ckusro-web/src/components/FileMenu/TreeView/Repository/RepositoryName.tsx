@@ -115,7 +115,7 @@ export default function(ownProps: OwnProps) {
   } = ownProps;
   const dispatchProps: DispatchProps = {
     onClick: () => {
-      dispatch(updateRepoPath(repoPath));
+      dispatch(updateRepoPath({ url, repoPath }));
       dispatch(updateMainViewType('repository'));
       onClick();
     },
