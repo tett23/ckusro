@@ -1,7 +1,8 @@
 import React from 'react';
-import { RepositoryViewTabTypes } from '../../../modules/ui/mainView/repositoryView';
+import { RepositoryViewTabTypes } from '../../../../modules/ui/mainView/repositoryView';
 import { useSelector } from 'react-redux';
-import { State } from '../../../modules';
+import { State } from '../../../../modules';
+import RepositoryStage from './RepositoryStage';
 
 type StateProps = {
   selectedTab: RepositoryViewTabTypes;
@@ -16,7 +17,7 @@ export function RepositoryViewContent({
     case 'CommitLogs':
       return <CommitLog />;
     case 'Stage':
-      return <CommitLog />;
+      return <RepositoryStage />;
     default:
       return null;
   }

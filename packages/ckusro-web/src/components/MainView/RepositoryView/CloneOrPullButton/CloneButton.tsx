@@ -8,9 +8,9 @@ type DispatchProps = {
   onClick: () => void;
 };
 
-export type CloneButton = DispatchProps;
+export type CloneButtonProps = DispatchProps;
 
-export function CloneButton({ onClick }: CloneButton) {
+export function CloneButton({ onClick }: CloneButtonProps) {
   return (
     <Button variant="contained" color="primary" onClick={onClick}>
       Clone

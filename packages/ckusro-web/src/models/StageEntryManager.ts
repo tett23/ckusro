@@ -4,6 +4,8 @@ import {
   createInternalPath,
   InternalPath,
   compareInternalPath,
+  RepoPath,
+  compareRepoPath,
 } from '@ckusro/ckusro-core';
 
 export type StageManager = {
@@ -18,6 +20,8 @@ export function createStageManager(manager: StageManager) {
     update: (items: InternalPathEntry[]) => update(manager, items),
     updateHeadOid: (oid: string) => updateHeadOid(manager, oid),
     fetch: (internalPath: InternalPath) => fetch(manager, internalPath),
+    repositoryFiles: (repoPath: RepoPath) => repositoryFiles(manager, repoPath),
+    filterBlob: () => filterBlob(manager),
   };
 }
 
@@ -69,4 +73,17 @@ export function fetch(
   }
 
   return result[1];
+}
+
+export function repositoryFiles(
+  manager: StageManager,
+  repoPath: RepoPath,
+): InternalPathEntry[] {
+  return manager.internalPathEntries.filter((item) =>
+    compareRepoPath(item[0].repoPath, repoPath),
+  );
+}
+
+export function filterBlob(manager: StageManager): InternalPathEntry[] {
+  return manager.internalPathEntries.filter((item) => item[1].type === 'blob');
 }

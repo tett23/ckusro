@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { State } from '../../../modules';
 import { Paper } from '@material-ui/core';
 import RepositoryHeader from './RepositoryHeader';
-import RepositoryViewContent from './RepositoryViewContent';
+import RepositoryViewContent from './RepositoryViewContents';
 import RepositoryViewTabs from './RepositoryViewTabs';
 
 export function RepositoryView() {

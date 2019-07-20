@@ -1,17 +1,19 @@
 import { SharedActions, UpdateState } from '../../actions/shared';
-import { RepositoryInfo } from '@ckusro/ckusro-core';
+import { RepositoryInfo, InternalPathEntry } from '@ckusro/ckusro-core';
 
 export type RepositoryViewTabTypes = 'Stage' | 'CommitLogs';
 
 export type RepositoryViewState = {
   repositoryInfo: RepositoryInfo | null;
   selectedTab: RepositoryViewTabTypes;
+  selectedStageEntry: InternalPathEntry | null;
 };
 
 export function initialRepoPathState(): RepositoryViewState {
   return {
     repositoryInfo: null,
     selectedTab: 'Stage',
+    selectedStageEntry: null,
   };
 }
 
@@ -33,9 +35,21 @@ export function updateSelectedTab(value: RepositoryViewTabTypes) {
   };
 }
 
+const UpdateSelectedStageEntry = 'UI/MainView/RepositoryView/UpdateSelectedStageEntry' as const;
+
+export function updateSelectedStageEntry(
+  internalPathEntry: InternalPathEntry | null,
+) {
+  return {
+    type: UpdateSelectedStageEntry,
+    payload: internalPathEntry,
+  };
+}
+
 export type RepositoryViewActions =
   | ReturnType<typeof updateRepoPath>
   | ReturnType<typeof updateSelectedTab>
+  | ReturnType<typeof updateSelectedStageEntry>
   | SharedActions;
 
 export default function repositoryViewReducer(
@@ -52,6 +66,11 @@ export default function repositoryViewReducer(
       return {
         ...state,
         selectedTab: action.payload,
+      };
+    case UpdateSelectedStageEntry:
+      return {
+        ...state,
+        selectedStageEntry: action.payload,
       };
     case UpdateState:
       if (
