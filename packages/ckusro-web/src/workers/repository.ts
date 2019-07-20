@@ -7,6 +7,7 @@ import ckusroCore, {
   GitObject,
   toTreeEntry,
   createRepoPath,
+  InternalPathEntry,
 } from '@ckusro/ckusro-core';
 import 'core-js/stable';
 import FS from 'fs';
@@ -273,15 +274,26 @@ async function updateBlobBufferHandler(
     return commitResult;
   }
 
+  const parentPath = createRepoPath(writeInfo.internalPath.repoPath).join();
+  const updates = addResult
+    .map(([internalPath, blobOrTree]) => {
+      if (internalPath.path.length <= parentPath.length) {
+        return null;
+      }
+
+      return [
+        {
+          path: internalPath.path.slice(parentPath.length),
+          repoPath: internalPath.repoPath,
+        },
+        toTreeEntry(basename(internalPath.path), blobOrTree),
+      ] as const;
+    })
+    .filter((item): item is InternalPathEntry => item != null);
   return [
     addObjects([...addResult.map(([, item]) => item), commitResult]),
     updateStageHead(commitResult.oid),
-    updateStageEntries(
-      addResult.map(([internalPath, blobOrTree]) => [
-        internalPath,
-        toTreeEntry(basename(internalPath.path), blobOrTree),
-      ]),
-    ),
+    updateStageEntries(updates),
   ];
 }
 

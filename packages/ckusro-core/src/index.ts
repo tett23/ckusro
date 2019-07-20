@@ -20,7 +20,6 @@ export * from './models/OidRepoPath';
 export * from './models/InternalPathEntry';
 export * from './models/InternalPathTreeObject';
 
-import _separateErrors from './utils/separateErrors';
-export const separateErrors = _separateErrors;
+export { default as separateErrors } from './utils/separateErrors';
 
 export default ckusroCore;
