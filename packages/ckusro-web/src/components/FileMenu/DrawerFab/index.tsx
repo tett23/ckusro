@@ -4,7 +4,8 @@ import { faCog, faEllipsisH, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch } from 'react-redux';
-import { updateMainViewType } from '../../modules/ui/mainView/mainViewMisc';
+import { updateMainViewType } from '../../../modules/ui/mainView/mainViewMisc';
+import AddRepositoryDialog from '../../AddRepositoryDialog';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -21,18 +22,23 @@ const useStyles = makeStyles(() =>
   }),
 );
 
+type ButtonActions = 'Config' | 'AddRepo';
+
 const actions = [
-  { icon: faCog, name: 'Config' },
-  { icon: faPlus, name: 'Add repository' },
+  { icon: faCog, name: 'Config' as const },
+  { icon: faPlus, name: 'AddRepo' as const },
 ];
 
 type StateProps = {
   isOpen: boolean;
+  isAddRepositoryDialogOpen: boolean;
 };
 
 type DispatchProps = {
   onClickConfig: () => void;
+  onClickAddRepo: () => void;
   setIsOpen: (value: boolean) => void;
+  setIsAddRepositoryDialogOpen: (value: boolean) => void;
 };
 
 type StyleProps = {
@@ -43,16 +49,22 @@ type DrawerFabProps = StateProps & DispatchProps & StyleProps;
 
 export function DrawerFab({
   isOpen,
+  isAddRepositoryDialogOpen,
   onClickConfig,
+  onClickAddRepo,
   setIsOpen,
+  setIsAddRepositoryDialogOpen,
   classes,
 }: DrawerFabProps) {
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
-  const handleClick = (name: string | null) => {
+  const handleClick = (name: ButtonActions | null) => {
     switch (name) {
       case 'Config':
         onClickConfig();
+        break;
+      case 'AddRepo':
+        onClickAddRepo();
         break;
       default:
     }
@@ -83,18 +95,36 @@ export function DrawerFab({
           />
         ))}
       </SpeedDial>
+      <AddRepositoryDialog
+        isOpen={isAddRepositoryDialogOpen}
+        setIsOpen={setIsAddRepositoryDialogOpen}
+      />
     </div>
   );
 }
 
 export default function() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAddRepositoryDialogOpen, setIsAddRepositoryDialogOpen] = useState(
+    false,
+  );
   const dispatch = useDispatch();
-  const dispatchProps = {
+  const dispatchProps: DispatchProps = {
     onClickConfig: () => dispatch(updateMainViewType('config')),
+    onClickAddRepo: () => {
+      setIsAddRepositoryDialogOpen(true);
+    },
     setIsOpen: (value: boolean) => setIsOpen(value),
+    setIsAddRepositoryDialogOpen: (value: boolean) =>
+      setIsAddRepositoryDialogOpen(value),
   };
-  const classes = useStyles();
+  const stateProps: StateProps = {
+    isOpen,
+    isAddRepositoryDialogOpen,
+  };
+  const styleProps: StyleProps = {
+    classes: useStyles(),
+  };
 
-  return <DrawerFab isOpen={isOpen} {...dispatchProps} classes={classes} />;
+  return <DrawerFab {...stateProps} {...dispatchProps} {...styleProps} />;
 }

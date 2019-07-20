@@ -23,7 +23,6 @@ type StyleProps = {
 export type ConfirmDialogProps = OwnProps & StyleProps;
 
 export function ConfirmDialog({
-  isOpen,
   title,
   body,
   onOk,
@@ -36,7 +35,7 @@ export function ConfirmDialog({
       disableEscapeKeyDown
       maxWidth="xs"
       aria-labelledby="confirmation-dialog-title"
-      open={isOpen}
+      open
     >
       <DialogTitle id="confirmation-dialog-title">{title}</DialogTitle>
       <DialogContent dividers>{body}</DialogContent>
@@ -60,6 +59,10 @@ export default function(props: OwnProps) {
   const styleProps: StyleProps = {
     classes: useDangerButtonStyles(),
   };
+
+  if (!props.isOpen) {
+    return null;
+  }
 
   return <ConfirmDialog {...props} {...styleProps} />;
 }

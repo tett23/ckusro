@@ -1,4 +1,8 @@
-import { CkusroConfig, convertColorScheme } from '@ckusro/ckusro-core';
+import {
+  CkusroConfig,
+  convertColorScheme,
+  RepositoryInfo,
+} from '@ckusro/ckusro-core';
 import { updateState, UpdateState } from './actions/shared';
 
 export type ConfigState = CkusroConfig;
@@ -69,6 +73,15 @@ export function updateAuthenticationGithub(value: string | null) {
   };
 }
 
+const AddRepository = 'Config/AddRepository' as const;
+
+export function addRepository(repositoryInfo: RepositoryInfo) {
+  return {
+    type: AddRepository,
+    payload: repositoryInfo,
+  };
+}
+
 const ClearRepositories = 'Config/ClearRepositories' as const;
 
 export function clearRepositories() {
@@ -81,6 +94,7 @@ export function clearRepositories() {
 export type ConfigActions =
   | ReturnType<typeof updateCorsProxy>
   | ReturnType<typeof updateAuthenticationGithub>
+  | ReturnType<typeof addRepository>
   | ReturnType<typeof clearRepositories>
   | ReturnType<typeof updateState>;
 
@@ -98,6 +112,11 @@ export function configReducer(
           ...state.authentication,
           github: action.payload,
         },
+      };
+    case AddRepository:
+      return {
+        ...state,
+        repositories: [...state.repositories, action.payload],
       };
     case ClearRepositories:
       return {

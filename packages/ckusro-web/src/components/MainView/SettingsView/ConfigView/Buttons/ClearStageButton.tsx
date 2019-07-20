@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import DangerButton from '../../../../shared/DangerButton';
-import { Typography } from '@material-ui/core';
+import { DialogContentText } from '@material-ui/core';
 import { clearStageData } from '../../../../../modules/thunkActions';
 
 type DispatchProps = {
@@ -12,9 +12,9 @@ export type ClearStageButtonProps = DispatchProps;
 
 export function ClearStageButton({ onClick }: ClearStageButtonProps) {
   const confirmBody = (
-    <Typography>
+    <DialogContentText>
       All editing data is discarded. This operation can not be undone.
-    </Typography>
+    </DialogContentText>
   );
 
   return (

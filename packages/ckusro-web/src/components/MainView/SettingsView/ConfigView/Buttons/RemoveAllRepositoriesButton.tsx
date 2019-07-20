@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import DangerButton from '../../../../shared/DangerButton';
-import { Typography } from '@material-ui/core';
+import { DialogContentText } from '@material-ui/core';
 import { removeAllRepositories } from '../../../../../modules/thunkActions';
 
 type DispatchProps = {
@@ -14,9 +14,9 @@ export function RemoveAllRepositoriesButton({
   onClick,
 }: RemoveAllRepositoriesButtonProps) {
   const confirmBody = (
-    <Typography>
+    <DialogContentText>
       All repositories will be deleted. This operation can not be undone.
-    </Typography>
+    </DialogContentText>
   );
 
   return (
