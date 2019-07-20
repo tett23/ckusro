@@ -1,6 +1,6 @@
 import { updateState, UpdateState } from '../../actions/shared';
 
-export type MainViewTypes = 'object' | 'config';
+export type MainViewTypes = 'object' | 'repository' | 'config';
 
 export type MainViewMiscState = {
   mainViewType: MainViewTypes;

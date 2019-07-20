@@ -18,19 +18,27 @@ import {
 } from '../../../../modules/thunkActions';
 import ObjectLink from '../../../shared/ObjectLinkText';
 import { createBufferInfo } from '../../../../models/BufferInfo';
+import { updateRepoPath } from '../../../../modules/ui/mainView/repositoryView';
+import { updateMainViewType } from '../../../../modules/ui/mainView/mainViewMisc';
 
 type OwnProps = {
-  repoPath: RepoPath;
+  repository: RepositoryInfo;
   headOid: string | null;
   onClick: () => void;
 };
 
+type StateProps = {
+  repoPath: RepoPath;
+  headOid: string | null;
+};
+
 type DispatchProps = {
+  onClick: () => void;
   onClickClone: () => void;
   onClickPull: () => void;
 };
 
-export type RepositoryNameProps = OwnProps & DispatchProps;
+export type RepositoryNameProps = StateProps & DispatchProps;
 
 function RepositoryName({
   repoPath,
@@ -98,27 +106,26 @@ function RepositoryName({
   );
 }
 
-export default function(ownProps: {
-  repository: RepositoryInfo;
-  headOid: string | null;
-  onClick: () => void;
-}) {
+export default function(ownProps: OwnProps) {
   const dispatch = useDispatch();
   const {
-    repository: { url },
+    repository: { url, repoPath },
     headOid,
+    onClick,
   } = ownProps;
-  const {
-    repository: { repoPath },
-  } = ownProps;
+  const dispatchProps: DispatchProps = {
+    onClick: () => {
+      dispatch(updateRepoPath(repoPath));
+      dispatch(updateMainViewType('repository'));
+      onClick();
+    },
+    onClickClone: () => dispatch(cloneRepository(url)),
+    onClickPull: () => dispatch(pullRepository(repoPath)),
+  };
+  const stateProps: StateProps = {
+    headOid,
+    repoPath,
+  };
 
-  return (
-    <RepositoryName
-      repoPath={repoPath}
-      headOid={headOid}
-      onClick={ownProps.onClick}
-      onClickClone={() => dispatch(cloneRepository(url))}
-      onClickPull={() => dispatch(pullRepository(repoPath))}
-    />
-  );
+  return <RepositoryName {...stateProps} {...dispatchProps} />;
 }

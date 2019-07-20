@@ -4,6 +4,7 @@ import { State } from '../../modules';
 import { MainViewTypes } from '../../modules/ui/mainView/mainViewMisc';
 import ObjectView from './ObjectView';
 import SettingsView from './SettingsView';
+import RepositoryView from './RepositoryView';
 
 type OwnProps = {};
 
@@ -24,6 +25,8 @@ export function MainViewComponent({ mainViewType }: MainViewComponentProps) {
   switch (mainViewType) {
     case 'object':
       return <ObjectView />;
+    case 'repository':
+      return <RepositoryView />;
     case 'config':
       return <SettingsView />;
     default:
