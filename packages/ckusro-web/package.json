@@ -25,7 +25,7 @@
     "preflight": "yarn lint && yarn run test",
     "build-watch": "rm -rf lib/ && parcel watch src/index.html -d lib",
     "lint": "yarn run lint:ts && yarn run lint:eslint && yarn run lint:prettier",
-    "lint:ts": "tsc -b --clean",
+    "lint:ts": "tsc -p . --noEmit",
     "lint:eslint": "eslint --ignore-path ../../.eslintignore --ext .js,.jsx,.ts,.tsx src __tests__",
     "lint:prettier": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --write --no-editorconfig -c '**/*.@(js|jsx|ts|tsx|md|json|yml|yaml|toml|html)'",
     "test": "jest",
