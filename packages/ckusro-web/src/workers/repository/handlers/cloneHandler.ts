@@ -6,14 +6,14 @@ import ckusroCore, {
 import FS from 'fs';
 import { addRef } from '../../../modules/domain';
 import { cloneRepository } from '../../../modules/workerActions/repository';
-import { HandlerResult, PayloadType } from '../../util';
+import { HandlersResult, PayloadType } from '../../util';
 import { RepositoryWorkerResponseActions } from '../index';
 
 export default async function cloneHandler(
   config: CkusroConfig,
   fs: typeof FS,
   { url }: PayloadType<ReturnType<typeof cloneRepository>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
+): Promise<HandlersResult<RepositoryWorkerResponseActions>> {
   const repoPath = url2RepoPath(url);
   if (repoPath instanceof Error) {
     return repoPath;

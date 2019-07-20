@@ -10,14 +10,14 @@ import {
   updateStageEntries,
 } from '../../../modules/domain';
 import { fetchStageInfo } from '../../../modules/workerActions/repository';
-import { HandlerResult, PayloadType } from '../../util';
+import { HandlersResult, PayloadType } from '../../util';
 import { RepositoryWorkerResponseActions } from '../index';
 
 export default async function fetchStageInfoHandler(
   config: CkusroConfig,
   fs: typeof FS,
   _: PayloadType<ReturnType<typeof fetchStageInfo>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
+): Promise<HandlersResult<RepositoryWorkerResponseActions>> {
   const core = ckusroCore(config, fs);
   const stage = await core.stage();
   if (stage instanceof Error) {

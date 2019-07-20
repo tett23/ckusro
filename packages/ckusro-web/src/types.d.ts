@@ -6,12 +6,12 @@ declare module '*.svg' {
 
 declare module '@isomorphic-git/lightning-fs';
 
-type FSAction<Payload = any> = {
-  type: string;
+interface FSAction<T = string, Payload = any> {
+  type: T;
   payload: Payload;
   error?: boolean;
   meta?: Record<string, any>;
-};
+}
 
 type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends Array<infer U>

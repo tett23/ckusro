@@ -42,14 +42,12 @@ export type RepositoryWorkerResponseActions = Actions;
 
 const eventHandler = newHandler<
   RepositoryWorkerRequestActions,
-  RepositoryWorkerResponseActions
+  RepositoryWorkerResponseActions,
+  typeof WorkerResponseRepository
 >(actionHandlers, WorkerResponseRepository);
 
 registerPromiseWorker(async (message) => {
   const response = await eventHandler(message);
-  if (response == null) {
-    return [];
-  }
 
   return response;
 });
@@ -62,43 +60,70 @@ function actionHandlers(
 > | null {
   switch (action.type) {
     case CloneRepository:
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return cloneHandler as any;
+      return cloneHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
     case PullRepository:
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return pullRepositoryHandler as any;
+      return pullRepositoryHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
     case FetchObjects:
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return fetchObjectsHandler as any;
+      return fetchObjectsHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
     case UpdateByInternalPath:
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return updateByInternalPathHandler as any;
+      return updateByInternalPathHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
     case FetchHeadOids:
-      return fetchHeadOidsHandler;
+      return fetchHeadOidsHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
     case UpdateBlobBuffer:
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return updateBlobBufferHandler as any;
+      return updateBlobBufferHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
     case FetchStageInfo:
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return fetchStageInfoHandler as any;
+      return fetchStageInfoHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
     case WritePersistedState:
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return writeStateHandler as any;
+      return writeStateHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
     case ReadPersistedState:
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return readStateHandler as any;
+      return readStateHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
     case ParseMarkdown:
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return parseMarkdownHandler as any;
+      return parseMarkdownHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
     case ClearStageData:
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return clearStageDataHandler as any;
+      return clearStageDataHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
     case RemoveAllRepositories:
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return removeAllRepositoriesHandler as any;
+      return removeAllRepositoriesHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
     case InitializePersistedState:
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return initializePersistedStateHandler as any;
+      return initializePersistedStateHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
     default:
       return null;
   }

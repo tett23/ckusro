@@ -12,7 +12,7 @@ import {
   updateStageEntries,
 } from '../../../modules/domain';
 import { updateBlobBuffer } from '../../../modules/workerActions/repository';
-import { HandlerResult, PayloadType } from '../../util';
+import { HandlersResult, PayloadType } from '../../util';
 import { basename } from 'path';
 import { RepositoryWorkerResponseActions } from '../index';
 
@@ -20,7 +20,7 @@ export default async function updateBlobBufferHandler(
   config: CkusroConfig,
   fs: typeof FS,
   writeInfo: PayloadType<ReturnType<typeof updateBlobBuffer>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
+): Promise<HandlersResult<RepositoryWorkerResponseActions>> {
   const core = ckusroCore(config, fs);
   const stage = await core.stage();
   if (stage instanceof Error) {

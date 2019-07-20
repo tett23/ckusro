@@ -2,14 +2,14 @@ import ckusroCore, { CkusroConfig, createRepoPath } from '@ckusro/ckusro-core';
 import FS from 'fs';
 import { addRef } from '../../../modules/domain';
 import { pullRepository } from '../../../modules/workerActions/repository';
-import { HandlerResult, PayloadType } from '../../util';
+import { HandlersResult, PayloadType } from '../../util';
 import { RepositoryWorkerResponseActions } from '../index';
 
 export default async function pullRepositoryHandler(
   config: CkusroConfig,
   fs: typeof FS,
   repoPath: PayloadType<ReturnType<typeof pullRepository>>,
-): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
+): Promise<HandlersResult<RepositoryWorkerResponseActions>> {
   const core = ckusroCore(config, fs);
   const repo = await core.repositories().fetchRepository(repoPath);
   if (repo instanceof Error) {

@@ -5,15 +5,15 @@ import { emptyMessage, errorMessage } from '../modules/workerActions/common';
 import { WithRequestId, WorkerRequest } from '../modules/workers';
 
 export type Handler<
-  RequestActions extends FSAction,
+  RequestAction extends FSAction,
   ResponseActions extends FSAction
 > = (
   config: CkusroConfig,
   fs: typeof FS,
-  payload: PayloadType<RequestActions>,
-) => Promise<HandlerResult<ResponseActions>>;
+  payload: PayloadType<RequestAction>,
+) => Promise<HandlersResult<ResponseActions>>;
 
-export type HandlerResult<ResponseActions extends FSAction> =
+export type HandlersResult<ResponseActions extends FSAction> =
   | ResponseActions[]
   | Error;
 
@@ -28,46 +28,62 @@ export type Handlers<
 
 export function newHandler<
   RequestActions extends FSAction,
-  ResponseActions extends FSAction
+  ResponseActions extends FSAction,
+  ResponseActionType extends string
 >(
   actionHandlers: Handlers<RequestActions, ResponseActions>,
-  actionType: string,
+  responseActionType: ResponseActionType,
 ) {
   return (action: WorkerRequest<RequestActions>) =>
-    handler<RequestActions, ResponseActions>(
+    handler<RequestActions, ResponseActions, ResponseActionType>(
       actionHandlers,
-      actionType,
+      responseActionType,
       action,
     );
 }
 
+type HandlerResult<ActionType, ResponseActions> = FSAction<
+  ActionType,
+  ResponseActions[]
+> & {
+  type: ActionType;
+  payload: ResponseActions[];
+};
+
 async function handler<
   RequestActions extends FSAction,
-  ResponseActions extends FSAction
+  ResponseActions extends FSAction,
+  ResponseActionType extends string
 >(
   handlers: Handlers<RequestActions, ResponseActions>,
-  actionType: string,
+  responseActionType: ResponseActionType,
   action: WorkerRequest<RequestActions>,
-): Promise<WithRequestId<ResponseActions>> {
+): Promise<WithRequestId<HandlerResult<ResponseActionType, ResponseActions>>> {
   const { config, requestId } = action.meta;
   const fs: typeof FS = new LightningFs(config.coreId);
   console.info(`[worker]:${requestId}`, action);
 
   const response = await process<RequestActions, ResponseActions>(
     handlers,
-    actionType,
     config,
     fs,
     action,
-  ).catch((err: Error) => err);
-  if (response instanceof Error) {
-    return withRequestId<ResponseActions>(requestId, errorMessage(
-      response,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ) as any);
-  }
+  )
+    .catch((err: Error) => err)
+    .then((item) => {
+      if (item instanceof Error) {
+        return [errorMessage(item)] as ResponseActions[];
+      }
 
-  return withRequestId<ResponseActions>(requestId, response);
+      return item;
+    });
+
+  const handlerResult: HandlerResult<ResponseActionType, ResponseActions> = {
+    type: responseActionType,
+    payload: response,
+  };
+
+  return withRequestId(requestId, handlerResult);
 }
 
 async function process<
@@ -75,48 +91,36 @@ async function process<
   ResponseActions extends FSAction
 >(
   handlers: Handlers<RequestActions, ResponseActions>,
-  actionType: string,
   config: CkusroConfig,
   fs: typeof FS,
   action: WorkerRequest<RequestActions>,
-): Promise<ResponseActions> {
+): Promise<ResponseActions[] | Error> {
   if (config == null) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return errorMessage(new Error('')) as any;
+    return new Error('');
   }
 
   const handler = handlers(action);
   if (handler == null) {
-    // TODO: wrap to empty action
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return emptyMessage() as any;
+    return [emptyMessage()] as ResponseActions[];
   }
 
   const result = await handler(config, fs, action.payload).catch(
     (err: Error) => err,
   );
   if (result instanceof Error) {
-    // TODO: wrap to error action
-    console.error(result);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return errorMessage(result) as any;
+    return result;
   }
 
-  return {
-    type: actionType,
-    payload: result,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } as any;
+  return result;
 }
 
-function withRequestId<ResponseActions extends FSAction>(
+function withRequestId<HandlerResult extends FSAction>(
   requestId: number,
-  action: ResponseActions,
-): WithRequestId<ResponseActions> {
+  handlerResult: HandlerResult,
+): WithRequestId<HandlerResult> {
   return {
-    ...action,
+    ...handlerResult,
     meta: {
-      ...(action.meta || {}),
       requestId,
     },
   };

@@ -7,6 +7,7 @@ import sequenceGenerator from '../utils/sequenceGenerator';
 import PromiseWorker from 'promise-worker';
 import { ParserWorkerActions } from './workerActions/parser';
 import { PersistStateWorkerActions } from './workerActions/persistedState';
+import { WorkerResponseRepository } from '../workers/repository';
 
 export type WorkerDispatcher<WorkerActions extends FSAction> = (
   action: WorkerActions,
@@ -17,7 +18,9 @@ export type MainWorkerActions =
   | ParserWorkerActions
   | PersistStateWorkerActions;
 
-export type WorkerResponse<T> = WithRequestId<FSAction<T[] | T>>;
+type WorkerTypes = typeof WorkerResponseRepository;
+
+export type WorkerResponse = WithRequestId<FSAction<WorkerTypes, Actions[]>>;
 
 export function newWorkerDispatcher<WorkerActions extends FSAction>(
   worker: Worker,
@@ -34,7 +37,7 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
     console.time(`[ui]:${req.meta.requestId}`); // eslint-disable-line no-console
 
     const result = await promiseWorker
-      .postMessage<WorkerResponse<Actions>>(req)
+      .postMessage<WorkerResponse>(req)
       .catch((err: Error) => err);
     console.timeEnd(`[ui]:${req.meta.requestId}`); // eslint-disable-line no-console
     if (result instanceof Error) {
@@ -48,11 +51,8 @@ export function newWorkerDispatcher<WorkerActions extends FSAction>(
     }
 
     batch(() => {
-      const actions = Array.isArray(result.payload)
-        ? result.payload
-        : [result.payload];
-      actions.forEach((action) => {
-        if (action === '' || action == null) {
+      result.payload.forEach((action) => {
+        if (action == null) {
           return;
         }
 
