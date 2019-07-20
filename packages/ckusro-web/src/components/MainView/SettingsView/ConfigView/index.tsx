@@ -8,6 +8,7 @@ import {
   FormLabel,
   IconButton,
   Grid,
+  Divider,
 } from '@material-ui/core';
 import useConfigViewStyles from './useConfigViewStyles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,6 +17,7 @@ import {
   updateCorsProxy as updateCorsProxyAction,
   updateAuthenticationGithub as updateAuthenticationGithubAction,
 } from '../../../../modules/config';
+import Buttons from './Buttons';
 
 type OwnProps = {};
 
@@ -114,6 +116,10 @@ export function ConfigView({
             </IconButton>
           </Grid>
         </Grid>
+      </FormGroup>
+      <Divider />
+      <FormGroup className={classes.dangerZone}>
+        <Buttons />
       </FormGroup>
     </>
   );

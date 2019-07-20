@@ -64,6 +64,15 @@ export function fetchStageInfo() {
   };
 }
 
+export const ClearStageData = 'RepositoryWorker/ClearStageData' as const;
+
+export function clearStageData() {
+  return {
+    type: ClearStageData,
+    payload: null,
+  };
+}
+
 export type RepositoryWorkerActions =
   | ReturnType<typeof cloneRepository>
   | ReturnType<typeof pullRepository>
@@ -71,4 +80,5 @@ export type RepositoryWorkerActions =
   | ReturnType<typeof updateByInternalPath>
   | ReturnType<typeof fetchHeadOids>
   | ReturnType<typeof updateBlobBuffer>
-  | ReturnType<typeof fetchStageInfo>;
+  | ReturnType<typeof fetchStageInfo>
+  | ReturnType<typeof clearStageData>;

@@ -59,12 +59,22 @@ export function updateStageEntries(entries: InternalPathEntry[]) {
   };
 }
 
+const ClearStageManager = 'Domain/ClearStageManager' as const;
+
+export function clearStageManager() {
+  return {
+    type: ClearStageManager,
+    payload: null,
+  };
+}
+
 export type DomainActions =
   | ReturnType<typeof addRef>
   | ReturnType<typeof addObjects>
   | ReturnType<typeof updateStageHead>
   | ReturnType<typeof updateStageEntries>
-  | ReturnType<typeof updateState>;
+  | ReturnType<typeof updateState>
+  | ReturnType<typeof clearStageManager>;
 
 export function domainReducer(
   state: DomainState = initialDomainState(),
@@ -104,6 +114,11 @@ export function domainReducer(
         ),
       };
     }
+    case ClearStageManager:
+      return {
+        ...state,
+        stageManager: { headOid: null, internalPathEntries: [] },
+      };
     case UpdateState:
       if (action.payload.domain == null) {
         return state;

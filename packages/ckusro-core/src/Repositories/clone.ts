@@ -1,12 +1,11 @@
 import * as Git from 'isomorphic-git';
 import FS from 'fs';
-import rimraf from 'rimraf';
 import { CkusroConfig } from '../models/CkusroConfig';
 import { RepoPath, toPath, url2RepoPath } from '../models/RepoPath';
 import { Repository, repository } from '../Repository';
-import { promisify, callbackify } from 'util';
 import { toIsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import mkdirP from '../utils/mkdirP';
+import rmrf from '../utils/rmrf';
 import isCloned from './internal/isCloned';
 
 export default async function clone(
@@ -57,12 +56,7 @@ async function clearRepositoryDirectory(
   const dirPath = toPath(config.base, repoPath);
   const isExist = await isCloned(config, fs, repoPath);
   if (isExist) {
-    const rmrfResult = await (async () =>
-      await promisify(rimraf)(dirPath, {
-        ...fs,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        lstat: callbackify(fs.promises.stat) as any,
-      }))().catch((err: Error) => err);
+    const rmrfResult = await rmrf(fs, dirPath);
     if (rmrfResult instanceof Error) {
       return rmrfResult;
     }

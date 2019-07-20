@@ -17,6 +17,7 @@ import {
   addRef,
   updateStageHead,
   updateStageEntries,
+  clearStageManager,
 } from '../modules/domain';
 import {
   CommonWorkerActions,
@@ -36,6 +37,8 @@ import {
   updateBlobBuffer,
   FetchStageInfo,
   fetchStageInfo,
+  ClearStageData,
+  clearStageData,
 } from '../modules/workerActions/repository';
 import {
   ReadPersistedState,
@@ -113,6 +116,9 @@ function actionHandlers(
     case ParseMarkdown:
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return parseMarkdownHandler as any;
+    case ClearStageData:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return clearStageDataHandler as any;
     default:
       return null;
   }
@@ -341,4 +347,23 @@ async function parseMarkdownHandler(
   }
 
   return [updateCurrentAst(ast as HastRoot)];
+}
+
+async function clearStageDataHandler(
+  config: CkusroConfig,
+  fs: typeof FS,
+  _: PayloadType<ReturnType<typeof clearStageData>>,
+): Promise<HandlerResult<RepositoryWorkerResponseActions>> {
+  const core = ckusroCore(config, fs);
+  const stage = await core.stage();
+  if (stage instanceof Error) {
+    return stage;
+  }
+
+  const clearResult = await stage.clear();
+  if (clearResult instanceof Error) {
+    return clearResult;
+  }
+
+  return [clearStageManager()];
 }

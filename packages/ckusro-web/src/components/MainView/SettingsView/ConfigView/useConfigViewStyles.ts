@@ -13,6 +13,9 @@ const useConfigViewStyles = makeStyles((theme: Theme) =>
     deleteButton: {
       margin: theme.spacing(1),
     },
+    dangerZone: {
+      paddingTop: '2rem',
+    },
   }),
 );
 

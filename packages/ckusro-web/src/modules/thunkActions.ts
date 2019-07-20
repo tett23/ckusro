@@ -11,6 +11,7 @@ import {
   pullRepository as pullRepositoryAction,
   updateBlobBuffer as updateBlobBufferAction,
   fetchStageInfo as fetchStageInfoAction,
+  clearStageData as clearStageDataAction,
 } from './workerActions/repository';
 import { updateMainViewType } from './ui/mainView/mainViewMisc';
 import { BufferInfo } from '../models/BufferInfo';
@@ -149,5 +150,16 @@ export function writePersistedState() {
     return repositoryWorkerDispatcher(
       writePersistedStateAction(serializeState(state)),
     );
+  };
+}
+
+export function clearStageData() {
+  return async (_: Dispatch<Actions>, getState: () => State) => {
+    const state = getState();
+    const {
+      workers: { repositoryWorkerDispatcher },
+    } = state;
+
+    return repositoryWorkerDispatcher(clearStageDataAction());
   };
 }
