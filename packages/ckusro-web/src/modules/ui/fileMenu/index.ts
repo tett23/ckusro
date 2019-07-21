@@ -22,7 +22,7 @@ export type FileMenuState = {
   gitObjectList: GitObjectListState;
 };
 
-export function initialFileMenuState(): FileMenuState{
+export function initialFileMenuState(): FileMenuState {
   return {
     misc: initialFileMenuMiscState(),
     treeView: initialTreeViewState(),
