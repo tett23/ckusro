@@ -11,16 +11,19 @@ import {
   FetchStageInfo,
   ClearStageData,
   RemoveAllRepositories,
+  RepositoryWorkerActions,
 } from '../../modules/workerActions/repository';
 import {
   ReadPersistedState,
   WritePersistedState,
   InitializePersistedState,
+  PersistStateWorkerActions,
 } from '../../modules/workerActions/persistedState';
-import { ParseMarkdown } from '../../modules/workerActions/parser';
+import {
+  ParseMarkdown,
+  ParserWorkerActions,
+} from '../../modules/workerActions/parser';
 import { Handler, newHandler } from '../util';
-import registerPromiseWorker from 'promise-worker/register';
-import { MainWorkerActions } from '../../modules/workers';
 import initializePersistedStateHandler from './handlers/initializePersistedStateHandler';
 import removeAllRepositoriesHandler from './handlers/removeAllRepositoriesHandler';
 import clearStageDataHandler from './handlers/clearStageDataHandler';
@@ -37,20 +40,23 @@ import cloneHandler from './handlers/cloneHandler';
 
 export const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
 
-export type RepositoryWorkerRequestActions = MainWorkerActions;
+export type RepositoryWorkerRequestActions =
+  | RepositoryWorkerActions
+  | ParserWorkerActions
+  | PersistStateWorkerActions;
 export type RepositoryWorkerResponseActions = Actions;
 
-const eventHandler = newHandler<
+export type RepositoryWorker = {
+  workerType: typeof WorkerResponseRepository;
+  requestActions: RepositoryWorkerRequestActions;
+  responseActions: RepositoryWorkerResponseActions;
+};
+
+export default newHandler<
   RepositoryWorkerRequestActions,
   RepositoryWorkerResponseActions,
   typeof WorkerResponseRepository
 >(actionHandlers, WorkerResponseRepository);
-
-registerPromiseWorker(async (message) => {
-  const response = await eventHandler(message);
-
-  return response;
-});
 
 function actionHandlers(
   action: RepositoryWorkerRequestActions,

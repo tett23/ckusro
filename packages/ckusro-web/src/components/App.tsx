@@ -2,22 +2,25 @@ import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import React, { useState, useEffect } from 'react';
 import { Provider, useDispatch } from 'react-redux';
-import initializeStore from '../modules';
+import initializeStore, { State } from '../modules';
 import { enablePersistedState } from '../modules/misc';
-import {
-  fetchHeadOids,
-  fetchStageInfo,
-  readPersistedState,
-} from '../modules/thunkActions';
+import { fetchHeadOids, fetchStageInfo } from '../modules/thunkActions';
 import FileMenu from './FileMenu';
 import MainView from './MainView';
+import { PWorkers } from '../workers';
+
+export type AppProps = {
+  workers: PWorkers;
+  initialState: DeepPartial<State>;
+};
 
 export function App() {
   return <Inner />;
 }
 
-export default function() {
-  const store = initializeStore({});
+export default function({ workers, initialState }: AppProps) {
+  const store = initializeStore(workers, initialState);
+  workers.connectStore(store);
   const theme = createMuiTheme();
 
   return (
@@ -35,7 +38,6 @@ function Inner() {
 
   useEffect(() => {
     (async () => {
-      await dispatch(readPersistedState());
       await dispatch(fetchHeadOids());
       await dispatch(fetchStageInfo());
 

@@ -9,7 +9,7 @@ export type RepositoryViewState = {
   selectedStageEntry: InternalPathEntry | null;
 };
 
-export function initialRepoPathState(): RepositoryViewState {
+export function initialRepositoryViewState(): RepositoryViewState {
   return {
     repositoryInfo: null,
     selectedTab: 'Stage',
@@ -53,7 +53,7 @@ export type RepositoryViewActions =
   | SharedActions;
 
 export default function repositoryViewReducer(
-  state: RepositoryViewState = initialRepoPathState(),
+  state: RepositoryViewState = initialRepositoryViewState(),
   action: RepositoryViewActions,
 ): RepositoryViewState {
   switch (action.type) {

@@ -2,14 +2,14 @@ import { updateState, UpdateState } from '../actions/shared';
 
 export type UIMiscState = {};
 
-export function initialFileMenuMiscState(): UIMiscState {
+export function initialUIMiscState(): UIMiscState {
   return {};
 }
 
 export type UIMiscActions = ReturnType<typeof updateState>;
 
 export default function uiMiscReducer(
-  state: UIMiscState = initialFileMenuMiscState(),
+  state: UIMiscState = initialUIMiscState(),
   action: UIMiscActions,
 ): UIMiscState {
   switch (action.type) {

@@ -2,7 +2,8 @@ import { CkusroConfig } from '@ckusro/ckusro-core';
 import LightningFs from '@isomorphic-git/lightning-fs';
 import FS from 'fs';
 import { emptyMessage, errorMessage } from '../modules/workerActions/common';
-import { WithRequestId, WorkerRequest } from '../modules/workers';
+import { WithRequestId } from './withRequestId';
+import { WorkerRequest } from './WorkerRequest';
 
 export type Handler<
   RequestAction extends FSAction,

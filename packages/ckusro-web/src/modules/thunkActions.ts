@@ -25,6 +25,7 @@ import {
 } from './workerActions/persistedState';
 import { serializeState } from '../models/PersistedState';
 import { createObjectManager } from '../models/ObjectManager';
+import { PWorkers } from '../workers';
 
 export function updateByBufferInfo(bufferInfo: BufferInfo | null) {
   return async (dispatch: Dispatch<Actions>) => {
@@ -38,46 +39,41 @@ export function updateByBufferInfo(bufferInfo: BufferInfo | null) {
 }
 
 export function updateByInternalPath(internalPath: InternalPath) {
-  return async (dispatch: Dispatch<Actions>, getState: () => State) => {
+  return async (
+    dispatch: Dispatch<Actions>,
+    _: () => State,
+    workers: PWorkers,
+  ) => {
     if (internalPath == null) {
       return;
     }
 
-    const {
-      workers: { repositoryWorkerDispatcher },
-    } = getState();
-
     dispatch(updateMainViewType('object'));
 
-    return repositoryWorkerDispatcher(updateByInternalPathAction(internalPath));
+    return workers.dispatch('main', updateByInternalPathAction(internalPath));
   };
 }
 
 export function cloneRepository(url: string) {
-  return async (_: Dispatch<Actions>, getState: () => State) => {
-    const {
-      workers: { repositoryWorkerDispatcher },
-    } = getState();
-
-    return repositoryWorkerDispatcher(cloneRepositoryAction(url));
+  return async (_: Dispatch<Actions>, __: () => State, workers: PWorkers) => {
+    return workers.dispatch('main', cloneRepositoryAction(url));
   };
 }
 
 export function pullRepository(repoPath: RepoPath) {
-  return async (_: Dispatch<Actions>, getState: () => State) => {
-    const {
-      workers: { repositoryWorkerDispatcher },
-    } = getState();
-
-    return repositoryWorkerDispatcher(pullRepositoryAction(repoPath));
+  return async (_: Dispatch<Actions>, __: () => State, workers: PWorkers) => {
+    return workers.dispatch('main', pullRepositoryAction(repoPath));
   };
 }
 
 export function fetchObjects(oids: string[]) {
-  return async (dispatch: Dispatch<Actions>, getState: () => State) => {
+  return async (
+    dispatch: Dispatch<Actions>,
+    getState: () => State,
+    workers: PWorkers,
+  ) => {
     const {
       domain: { objectManager },
-      workers: { repositoryWorkerDispatcher },
       misc: { fetchingOids: fetchingOids },
     } = getState();
 
@@ -91,102 +87,69 @@ export function fetchObjects(oids: string[]) {
     }
     dispatch(addFetchingOids(fetchOids));
 
-    return repositoryWorkerDispatcher(fetchObjectsAction(fetchOids));
+    return workers.dispatch('main', fetchObjectsAction(fetchOids));
   };
 }
 
 export function fetchHeadOids() {
-  return async (_: Dispatch<Actions>, getState: () => State) => {
-    const {
-      workers: { repositoryWorkerDispatcher },
-    } = getState();
-
-    return repositoryWorkerDispatcher(fetchHeadOidsAction());
+  return async (_: Dispatch<Actions>, __j: () => State, workers: PWorkers) => {
+    return workers.dispatch('main', fetchHeadOidsAction());
   };
 }
 
 export function parseMarkdown(md: string) {
-  return async (_: Dispatch<Actions>, getState: () => State) => {
-    const {
-      workers: { repositoryWorkerDispatcher },
-    } = getState();
-
-    return repositoryWorkerDispatcher(parseMarkdownAction(md));
+  return async (_: Dispatch<Actions>, __: () => State, workers: PWorkers) => {
+    return workers.dispatch('main', parseMarkdownAction(md));
   };
 }
 
 export function updateBlobBuffer(writeInfo: GlobalBlobWriteInfo) {
-  return async (_: Dispatch<Actions>, getState: () => State) => {
-    const {
-      workers: { repositoryWorkerDispatcher },
-    } = getState();
-
-    return repositoryWorkerDispatcher(updateBlobBufferAction(writeInfo));
+  return async (_: Dispatch<Actions>, __: () => State, workers: PWorkers) => {
+    return workers.dispatch('main', updateBlobBufferAction(writeInfo));
   };
 }
 
 export function fetchStageInfo() {
-  return async (_: Dispatch<Actions>, getState: () => State) => {
-    const {
-      workers: { repositoryWorkerDispatcher },
-    } = getState();
-
-    return repositoryWorkerDispatcher(fetchStageInfoAction());
+  return async (_: Dispatch<Actions>, __: () => State, workers: PWorkers) => {
+    return workers.dispatch('main', fetchStageInfoAction());
   };
 }
 
 export function readPersistedState() {
-  return async (_: Dispatch<Actions>, getState: () => State) => {
-    const {
-      workers: { repositoryWorkerDispatcher },
-    } = getState();
-
-    return repositoryWorkerDispatcher(readPersistedStateAction());
+  return async (_: Dispatch<Actions>, __: () => State, workers: PWorkers) => {
+    return workers.dispatch('main', readPersistedStateAction());
   };
 }
 
 export function writePersistedState() {
-  return async (_: Dispatch<Actions>, getState: () => State) => {
+  return async (
+    _: Dispatch<Actions>,
+    getState: () => State,
+    workers: PWorkers,
+  ) => {
     const state = getState();
-    const {
-      workers: { repositoryWorkerDispatcher },
-    } = state;
 
-    return repositoryWorkerDispatcher(
+    return workers.dispatch(
+      'main',
       writePersistedStateAction(serializeState(state)),
     );
   };
 }
 
 export function clearStageData() {
-  return async (_: Dispatch<Actions>, getState: () => State) => {
-    const state = getState();
-    const {
-      workers: { repositoryWorkerDispatcher },
-    } = state;
-
-    return repositoryWorkerDispatcher(clearStageDataAction());
+  return async (_: Dispatch<Actions>, __: () => State, workers: PWorkers) => {
+    return workers.dispatch('main', clearStageDataAction());
   };
 }
 
 export function removeAllRepositories() {
-  return async (_: Dispatch<Actions>, getState: () => State) => {
-    const state = getState();
-    const {
-      workers: { repositoryWorkerDispatcher },
-    } = state;
-
-    return repositoryWorkerDispatcher(removeAllRepositoriesAction());
+  return async (_: Dispatch<Actions>, __: () => State, workers: PWorkers) => {
+    return workers.dispatch('main', removeAllRepositoriesAction());
   };
 }
 
 export function initializePersistedState() {
-  return async (_: Dispatch<Actions>, getState: () => State) => {
-    const state = getState();
-    const {
-      workers: { repositoryWorkerDispatcher },
-    } = state;
-
-    return repositoryWorkerDispatcher(initializePersistedStateAction());
+  return async (_: Dispatch<Actions>, __: () => State, workers: PWorkers) => {
+    return workers.dispatch('main', initializePersistedStateAction());
   };
 }

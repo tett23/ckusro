@@ -9,6 +9,7 @@ import debounce from 'lodash.debounce';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import useEditorStyles from './useEditorStyles';
+import { PWorkers } from '../../workers';
 
 type OwnProps = {
   blobBufferInfo: BlobBufferInfo;
@@ -99,7 +100,7 @@ export default function(props: OwnProps) {
 }
 
 function buildUpdateBlobBuffer(
-  dispatch: ThunkDispatch<State, unknown, Action>,
+  dispatch: ThunkDispatch<State, PWorkers, Action>,
   internalPath: InternalPath,
 ) {
   return (content: string) =>

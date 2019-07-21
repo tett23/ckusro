@@ -1,13 +1,12 @@
-import {
-  applyMiddleware,
-  combineReducers,
-  createStore,
-  DeepPartial,
-  Store,
-} from 'redux';
+import { applyMiddleware, combineReducers, createStore, Store } from 'redux';
 import thunk, { ThunkDispatch, ThunkMiddleware } from 'redux-thunk';
 import { SharedActions } from './actions/shared';
-import { ConfigActions, configReducer, ConfigState } from './config';
+import {
+  ConfigActions,
+  configReducer,
+  ConfigState,
+  initialConfigState,
+} from './config';
 import {
   DomainActions,
   domainReducer,
@@ -15,30 +14,22 @@ import {
   initialDomainState,
 } from './domain';
 import persistStore from './middlewares/persistStore';
-import { MiscActions, miscReducer, MiscState } from './misc';
-import uiReducer, { UIActions, UIState } from './ui';
+import { MiscActions, miscReducer, MiscState, initialMiscState } from './misc';
+import uiReducer, { UIActions, UIState, initialUIState } from './ui';
 import { CommonWorkerActions } from './workerActions/common';
-import {
-  initialWorkerState,
-  newWorkerDispatcher,
-  replaceRepositoryWorkerDispatcher,
-  WorkersActions,
-  workersReducer,
-  WorkersState,
-} from './workers';
+import { PWorkers } from '../workers';
+import merge from 'lodash.merge';
 
 export type State = {
   domain: DomainState;
   config: ConfigState;
   misc: MiscState;
   ui: UIState;
-  workers: WorkersState;
 };
 
 export type Actions =
   | ConfigActions
   | DomainActions
-  | WorkersActions
   | MiscActions
   | CommonWorkerActions
   | UIActions
@@ -49,8 +40,16 @@ export const reducers = combineReducers<State>({
   config: configReducer,
   misc: miscReducer,
   ui: uiReducer,
-  workers: workersReducer,
 });
+
+function initialState(): State {
+  return {
+    domain: initialDomainState(),
+    config: initialConfigState(),
+    misc: initialMiscState(),
+    ui: initialUIState(),
+  };
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ThunkStore<S, A extends Actions> = Store<S, A> & {
@@ -58,33 +57,28 @@ export type ThunkStore<S, A extends Actions> = Store<S, A> & {
 };
 
 export default function initializeStore(
+  workers: PWorkers,
   props: DeepPartial<State>,
-): ThunkStore<State, Actions> {
-  const init: DeepPartial<State> = {
-    domain: { ...initialDomainState(), ...(props.domain || {}) },
-    workers: initialWorkerState(),
-  };
+): Store<State, Actions> {
+  const init: State = merge(initialState(), {
+    config: props.config,
+    domain: props.domain,
+  });
 
-  const persistedStateMiddleware = persistStore();
+  const persistedStateMiddleware = persistStore(workers);
 
-  const store = createStore(
+  const store: Store<State, Actions> = createStore(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     reducers as any,
     init,
     applyMiddleware(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       persistedStateMiddleware as any,
-      thunk as ThunkMiddleware<State, Actions>,
+      thunk.withExtraArgument(workers) as ThunkMiddleware<State, Actions>,
     ),
   );
 
-  const repositoryWorker = new Worker('../workers/repository/index.ts');
-  const repositoryWorkerDispatcher = newWorkerDispatcher(
-    repositoryWorker,
-    store,
-  );
-  store.dispatch(replaceRepositoryWorkerDispatcher(repositoryWorkerDispatcher));
+  workers.connectStore(store);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return store as any;
+  return store;
 }

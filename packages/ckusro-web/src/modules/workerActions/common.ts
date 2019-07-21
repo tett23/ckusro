@@ -4,6 +4,7 @@ export function errorMessage(err: Error) {
   return {
     type: ErrorMessage,
     payload: err.message,
+    error: true,
   };
 }
 

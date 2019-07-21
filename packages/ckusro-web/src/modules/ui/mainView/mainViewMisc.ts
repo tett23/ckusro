@@ -6,7 +6,7 @@ export type MainViewMiscState = {
   mainViewType: MainViewTypes;
 };
 
-export function initialMainMiscViewState(): MainViewMiscState {
+export function initialMainViewMiscState(): MainViewMiscState {
   return {
     mainViewType: 'object',
   };
@@ -26,7 +26,7 @@ export type MainViewMiscActions =
   | ReturnType<typeof updateState>;
 
 export default function mainViewMiscReducer(
-  state: MainViewMiscState = initialMainMiscViewState(),
+  state: MainViewMiscState = initialMainViewMiscState(),
   action: MainViewMiscActions,
 ): MainViewMiscState {
   switch (action.type) {

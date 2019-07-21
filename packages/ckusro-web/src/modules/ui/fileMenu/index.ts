@@ -1,13 +1,19 @@
 import { combineReducers } from 'redux';
-import treeViewReducer, { TreeViewState, TreeViewActions } from './treeView';
+import treeViewReducer, {
+  TreeViewState,
+  TreeViewActions,
+  initialTreeViewState,
+} from './treeView';
 import {
   fileMenuMiscReducer,
   FileMenuMiscState,
   FileMenuMiscActions,
+  initialFileMenuMiscState,
 } from './fileMenuMisc';
 import gitObjectListReducer, {
   GitObjectListState,
   GitObjectListActions,
+  initialGitObjectListState,
 } from './gitObjectList';
 
 export type FileMenuState = {
@@ -15,6 +21,14 @@ export type FileMenuState = {
   treeView: TreeViewState;
   gitObjectList: GitObjectListState;
 };
+
+export function initialFileMenuState(): FileMenuState{
+  return {
+    misc: initialFileMenuMiscState(),
+    treeView: initialTreeViewState(),
+    gitObjectList: initialGitObjectListState(),
+  };
+}
 
 export type FileMenuActions =
   | FileMenuMiscActions

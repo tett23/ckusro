@@ -1,13 +1,33 @@
 import { combineReducers } from 'redux';
-import fileMenuReducer, { FileMenuActions, FileMenuState } from './fileMenu';
-import mainViewReducer, { MainViewState, MainViewActions } from './mainView';
-import uiMiscReducer, { UIMiscState, UIMiscActions } from './uiMisc';
+import fileMenuReducer, {
+  FileMenuActions,
+  FileMenuState,
+  initialFileMenuState,
+} from './fileMenu';
+import mainViewReducer, {
+  MainViewState,
+  MainViewActions,
+  initialMainViewState,
+} from './mainView';
+import uiMiscReducer, {
+  UIMiscState,
+  UIMiscActions,
+  initialUIMiscState,
+} from './uiMisc';
 
 export type UIState = {
   fileMenu: FileMenuState;
   mainView: MainViewState;
   misc: UIMiscState;
 };
+
+export function initialUIState(): UIState {
+  return {
+    fileMenu: initialFileMenuState(),
+    mainView: initialMainViewState(),
+    misc: initialUIMiscState(),
+  };
+}
 
 export type UIActions = FileMenuActions | MainViewActions | UIMiscActions;
 
