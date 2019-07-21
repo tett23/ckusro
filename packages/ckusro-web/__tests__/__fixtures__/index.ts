@@ -4,7 +4,6 @@ import { Ref, RefManager } from '../../src/models/RefManager';
 import { State } from '../../src/modules';
 import { initialDomainState } from '../../src/modules/domain';
 import { initialMiscState } from '../../src/modules/misc';
-import { initialWorkerState } from '../../src/modules/workers';
 import uiReducer from '../../src/modules/ui';
 
 export function fixtureBuilder<T>(base: T): (override?: Partial<T>) => T {
@@ -46,7 +45,6 @@ export const buildState = fixtureBuilder<State>({
   config: buildCkusroConfig(),
   misc: initialMiscState(),
   ui: uiReducer(undefined, {} as any), // eslint-disable-line @typescript-eslint/no-explicit-any
-  workers: initialWorkerState(),
 });
 
 export const buildRef = fixtureBuilder<Ref>({

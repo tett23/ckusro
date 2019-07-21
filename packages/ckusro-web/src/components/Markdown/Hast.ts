@@ -3,7 +3,6 @@ import {
   Node as UnistNode,
   Parent as UnistParent,
 } from 'unist';
-import { FlowContentsNames } from './HtmlComponents/elementTypes';
 
 export type HastParent = UnistParent & {
   children: Array<HastDoctype | HastElementChild>;
@@ -23,7 +22,7 @@ export type HastProperties = Record<string, any>;
 
 export type HastElement = UnistParent & {
   type: 'element';
-  tagName: FlowContentsNames;
+  tagName: string;
   properties?: HastProperties;
   content?: HastRoot;
   children: HastElementChild[];
