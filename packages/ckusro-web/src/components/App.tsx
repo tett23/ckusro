@@ -8,6 +8,7 @@ import { fetchHeadOids, fetchStageInfo } from '../modules/thunkActions';
 import FileMenu from './FileMenu';
 import MainView from './MainView';
 import { PWorkers } from '../workers';
+import { WorkersProvider } from '../utils/WorkersProvider';
 
 export type AppProps = {
   workers: PWorkers;
@@ -26,7 +27,9 @@ export default function({ workers, initialState }: AppProps) {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <App />
+        <WorkersProvider value={workers}>
+          <App />
+        </WorkersProvider>
       </ThemeProvider>
     </Provider>
   );
