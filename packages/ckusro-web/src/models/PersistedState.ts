@@ -60,7 +60,7 @@ export async function readPersistedState(
 
   const persistedState: PersistedState = JSON.parse(stateJson);
 
-  return await toState(persistedState);
+  return await deserializeState(persistedState);
 }
 
 export async function writePersistedState(
@@ -106,7 +106,7 @@ export function serializeState(state: State): PersistedState {
   };
 }
 
-export async function toState(
+export async function deserializeState(
   persistedState: PersistedState,
 ): Promise<DeepPartial<State> | Error> {
   const objects = await getWorkers().fetchObjects(
