@@ -38,6 +38,10 @@ const DefaultConfig = {
   },
 };
 
+type ErrorWithCode = Error & {
+  code?: number;
+};
+
 export async function readPersistedState(
   coreId: string,
   fs: typeof FS,
@@ -48,10 +52,9 @@ export async function readPersistedState(
 
   const stateJson = await fs.promises
     .readFile(PersistedStatePath, 'utf8')
-    .catch((err: Error) => err);
+    .catch((err: ErrorWithCode) => err);
   if (stateJson instanceof Error) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((stateJson as any).code === ENOENT) {
+    if (stateJson.code === ENOENT) {
       return { config: DefaultConfig };
     }
 
