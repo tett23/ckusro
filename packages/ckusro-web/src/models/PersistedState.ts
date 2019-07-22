@@ -1,4 +1,4 @@
-import ckusroCore, { convertColorScheme } from '@ckusro/ckusro-core';
+import { convertColorScheme } from '@ckusro/ckusro-core';
 import LightningFs from '@isomorphic-git/lightning-fs';
 import { ENOENT } from 'constants';
 import FS from 'fs';
@@ -9,6 +9,7 @@ import {
   createEmptyObjectManager,
   SerializedObjectManager,
 } from './ObjectManager';
+import { getWorkers } from '../workers';
 
 export type PersistedState = Pick<State, 'config' | 'ui'> & {
   objectManager: SerializedObjectManager;
@@ -58,7 +59,8 @@ export async function readPersistedState(
   }
 
   const persistedState: PersistedState = JSON.parse(stateJson);
-  return await toState(fs, persistedState);
+
+  return await toState(persistedState);
 }
 
 export async function writePersistedState(
@@ -105,16 +107,16 @@ export function serializeState(state: State): PersistedState {
 }
 
 export async function toState(
-  fs: typeof FS,
   persistedState: PersistedState,
 ): Promise<DeepPartial<State> | Error> {
-  const core = ckusroCore(persistedState.config, fs);
-  const ps = persistedState.objectManager.oids.map(
-    core.repositories().fetchObject,
+  const objects = await getWorkers().fetchObjects(
+    persistedState.objectManager.oids,
   );
-  const objects = await Promise.all(ps).catch((err: Error) => err);
   if (objects instanceof Error) {
     return objects;
+  }
+  if (objects == null) {
+    return new Error('');
   }
 
   const [gitObjects] = splitError(objects);

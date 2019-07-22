@@ -5,7 +5,7 @@ import { render } from 'react-dom';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 import PromiseWorker from 'promise-worker';
-import createWorkers from './workers';
+import { initializeWorkers } from './workers';
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
@@ -14,7 +14,7 @@ serviceWorker.unregister();
 library.add(fas);
 
 (async () => {
-  const workers = await initializeWorkers();
+  const workers = await initWorkers();
   const initialState = (await workers.readPersistedState()) || {};
 
   render(
@@ -23,11 +23,11 @@ library.add(fas);
   );
 })();
 
-async function initializeWorkers() {
+async function initWorkers() {
   const repositoryWorker = new Worker(
-    './workers/repository/workerEntryPoint.ts',
+    './workers/repositoryWorker/workerEntryPoint.ts',
   );
-  const workers = createWorkers({
+  const workers = initializeWorkers({
     main: new PromiseWorker(repositoryWorker),
   });
 

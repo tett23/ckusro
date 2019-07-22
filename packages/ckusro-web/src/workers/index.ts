@@ -11,6 +11,8 @@ import {
 } from '../modules/workerActions/persistedState';
 import { updateState } from '../modules/actions/shared';
 import { errorMessage, ErrorMessage } from '../modules/workerActions/common';
+import { fetchObjects } from '../modules/workerActions/repository';
+import { GitObject } from '@ckusro/ckusro-core';
 
 type WorkerTypes = typeof WorkerResponseRepository;
 
@@ -26,6 +28,7 @@ type Workers = {
 
 export type PWorkers = {
   readPersistedState: () => Promise<DeepPartial<State> | null>;
+  fetchObjects: (oids: string[]) => Promise<GitObject[] | Error | null>;
   writePersistedState: (persistedState: PersistedState) => Promise<[]>;
   connectStore: (store: Store<State, Actions>) => void;
   dispatch: <WorkerType extends keyof WorkerInstances>(
@@ -34,7 +37,24 @@ export type PWorkers = {
   ) => Promise<true | Error>;
 };
 
-export default function createWorkers(workerInstances: WorkerInstances) {
+let pWorkers: PWorkers;
+
+export function getWorkers(): PWorkers {
+  if (pWorkers == null) {
+    throw new Error('workers have not been initialized.');
+  }
+  return pWorkers;
+}
+
+export function initializeWorkers(workerInstances: WorkerInstances) {
+  return ((): PWorkers => {
+    pWorkers = createWorkers(workerInstances);
+
+    return pWorkers;
+  })();
+}
+
+function createWorkers(workerInstances: WorkerInstances) {
   return ((): PWorkers => {
     let _store: Store<State, Actions> | null = null;
     const item: PWorkers = {
@@ -66,11 +86,21 @@ export default function createWorkers(workerInstances: WorkerInstances) {
         workerType: WorkerType,
         action: Workers[WorkerType]['requestActions'],
       ) => dispatch(_store, workerInstances, workerType, action),
+      fetchOids: (oids: string[]) => {
+        const result = dispatch(
+          store,
+          workerInstances,
+          'main',
+          fetchObjects(oids),
+        );
+      },
     };
 
     return item;
   })();
 }
+
+async function process() {}
 
 async function dispatch<WorkerType extends keyof WorkerInstances>(
   store: Store<State, Actions> | null,
