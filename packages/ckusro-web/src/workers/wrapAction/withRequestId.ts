@@ -1,4 +1,4 @@
-import sequenceGenerator from '../utils/sequenceGenerator';
+import sequenceGenerator from '../../utils/sequenceGenerator';
 
 export type WithRequestId<T extends FSAction> = T & {
   meta: { requestId: number };

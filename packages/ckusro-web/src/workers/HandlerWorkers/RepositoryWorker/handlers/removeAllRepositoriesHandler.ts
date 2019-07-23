@@ -1,7 +1,7 @@
 import ckusroCore, { CkusroConfig } from '@ckusro/ckusro-core';
 import FS from 'fs';
 import { removeAllRepositories } from '../../../../modules/workerActions/repository';
-import { HandlersResult, PayloadType } from '../../../util';
+import { HandlersResult, PayloadType } from '../../../handleAction';
 import { clearRepositories } from '../../../../modules/config';
 import { RepositoryWorkerResponseActions } from '../index';
 

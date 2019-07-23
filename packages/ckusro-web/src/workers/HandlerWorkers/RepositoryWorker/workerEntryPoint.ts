@@ -1,8 +1,13 @@
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 import registerPromiseWorker from 'promise-worker/register';
-import mainHandler from './index';
+import mainHandler, { RepositoryWorkerRequestActions } from './index';
+import { WorkerRequest } from '../../WorkerRequest';
 
-registerPromiseWorker(async (message) => {
-  const response = await mainHandler(message);
+registerPromiseWorker(
+  async (message: WorkerRequest<RepositoryWorkerRequestActions>) => {
+    const response = await mainHandler(message);
 
-  return response;
-});
+    return response;
+  },
+);

@@ -2,7 +2,7 @@ import ckusroCore, { CkusroConfig, createRepoPath } from '@ckusro/ckusro-core';
 import FS from 'fs';
 import { addRef } from '../../../../modules/domain';
 import { pullRepository } from '../../../../modules/workerActions/repository';
-import { HandlersResult, PayloadType } from '../../../util';
+import { HandlersResult, PayloadType } from '../../../handleAction';
 import { RepositoryWorkerResponseActions } from '../index';
 
 export default async function pullRepositoryHandler(

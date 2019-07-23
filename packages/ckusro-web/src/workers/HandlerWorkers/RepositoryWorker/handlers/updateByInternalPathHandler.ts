@@ -2,7 +2,7 @@ import ckusroCore, { CkusroConfig } from '@ckusro/ckusro-core';
 import FS from 'fs';
 import { addObjects } from '../../../../modules/domain';
 import { updateByInternalPath } from '../../../../modules/workerActions/repository';
-import { HandlersResult, PayloadType } from '../../../util';
+import { HandlersResult, PayloadType } from '../../../handleAction';
 import { selectBufferInfo } from '../../../../modules/actions/shared';
 import { createBufferInfo } from '../../../../models/BufferInfo';
 import { RepositoryWorkerResponseActions } from '../index';

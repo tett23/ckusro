@@ -6,7 +6,7 @@ import ckusroCore, {
 import FS from 'fs';
 import { addRef } from '../../../../modules/domain';
 import { cloneRepository } from '../../../../modules/workerActions/repository';
-import { HandlersResult, PayloadType } from '../../../util';
+import { HandlersResult, PayloadType } from '../../../handleAction';
 import { RepositoryWorkerResponseActions } from '../index';
 
 export default async function cloneHandler(

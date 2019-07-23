@@ -1,7 +1,7 @@
 import { Store } from 'redux';
 import PromiseWorker from 'promise-worker';
 import { Actions, State } from '../modules';
-import { WithRequestId } from './withRequestId';
+import { WithRequestId } from './wrapAction/withRequestId';
 import {
   WorkerResponseRepository,
   RepositoryWorker,
@@ -35,9 +35,9 @@ export type PWorkers = {
 
 let pWorkers: PWorkers;
 
-export function getWorkers(): PWorkers {
+export function getWorkers(): PWorkers | Error {
   if (pWorkers == null) {
-    throw new Error('workers have not been initialized.');
+    return new Error('workers have not been initialized.');
   }
 
   return pWorkers;

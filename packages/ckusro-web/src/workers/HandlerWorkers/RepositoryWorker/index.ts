@@ -1,5 +1,3 @@
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
 import { Actions } from '../../../modules';
 import {
   CloneRepository,
@@ -23,7 +21,7 @@ import {
   ParseMarkdown,
   ParserWorkerActions,
 } from '../../../modules/workerActions/parser';
-import { Handler, newHandler } from '../../util';
+import { Handler, newHandler } from '../../handleAction';
 import initializePersistedStateHandler from './handlers/initializePersistedStateHandler';
 import removeAllRepositoriesHandler from './handlers/removeAllRepositoriesHandler';
 import clearStageDataHandler from './handlers/clearStageDataHandler';
@@ -54,9 +52,8 @@ export type RepositoryWorker = {
 
 export default newHandler<
   RepositoryWorkerRequestActions,
-  RepositoryWorkerResponseActions,
-  typeof WorkerResponseRepository
->(actionHandlers, WorkerResponseRepository);
+  RepositoryWorkerResponseActions
+>(actionHandlers);
 
 function actionHandlers(
   action: RepositoryWorkerRequestActions,

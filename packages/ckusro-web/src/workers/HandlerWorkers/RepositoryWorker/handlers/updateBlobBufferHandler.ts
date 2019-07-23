@@ -12,7 +12,7 @@ import {
   updateStageEntries,
 } from '../../../../modules/domain';
 import { updateBlobBuffer } from '../../../../modules/workerActions/repository';
-import { HandlersResult, PayloadType } from '../../../util';
+import { HandlersResult, PayloadType } from '../../../handleAction';
 import { basename } from 'path';
 import { RepositoryWorkerResponseActions } from '../index';
 

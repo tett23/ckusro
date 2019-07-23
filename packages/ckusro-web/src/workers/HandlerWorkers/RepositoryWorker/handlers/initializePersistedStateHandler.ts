@@ -1,7 +1,7 @@
 import { CkusroConfig } from '@ckusro/ckusro-core';
 import FS from 'fs';
 import { initializePersistedState } from '../../../../modules/workerActions/persistedState';
-import { HandlersResult, PayloadType } from '../../../util';
+import { HandlersResult, PayloadType } from '../../../handleAction';
 import { removePersistedState } from '../../../../models/PersistedState';
 import { RepositoryWorkerResponseActions } from '../index';
 

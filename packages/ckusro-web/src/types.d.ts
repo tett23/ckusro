@@ -20,3 +20,5 @@ type DeepPartial<T> = {
     ? ReadonlyArray<DeepPartial<U>>
     : DeepPartial<T[P]>;
 };
+
+type ValuesOf<T> = T extends Record<any, infer U> ? U : never;

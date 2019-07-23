@@ -1,23 +1,25 @@
 import { State } from '../modules';
-import withRequestId from './withRequestId';
 import { readPersistedState as readPersistedStateAction } from '../modules/workerActions/persistedState';
 import { updateState } from '../modules/actions/shared';
 import { errorMessage, ErrorMessage } from '../modules/workerActions/common';
 import { WorkerInstances } from './index';
+import { CkusroConfig } from '@ckusro/ckusro-core';
+import wrapMessage from './wrapAction';
 
 type Result = ReturnType<typeof updateState> | ReturnType<typeof errorMessage>;
 
 export default async function readPersistedState(
   workerInstances: WorkerInstances,
 ): Promise<DeepPartial<State> | null> {
-  const wid = withRequestId(readPersistedStateAction());
-  const action = {
-    ...wid,
-    meta: {
-      ...wid.meta,
-      config: { coreId: 'ckusro-web__dev' },
-    },
+  const partialConfig: Pick<CkusroConfig, 'coreId'> = {
+    coreId: 'ckusro-web__dev',
   };
+  const partialState: Pick<State, 'config'> = {
+    config: partialConfig as CkusroConfig,
+  };
+  const state: State = partialState as State;
+  const action = wrapMessage(state, readPersistedStateAction());
+
   const result = await workerInstances.main.postMessage<Result>(action);
   if (result.type === ErrorMessage) {
     return null;

@@ -112,9 +112,12 @@ export function serializeState(state: State): PersistedState {
 export async function deserializeState(
   persistedState: PersistedState,
 ): Promise<DeepPartial<State> | Error> {
-  const objects = await getWorkers().fetchObjects(
-    persistedState.objectManager.oids,
-  );
+  const workers = await (async () => getWorkers())().catch((err: Error) => err);
+  if (workers instanceof Error) {
+    return new Error('');
+  }
+
+  const objects = await workers.fetchObjects(persistedState.objectManager.oids);
   if (objects instanceof Error) {
     return objects;
   }

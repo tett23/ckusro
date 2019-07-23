@@ -6,7 +6,7 @@ import ckusroCore, {
 } from '@ckusro/ckusro-core';
 import FS from 'fs';
 import { addRef } from '../../../../modules/domain';
-import { HandlersResult } from '../../../util';
+import { HandlersResult } from '../../../handleAction';
 import { RepositoryWorkerResponseActions } from '../index';
 
 export default async function fetchHeadOidsHandler(
