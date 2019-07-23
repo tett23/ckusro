@@ -2,10 +2,9 @@ import debounce from 'lodash.debounce';
 import { serializeState } from '../../models/PersistedState';
 import { Actions, State, ThunkStore } from '../index';
 import { PWorkers } from '../../Workers';
-import { writePersistedState } from '../workerActions/persistedState';
 
 const debounced = debounce((workers: PWorkers, state: State) => {
-  workers.dispatch('main', writePersistedState(serializeState(state)));
+  workers.writePersistedState(serializeState(state));
 }, 3000);
 
 export default function(workers: PWorkers) {

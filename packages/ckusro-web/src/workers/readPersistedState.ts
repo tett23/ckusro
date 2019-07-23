@@ -2,14 +2,14 @@ import { State } from '../modules';
 import { readPersistedState as readPersistedStateAction } from '../modules/workerActions/persistedState';
 import { updateState } from '../modules/actions/shared';
 import { errorMessage, ErrorMessage } from '../modules/workerActions/common';
-import { WorkerInstances } from './index';
 import { CkusroConfig } from '@ckusro/ckusro-core';
 import wrapMessage from './wrapAction';
+import PromiseWorker from 'promise-worker';
 
 type Result = ReturnType<typeof updateState> | ReturnType<typeof errorMessage>;
 
 export default async function readPersistedState(
-  workerInstances: WorkerInstances,
+  worker: PromiseWorker,
 ): Promise<DeepPartial<State> | null> {
   const partialConfig: Pick<CkusroConfig, 'coreId'> = {
     coreId: 'ckusro-web__dev',
@@ -20,7 +20,7 @@ export default async function readPersistedState(
   const state: State = partialState as State;
   const action = wrapMessage(state, readPersistedStateAction());
 
-  const result = await workerInstances.main.postMessage<Result>(action);
+  const result = await worker.postMessage<Result>(action);
   if (result.type === ErrorMessage) {
     return null;
   }

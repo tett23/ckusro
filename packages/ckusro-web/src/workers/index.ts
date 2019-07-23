@@ -10,6 +10,7 @@ import { PersistedState } from '../models/PersistedState';
 import { dispatch } from './dispatch';
 import readPersistedState from './readPersistedState';
 import { writePersistedState } from './writePersistedState';
+import getWorker from './getWorker';
 
 type WorkerTypes = typeof WorkerResponseRepository;
 
@@ -58,9 +59,10 @@ function createWorkers(workerInstances: WorkerInstances): PWorkers {
       connectStore: (store: Store<State, Actions>) => {
         _store = store;
       },
-      readPersistedState: () => readPersistedState(workerInstances),
+      readPersistedState: () =>
+        readPersistedState(getWorker(workerInstances, 'main')),
       writePersistedState: (ps: PersistedState) =>
-        writePersistedState(workerInstances, ps),
+        writePersistedState(getWorker(workerInstances, 'main'), ps),
       dispatch: <WorkerType extends keyof WorkerInstances>(
         workerType: WorkerType,
         action: Workers[WorkerType]['requestActions'],
