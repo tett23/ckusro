@@ -25,7 +25,7 @@ import {
 } from './workerActions/persistedState';
 import { serializeState } from '../models/PersistedState';
 import { createObjectManager } from '../models/ObjectManager';
-import { PWorkers } from '../workers';
+import { PWorkers } from '../Workers';
 
 export function updateByBufferInfo(bufferInfo: BufferInfo | null) {
   return async (dispatch: Dispatch<Actions>) => {

@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { PWorkers, WorkerInfos, WorkerInstances } from '../../workers';
+import { PWorkers, WorkerInfos, WorkerInstances } from '../../Workers';
 
 const WorkersContext = createContext<PWorkers | null>(null);
 

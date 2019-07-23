@@ -7,7 +7,7 @@ import { enablePersistedState } from '../modules/misc';
 import { fetchHeadOids, fetchStageInfo } from '../modules/thunkActions';
 import FileMenu from './FileMenu';
 import MainView from './MainView';
-import { PWorkers } from '../workers';
+import { PWorkers } from '../Workers';
 import { WorkersProvider } from '../utils/WorkersProvider';
 
 export type AppProps = {

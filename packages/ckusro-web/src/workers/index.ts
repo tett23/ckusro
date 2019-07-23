@@ -3,7 +3,10 @@ import PromiseWorker from 'promise-worker';
 import { Actions, State } from '../modules';
 import withRequestId, { WithRequestId } from './withRequestId';
 import withConfig from './withConfig';
-import { WorkerResponseRepository, RepositoryWorker } from './repositoryWorker';
+import {
+  WorkerResponseRepository,
+  RepositoryWorker,
+} from './HandlerWorkers/RepositoryWorker';
 import { PersistedState } from '../models/PersistedState';
 import {
   readPersistedState,

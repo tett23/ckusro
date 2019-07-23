@@ -1,8 +1,8 @@
 import { CkusroConfig } from '@ckusro/ckusro-core';
 import FS from 'fs';
-import { writePersistedState as writePersistedStateAction } from '../../../modules/workerActions/persistedState';
-import { HandlersResult, PayloadType } from '../../util';
-import { writePersistedState } from '../../../models/PersistedState';
+import { writePersistedState as writePersistedStateAction } from '../../../../modules/workerActions/persistedState';
+import { HandlersResult, PayloadType } from '../../../util';
+import { writePersistedState } from '../../../../models/PersistedState';
 import { RepositoryWorkerResponseActions } from '../index';
 
 export default async function writeStateHandler(

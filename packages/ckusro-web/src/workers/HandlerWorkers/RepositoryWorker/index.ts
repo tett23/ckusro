@@ -1,6 +1,6 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import { Actions } from '../../modules';
+import { Actions } from '../../../modules';
 import {
   CloneRepository,
   FetchHeadOids,
@@ -12,18 +12,18 @@ import {
   ClearStageData,
   RemoveAllRepositories,
   RepositoryWorkerActions,
-} from '../../modules/workerActions/repository';
+} from '../../../modules/workerActions/repository';
 import {
   ReadPersistedState,
   WritePersistedState,
   InitializePersistedState,
   PersistStateWorkerActions,
-} from '../../modules/workerActions/persistedState';
+} from '../../../modules/workerActions/persistedState';
 import {
   ParseMarkdown,
   ParserWorkerActions,
-} from '../../modules/workerActions/parser';
-import { Handler, newHandler } from '../util';
+} from '../../../modules/workerActions/parser';
+import { Handler, newHandler } from '../../util';
 import initializePersistedStateHandler from './handlers/initializePersistedStateHandler';
 import removeAllRepositoriesHandler from './handlers/removeAllRepositoriesHandler';
 import clearStageDataHandler from './handlers/clearStageDataHandler';

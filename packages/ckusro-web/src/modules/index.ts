@@ -17,7 +17,7 @@ import persistStore from './middlewares/persistStore';
 import { MiscActions, miscReducer, MiscState, initialMiscState } from './misc';
 import uiReducer, { UIActions, UIState, initialUIState } from './ui';
 import { CommonWorkerActions } from './workerActions/common';
-import { PWorkers } from '../workers';
+import { PWorkers } from '../Workers';
 import merge from 'lodash.merge';
 
 export type State = {

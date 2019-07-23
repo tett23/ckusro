@@ -8,9 +8,9 @@ import {
   addObjects,
   updateStageHead,
   updateStageEntries,
-} from '../../../modules/domain';
-import { fetchStageInfo } from '../../../modules/workerActions/repository';
-import { HandlersResult, PayloadType } from '../../util';
+} from '../../../../modules/domain';
+import { fetchStageInfo } from '../../../../modules/workerActions/repository';
+import { HandlersResult, PayloadType } from '../../../util';
 import { RepositoryWorkerResponseActions } from '../index';
 
 export default async function fetchStageInfoHandler(

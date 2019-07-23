@@ -1,9 +1,9 @@
 import ckusroCore, { CkusroConfig } from '@ckusro/ckusro-core';
 import FS from 'fs';
-import { parseMarkdown } from '../../../modules/workerActions/parser';
-import { HandlersResult, PayloadType } from '../../util';
-import { HastRoot } from '../../../components/Markdown/Hast';
-import { updateCurrentAst } from '../../../modules/ui/mainView/objectView';
+import { parseMarkdown } from '../../../../modules/workerActions/parser';
+import { HandlersResult, PayloadType } from '../../../util';
+import { HastRoot } from '../../../../components/Markdown/Hast';
+import { updateCurrentAst } from '../../../../modules/ui/mainView/objectView';
 import { RepositoryWorkerResponseActions } from '../index';
 
 export default async function parseMarkdownHandler(

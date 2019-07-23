@@ -9,7 +9,7 @@ import {
   createEmptyObjectManager,
   SerializedObjectManager,
 } from './ObjectManager';
-import { getWorkers } from '../workers';
+import { getWorkers } from '../Workers';
 
 export type PersistedState = Pick<State, 'config' | 'ui'> & {
   objectManager: SerializedObjectManager;

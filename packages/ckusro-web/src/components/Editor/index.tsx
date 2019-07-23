@@ -9,7 +9,7 @@ import debounce from 'lodash.debounce';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import useEditorStyles from './useEditorStyles';
-import { PWorkers } from '../../workers';
+import { PWorkers } from '../../Workers';
 
 type OwnProps = {
   blobBufferInfo: BlobBufferInfo;

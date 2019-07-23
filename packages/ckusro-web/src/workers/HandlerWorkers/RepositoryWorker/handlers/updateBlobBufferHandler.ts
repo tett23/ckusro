@@ -10,9 +10,9 @@ import {
   addObjects,
   updateStageHead,
   updateStageEntries,
-} from '../../../modules/domain';
-import { updateBlobBuffer } from '../../../modules/workerActions/repository';
-import { HandlersResult, PayloadType } from '../../util';
+} from '../../../../modules/domain';
+import { updateBlobBuffer } from '../../../../modules/workerActions/repository';
+import { HandlersResult, PayloadType } from '../../../util';
 import { basename } from 'path';
 import { RepositoryWorkerResponseActions } from '../index';
 

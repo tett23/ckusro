@@ -1,9 +1,9 @@
 import { CkusroConfig } from '@ckusro/ckusro-core';
 import FS from 'fs';
-import { readPersistedState as readPersistedStateAction } from '../../../modules/workerActions/persistedState';
-import { HandlersResult, PayloadType } from '../../util';
-import { updateState } from '../../../modules/actions/shared';
-import { readPersistedState } from '../../../models/PersistedState';
+import { readPersistedState as readPersistedStateAction } from '../../../../modules/workerActions/persistedState';
+import { HandlersResult, PayloadType } from '../../../util';
+import { updateState } from '../../../../modules/actions/shared';
+import { readPersistedState } from '../../../../models/PersistedState';
 import { RepositoryWorkerResponseActions } from '../index';
 
 export default async function readStateHandler(

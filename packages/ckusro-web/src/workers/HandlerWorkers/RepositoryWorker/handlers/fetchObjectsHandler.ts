@@ -1,10 +1,10 @@
 import ckusroCore, { CkusroConfig } from '@ckusro/ckusro-core';
 import FS from 'fs';
-import { addObjects } from '../../../modules/domain';
-import { errorMessage } from '../../../modules/workerActions/common';
-import { fetchObjects } from '../../../modules/workerActions/repository';
-import { splitError } from '../../../utils';
-import { HandlersResult, PayloadType } from '../../util';
+import { addObjects } from '../../../../modules/domain';
+import { errorMessage } from '../../../../modules/workerActions/common';
+import { fetchObjects } from '../../../../modules/workerActions/repository';
+import { splitError } from '../../../../utils';
+import { HandlersResult, PayloadType } from '../../../util';
 import { RepositoryWorkerResponseActions } from '../index';
 
 export default async function fetchObjectsHandler(
