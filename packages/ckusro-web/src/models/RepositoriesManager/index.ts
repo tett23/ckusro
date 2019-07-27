@@ -43,14 +43,20 @@ export function createRepositoriesManager(manager: RepositoriesManager) {
       ...manager,
       refManager: createRefManager(manager.refManager).addRef(ref),
     }),
+    updateRepositoryPaths: (paths: InternalPathEntry[]) => ({
+      ...manager,
+      repositoryPathManager: createPathManager(
+        manager.repositoryPathManager,
+      ).update(paths),
+    }),
     updateStageHead: (stageHead: string | null) => ({
       ...manager,
       stageHead,
     }),
-    updateStageEntries: (entries: InternalPathEntry[]) => ({
+    updateStagePaths: (paths: InternalPathEntry[]) => ({
       ...manager,
       stagePathManager: createPathManager(manager.stagePathManager).update(
-        entries,
+        paths,
       ),
     }),
     clearStageManager: () => ({

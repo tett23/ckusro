@@ -8,6 +8,11 @@ import FileMenu from './FileMenu';
 import MainView from './MainView';
 import { PWorkers } from '../Workers';
 import { WorkersProvider } from '../utils/WorkersProvider';
+import {
+  fetchStageInfo,
+  lsFiles,
+  fetchHeadOids,
+} from '../modules/thunkActions';
 
 export type AppProps = {
   workers: PWorkers;
@@ -40,6 +45,10 @@ function Inner() {
 
   useEffect(() => {
     (async () => {
+      await dispatch(fetchHeadOids());
+      await dispatch(fetchStageInfo());
+      await dispatch(lsFiles());
+
       setIsLoading(false);
     })();
   }, []);

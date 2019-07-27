@@ -64,6 +64,15 @@ export function fetchStageInfo() {
   };
 }
 
+export const LsFiles = 'RepositoryWorker/LsFiles' as const;
+
+export function lsFiles() {
+  return {
+    type: LsFiles,
+    payload: null,
+  };
+}
+
 export const ClearStageData = 'RepositoryWorker/ClearStageData' as const;
 
 export function clearStageData() {
@@ -90,5 +99,6 @@ export type RepositoryWorkerActions =
   | ReturnType<typeof fetchHeadOids>
   | ReturnType<typeof updateBlobBuffer>
   | ReturnType<typeof fetchStageInfo>
+  | ReturnType<typeof lsFiles>
   | ReturnType<typeof clearStageData>
   | ReturnType<typeof removeAllRepositories>;

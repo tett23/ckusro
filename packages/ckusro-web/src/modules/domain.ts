@@ -36,6 +36,15 @@ export function addObjects(objects: GitObject[]) {
   };
 }
 
+const UpdateRepositoryPaths = 'Domain/UpdateRepositoryPaths' as const;
+
+export function updateRepositoryPaths(paths: InternalPathEntry[]) {
+  return {
+    type: UpdateRepositoryPaths,
+    payload: paths,
+  };
+}
+
 const UpdateStageHead = 'Domain/UpdateStageHead' as const;
 
 export function updateStageHead(oid: string) {
@@ -47,10 +56,10 @@ export function updateStageHead(oid: string) {
 
 const UpdateStageEntries = 'Domain/UpdateStageEntries' as const;
 
-export function updateStageEntries(entries: InternalPathEntry[]) {
+export function updateStagePaths(paths: InternalPathEntry[]) {
   return {
     type: UpdateStageEntries,
-    payload: entries,
+    payload: paths,
   };
 }
 
@@ -66,8 +75,9 @@ export function clearStageManager() {
 export type DomainActions =
   | ReturnType<typeof addRef>
   | ReturnType<typeof addObjects>
+  | ReturnType<typeof updateRepositoryPaths>
   | ReturnType<typeof updateStageHead>
-  | ReturnType<typeof updateStageEntries>
+  | ReturnType<typeof updateStagePaths>
   | ReturnType<typeof updateState>
   | ReturnType<typeof clearStageManager>;
 
@@ -96,6 +106,14 @@ export function domainReducer(
         ),
       };
     }
+    case UpdateRepositoryPaths: {
+      return {
+        ...state,
+        repositories: createRepositoriesManager(
+          state.repositories,
+        ).updateRepositoryPaths(action.payload),
+      };
+    }
     case UpdateStageHead: {
       return {
         ...state,
@@ -109,7 +127,7 @@ export function domainReducer(
         ...state,
         repositories: createRepositoriesManager(
           state.repositories,
-        ).updateStageEntries(action.payload),
+        ).updateStagePaths(action.payload),
       };
     }
     case ClearStageManager:

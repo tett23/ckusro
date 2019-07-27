@@ -10,6 +10,7 @@ import {
   ClearStageData,
   RemoveAllRepositories,
   RepositoryWorkerActions,
+  LsFiles,
 } from '../../../modules/workerActions/repository';
 import {
   ReadPersistedState,
@@ -39,6 +40,7 @@ import pullRepositoryHandler from './handlers/pullRepositoryHandler';
 import cloneHandler from './handlers/cloneHandler';
 import writeConfigHandler from './handlers/writeConfigHandler';
 import readConfigHandler from './handlers/readConfigHandler';
+import lsFilesHandler from './handlers/lsFilesHandler';
 
 export const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
 
@@ -138,6 +140,11 @@ function actionHandlers(
       >;
     case InitializePersistedState:
       return initializePersistedStateHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
+    case LsFiles:
+      return lsFilesHandler as Handler<
         RepositoryWorkerRequestActions,
         RepositoryWorkerResponseActions
       >;

@@ -9,7 +9,7 @@ import FS from 'fs';
 import {
   addObjects,
   updateStageHead,
-  updateStageEntries,
+  updateStagePaths,
 } from '../../../../modules/domain';
 import { updateBlobBuffer } from '../../../../modules/workerActions/repository';
 import { HandlersResult, PayloadType } from '../../../handleAction';
@@ -61,6 +61,6 @@ export default async function updateBlobBufferHandler(
   return [
     addObjects([...addResult.map(([, item]) => item), commitResult]),
     updateStageHead(commitResult.oid),
-    updateStageEntries(updates),
+    updateStagePaths(updates),
   ];
 }

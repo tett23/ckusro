@@ -7,7 +7,7 @@ import FS from 'fs';
 import {
   addObjects,
   updateStageHead,
-  updateStageEntries,
+  updateStagePaths,
 } from '../../../../modules/domain';
 import { fetchStageInfo } from '../../../../modules/workerActions/repository';
 import { HandlersResult, PayloadType } from '../../../handleAction';
@@ -46,6 +46,6 @@ export default async function fetchStageInfoHandler(
   return [
     addObjects(objects),
     updateStageHead(tree.oid),
-    updateStageEntries(result),
+    updateStagePaths(result),
   ];
 }

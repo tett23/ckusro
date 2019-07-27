@@ -13,6 +13,7 @@ import {
   fetchStageInfo as fetchStageInfoAction,
   clearStageData as clearStageDataAction,
   removeAllRepositories as removeAllRepositoriesAction,
+  lsFiles as lsFilesAction,
 } from './workerActions/repository';
 import { updateMainViewType } from './ui/mainView/mainViewMisc';
 import { BufferInfo } from '../models/BufferInfo';
@@ -94,7 +95,7 @@ export function fetchObjects(oids: string[]) {
 }
 
 export function fetchHeadOids() {
-  return async (_: Dispatch<Actions>, __j: () => State, workers: PWorkers) => {
+  return async (_: Dispatch<Actions>, __: () => State, workers: PWorkers) => {
     return workers.dispatch('main', fetchHeadOidsAction());
   };
 }
@@ -153,5 +154,11 @@ export function removeAllRepositories() {
 export function initializePersistedState() {
   return async (_: Dispatch<Actions>, __: () => State, workers: PWorkers) => {
     return workers.dispatch('main', initializePersistedStateAction());
+  };
+}
+
+export function lsFiles() {
+  return async (_: Dispatch<Actions>, __: () => State, workers: PWorkers) => {
+    return workers.dispatch('main', lsFilesAction());
   };
 }
