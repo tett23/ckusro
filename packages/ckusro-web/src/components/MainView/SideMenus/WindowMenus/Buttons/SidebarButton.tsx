@@ -8,9 +8,9 @@ type StyleProps = {
   classes: ReturnType<typeof useSideMenusStyles>;
 };
 
-export type ObjectMenusProps = StyleProps;
+export type SidebarButton = StyleProps;
 
-export function SidebarButton({ classes }: StyleProps) {
+export function SidebarButton({ classes }: SidebarButton) {
   return (
     <Icon className={classes.iconWrapper}>
       <FontAwesomeIcon icon={faColumns} className={classes.icon} />
