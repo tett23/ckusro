@@ -2,7 +2,7 @@ import { RepositoriesManager } from './index';
 import { RefManager } from '../RefManager';
 import { PathManager } from '../PathManager';
 
-type SerializedRepositoriesManager = {
+export type SerializedRepositoriesManager = {
   oids: string[];
   stageHead: string | null;
   stagePathManager: PathManager;
@@ -10,7 +10,7 @@ type SerializedRepositoriesManager = {
   refManager: RefManager;
 };
 
-export function serialize(
+export default function serializeRepositoriesManager(
   manager: RepositoriesManager,
 ): SerializedRepositoriesManager {
   return {

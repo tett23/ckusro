@@ -36,7 +36,9 @@ describe('PersistedState', () => {
       const fs = pfs();
 
       const blobObject = buildBlobObject('');
-      createObjectManager(state.domain.objectManager).addObjects([blobObject]);
+      createObjectManager(state.domain.repositories.objectManager).addObjects([
+        blobObject,
+      ]);
       await writeGitObject(
         fs,
         config.base,

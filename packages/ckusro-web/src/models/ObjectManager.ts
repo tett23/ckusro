@@ -27,7 +27,6 @@ export function createObjectManager(manager: ObjectManager) {
       fetch(manager, oid, type),
     includes: (objects: GitObject[]) => includes(manager, objects),
     difference: (oids: string[]) => difference(manager, oids),
-    serialize: () => serialize(manager),
   };
 }
 
@@ -88,16 +87,4 @@ export function difference(manager: ObjectManager, oids: string[]): string[] {
   const keys = Object.keys(manager.originalObjects);
 
   return oids.filter((item) => !keys.includes(item));
-}
-
-export type SerializedObjectManager = {
-  oids: string[];
-};
-
-export function serialize(manager: ObjectManager): SerializedObjectManager {
-  const keys = Object.keys(manager.originalObjects);
-
-  return {
-    oids: keys,
-  };
 }

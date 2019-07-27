@@ -13,13 +13,9 @@ export default async function fetchObjects(
   state: State,
   oids: string[],
 ): Promise<GitObject[] | Error> {
-  console.log(oids);
   const action = wrapMessage(state, fetchObjectsAction(oids));
-  console.log(action);
 
   const result = await worker.postMessage<Result>(action);
-  console.log(result);
-  console.log(result);
   if (!Array.isArray(result)) {
     return [];
   }

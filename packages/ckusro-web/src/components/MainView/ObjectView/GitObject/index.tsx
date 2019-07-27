@@ -89,7 +89,9 @@ export default function() {
       gitObject:
         oid == null
           ? null
-          : createObjectManager(state.domain.objectManager).fetch(oid),
+          : createObjectManager(state.domain.repositories.objectManager).fetch(
+              oid,
+            ),
     };
   });
   if (gitObject == null || bufferInfo == null) {

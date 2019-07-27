@@ -13,7 +13,7 @@ export type FetchObjectsProps = OwnProps;
 
 export default function FetchObjects({ oids, children }: FetchObjectsProps) {
   const manager = useSelector((state: State) =>
-    createObjectManager(state.domain.objectManager),
+    createObjectManager(state.domain.repositories.objectManager),
   );
   const dispatch = useDispatch();
 

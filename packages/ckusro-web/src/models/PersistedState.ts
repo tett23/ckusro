@@ -1,17 +1,16 @@
-import { GitObject } from '@ckusro/ckusro-core';
 import { ENOENT } from 'constants';
 import FS from 'fs';
 import { State, initialState } from '../modules/index';
-import { splitError } from '../utils';
-import {
-  createObjectManager,
-  createEmptyObjectManager,
-  SerializedObjectManager,
-} from './ObjectManager';
 import { getWorkers } from '../Workers';
+import { SerializedRepositoriesManager } from './RepositoriesManager/serialize';
+import {
+  createRepositoriesManager,
+  emptyRepositoriesManager,
+} from './RepositoriesManager';
+import deserializeRepositoriesManager from './RepositoriesManager/deserialize';
 
-export type PersistedState = Pick<State, 'config' | 'ui' | 'misc'> & {
-  objectManager: SerializedObjectManager;
+export type PersistedState = Pick<State, 'config' | 'ui'> & {
+  domain: { repositories: SerializedRepositoriesManager };
 };
 
 export const PersistedStatePath = '/state.json';
@@ -75,8 +74,11 @@ export function serializeState(state: State): PersistedState {
   return {
     config: state.config,
     ui: state.ui,
-    misc: state.misc,
-    objectManager: createObjectManager(state.domain.objectManager).serialize(),
+    domain: {
+      repositories: createRepositoriesManager(
+        state.domain.repositories,
+      ).serialize(),
+    },
   };
 }
 
@@ -88,24 +90,25 @@ export async function deserializeState(
     return new Error('');
   }
 
-  const objects = await workers.fetchObjects(persistedState.objectManager.oids);
-  if (objects instanceof Error) {
-    return objects;
+  let repos;
+  if (persistedState.domain.repositories == null) {
+    repos = emptyRepositoriesManager();
+  } else {
+    repos = await deserializeRepositoriesManager(
+      persistedState.domain.repositories,
+      workers.fetchObjects,
+    );
+    if (repos instanceof Error) {
+      return repos;
+    }
   }
-  if (objects == null) {
-    return new Error('');
-  }
-
-  const [gitObjects] = splitError(objects);
-  const objectManager = createObjectManager(
-    createEmptyObjectManager(),
-  ).addObjects(gitObjects.filter((item): item is GitObject => item != null));
 
   return {
-    config: persistedState.config,
     domain: {
-      objectManager,
+      ...persistedState.domain,
+      repositories: repos,
     },
+    config: persistedState.config,
     ui: persistedState.ui,
   };
 }

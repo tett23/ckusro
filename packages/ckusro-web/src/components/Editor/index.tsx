@@ -48,10 +48,9 @@ export function Editor({ content, onChange, onBlur, classes }: EditorProps) {
 
 export default function(props: OwnProps) {
   const { blobObject } = useSelector((state: State) => ({
-    blobObject: createObjectManager(state.domain.objectManager).fetch(
-      props.blobBufferInfo.oid,
-      'blob',
-    ),
+    blobObject: createObjectManager(
+      state.domain.repositories.objectManager,
+    ).fetch(props.blobBufferInfo.oid, 'blob'),
   }));
   const [content, setContent] = useState<string | null>(null);
   const { internalPath, oid } = props.blobBufferInfo;

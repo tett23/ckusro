@@ -53,7 +53,10 @@ const Memoized = React.memo(TreeObject, (prev, next) => prev.oid === next.oid);
 export default function(ownProps: OwnProps) {
   const styles = useGitObjectListStyles();
   const gitObject = useSelector((state: State) =>
-    createObjectManager(state.domain.objectManager).fetch(ownProps.oid, 'tree'),
+    createObjectManager(state.domain.repositories.objectManager).fetch(
+      ownProps.oid,
+      'tree',
+    ),
   );
   if (gitObject == null) {
     return <FetchObjects oids={[ownProps.oid]} />;

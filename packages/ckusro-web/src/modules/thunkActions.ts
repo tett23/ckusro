@@ -73,7 +73,9 @@ export function fetchObjects(oids: string[]) {
     workers: PWorkers,
   ) => {
     const {
-      domain: { objectManager },
+      domain: {
+        repositories: { objectManager },
+      },
       misc: { fetchingOids: fetchingOids },
     } = getState();
 

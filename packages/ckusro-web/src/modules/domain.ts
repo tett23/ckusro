@@ -1,9 +1,5 @@
 import { GitObject, InternalPathEntry } from '@ckusro/ckusro-core';
-import {
-  createObjectManager,
-  ObjectManager,
-  createEmptyObjectManager,
-} from '../models/ObjectManager';
+import { createObjectManager } from '../models/ObjectManager';
 import { Ref } from '../models/RefManager';
 import { updateState, UpdateState } from './actions/shared';
 import {
@@ -13,13 +9,11 @@ import {
 } from '../models/RepositoriesManager';
 
 export type DomainState = {
-  objectManager: ObjectManager;
   repositories: RepositoriesManager;
 };
 
 export function initialDomainState(): DomainState {
   return {
-    objectManager: createEmptyObjectManager(),
     repositories: emptyRepositoriesManager(),
   };
 }
@@ -90,14 +84,16 @@ export function domainReducer(
         ),
       };
     case AddObjects: {
-      const manager = createObjectManager(state.objectManager);
+      const manager = createObjectManager(state.repositories.objectManager);
       if (manager.includes(action.payload)) {
         return state;
       }
 
       return {
         ...state,
-        objectManager: manager.addObjects(action.payload),
+        repositories: createRepositoriesManager(state.repositories).addObjects(
+          action.payload,
+        ),
       };
     }
     case UpdateStageHead: {

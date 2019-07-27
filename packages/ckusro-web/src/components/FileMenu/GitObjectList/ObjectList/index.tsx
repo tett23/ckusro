@@ -30,7 +30,7 @@ export function ObjectList({ bufferInfo }: HeaderProps) {
 
 export default function() {
   const { objectManager, bufferInfo } = useSelector((state: State) => ({
-    objectManager: createObjectManager(state.domain.objectManager),
+    objectManager: createObjectManager(state.domain.repositories.objectManager),
     bufferInfo: state.ui.fileMenu.gitObjectList.bufferInfo,
   }));
   if (bufferInfo == null || bufferInfo.type !== 'tree') {

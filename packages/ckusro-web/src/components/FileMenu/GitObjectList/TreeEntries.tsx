@@ -53,7 +53,7 @@ export default function(props: OwnProps) {
   const { oid, internalPath } = props;
   const classes = useGitObjectListStyles();
   const { objectManager } = useSelector((state: State) => ({
-    objectManager: createObjectManager(state.domain.objectManager),
+    objectManager: createObjectManager(state.domain.repositories.objectManager),
   }));
   if (oid == null || internalPath == null) {
     return null;

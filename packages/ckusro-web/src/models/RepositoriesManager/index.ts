@@ -1,12 +1,16 @@
-import { ObjectManager } from '../ObjectManager';
-import { InternalPathEntry } from '@ckusro/ckusro-core';
+import {
+  ObjectManager,
+  createObjectManager,
+  createEmptyObjectManager,
+} from '../ObjectManager';
+import { InternalPathEntry, GitObject } from '@ckusro/ckusro-core';
 import {
   RefManager,
   emptyRefManager,
   createRefManager,
   Ref,
 } from '../RefManager';
-import { serialize } from './serialize';
+import serializeRepositoriesManager from './serialize';
 import { createPathManager, PathManager } from '../PathManager';
 
 export type RepositoriesManager = {
@@ -19,9 +23,7 @@ export type RepositoriesManager = {
 
 export function emptyRepositoriesManager(): RepositoriesManager {
   return {
-    objectManager: {
-      originalObjects: {},
-    },
+    objectManager: createEmptyObjectManager(),
     stageHead: null,
     stagePathManager: [],
     repositoryPathManager: [],
@@ -31,6 +33,12 @@ export function emptyRepositoriesManager(): RepositoriesManager {
 
 export function createRepositoriesManager(manager: RepositoriesManager) {
   return {
+    addObjects: (objects: GitObject[]) => ({
+      ...manager,
+      objectManager: createObjectManager(manager.objectManager).addObjects(
+        objects,
+      ),
+    }),
     addRef: (ref: Ref) => ({
       ...manager,
       refManager: createRefManager(manager.refManager).addRef(ref),
@@ -49,6 +57,6 @@ export function createRepositoriesManager(manager: RepositoriesManager) {
       ...manager,
       stagePathManager: createPathManager(manager.stagePathManager).clear(),
     }),
-    serialize: () => serialize(manager),
+    serialize: () => serializeRepositoriesManager(manager),
   };
 }

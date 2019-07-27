@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { Provider, useDispatch } from 'react-redux';
 import initializeStore, { State } from '../modules';
 import { enablePersistedState } from '../modules/misc';
-import { fetchHeadOids, fetchStageInfo } from '../modules/thunkActions';
 import FileMenu from './FileMenu';
 import MainView from './MainView';
 import { PWorkers } from '../Workers';
@@ -41,9 +40,6 @@ function Inner() {
 
   useEffect(() => {
     (async () => {
-      await dispatch(fetchHeadOids());
-      await dispatch(fetchStageInfo());
-
       setIsLoading(false);
     })();
   }, []);

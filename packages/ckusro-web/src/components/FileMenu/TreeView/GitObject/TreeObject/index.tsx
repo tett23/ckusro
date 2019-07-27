@@ -75,7 +75,10 @@ export default function(props: OwnProps) {
   };
 
   const gitObject = useSelector((state: State) =>
-    createObjectManager(state.domain.objectManager).fetch(oid, 'tree'),
+    createObjectManager(state.domain.repositories.objectManager).fetch(
+      oid,
+      'tree',
+    ),
   );
   if (gitObject == null) {
     return <FetchObjects oids={[oid]} />;
