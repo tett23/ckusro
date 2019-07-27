@@ -39,7 +39,7 @@ export default async function clone(
     return result;
   }
 
-  const repo = repository(gitConfig);
+  const repo = repository(gitConfig, repoPath);
   const checkoutResult = await repo.checkout('origin/master');
   if (checkoutResult instanceof Error) {
     return checkoutResult;

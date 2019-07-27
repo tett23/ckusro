@@ -3,15 +3,19 @@ import { IsomorphicGitConfig } from './models/IsomorphicGitConfig';
 import repositoryPrimitives from './RepositoryPrimitives';
 import headOid from './RepositoryPrimitives/headOid';
 import { dirname } from 'path';
+import lsFilesByRef from './RepositoryPrimitives/lsFilesByRef';
+import { RepoPath } from './models/RepoPath';
+import { InternalPathEntry } from './models/InternalPathEntry';
 
 export type Repository = ReturnType<typeof repository>;
 
-export function repository(config: IsomorphicGitConfig) {
+export function repository(config: IsomorphicGitConfig, repoPath: RepoPath) {
   return {
     ...repositoryPrimitives(config),
     fetch: (ref?: string) => fetch(config, ref),
     pull: () => pull(config),
     checkout: (ref: string) => checkout(config, ref),
+    lsFiles: () => lsFiles(config, repoPath),
   };
 }
 
@@ -67,4 +71,23 @@ export async function checkout(
   }
 
   return;
+}
+
+export async function lsFiles(
+  config: IsomorphicGitConfig,
+  repoPath: RepoPath,
+): Promise<InternalPathEntry[] | Error> {
+  const lsResult = await lsFilesByRef(config, 'HEAD');
+  if (lsResult instanceof Error) {
+    return lsResult;
+  }
+
+  return lsResult.map(([path, treeEntry]) => {
+    const internalPath = {
+      repoPath,
+      path,
+    };
+
+    return [internalPath, treeEntry] as const;
+  });
 }

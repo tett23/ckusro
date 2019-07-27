@@ -16,5 +16,5 @@ export default async function fetchRepository(
     return new Error('Repository have not been cloned.');
   }
 
-  return repository(gitConfig);
+  return repository(gitConfig, repoPath);
 }

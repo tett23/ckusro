@@ -34,7 +34,7 @@ describe(fetchByOid, () => {
       config,
       config.repositories[0].repoPath,
     );
-    const repo = repository(isoConfig);
+    const repo = repository(isoConfig, config.repositories[0].repoPath);
     const oid = (await repo.headOid()) as string;
     const expected = (await fetchByOid(config, fs, oid, 'commit')) as GitObject;
 
