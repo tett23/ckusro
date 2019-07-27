@@ -1,4 +1,5 @@
 import { PersistedState } from '../../models/PersistedState';
+import { CkusroConfig } from '@ckusro/ckusro-core';
 
 export const WritePersistedState = 'PersistWorkerWorker/WritePersistedState' as const;
 
@@ -18,6 +19,24 @@ export function readPersistedState() {
   };
 }
 
+export const WriteConfig = 'PersistWorkerWorker/WriteConfig' as const;
+
+export function writeConfig(config: CkusroConfig) {
+  return {
+    type: WriteConfig,
+    payload: config,
+  };
+}
+
+export const ReadConfig = 'PersistWorkerWorker/ReadConfig' as const;
+
+export function readConfig() {
+  return {
+    type: ReadConfig,
+    payload: null,
+  };
+}
+
 export const InitializePersistedState = 'PersistWorkerWorker/InitializePersistedState' as const;
 
 export function initializePersistedState() {
@@ -30,4 +49,6 @@ export function initializePersistedState() {
 export type PersistStateWorkerActions =
   | ReturnType<typeof writePersistedState>
   | ReturnType<typeof readPersistedState>
+  | ReturnType<typeof writeConfig>
+  | ReturnType<typeof readConfig>
   | ReturnType<typeof initializePersistedState>;

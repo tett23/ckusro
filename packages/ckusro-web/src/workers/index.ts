@@ -12,7 +12,9 @@ import readPersistedState from './readPersistedState';
 import { writePersistedState } from './writePersistedState';
 import getWorker from './getWorker';
 import fetchObjects from './fetchObjects';
-import { GitObject } from '@ckusro/ckusro-core';
+import { GitObject, CkusroConfig } from '@ckusro/ckusro-core';
+import readConfig from './readConfig';
+import { writeConfig } from './writeConfig';
 
 type WorkerTypes = typeof WorkerResponseRepository;
 
@@ -27,9 +29,14 @@ export type Workers = {
 };
 
 export type PWorkers = {
-  readPersistedState: () => Promise<PersistedState | null>;
+  readConfig: () => Promise<CkusroConfig | null>;
+  writeConfig: (config: CkusroConfig) => Promise<true | Error>;
+  readPersistedState: (config: CkusroConfig) => Promise<PersistedState | null>;
   writePersistedState: (persistedState: PersistedState) => Promise<[]>;
-  fetchObjects: (oids: string[]) => Promise<Array<GitObject | null> | Error>;
+  fetchObjects: (
+    config: CkusroConfig,
+    oids: string[],
+  ) => Promise<Array<GitObject | null> | Error>;
   connectStore: (store: Store<State, Actions>) => void;
   dispatch: <WorkerType extends keyof WorkerInstances>(
     worker: WorkerType,
@@ -60,15 +67,17 @@ function createWorkers(workerInstances: WorkerInstances): PWorkers {
       connectStore: (store: Store<State, Actions>) => {
         _store = store;
       },
-      fetchObjects: (oids: string[]) =>
+      fetchObjects: (config: CkusroConfig, oids: string[]) =>
         fetchObjects(
           getWorker(workerInstances, 'main'),
-          { config: { coreId: 'ckusro-web__dev' } } as any,
-
+          { config } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
           oids,
         ),
-      readPersistedState: () =>
-        readPersistedState(getWorker(workerInstances, 'main')),
+      readConfig: () => readConfig(getWorker(workerInstances, 'main')),
+      writeConfig: (config: CkusroConfig) =>
+        writeConfig(getWorker(workerInstances, 'main'), config),
+      readPersistedState: (config: CkusroConfig) =>
+        readPersistedState(config, getWorker(workerInstances, 'main')),
       writePersistedState: (ps: PersistedState) =>
         writePersistedState(getWorker(workerInstances, 'main'), ps),
       dispatch: <WorkerType extends keyof WorkerInstances>(

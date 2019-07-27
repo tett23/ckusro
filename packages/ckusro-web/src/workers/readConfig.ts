@@ -1,25 +1,26 @@
 import { State } from '../modules';
-import { readPersistedState as readPersistedStateAction } from '../modules/workerActions/persistedState';
-import { updateState } from '../modules/actions/shared';
+import { readConfig as readConfigAction } from '../modules/workerActions/persistedState';
 import { errorMessage, ErrorMessage } from '../modules/workerActions/common';
 import { CkusroConfig } from '@ckusro/ckusro-core';
 import wrapMessage from './wrapAction';
 import PromiseWorker from 'promise-worker';
-import { PersistedState } from '../models/PersistedState';
+import { readConfigResult } from '../modules/config';
 
 type Result = [
-  ReturnType<typeof updateState> | ReturnType<typeof errorMessage>,
+  ReturnType<typeof readConfigResult> | ReturnType<typeof errorMessage>,
 ];
 
-export default async function readPersistedState(
-  config: CkusroConfig,
+export default async function readConfig(
   worker: PromiseWorker,
-): Promise<PersistedState | null> {
+): Promise<CkusroConfig | null> {
+  const partialConfig: Pick<CkusroConfig, 'coreId'> = {
+    coreId: 'ckusro-web__dev',
+  };
   const partialState: Pick<State, 'config'> = {
-    config,
+    config: partialConfig as CkusroConfig,
   };
   const state: State = partialState as State;
-  const action = wrapMessage(state, readPersistedStateAction());
+  const action = wrapMessage(state, readConfigAction());
 
   const [result] = await worker.postMessage<Result>(action);
   if (result == null) {
@@ -29,5 +30,5 @@ export default async function readPersistedState(
     return null;
   }
 
-  return result.payload as PersistedState;
+  return result.payload;
 }

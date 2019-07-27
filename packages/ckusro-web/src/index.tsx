@@ -5,8 +5,9 @@ import { render } from 'react-dom';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 import PromiseWorker from 'promise-worker';
-import { initializeWorkers } from './Workers';
+import { initializeWorkers, PWorkers } from './Workers';
 import { deserializeState } from './models/PersistedState';
+import { State } from './modules';
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
@@ -16,15 +17,7 @@ library.add(fas);
 
 (async () => {
   const workers = await initWorkers();
-  const ps = await workers.readPersistedState();
-  if (ps == null) {
-    throw new Error('Initialize failed.');
-  }
-
-  const initialState = await deserializeState(ps);
-  if (initialState instanceof Error) {
-    throw new Error('Initialize failed.');
-  }
+  const initialState = await fetchInitialState(workers);
 
   render(
     <App workers={workers} initialState={initialState} />,
@@ -41,4 +34,25 @@ async function initWorkers() {
   });
 
   return workers;
+}
+
+async function fetchInitialState(
+  workers: PWorkers,
+): Promise<DeepPartial<State>> {
+  const config = await workers.readConfig();
+  if (config == null) {
+    return {};
+  }
+
+  const ps = await workers.readPersistedState(config);
+  if (ps == null) {
+    throw new Error('Initialize failed.');
+  }
+
+  const initialState = await deserializeState(config, ps);
+  if (initialState instanceof Error) {
+    throw new Error('Initialize failed.');
+  }
+
+  return initialState;
 }

@@ -91,11 +91,21 @@ export function clearRepositories() {
   };
 }
 
+const ReadConfigResult = 'Config/ReadConfigResult' as const;
+
+export function readConfigResult(config: CkusroConfig | null) {
+  return {
+    type: ReadConfigResult,
+    payload: config,
+  };
+}
+
 export type ConfigActions =
   | ReturnType<typeof updateCorsProxy>
   | ReturnType<typeof updateAuthenticationGithub>
   | ReturnType<typeof addRepository>
   | ReturnType<typeof clearRepositories>
+  | ReturnType<typeof readConfigResult>
   | ReturnType<typeof updateState>;
 
 export function configReducer(

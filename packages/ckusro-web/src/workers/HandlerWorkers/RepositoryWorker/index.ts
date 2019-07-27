@@ -16,6 +16,8 @@ import {
   WritePersistedState,
   InitializePersistedState,
   PersistStateWorkerActions,
+  ReadConfig,
+  WriteConfig,
 } from '../../../modules/workerActions/persistedState';
 import {
   ParseMarkdown,
@@ -35,6 +37,8 @@ import updateByInternalPathHandler from './handlers/updateByInternalPathHandler'
 import fetchObjectsHandler from './handlers/fetchObjectsHandler';
 import pullRepositoryHandler from './handlers/pullRepositoryHandler';
 import cloneHandler from './handlers/cloneHandler';
+import writeConfigHandler from './handlers/writeConfigHandler';
+import readConfigHandler from './handlers/readConfigHandler';
 
 export const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
 
@@ -104,6 +108,16 @@ function actionHandlers(
       >;
     case ReadPersistedState:
       return readStateHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
+    case WriteConfig:
+      return writeConfigHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
+    case ReadConfig:
+      return readConfigHandler as Handler<
         RepositoryWorkerRequestActions,
         RepositoryWorkerResponseActions
       >;

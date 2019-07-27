@@ -4,6 +4,7 @@ import { Actions, State, ThunkStore } from '../index';
 import { PWorkers } from '../../Workers';
 
 const debounced = debounce((workers: PWorkers, state: State) => {
+  workers.writeConfig(state.config);
   workers.writePersistedState(serializeState(state));
 }, 3000);
 

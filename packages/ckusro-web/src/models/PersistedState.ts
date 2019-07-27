@@ -8,16 +8,14 @@ import {
   emptyRepositoriesManager,
 } from './RepositoriesManager';
 import deserializeRepositoriesManager from './RepositoriesManager/deserialize';
+import { ErrorWithCode } from './ErrorWithCode';
+import { CkusroConfig } from '@ckusro/ckusro-core';
 
-export type PersistedState = Pick<State, 'config' | 'ui'> & {
+export type PersistedState = Pick<State, 'ui'> & {
   domain: { repositories: SerializedRepositoriesManager };
 };
 
 export const PersistedStatePath = '/state.json';
-
-type ErrorWithCode = Error & {
-  code?: number;
-};
 
 export async function readPersistedState(
   coreId: string,
@@ -45,11 +43,6 @@ export async function writePersistedState(
   fs: typeof FS,
   state: PersistedState,
 ): Promise<true | Error> {
-  const coreId = state.config.coreId;
-  if (coreId == null || coreId === '') {
-    return new Error('');
-  }
-
   const result = await fs.promises
     .writeFile(PersistedStatePath, JSON.stringify(state), 'utf8')
     .catch((err: Error) => err);
@@ -72,7 +65,6 @@ export async function removePersistedState(
 
 export function serializeState(state: State): PersistedState {
   return {
-    config: state.config,
     ui: state.ui,
     domain: {
       repositories: createRepositoriesManager(
@@ -83,6 +75,7 @@ export function serializeState(state: State): PersistedState {
 }
 
 export async function deserializeState(
+  config: CkusroConfig,
   persistedState: PersistedState,
 ): Promise<DeepPartial<State> | Error> {
   const workers = await (async () => getWorkers())().catch((err: Error) => err);
@@ -96,7 +89,7 @@ export async function deserializeState(
   } else {
     repos = await deserializeRepositoriesManager(
       persistedState.domain.repositories,
-      workers.fetchObjects,
+      (oids: string[]) => workers.fetchObjects(config, oids),
     );
     if (repos instanceof Error) {
       return repos;
@@ -104,11 +97,11 @@ export async function deserializeState(
   }
 
   return {
+    config,
     domain: {
       ...persistedState.domain,
       repositories: repos,
     },
-    config: persistedState.config,
     ui: persistedState.ui,
   };
 }
