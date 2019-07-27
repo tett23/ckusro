@@ -64,7 +64,10 @@ export default function() {
   const state = useSelector(
     ({
       config: { repositories },
-      domain: { objectManager, refManager },
+      domain: {
+        objectManager,
+        repositories: { refManager },
+      },
     }: State) => {
       return { repositories, objectManager, refManager };
     },

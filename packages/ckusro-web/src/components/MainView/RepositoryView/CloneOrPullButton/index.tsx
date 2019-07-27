@@ -22,7 +22,7 @@ export function CloneOrPullButton({ isCloned }: CloneOrPullButtonProps) {
 export default function() {
   const { repositoryInfo, refManager } = useSelector((state: State) => ({
     repositoryInfo: state.ui.mainView.repositoryView.repositoryInfo,
-    refManager: createRefManager(state.domain.refManager),
+    refManager: createRefManager(state.domain.repositories.refManager),
   }));
   if (repositoryInfo == null) {
     return null;

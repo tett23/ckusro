@@ -4,30 +4,29 @@ import {
   ObjectManager,
   createEmptyObjectManager,
 } from '../models/ObjectManager';
-import { createRefManager, Ref, RefManager } from '../models/RefManager';
+import { Ref } from '../models/RefManager';
 import { updateState, UpdateState } from './actions/shared';
 import { createStageManager, StageManager } from '../models/StageEntryManager';
 import {
   RepositoriesManager,
   emptyRepositoriesManager,
+  createRepositoriesManager,
 } from '../models/RepositoriesManager';
 
 export type DomainState = {
-  refManager: RefManager;
   objectManager: ObjectManager;
   stageManager: StageManager;
+  repositories: RepositoriesManager;
 };
 
 export function initialDomainState(): DomainState {
   return {
-    refManager: {
-      refs: [],
-    },
     objectManager: createEmptyObjectManager(),
     stageManager: {
       headOid: null,
       internalPathEntries: [],
     },
+    repositories: emptyRepositoriesManager(),
   };
 }
 
@@ -90,10 +89,11 @@ export function domainReducer(
 ): DomainState {
   switch (action.type) {
     case AddRef:
-      // TODO: optimization
       return {
         ...state,
-        refManager: createRefManager(state.refManager).addRef(action.payload),
+        repositories: createRepositoriesManager(state.repositories).addRef(
+          action.payload,
+        ),
       };
     case AddObjects: {
       const manager = createObjectManager(state.objectManager);

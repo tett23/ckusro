@@ -10,6 +10,12 @@ export type RefManager = {
   readonly refs: Ref[];
 };
 
+export function emptyRefManager(): RefManager {
+  return {
+    refs: [],
+  };
+}
+
 export function createRefManager(refManager: RefManager) {
   return {
     addRef: (ref: Ref) => addRef(refManager, ref),
