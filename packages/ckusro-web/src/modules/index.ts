@@ -63,6 +63,8 @@ export default function initializeStore(
   const init: State = merge(initialState(), {
     config: props.config,
     domain: props.domain,
+    ui: props.ui,
+    misc: props.misc,
   });
 
   const persistedStateMiddleware = persistStore(workers);

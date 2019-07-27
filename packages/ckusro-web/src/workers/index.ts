@@ -11,6 +11,8 @@ import { dispatch } from './dispatch';
 import readPersistedState from './readPersistedState';
 import { writePersistedState } from './writePersistedState';
 import getWorker from './getWorker';
+import fetchObjects from './fetchObjects';
+import { GitObject } from '@ckusro/ckusro-core';
 
 type WorkerTypes = typeof WorkerResponseRepository;
 
@@ -25,8 +27,9 @@ export type Workers = {
 };
 
 export type PWorkers = {
-  readPersistedState: () => Promise<DeepPartial<State> | null>;
+  readPersistedState: () => Promise<PersistedState | null>;
   writePersistedState: (persistedState: PersistedState) => Promise<[]>;
+  fetchObjects: (oids: string[]) => Promise<Array<GitObject | null> | Error>;
   connectStore: (store: Store<State, Actions>) => void;
   dispatch: <WorkerType extends keyof WorkerInstances>(
     worker: WorkerType,
@@ -34,7 +37,7 @@ export type PWorkers = {
   ) => Promise<true | Error>;
 };
 
-let pWorkers: PWorkers;
+let pWorkers: PWorkers | null = null;
 
 export function getWorkers(): PWorkers | Error {
   if (pWorkers == null) {
@@ -44,21 +47,26 @@ export function getWorkers(): PWorkers | Error {
   return pWorkers;
 }
 
-export function initializeWorkers(workerInstances: WorkerInstances) {
-  return ((): PWorkers => {
-    pWorkers = createWorkers(workerInstances);
+export function initializeWorkers(workerInstances: WorkerInstances): PWorkers {
+  pWorkers = createWorkers(workerInstances);
 
-    return pWorkers;
-  })();
+  return pWorkers;
 }
 
 function createWorkers(workerInstances: WorkerInstances): PWorkers {
-  return ((): PWorkers => {
+  const ret = ((): PWorkers => {
     let _store: Store<State, Actions> | null = null;
     const item: PWorkers = {
       connectStore: (store: Store<State, Actions>) => {
         _store = store;
       },
+      fetchObjects: (oids: string[]) =>
+        fetchObjects(
+          getWorker(workerInstances, 'main'),
+          { config: { coreId: 'ckusro-web__dev' } } as any,
+
+          oids,
+        ),
       readPersistedState: () =>
         readPersistedState(getWorker(workerInstances, 'main')),
       writePersistedState: (ps: PersistedState) =>
@@ -71,4 +79,6 @@ function createWorkers(workerInstances: WorkerInstances): PWorkers {
 
     return item;
   })();
+
+  return ret;
 }

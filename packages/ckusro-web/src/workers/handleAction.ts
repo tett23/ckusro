@@ -1,8 +1,8 @@
 import { CkusroConfig } from '@ckusro/ckusro-core';
-import LightningFs from '@isomorphic-git/lightning-fs';
 import FS from 'fs';
 import { emptyMessage, errorMessage } from '../modules/workerActions/common';
 import { WorkerRequest } from './WorkerRequest';
+import getFsInstance from '../utils/getFsInstance';
 
 export type Handler<
   RequestAction extends FSAction,
@@ -42,7 +42,7 @@ async function handler<
   action: WorkerRequest<RequestActions>,
 ): Promise<ResponseActions[] | ReturnType<typeof errorMessage>> {
   const { config, requestId } = action.meta;
-  const fs: typeof FS = new LightningFs(config.coreId);
+  const fs = getFsInstance(config.coreId);
   console.info(`[worker]:${requestId}`, action);
 
   const response = await process<RequestActions, ResponseActions>(

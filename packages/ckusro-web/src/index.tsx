@@ -6,6 +6,7 @@ import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 import PromiseWorker from 'promise-worker';
 import { initializeWorkers } from './Workers';
+import { deserializeState } from './models/PersistedState';
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
@@ -15,7 +16,15 @@ library.add(fas);
 
 (async () => {
   const workers = await initWorkers();
-  const initialState = (await workers.readPersistedState()) || {};
+  const ps = await workers.readPersistedState();
+  if (ps == null) {
+    throw new Error('Initialize failed.');
+  }
+
+  const initialState = await deserializeState(ps);
+  if (initialState instanceof Error) {
+    throw new Error('Initialize failed.');
+  }
 
   render(
     <App workers={workers} initialState={initialState} />,

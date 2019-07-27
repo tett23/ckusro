@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { PWorkers, WorkerInfos, WorkerInstances } from '../../Workers';
+import { PWorkers, Workers, WorkerInstances } from '../../Workers';
 
 const WorkersContext = createContext<PWorkers | null>(null);
 
@@ -16,7 +16,7 @@ export function useWorkers(): PWorkers {
 
 export function useWorkerDispatch<WorkerType extends keyof WorkerInstances>(
   workerType: WorkerType,
-  action: WorkerInfos[WorkerType]['requestActions'],
+  action: Workers[WorkerType]['requestActions'],
 ): () => Promise<true | Error> {
   const workers = useContext(WorkersContext);
   if (workers == null) {

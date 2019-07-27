@@ -1,5 +1,4 @@
-import { convertColorScheme } from '@ckusro/ckusro-core';
-import LightningFs from '@isomorphic-git/lightning-fs';
+import { convertColorScheme, GitObject } from '@ckusro/ckusro-core';
 import { ENOENT } from 'constants';
 import FS from 'fs';
 import { State } from '../modules/index';
@@ -11,7 +10,7 @@ import {
 } from './ObjectManager';
 import { getWorkers } from '../Workers';
 
-export type PersistedState = Pick<State, 'config' | 'ui'> & {
+export type PersistedState = Pick<State, 'config' | 'ui' | 'misc'> & {
   objectManager: SerializedObjectManager;
 };
 
@@ -45,7 +44,7 @@ type ErrorWithCode = Error & {
 export async function readPersistedState(
   coreId: string,
   fs: typeof FS,
-): Promise<DeepPartial<State> | Error> {
+): Promise<PersistedState | Error> {
   if (coreId == null || coreId === '') {
     return new Error('');
   }
@@ -55,15 +54,13 @@ export async function readPersistedState(
     .catch((err: ErrorWithCode) => err);
   if (stateJson instanceof Error) {
     if (stateJson.code === ENOENT) {
-      return { config: DefaultConfig };
+      return serializeState({ config: DefaultConfig });
     }
 
     return stateJson;
   }
 
-  const persistedState: PersistedState = JSON.parse(stateJson);
-
-  return await deserializeState(persistedState);
+  return JSON.parse(stateJson);
 }
 
 export async function writePersistedState(
@@ -95,16 +92,11 @@ export async function removePersistedState(
   return true;
 }
 
-export async function getFsInstance(
-  coreId: string,
-): Promise<typeof FS | Error> {
-  return (async () => new LightningFs(coreId))().catch((err: Error) => err);
-}
-
 export function serializeState(state: State): PersistedState {
   return {
     config: state.config,
     ui: state.ui,
+    misc: state.misc,
     objectManager: createObjectManager(state.domain.objectManager).serialize(),
   };
 }
@@ -128,7 +120,7 @@ export async function deserializeState(
   const [gitObjects] = splitError(objects);
   const objectManager = createObjectManager(
     createEmptyObjectManager(),
-  ).addObjects(gitObjects);
+  ).addObjects(gitObjects.filter((item): item is GitObject => item != null));
 
   return {
     config: persistedState.config,
