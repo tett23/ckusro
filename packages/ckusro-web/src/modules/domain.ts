@@ -6,7 +6,6 @@ import {
 } from '../models/ObjectManager';
 import { Ref } from '../models/RefManager';
 import { updateState, UpdateState } from './actions/shared';
-import { createStageManager, StageManager } from '../models/StageEntryManager';
 import {
   RepositoriesManager,
   emptyRepositoriesManager,
@@ -15,17 +14,12 @@ import {
 
 export type DomainState = {
   objectManager: ObjectManager;
-  stageManager: StageManager;
   repositories: RepositoriesManager;
 };
 
 export function initialDomainState(): DomainState {
   return {
     objectManager: createEmptyObjectManager(),
-    stageManager: {
-      headOid: null,
-      internalPathEntries: [],
-    },
     repositories: emptyRepositoriesManager(),
   };
 }
@@ -109,23 +103,25 @@ export function domainReducer(
     case UpdateStageHead: {
       return {
         ...state,
-        stageManager: createStageManager(state.stageManager).updateHeadOid(
-          action.payload,
-        ),
+        repositories: createRepositoriesManager(
+          state.repositories,
+        ).updateStageHead(action.payload),
       };
     }
     case UpdateStageEntries: {
       return {
         ...state,
-        stageManager: createStageManager(state.stageManager).update(
-          action.payload,
-        ),
+        repositories: createRepositoriesManager(
+          state.repositories,
+        ).updateStageEntries(action.payload),
       };
     }
     case ClearStageManager:
       return {
         ...state,
-        stageManager: { headOid: null, internalPathEntries: [] },
+        repositories: createRepositoriesManager(
+          state.repositories,
+        ).clearStageManager(),
       };
     case UpdateState:
       if (action.payload.domain == null) {

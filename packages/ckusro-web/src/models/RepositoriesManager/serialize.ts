@@ -1,5 +1,6 @@
-import { RepositoriesManager, PathManager } from './index';
+import { RepositoriesManager } from './index';
 import { RefManager } from '../RefManager';
+import { PathManager } from '../PathManager';
 
 type SerializedRepositoriesManager = {
   oids: string[];

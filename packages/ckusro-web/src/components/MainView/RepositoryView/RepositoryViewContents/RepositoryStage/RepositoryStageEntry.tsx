@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { State } from '../../../../../modules';
-import { createStageManager } from '../../../../../models/StageEntryManager';
 import { InternalPath, TreeEntry } from '@ckusro/ckusro-core';
 import { ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
 import { updateSelectedStageEntry } from '../../../../../modules/ui/mainView/repositoryView';
@@ -47,7 +46,6 @@ export function RepositoryStageEntry({
 export default function({ internalPath, treeEntry }: OwnProps) {
   const { repositoryInfo } = useSelector((state: State) => ({
     repositoryInfo: state.ui.mainView.repositoryView.repositoryInfo,
-    stageManager: createStageManager(state.domain.stageManager),
   }));
   const dispatch = useDispatch();
   const styleProps: StyleProps = {

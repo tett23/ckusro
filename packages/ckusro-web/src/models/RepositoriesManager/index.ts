@@ -1,5 +1,5 @@
 import { ObjectManager } from '../ObjectManager';
-import { InternalPath } from '@ckusro/ckusro-core';
+import { InternalPathEntry } from '@ckusro/ckusro-core';
 import {
   RefManager,
   emptyRefManager,
@@ -7,8 +7,7 @@ import {
   Ref,
 } from '../RefManager';
 import { serialize } from './serialize';
-
-export type PathManager = Array<[InternalPath, string]>;
+import { createPathManager, PathManager } from '../PathManager';
 
 export type RepositoriesManager = {
   objectManager: ObjectManager;
@@ -35,6 +34,20 @@ export function createRepositoriesManager(manager: RepositoriesManager) {
     addRef: (ref: Ref) => ({
       ...manager,
       refManager: createRefManager(manager.refManager).addRef(ref),
+    }),
+    updateStageHead: (stageHead: string | null) => ({
+      ...manager,
+      stageHead,
+    }),
+    updateStageEntries: (entries: InternalPathEntry[]) => ({
+      ...manager,
+      stagePathManager: createPathManager(manager.stagePathManager).update(
+        entries,
+      ),
+    }),
+    clearStageManager: () => ({
+      ...manager,
+      stagePathManager: createPathManager(manager.stagePathManager).clear(),
     }),
     serialize: () => serialize(manager),
   };

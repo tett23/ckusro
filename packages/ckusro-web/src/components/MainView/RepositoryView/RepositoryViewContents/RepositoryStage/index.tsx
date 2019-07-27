@@ -2,11 +2,11 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { State } from '../../../../../modules';
 import { cloneRepository } from '../../../../../modules/thunkActions';
-import { createStageManager } from '../../../../../models/StageEntryManager';
 import { InternalPathEntry } from '@ckusro/ckusro-core';
 import RepositoryStageEntry from './RepositoryStageEntry';
 import { List } from '@material-ui/core';
 import Diff from './Diff';
+import { createPathManager } from '../../../../../models/PathManager';
 
 type StateProps = {
   internalPathEntries: InternalPathEntry[];
@@ -38,19 +38,18 @@ export function RepositoryStage({ internalPathEntries }: RepositoryStageProps) {
 export default function() {
   const { repositoryInfo, stageManager } = useSelector((state: State) => ({
     repositoryInfo: state.ui.mainView.repositoryView.repositoryInfo,
-    stageManager: createStageManager(state.domain.stageManager),
+    stageManager: createPathManager(state.domain.repositories.stagePathManager),
   }));
   const dispatch = useDispatch();
   if (repositoryInfo == null) {
     return null;
   }
 
-  const filtered = createStageManager({
-    headOid: stageManager.headOid(),
-    internalPathEntries: stageManager.repositoryFiles(repositoryInfo.repoPath),
-  });
+  const filtered = createPathManager(
+    stageManager.filterRepository(repositoryInfo.repoPath),
+  ).filterBlob();
   const stateProps: StateProps = {
-    internalPathEntries: filtered.filterBlob(),
+    internalPathEntries: filtered,
   };
   const dispatchProps: DispatchProps = {
     onClick: () => {

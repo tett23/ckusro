@@ -1,14 +1,10 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { State } from '../../../modules';
-import {
-  isBlobEntry,
-  InternalPathBlobEntry,
-  createInternalPath,
-} from '@ckusro/ckusro-core';
+import { InternalPathBlobEntry, createInternalPath } from '@ckusro/ckusro-core';
 import StageEntry from './StageEntry';
 import { List, ListSubheader } from '@material-ui/core';
-import { createStageManager } from '../../../models/StageEntryManager';
+import { createPathManager } from '../../../models/PathManager';
 
 type StateProps = {
   oid: string;
@@ -38,11 +34,13 @@ const Memoized = React.memo(Stage, (prev, next) => prev.oid === next.oid);
 
 export default function() {
   const { stageHead, stageEntries } = useSelector(
-    ({ domain: { stageManager } }: State) => ({
-      stageHead: stageManager.headOid,
-      stageEntries: createStageManager(stageManager)
-        .pathEntries()
-        .filter((item): item is InternalPathBlobEntry => isBlobEntry(item[1])),
+    ({
+      domain: {
+        repositories: { stageHead, stagePathManager },
+      },
+    }: State) => ({
+      stageHead,
+      stageEntries: createPathManager(stagePathManager).filterBlob(),
     }),
   );
   if (stageHead == null) {
