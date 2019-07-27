@@ -7,6 +7,10 @@ import {
 import { createRefManager, Ref, RefManager } from '../models/RefManager';
 import { updateState, UpdateState } from './actions/shared';
 import { createStageManager, StageManager } from '../models/StageEntryManager';
+import {
+  RepositoriesManager,
+  emptyRepositoriesManager,
+} from '../models/RepositoriesManager';
 
 export type DomainState = {
   refManager: RefManager;
@@ -17,7 +21,7 @@ export type DomainState = {
 export function initialDomainState(): DomainState {
   return {
     refManager: {
-      refs: {},
+      refs: [],
     },
     objectManager: createEmptyObjectManager(),
     stageManager: {

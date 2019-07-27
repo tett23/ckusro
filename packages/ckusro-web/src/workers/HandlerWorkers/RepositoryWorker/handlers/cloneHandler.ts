@@ -1,8 +1,4 @@
-import ckusroCore, {
-  CkusroConfig,
-  url2RepoPath,
-  createRepoPath,
-} from '@ckusro/ckusro-core';
+import ckusroCore, { CkusroConfig, url2RepoPath } from '@ckusro/ckusro-core';
 import FS from 'fs';
 import { addRef } from '../../../../modules/domain';
 import { cloneRepository } from '../../../../modules/workerActions/repository';
@@ -32,7 +28,7 @@ export default async function cloneHandler(
 
   return [
     addRef({
-      repository: createRepoPath(repoPath).join(),
+      repoPath,
       name: 'HEAD',
       oid,
     }),

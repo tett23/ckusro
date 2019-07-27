@@ -1,4 +1,4 @@
-import ckusroCore, { CkusroConfig, createRepoPath } from '@ckusro/ckusro-core';
+import ckusroCore, { CkusroConfig } from '@ckusro/ckusro-core';
 import FS from 'fs';
 import { addRef } from '../../../../modules/domain';
 import { pullRepository } from '../../../../modules/workerActions/repository';
@@ -23,7 +23,7 @@ export default async function pullRepositoryHandler(
 
   return [
     addRef({
-      repository: createRepoPath(repoPath).join(),
+      repoPath,
       name: 'HEAD',
       oid: result,
     }),

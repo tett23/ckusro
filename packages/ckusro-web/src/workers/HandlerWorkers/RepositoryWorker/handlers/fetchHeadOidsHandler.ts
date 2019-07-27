@@ -2,7 +2,6 @@ import ckusroCore, {
   CkusroConfig,
   OidRepoPath,
   separateErrors,
-  createRepoPath,
 } from '@ckusro/ckusro-core';
 import FS from 'fs';
 import { addRef } from '../../../../modules/domain';
@@ -22,7 +21,7 @@ export default async function fetchHeadOidsHandler(
 
   return heads.map(([oid, repoPath]) => {
     return addRef({
-      repository: createRepoPath(repoPath).join(),
+      repoPath,
       name: 'HEAD',
       oid,
     });

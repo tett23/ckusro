@@ -1,15 +1,13 @@
-import { RepoPath, createRepoPath } from '@ckusro/ckusro-core';
+import { RepoPath, compareRepoPath } from '@ckusro/ckusro-core';
 
 export type Ref = {
-  readonly repository: string;
+  readonly repoPath: RepoPath;
   readonly name: string;
   readonly oid: string;
 };
 
 export type RefManager = {
-  readonly [repoName: string]: {
-    readonly [refName: string]: Ref;
-  };
+  readonly refs: Ref[];
 };
 
 export function createRefManager(refManager: RefManager) {
@@ -19,29 +17,49 @@ export function createRefManager(refManager: RefManager) {
   };
 }
 
-export function addRef(refManager: RefManager, ref: Ref): RefManager {
-  const ret = { ...refManager };
-  ret[ref.repository] = {
-    ...(ret[ref.repository] || {}),
-    [ref.name]: ref,
-  };
+export function addRef(manager: RefManager, ref: Ref): RefManager {
+  const { refs } = manager;
+  const idx = findRefIndex(manager, ref.repoPath, ref.name);
+  if (idx === -1) {
+    return { refs: [...refs, ref] };
+  }
 
-  return ret;
+  return {
+    refs: [...refs.slice(0, idx), ...refs.slice(idx + 1), ref],
+  };
 }
 
 export function headOid(
-  refManager: RefManager,
+  manager: RefManager,
   repoPath: RepoPath,
 ): string | null {
-  const refs = refManager[createRepoPath(repoPath).join()];
-  if (refs == null) {
+  const ref = findRef(manager, repoPath, 'HEAD');
+  if (ref == null) {
     return null;
   }
 
-  const head = refs.HEAD;
-  if (head == null) {
+  return ref.oid;
+}
+
+function findRefIndex(
+  { refs }: RefManager,
+  repoPath: RepoPath,
+  name: string,
+): number {
+  return refs.findIndex(
+    (item) => compareRepoPath(item.repoPath, repoPath) && item.name === name,
+  );
+}
+
+function findRef(
+  manager: RefManager,
+  repoPath: RepoPath,
+  name: string,
+): Ref | null {
+  const idx = findRefIndex(manager, repoPath, name);
+  if (idx === -1) {
     return null;
   }
 
-  return head.oid;
+  return manager.refs[idx];
 }

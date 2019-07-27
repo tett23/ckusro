@@ -1,4 +1,4 @@
-import { BlobObject, CkusroConfig } from '@ckusro/ckusro-core';
+import { BlobObject, CkusroConfig, RepoPath } from '@ckusro/ckusro-core';
 import crypto from 'crypto';
 import { Ref, RefManager } from '../../src/models/RefManager';
 import { State } from '../../src/modules';
@@ -47,13 +47,19 @@ export const buildState = fixtureBuilder<State>({
   ui: uiReducer(undefined, {} as any), // eslint-disable-line @typescript-eslint/no-explicit-any
 });
 
+export const buildRepoPath = fixtureBuilder<RepoPath>({
+  domain: 'example.com',
+  user: 'test_user',
+  name: 'test_repo',
+});
+
 export const buildRef = fixtureBuilder<Ref>({
-  repository: 'test_repo',
+  repoPath: buildRepoPath(),
   name: 'HEAD',
   oid: '6250ead2a013f1e15bb8df838600ec8528fa5b8c',
 });
 
-export const buildRefManager = fixtureBuilder<RefManager>({});
+export const buildRefManager = fixtureBuilder<RefManager>({ refs: [] });
 
 export function buildBlobObject(content: string | Buffer): BlobObject {
   let buffer: Buffer;
