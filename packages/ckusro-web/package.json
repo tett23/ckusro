@@ -93,7 +93,8 @@
       "json"
     ],
     "transform": {
-      "^.+\\.tsx?$": "ts-jest"
+      "^.+\\.tsx?$": "ts-jest",
+      "^.+\\.jsx?$": "ts-jest"
     },
     "globals": {
       "ts-jest": {
@@ -102,9 +103,9 @@
       }
     },
     "setupFiles": [
-      "./__tests__/setup.ts"
+      "<rootDir>/__tests__/setup.ts"
     ],
-    "testRegex": "(models/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "testRegex": "(<rootDir>/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "testPathIgnorePatterns": [
       "node_modules",
       "lib"
@@ -116,7 +117,7 @@
       [
         "@babel/preset-env",
         {
-          "modules": "commonjs",
+          "modules": false,
           "targets": {
             "node": "8.10",
             "browsers": "> 0.25%, not dead"
