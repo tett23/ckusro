@@ -42,7 +42,7 @@ export const reducers = combineReducers<State>({
   ui: uiReducer,
 });
 
-function initialState(): State {
+export function initialState(): State {
   return {
     domain: initialDomainState(),
     config: initialConfigState(),

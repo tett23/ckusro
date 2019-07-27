@@ -1,7 +1,7 @@
-import { convertColorScheme, GitObject } from '@ckusro/ckusro-core';
+import { GitObject } from '@ckusro/ckusro-core';
 import { ENOENT } from 'constants';
 import FS from 'fs';
-import { State } from '../modules/index';
+import { State, initialState } from '../modules/index';
 import { splitError } from '../utils';
 import {
   createObjectManager,
@@ -15,27 +15,6 @@ export type PersistedState = Pick<State, 'config' | 'ui' | 'misc'> & {
 };
 
 export const PersistedStatePath = '/state.json';
-
-const DefaultConfig = {
-  base: '/repositories',
-  coreId: 'ckusro-web__dev',
-  corsProxy: 'https://cors.isomorphic-git.org',
-  authentication: {
-    github: null,
-  },
-  colorScheme: convertColorScheme({
-    main: 'B22E42',
-    accent: 'A4CE50',
-    text: '090C02',
-    // background: 'DDE2C6',
-    background: 'F6F7F4',
-    base: 'BBC5AA',
-  }),
-  plugins: {
-    parsers: [],
-    components: [],
-  },
-};
 
 type ErrorWithCode = Error & {
   code?: number;
@@ -54,7 +33,7 @@ export async function readPersistedState(
     .catch((err: ErrorWithCode) => err);
   if (stateJson instanceof Error) {
     if (stateJson.code === ENOENT) {
-      return serializeState({ config: DefaultConfig });
+      return serializeState(initialState());
     }
 
     return stateJson;
