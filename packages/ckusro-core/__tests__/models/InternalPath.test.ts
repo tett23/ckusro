@@ -1,7 +1,7 @@
 import {
   basename,
   compareInternalPath,
-  join,
+  joinInternalPath,
   split,
   flat,
   tree,
@@ -47,11 +47,11 @@ describe(basename, () => {
   });
 });
 
-describe(join, () => {
+describe(joinInternalPath, () => {
   it('returns InternalPath', () => {
     const internalPath = buildInternalPath({ path: '/foo' });
 
-    expect(join(internalPath, 'bar', 'baz.md')).toMatchObject({
+    expect(joinInternalPath(internalPath, 'bar', 'baz.md')).toMatchObject({
       repoPath: internalPath.repoPath,
       path: '/foo/bar/baz.md',
     });

@@ -14,7 +14,7 @@ export function createInternalPath(internalPath: InternalPath) {
     compareInternalPath: (b: InternalPath) =>
       compareInternalPath(internalPath, b),
     basename: () => basename(internalPath),
-    join: (...paths: string[]) => join(internalPath, ...paths),
+    join: (...paths: string[]) => joinInternalPath(internalPath, ...paths),
     split: () => split(internalPath),
     tree: () => tree(internalPath),
     flat: () => flat(internalPath),
@@ -37,7 +37,7 @@ export function basename(internalPath: InternalPath): string {
   return _basename(internalPath.path);
 }
 
-export function join(
+export function joinInternalPath(
   internalPath: InternalPath,
   ...paths: string[]
 ): InternalPath {
