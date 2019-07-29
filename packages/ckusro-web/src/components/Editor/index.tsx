@@ -1,5 +1,10 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { BlobObject, BlobBufferInfo, InternalPath } from '@ckusro/ckusro-core';
+import {
+  BlobObject,
+  BlobBufferInfo,
+  InternalPath,
+  createInternalPath,
+} from '@ckusro/ckusro-core';
 import { useSelector, useDispatch } from 'react-redux';
 import { State } from '../../modules';
 import { createObjectManager } from '../../models/ObjectManager';
@@ -17,7 +22,7 @@ type OwnProps = {
 
 type StateProps = {
   blobObject: BlobObject;
-  content: string | null;
+  content: string;
 };
 
 type DispatchProps = {
@@ -32,10 +37,6 @@ type StyleProps = {
 export type EditorProps = OwnProps & StateProps & DispatchProps & StyleProps;
 
 export function Editor({ content, onChange, onBlur, classes }: EditorProps) {
-  if (content == null) {
-    return null;
-  }
-
   return (
     <textarea
       className={classes.editor}
@@ -52,26 +53,21 @@ export default function(props: OwnProps) {
       state.domain.repositories.objectManager,
     ).fetch(props.blobBufferInfo.oid, 'blob'),
   }));
-  const [content, setContent] = useState<string | null>(null);
+  const text = new TextDecoder().decode(
+    (blobObject || { content: Buffer.from('') }).content,
+  );
+  const [content, setContent] = useState(text);
   const { internalPath, oid } = props.blobBufferInfo;
-  useEffect(() => {
-    setContent(
-      new TextDecoder().decode(
-        (blobObject || { content: Buffer.from('') }).content,
-      ),
-    );
-
-    return () => {
-      if (content == null) {
-        return;
-      }
-
-      onChange(content);
-    };
-  }, [oid]);
+  const fullPath = createInternalPath(internalPath).flat();
   const dispatch = useDispatch();
   const updateBuffer = buildUpdateBlobBuffer(dispatch, internalPath);
-  const debounced = useMemo(() => debounce(updateBuffer, 5000), [oid]);
+  useEffect(() => {
+    setContent(text);
+  }, [oid, fullPath]);
+  const debounced = useMemo(() => debounce(updateBuffer, 5000), [
+    oid,
+    fullPath,
+  ]);
   const onChange = (value: string) => {
     setContent(value);
     debounced(value);
