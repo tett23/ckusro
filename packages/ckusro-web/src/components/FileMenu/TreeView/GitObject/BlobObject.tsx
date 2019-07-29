@@ -4,9 +4,10 @@ import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { updateByBufferInfo } from '../../../../modules/thunkActions';
-import { InternalPath, createInternalPath } from '@ckusro/ckusro-core';
+import { InternalPath } from '@ckusro/ckusro-core';
 import { createBufferInfo } from '../../../../models/BufferInfo';
 import useFileMenuStyles from '../../useFileMenuStyles';
+import EntryName from './EntryName';
 
 type OwnProps = {
   oid: string;
@@ -18,7 +19,7 @@ type DispatchProps = {
 };
 
 type StyleProps = {
-  fileTypeIconClass: ReturnType<typeof useFileMenuStyles>['fileTypeIcon'];
+  classes: ReturnType<typeof useFileMenuStyles>;
 };
 
 export type BlobObjectProps = OwnProps & DispatchProps & StyleProps;
@@ -26,14 +27,16 @@ export type BlobObjectProps = OwnProps & DispatchProps & StyleProps;
 export function BlobObject({
   internalPath,
   onClick,
-  fileTypeIconClass,
+  classes,
 }: BlobObjectProps) {
   return (
     <ListItem button onClick={onClick}>
-      <ListItemIcon className={fileTypeIconClass}>
+      <ListItemIcon className={classes.fileTypeIcon}>
         <FontAwesomeIcon icon={faFile} />
       </ListItemIcon>
-      <ListItemText primary={createInternalPath(internalPath).basename()} />
+      <ListItemText>
+        <EntryName internalPath={internalPath} />
+      </ListItemText>
     </ListItem>
   );
 }
@@ -48,13 +51,9 @@ export default function(props: OwnProps) {
         ),
       ),
   };
-  const styles = useFileMenuStyles();
+  const styleProps: StyleProps = {
+    classes: useFileMenuStyles(),
+  };
 
-  return (
-    <BlobObject
-      {...props}
-      {...dispatchProps}
-      fileTypeIconClass={styles.fileTypeIcon}
-    />
-  );
+  return <BlobObject {...props} {...dispatchProps} {...styleProps} />;
 }

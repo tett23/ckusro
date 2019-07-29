@@ -3,7 +3,15 @@ import {
   createObjectManager,
   createEmptyObjectManager,
 } from '../ObjectManager';
-import { InternalPathEntry, GitObject } from '@ckusro/ckusro-core';
+import {
+  InternalPathEntry,
+  GitObject,
+  RepoPath,
+  compareRepoPath,
+  compareInternalPath,
+  InternalPath,
+  TreeEntry,
+} from '@ckusro/ckusro-core';
 import {
   RefManager,
   emptyRefManager,
@@ -12,6 +20,7 @@ import {
 } from '../RefManager';
 import serializeRepositoriesManager from './serialize';
 import { createPathManager, PathManager } from '../PathManager';
+import { createFilesStatus } from '../FilesStatus';
 
 export type RepositoriesManager = {
   objectManager: ObjectManager;
@@ -63,6 +72,52 @@ export function createRepositoriesManager(manager: RepositoriesManager) {
       ...manager,
       stagePathManager: createPathManager(manager.stagePathManager).clear(),
     }),
+    currentTree: (repoPath: RepoPath) =>
+      createFilesStatus(
+        manager.repositoryPathManager,
+        manager.stagePathManager,
+      ).filter((item) => compareRepoPath(repoPath, item.internalPath.repoPath)),
+    entryStatus: (internalPath: InternalPath) => {
+      const item = createFilesStatus(
+        manager.repositoryPathManager,
+        manager.stagePathManager,
+      ).find((item) => compareInternalPath(internalPath, item.internalPath));
+
+      return item || null;
+    },
+    fetchCurrentTreeEntries: (internalPath: InternalPath) => {
+      const originalEntry = createPathManager(
+        manager.repositoryPathManager,
+      ).fetch(internalPath);
+      const stageEntry = createPathManager(manager.stagePathManager).fetch(
+        internalPath,
+      );
+      const originalOid = originalEntry == null ? null : originalEntry.oid;
+      const stageOid = stageEntry == null ? null : stageEntry.oid;
+      const objectManager = createObjectManager(manager.objectManager);
+      const originalTree =
+        originalOid == null ? null : objectManager.fetch(originalOid, 'tree');
+      const stageTree =
+        stageOid == null ? null : objectManager.fetch(stageOid, 'tree');
+
+      const originalEntries = (originalTree == null
+        ? []
+        : originalTree.content
+      ).reduce<Record<string, TreeEntry>>((acc, item) => {
+        acc[item.path] = item;
+
+        return acc;
+      }, {});
+      const merged = (stageTree == null ? [] : stageTree.content).reduce<
+        Record<string, TreeEntry>
+      >((acc, item) => {
+        acc[item.path] = item;
+
+        return acc;
+      }, originalEntries);
+
+      return Object.values(merged);
+    },
     serialize: () => serializeRepositoriesManager(manager),
   };
 }

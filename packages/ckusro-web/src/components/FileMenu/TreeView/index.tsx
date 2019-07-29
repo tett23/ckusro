@@ -65,8 +65,7 @@ export default function() {
     ({
       config: { repositories },
       domain: {
-        repositories: { objectManager },
-        repositories: { refManager },
+        repositories: { objectManager, refManager },
       },
     }: State) => {
       return { repositories, objectManager, refManager };

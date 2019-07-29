@@ -1,20 +1,15 @@
-import {
-  TreeObject as TreeObjectType,
-  InternalPath,
-  createInternalPath,
-} from '@ckusro/ckusro-core';
+import { InternalPath, TreeEntry } from '@ckusro/ckusro-core';
 import { Collapse } from '@material-ui/core';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createObjectManager } from '../../../../../models/ObjectManager';
 import { State } from '../../../../../modules';
 import { updateByBufferInfo } from '../../../../../modules/thunkActions';
-import FetchObjects from '../../../../FetchObject';
 import { TreeEntries } from '../../TreeEntries';
 import TreeName from './TreeName';
 import { updateOpened } from '../../../../../modules/ui/fileMenu/treeView';
 import { createOpenedInternalPathManager } from '../../../../../models/OpenedInternalPathManager';
 import { createBufferInfo } from '../../../../../models/BufferInfo';
+import { createRepositoriesManager } from '../../../../../models/RepositoriesManager';
 
 type OwnProps = {
   oid: string;
@@ -23,7 +18,7 @@ type OwnProps = {
 
 type StateProps = {
   isOpened: boolean;
-  treeObject: TreeObjectType;
+  treeEntries: TreeEntry[];
 };
 
 type DispatchProps = {
@@ -36,21 +31,21 @@ export type TreeObjectProps = OwnProps & StateProps & DispatchProps;
 export function TreeObject({
   internalPath,
   isOpened,
-  treeObject: { content },
+  treeEntries,
   onClick,
   onClickSecondaryAction,
 }: TreeObjectProps) {
   return (
     <>
       <TreeName
-        path={createInternalPath(internalPath).basename()}
+        internalPath={internalPath}
         onClick={onClick}
         isOpen={isOpened}
         onClickSecondaryAction={onClickSecondaryAction}
       />
       <Collapse in={isOpened} timeout="auto" unmountOnExit>
         <TreeEntries
-          treeEntries={!isOpened ? [] : content}
+          treeEntries={!isOpened ? [] : treeEntries}
           internalPath={internalPath}
         />
       </Collapse>
@@ -61,7 +56,7 @@ export function TreeObject({
 export default function(props: OwnProps) {
   const { oid, internalPath } = props;
 
-  const state = useSelector((state: State) => ({
+  const { isOpened } = useSelector((state: State) => ({
     isOpened: createOpenedInternalPathManager(
       state.ui.fileMenu.treeView.opened,
     ).isOpened(internalPath),
@@ -71,25 +66,19 @@ export default function(props: OwnProps) {
     onClick: () =>
       dispatch(updateByBufferInfo(createBufferInfo('tree', oid, internalPath))),
     onClickSecondaryAction: () =>
-      dispatch(updateOpened(internalPath, !state.isOpened)),
+      dispatch(updateOpened(internalPath, !isOpened)),
   };
 
-  const gitObject = useSelector((state: State) =>
-    createObjectManager(state.domain.repositories.objectManager).fetch(
-      oid,
-      'tree',
-    ),
+  const treeEntries = useSelector((state: State) =>
+    createRepositoriesManager(
+      state.domain.repositories,
+    ).fetchCurrentTreeEntries(internalPath),
   );
-  if (gitObject == null) {
-    return <FetchObjects oids={[oid]} />;
-  }
 
-  return (
-    <TreeObject
-      {...props}
-      {...state}
-      treeObject={gitObject}
-      {...dispatchProps}
-    />
-  );
+  const stateProps: StateProps = {
+    isOpened,
+    treeEntries,
+  };
+
+  return <TreeObject {...props} {...stateProps} {...dispatchProps} />;
 }

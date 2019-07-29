@@ -1,5 +1,6 @@
 import { Theme } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/styles';
+import { red, green, yellow } from '@material-ui/core/colors';
 
 const drawerWidth = 240;
 
@@ -80,6 +81,18 @@ const useFileMenuStyles = makeStyles((theme: Theme) => {
       width: '2rem',
       minWidth: '2rem',
       maxWidth: '2rem',
+    },
+    noChangedText: {
+      color: theme.palette.text.primary,
+    },
+    changedText: {
+      color: yellow['A700'],
+    },
+    addedText: {
+      color: green['A700'],
+    },
+    deletedText: {
+      color: red['A700'],
     },
   });
 });

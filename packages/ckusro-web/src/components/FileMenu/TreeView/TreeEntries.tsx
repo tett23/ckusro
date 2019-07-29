@@ -11,11 +11,19 @@ import { State } from '../../../modules';
 import FetchObjects from '../../FetchObject';
 import TreeEntry from './TreeEntry';
 import useTreeViewStyles from './useTreeViewStyles';
+import { createRepositoriesManager } from '../../../models/RepositoriesManager';
 
-export type TreeEntriesProps = {
+type OwnProps = {
+  internalPath: InternalPath;
+  oid: string;
+};
+
+type StateProps = {
   internalPath: InternalPath;
   treeEntries: TreeEntryType[];
 };
+
+export type TreeEntriesProps = StateProps;
 
 export function TreeEntries({ treeEntries, internalPath }: TreeEntriesProps) {
   const entries = treeEntries.map((item) => (
@@ -39,29 +47,27 @@ export function TreeEntries({ treeEntries, internalPath }: TreeEntriesProps) {
   );
 }
 
-export default function({
-  oid,
-  internalPath,
-}: {
-  internalPath: InternalPath;
-  oid: string;
-}) {
-  const gitObject = useSelector((state: State) =>
-    createObjectManager(state.domain.repositories.objectManager).fetch(
-      oid,
-      'tree',
-    ),
-  );
+export default function({ oid, internalPath }: OwnProps) {
+  const { gitObject, treeEntries } = useSelector((state: State) => ({
+    gitObject: createObjectManager(
+      state.domain.repositories.objectManager,
+    ).fetch(oid, 'tree'),
+    treeEntries: createRepositoriesManager(
+      state.domain.repositories,
+    ).fetchCurrentTreeEntries(internalPath),
+  }));
   if (gitObject == null) {
-    return <FetchObjects oids={oid == null ? [] : [oid]} />;
+    return <FetchObjects oids={[oid]} />;
   }
 
+  const stateProps: StateProps = {
+    internalPath,
+    treeEntries,
+  };
+
   return (
-    <FetchObjects oids={gitObject.content.map(({ oid }) => oid)}>
-      <TreeEntries
-        internalPath={internalPath}
-        treeEntries={gitObject.content}
-      />
+    <FetchObjects oids={treeEntries.map(({ oid }) => oid)}>
+      <TreeEntries {...stateProps} />
     </FetchObjects>
   );
 }

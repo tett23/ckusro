@@ -14,33 +14,38 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import useFileMenuStyles from '../../../useFileMenuStyles';
+import { InternalPath } from '@ckusro/ckusro-core';
+import EntryName from '../EntryName';
 
 type OwnProps = {
-  path: string;
+  internalPath: InternalPath;
   isOpen: boolean;
   onClick: () => void;
   onClickSecondaryAction: () => void;
 };
 
 type StyleProps = {
-  fileTypeIconClass: ReturnType<typeof useFileMenuStyles>['fileTypeIcon'];
+  classes: ReturnType<typeof useFileMenuStyles>;
 };
 
-export type TreeNameProps = OwnProps & StyleProps;
+export type TreeNameProps = OwnProps & StyleProps & StyleProps;
 
 export function TreeName({
-  path,
+  internalPath,
   isOpen,
   onClick,
   onClickSecondaryAction,
-  fileTypeIconClass,
+  classes,
 }: TreeNameProps) {
   return (
     <ListItem button onClick={onClick}>
-      <ListItemIcon className={fileTypeIconClass}>
+      <ListItemIcon className={classes.fileTypeIcon}>
         <FolderIcon isOpen={isOpen} />
       </ListItemIcon>
-      <ListItemText primary={path} />
+      <ListItemText>
+        <EntryName internalPath={internalPath} />
+      </ListItemText>
+
       <ListItemSecondaryAction>
         <IconButton edge="end" onClick={onClickSecondaryAction}>
           <ChevronIcon isOpen={isOpen} />
@@ -75,7 +80,9 @@ function FolderClosed() {
 }
 
 export default function(props: OwnProps) {
-  const styles = useFileMenuStyles();
+  const styleProps: StyleProps = {
+    classes: useFileMenuStyles(),
+  };
 
-  return <TreeName {...props} fileTypeIconClass={styles.fileTypeIcon} />;
+  return <TreeName {...props} {...styleProps} />;
 }
