@@ -24,6 +24,8 @@ export function createPathManager(manager: PathManager) {
     filterRepository: (repoPath: RepoPath) =>
       filterRepository(manager, repoPath),
     filterBlob: () => filterBlob(manager),
+    removeUnchanged: (repoPathManager: PathManager) =>
+      removeUnchanged(manager, repoPathManager),
   };
 }
 
@@ -76,4 +78,17 @@ function filterBlob(manager: PathManager): BlobPathManager {
   return manager.filter((item): item is InternalPathBlobEntry =>
     isBlobEntry(item[1]),
   );
+}
+
+function removeUnchanged(
+  manager: PathManager,
+  repoPathManager: PathManager,
+): PathManager {
+  return manager.filter(([stageInternalPath, { oid: stageOid }]) => {
+    return !repoPathManager.some(
+      ([repoInternalPath, { oid: repoOid }]) =>
+        stageOid === repoOid &&
+        compareInternalPath(stageInternalPath, repoInternalPath),
+    );
+  });
 }
