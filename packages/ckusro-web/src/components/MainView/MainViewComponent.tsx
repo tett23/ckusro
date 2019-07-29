@@ -5,6 +5,7 @@ import { MainViewTypes } from '../../modules/ui/mainView/mainViewMisc';
 import ObjectView from './ObjectView';
 import SettingsView from './SettingsView';
 import RepositoryView from './RepositoryView';
+import DiffView from './DiffView';
 
 type OwnProps = {};
 
@@ -27,6 +28,8 @@ export function MainViewComponent({ mainViewType }: MainViewComponentProps) {
       return <ObjectView />;
     case 'repository':
       return <RepositoryView />;
+    case 'diff':
+      return <DiffView />;
     case 'config':
       return <SettingsView />;
     default:
