@@ -1,5 +1,11 @@
-import { BlobObject, CkusroConfig, RepoPath } from '@ckusro/ckusro-core';
-import crypto from 'crypto';
+import {
+  BlobObject,
+  CkusroConfig,
+  RepoPath,
+  InternalPath,
+  TreeEntry,
+} from '@ckusro/ckusro-core';
+import crypto, { createHash } from 'crypto';
 import { Ref, RefManager } from '../../src/models/RefManager';
 import { State } from '../../src/modules';
 import { initialDomainState } from '../../src/modules/domain';
@@ -52,6 +58,32 @@ export const buildRepoPath = fixtureBuilder<RepoPath>({
   user: 'test_user',
   name: 'test_repo',
 });
+
+export const buildInternalPath = fixtureBuilder<InternalPath>({
+  path: '/',
+  repoPath: buildRepoPath(),
+});
+
+export const buildTreeEntry = fixtureBuilder<TreeEntry>({
+  type: 'tree',
+  oid: randomOid(),
+  mode: '040000',
+  path: 'test',
+});
+
+export function randomOid(): string {
+  const currentDate = new Date().getTime().toString();
+  const random = Math.random().toString();
+
+  return createHash('sha1')
+    .update(currentDate + random)
+    .digest('hex');
+}
+
+export const buildInternalPathEntry = (
+  internalPath: InternalPath,
+  treeEntry: TreeEntry,
+) => [internalPath, treeEntry] as const;
 
 export const buildRef = fixtureBuilder<Ref>({
   repoPath: buildRepoPath(),
