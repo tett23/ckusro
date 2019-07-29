@@ -23,7 +23,7 @@ type EntryNameProps = OwnProps & StateProps & StyleProps;
 
 export function EntryName({ internalPath, status, classes }: EntryNameProps) {
   return (
-    <Typography className={textClass(classes, status)}>
+    <Typography variant="body2" className={textClass(classes, status)}>
       {createInternalPath(internalPath).basename()}
     </Typography>
   );
