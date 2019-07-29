@@ -47,7 +47,7 @@ export function updateRepositoryPaths(paths: InternalPathEntry[]) {
 
 const UpdateStageHead = 'Domain/UpdateStageHead' as const;
 
-export function updateStageHead(oid: string) {
+export function updateStageHead(oid: string | null) {
   return {
     type: UpdateStageHead,
     payload: oid,

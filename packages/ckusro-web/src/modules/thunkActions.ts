@@ -27,6 +27,7 @@ import {
 import { serializeState } from '../models/PersistedState';
 import { createObjectManager } from '../models/ObjectManager';
 import { PWorkers } from '../Workers';
+import { clearStageManager, updateStageHead } from './domain';
 
 export function updateByBufferInfo(bufferInfo: BufferInfo | null) {
   return async (dispatch: Dispatch<Actions>) => {
@@ -140,7 +141,13 @@ export function writePersistedState() {
 }
 
 export function clearStageData() {
-  return async (_: Dispatch<Actions>, __: () => State, workers: PWorkers) => {
+  return async (
+    dispatch: Dispatch<Actions>,
+    __: () => State,
+    workers: PWorkers,
+  ) => {
+    dispatch(updateStageHead(null));
+    dispatch(clearStageManager());
     return workers.dispatch('main', clearStageDataAction());
   };
 }
