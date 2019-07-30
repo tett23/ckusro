@@ -6,6 +6,7 @@ import { InternalPath, createInternalPath } from '@ckusro/ckusro-core';
 import { State } from '../../../../modules';
 import { useSelector } from 'react-redux';
 import { createRepositoriesManager } from '../../../../models/RepositoriesManager';
+import { createRefManager } from '../../../../models/RefManager';
 
 type OwnProps = {
   internalPath: InternalPath;
@@ -30,11 +31,19 @@ export function EntryName({ internalPath, status, classes }: EntryNameProps) {
 }
 
 export default function(props: OwnProps) {
-  const { entryStatus } = useSelector((state: State) => ({
-    entryStatus: createRepositoriesManager(
-      state.domain.repositories,
-    ).entryStatus(props.internalPath),
-  }));
+  const { entryStatus } = useSelector(
+    (state: State) => ({
+      stageOid: state.domain.repositories.stageHead,
+      repoOid: createRefManager(state.domain.repositories.refManager).headOid(
+        props.internalPath.repoPath,
+      ),
+      entryStatus: createRepositoriesManager(
+        state.domain.repositories,
+      ).entryStatus(props.internalPath),
+    }),
+    (left, right) =>
+      left.repoOid === right.repoOid && left.stageOid === right.stageOid,
+  );
   const styleProps: StyleProps = {
     classes: useFileMenuStyles(),
   };
