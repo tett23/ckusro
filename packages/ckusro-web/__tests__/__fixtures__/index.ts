@@ -1,16 +1,15 @@
 import {
-  BlobObject,
   CkusroConfig,
   RepoPath,
   InternalPath,
   TreeEntry,
+  BlobBufferInfo,
 } from '@ckusro/ckusro-core';
-import crypto, { createHash } from 'crypto';
+import { createHash } from 'crypto';
 import { Ref, RefManager } from '../../src/models/RefManager';
-import { State } from '../../src/modules';
-import { initialDomainState } from '../../src/modules/domain';
-import { initialMiscState } from '../../src/modules/misc';
-import uiReducer from '../../src/modules/ui';
+import { State, initialState } from '../../src/modules';
+import { PWorkers } from '../../src/Workers';
+import { GlobalBlobWriteInfo } from '@ckusro/ckusro-core/lib/src/models/GlobalWriteInfo';
 
 export function fixtureBuilder<T>(base: T): (override?: Partial<T>) => T {
   return (override: Partial<T> = {}) => {
@@ -47,10 +46,7 @@ export const buildCkusroConfig = fixtureBuilder<CkusroConfig>({
 });
 
 export const buildState = fixtureBuilder<State>({
-  domain: initialDomainState(),
-  config: buildCkusroConfig(),
-  misc: initialMiscState(),
-  ui: uiReducer(undefined, {} as any), // eslint-disable-line @typescript-eslint/no-explicit-any
+  ...initialState(),
 });
 
 export const buildRepoPath = fixtureBuilder<RepoPath>({
@@ -93,22 +89,24 @@ export const buildRef = fixtureBuilder<Ref>({
 
 export const buildRefManager = fixtureBuilder<RefManager>({ refs: [] });
 
-export function buildBlobObject(content: string | Buffer): BlobObject {
-  let buffer: Buffer;
-  if (typeof content === 'string') {
-    buffer = new Buffer(content);
-  } else {
-    buffer = content;
-  }
+export const buildBlobBufferInfo = fixtureBuilder<BlobBufferInfo>({
+  type: 'blob',
+  oid: randomOid(),
+  internalPath: buildInternalPath(),
+});
 
-  const oid = crypto
-    .createHash('sha1')
-    .update(buffer)
-    .digest('hex');
+export const buildPWorkers = fixtureBuilder<PWorkers>({
+  readConfig: jest.fn().mockResolvedValue(buildCkusroConfig()),
+  writeConfig: jest.fn().mockResolvedValue(true),
+  readPersistedState: jest.fn().mockResolvedValue(null),
+  writePersistedState: jest.fn(),
+  fetchObjects: jest.fn().mockResolvedValue([]),
+  connectStore: jest.fn(),
+  dispatch: jest.fn().mockResolvedValue(true),
+});
 
-  return {
-    type: 'blob',
-    oid,
-    content: buffer,
-  };
-}
+export const buildGlobalBlobWriteInfo = fixtureBuilder<GlobalBlobWriteInfo>({
+  type: 'blob',
+  internalPath: buildInternalPath(),
+  content: Buffer.from(''),
+});

@@ -9,11 +9,8 @@ import {
   serializeState,
   writePersistedState,
 } from '../../src/models/PersistedState';
-import {
-  buildBlobObject,
-  buildCkusroConfig,
-  buildState,
-} from '../__fixtures__';
+import { buildCkusroConfig, buildState } from '../__fixtures__';
+import { createBlobObject } from '../__helpers__/createBlobObject';
 import { pfs } from '../__helpers__/pfs';
 import { createObjectManager } from '../../src/models/ObjectManager';
 
@@ -35,7 +32,7 @@ describe('PersistedState', () => {
       const state = buildState({ config });
       const fs = pfs();
 
-      const blobObject = buildBlobObject('');
+      const blobObject = createBlobObject('');
       createObjectManager(state.domain.repositories.objectManager).addObjects([
         blobObject,
       ]);

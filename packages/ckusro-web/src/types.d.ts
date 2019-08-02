@@ -22,3 +22,11 @@ type DeepPartial<T> = {
 };
 
 type ValuesOf<T> = T extends Record<any, infer U> ? U : never;
+
+type FunctionArgs<F extends Function> = F extends (...args: infer U) => any
+  ? U
+  : never;
+
+type ArrayItems<F extends any[]> = F extends Array<infer U> ? U : never;
+
+type PropType<F extends Function> = ArrayItems<FunctionArgs<F>>;

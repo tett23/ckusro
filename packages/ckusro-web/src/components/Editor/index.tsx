@@ -1,6 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import {
-  BlobObject,
   BlobBufferInfo,
   InternalPath,
   createInternalPath,
@@ -8,8 +7,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { State } from '../../modules';
 import { createObjectManager } from '../../models/ObjectManager';
-import FetchObjects from '../FetchObject';
-import { updateBlobBuffer } from '../../modules/thunkActions';
+import { updateBlobBuffer, fetchObjects } from '../../modules/thunkActions';
 import debounce from 'lodash.debounce';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -21,7 +19,6 @@ type OwnProps = {
 };
 
 type StateProps = {
-  blobObject: BlobObject;
   content: string;
 };
 
@@ -34,7 +31,7 @@ type StyleProps = {
   classes: ReturnType<typeof useEditorStyles>;
 };
 
-export type EditorProps = OwnProps & StateProps & DispatchProps & StyleProps;
+export type EditorProps = StateProps & DispatchProps & StyleProps;
 
 export function Editor({ content, onChange, onBlur, classes }: EditorProps) {
   return (
@@ -47,7 +44,7 @@ export function Editor({ content, onChange, onBlur, classes }: EditorProps) {
   );
 }
 
-export default function(props: OwnProps) {
+export function buildEditorProps(props: OwnProps) {
   const { blobObject } = useSelector((state: State) => ({
     blobObject: createObjectManager(
       state.domain.repositories.objectManager,
@@ -60,7 +57,11 @@ export default function(props: OwnProps) {
   const { internalPath, oid } = props.blobBufferInfo;
   const fullPath = createInternalPath(internalPath).flat();
   const dispatch = useDispatch();
-  const updateBuffer = buildUpdateBlobBuffer(dispatch, internalPath);
+  const updateBuffer = buildUpdateBlobBuffer(
+    dispatch,
+    setContent,
+    internalPath,
+  );
   useEffect(() => {
     setContent(text);
   }, [oid, fullPath]);
@@ -81,24 +82,37 @@ export default function(props: OwnProps) {
   };
 
   if (blobObject == null) {
-    return <FetchObjects oids={[props.blobBufferInfo.oid]} />;
+    dispatch(fetchObjects([props.blobBufferInfo.oid]));
+    return null;
   }
 
   const stateProps: StateProps = {
-    blobObject,
-    content: content,
+    content,
   };
 
-  return (
-    <Editor {...props} {...stateProps} {...dispatchProps} {...styleProps} />
-  );
+  return {
+    ...stateProps,
+    ...dispatchProps,
+    ...styleProps,
+  };
+}
+
+export default function(props: OwnProps) {
+  const componentProps: EditorProps | null = buildEditorProps(props);
+  if (componentProps == null) {
+    return null;
+  }
+
+  return <Editor {...componentProps} />;
 }
 
 function buildUpdateBlobBuffer(
   dispatch: ThunkDispatch<State, PWorkers, Action>,
+  setContent: (value: string) => void,
   internalPath: InternalPath,
 ) {
-  return (content: string) =>
+  return (content: string) => {
+    setContent(content);
     dispatch(
       updateBlobBuffer({
         type: 'blob',
@@ -106,4 +120,5 @@ function buildUpdateBlobBuffer(
         content: Buffer.from(content),
       }),
     );
+  };
 }
