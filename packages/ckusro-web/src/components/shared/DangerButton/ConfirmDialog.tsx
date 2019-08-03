@@ -14,6 +14,7 @@ type OwnProps = {
   body: ReactNode;
   onOk: () => void;
   onCancel?: () => void;
+  submitText?: string;
 };
 
 type StyleProps = {
@@ -25,6 +26,7 @@ export type ConfirmDialogProps = OwnProps & StyleProps;
 export function ConfirmDialog({
   title,
   body,
+  submitText,
   onOk,
   onCancel,
   classes,
@@ -48,21 +50,30 @@ export function ConfirmDialog({
           variant="contained"
           className={classes.dangerButton}
         >
-          Ok
+          {submitText || 'Ok'}
         </Button>
       </DialogActions>
     </Dialog>
   );
 }
 
-export default function(props: OwnProps) {
+export default function(ownProps: OwnProps) {
+  const props = buildConfirmDialogProps(ownProps);
+
+  if (!ownProps.isOpen) {
+    return null;
+  }
+
+  return <ConfirmDialog {...props} />;
+}
+
+function buildConfirmDialogProps(props: OwnProps): ConfirmDialogProps {
   const styleProps: StyleProps = {
     classes: useDangerButtonStyles(),
   };
 
-  if (!props.isOpen) {
-    return null;
-  }
-
-  return <ConfirmDialog {...props} {...styleProps} />;
+  return {
+    ...props,
+    ...styleProps,
+  };
 }
