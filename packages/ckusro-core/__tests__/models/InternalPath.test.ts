@@ -5,6 +5,7 @@ import {
   split,
   flat,
   tree,
+  internalPathDirname,
 } from '../../src/models/InternalPath';
 import { buildInternalPath, buildRepoPath } from '../__fixtures__';
 
@@ -124,5 +125,35 @@ describe(flat, () => {
     });
 
     expect(flat(internalPath)).toBe('/example.com/test/repo/foo/bar');
+  });
+});
+
+describe(internalPathDirname, () => {
+  it('returns string', () => {
+    const internalPath = buildInternalPath({
+      repoPath: buildRepoPath({
+        domain: 'example.com',
+        user: 'test',
+        name: 'repo',
+      }),
+      path: '/foo/bar',
+    });
+    const actual = internalPathDirname(internalPath);
+
+    expect(actual).toBe('/example.com/test/repo/foo');
+  });
+
+  it('returns string', () => {
+    const internalPath = buildInternalPath({
+      repoPath: buildRepoPath({
+        domain: 'example.com',
+        user: 'test',
+        name: 'repo',
+      }),
+      path: '/',
+    });
+    const actual = internalPathDirname(internalPath);
+
+    expect(actual).toBe('/example.com/test');
   });
 });

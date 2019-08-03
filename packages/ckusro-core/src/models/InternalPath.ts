@@ -1,4 +1,4 @@
-import { basename as _basename, join as _join } from 'path';
+import { basename as _basename, join as _join, dirname } from 'path';
 import { compareRepoPath, RepoPath } from './RepoPath';
 import normalizePath from '../utils/normalizePath';
 import trimRootSlash from '../utils/trimRootSlash';
@@ -15,6 +15,7 @@ export function createInternalPath(internalPath: InternalPath) {
       compareInternalPath(internalPath, b),
     basename: () => basename(internalPath),
     join: (...paths: string[]) => joinInternalPath(internalPath, ...paths),
+    dirname: () => internalPathDirname(internalPath),
     split: () => split(internalPath),
     tree: () => tree(internalPath),
     flat: () => flat(internalPath),
@@ -62,4 +63,8 @@ export function tree(internalPath: InternalPath): string[] {
 
 export function flat(internalPath: InternalPath): string {
   return _join('/', ...split(internalPath));
+}
+
+export function internalPathDirname(internalPath: InternalPath): string {
+  return dirname(flat(internalPath));
 }
