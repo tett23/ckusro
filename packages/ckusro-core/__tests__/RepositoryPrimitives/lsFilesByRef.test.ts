@@ -6,7 +6,7 @@ import lsFilesByRef from '../../src/RepositoryPrimitives/lsFilesByRef';
 import headTree from '../../src/RepositoryPrimitives/headTree';
 import { TreeObject, createWriteInfo } from '../../src';
 import { PathTreeObject } from '../../src/models/PathTreeObject';
-import commit from '../../src/Stage/commands/commit';
+import commit from '../../src/RepositoryPrimitives/commands/commit';
 import { writeBlob } from '../../src/RepositoryPrimitives/writeBlob';
 import { PathTreeEntry } from '../../src/models/PathTreeEntry';
 

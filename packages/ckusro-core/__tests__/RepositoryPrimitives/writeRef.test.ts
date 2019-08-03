@@ -6,7 +6,7 @@ import { createWriteInfo } from '../../src/models/writeInfo';
 import { PathTreeObject } from '../../src/models/PathTreeObject';
 import { TreeObject, CommitObject } from '../../src';
 import headTree from '../../src/RepositoryPrimitives/headTree';
-import commit from '../../src/Stage/commands/commit';
+import commit from '../../src/RepositoryPrimitives/commands/commit';
 import writeRef from '../../src/RepositoryPrimitives/writeRef';
 import headOid from '../../src/RepositoryPrimitives/headOid';
 import { writeBlob } from '../../src/RepositoryPrimitives/writeBlob';

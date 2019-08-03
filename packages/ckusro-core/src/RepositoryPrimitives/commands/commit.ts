@@ -4,8 +4,8 @@ import {
   CommitObject,
 } from '../../models/GitObject';
 import { IsomorphicGitConfig } from '../../models/IsomorphicGitConfig';
-import { writeObject } from '../../RepositoryPrimitives/writeObject';
-import writeRef from '../../RepositoryPrimitives/writeRef';
+import { writeObject } from '../writeObject';
+import writeRef from '../writeRef';
 
 export default async function commit(
   config: IsomorphicGitConfig,

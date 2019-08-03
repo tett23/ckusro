@@ -12,7 +12,7 @@ import {
   InternalPathTreeObject,
 } from '../../../src';
 import headTree from '../../../src/RepositoryPrimitives/headTree';
-import commit from '../../../src/Stage/commands/commit';
+import commit from '../../../src/RepositoryPrimitives/commands/commit';
 import add from '../../../src/Stage/commands/add';
 import { createGlobalWriteInfo } from '../../../src/models/GlobalWriteInfo';
 

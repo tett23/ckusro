@@ -14,7 +14,7 @@ import {
 } from '../../src';
 import headTree from '../../src/RepositoryPrimitives/headTree';
 import { createGlobalWriteInfo } from '../../src/models/GlobalWriteInfo';
-import commit from '../../src/Stage/commands/commit';
+import commit from '../../src/RepositoryPrimitives/commands/commit';
 import add from '../../src/Stage/commands/add';
 import { initRepository } from '../../src/Stage/prepare';
 

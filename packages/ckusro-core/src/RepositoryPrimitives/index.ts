@@ -24,11 +24,14 @@ import lsFilesByTree from './lsFilesByTree';
 import revParse from './revParse';
 import fetchObjectByRef from './fetchObjectByRef';
 import add from './commands/add';
+import commit from './commands/commit';
 
 export default function repositoryPrimitives(config: IsomorphicGitConfig) {
   return {
     add: (root: TreeObject, writeInfo: WriteInfo) =>
       add(config, root, writeInfo),
+    commit: (root: TreeObject, message: string) =>
+      commit(config, root, message),
 
     headOid: () => headOid(config),
     headCommitObject: () => headCommitObject(config),
