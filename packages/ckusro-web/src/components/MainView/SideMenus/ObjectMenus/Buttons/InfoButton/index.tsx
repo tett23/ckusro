@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import useSideMenusStyles from '../../useSideMenusStyles';
+import useSideMenusStyles from '../../../useSideMenusStyles';
 import { useSelector } from 'react-redux';
-import { State } from '../../../../../modules';
-import { IconButton, Popper, Fade, Paper, Typography } from '@material-ui/core';
+import { State } from '../../../../../../modules';
+import { IconButton, ClickAwayListener } from '@material-ui/core';
+import BufferInfoPopper from './BufferInfoPopper';
+import { BufferInfo } from '@ckusro/ckusro-core';
 
 type StateProps = {
+  bufferInfo: BufferInfo | null;
   disabled: boolean;
   isOpen: boolean;
   anchorEl: HTMLButtonElement | null;
@@ -14,6 +17,7 @@ type StateProps = {
 
 type DispatchProps = {
   onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  closePopper: () => void;
 };
 
 type StyleProps = {
@@ -23,10 +27,12 @@ type StyleProps = {
 export type InfoButtonProps = StateProps & DispatchProps & StyleProps;
 
 export function InfoButton({
+  bufferInfo,
   disabled,
   isOpen,
   anchorEl,
   onClick,
+  closePopper,
   classes,
 }: InfoButtonProps) {
   return (
@@ -38,7 +44,17 @@ export function InfoButton({
       >
         <FontAwesomeIcon icon={faInfoCircle} className={classes.icon} />
       </IconButton>
-      <BufferInfoPopper isOpen={isOpen} anchorEl={anchorEl} />
+      {bufferInfo && isOpen && (
+        <ClickAwayListener onClickAway={closePopper}>
+          <div>
+            <BufferInfoPopper
+              isOpen={isOpen}
+              bufferInfo={bufferInfo}
+              anchorEl={anchorEl}
+            />
+          </div>
+        </ClickAwayListener>
+      )}
     </>
   );
 }
@@ -64,6 +80,7 @@ export function buildProps() {
   });
   const disabled = bufferInfo == null || bufferInfo.type != 'blob';
   const stateProps: StateProps = {
+    bufferInfo: bufferInfo || null,
     disabled: disabled,
     isOpen: !disabled && isOpen,
     anchorEl,
@@ -73,6 +90,7 @@ export function buildProps() {
       setAnchorEl(e.currentTarget);
       setIsOpen(!isOpen);
     },
+    closePopper: () => setIsOpen(false),
   };
   const styleProps: StyleProps = {
     classes: useSideMenusStyles(),
@@ -83,26 +101,4 @@ export function buildProps() {
     ...dispatchProps,
     ...styleProps,
   };
-}
-
-type BufferInfoPopperProps = {
-  isOpen: boolean;
-  anchorEl: HTMLButtonElement | null;
-};
-function BufferInfoPopper({ isOpen, anchorEl }: BufferInfoPopperProps) {
-  if (!isOpen) {
-    return null;
-  }
-
-  return (
-    <Popper open={isOpen} anchorEl={anchorEl} transition>
-      {({ TransitionProps }) => (
-        <Fade {...TransitionProps} timeout={350}>
-          <Paper>
-            <Typography>The content of the Popper.</Typography>
-          </Paper>
-        </Fade>
-      )}
-    </Popper>
-  );
 }
