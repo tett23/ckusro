@@ -57,11 +57,7 @@ export function buildEditorProps(props: OwnProps) {
   const { internalPath, oid } = props.blobBufferInfo;
   const fullPath = createInternalPath(internalPath).flat();
   const dispatch = useDispatch();
-  const updateBuffer = buildUpdateBlobBuffer(
-    dispatch,
-    setContent,
-    internalPath,
-  );
+  const updateBuffer = buildUpdateBlobBuffer(dispatch, internalPath);
   useEffect(() => {
     setContent(text);
   }, [oid, fullPath]);
@@ -108,11 +104,9 @@ export default function(props: OwnProps) {
 
 function buildUpdateBlobBuffer(
   dispatch: ThunkDispatch<State, PWorkers, Action>,
-  setContent: (value: string) => void,
   internalPath: InternalPath,
 ) {
   return (content: string) => {
-    setContent(content);
     dispatch(
       updateBlobBuffer({
         type: 'blob',

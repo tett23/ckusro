@@ -42,6 +42,10 @@ export function BlobObject({
 }
 
 export default function(props: OwnProps) {
+  return <BlobObject {...buildBlobObjectProps(props)} />;
+}
+
+function buildBlobObjectProps(props: OwnProps) {
   const dispatch = useDispatch();
   const dispatchProps = {
     onClick: () =>
@@ -55,5 +59,9 @@ export default function(props: OwnProps) {
     classes: useFileMenuStyles(),
   };
 
-  return <BlobObject {...props} {...dispatchProps} {...styleProps} />;
+  return {
+    ...props,
+    ...dispatchProps,
+    ...styleProps,
+  };
 }

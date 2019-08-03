@@ -50,7 +50,6 @@ describe(buildEditorProps, () => {
     });
 
     act(() => result.current.onBlur('updated2'));
-    expect(result.current.content).toBe('updated2');
 
     expect(pWorkers.dispatch).toBeCalledWith(
       'main',

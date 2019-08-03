@@ -49,7 +49,7 @@ export function includes(
   manager: ObjectManager,
   gitObjects: GitObject[],
 ): boolean {
-  return gitObjects.some(({ oid }) => manager.originalObjects[oid] != null);
+  return gitObjects.every(({ oid }) => manager.originalObjects[oid] != null);
 }
 
 type NameOrGitObject<
