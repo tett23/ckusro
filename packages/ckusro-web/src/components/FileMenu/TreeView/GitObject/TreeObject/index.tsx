@@ -56,11 +56,21 @@ export function TreeObject({
 export default function(props: OwnProps) {
   const { oid, internalPath } = props;
 
-  const { isOpened } = useSelector((state: State) => ({
-    isOpened: createOpenedInternalPathManager(
+  const { isOpened, treeEntries } = useSelector((state: State) => {
+    const isOpened = createOpenedInternalPathManager(
       state.ui.fileMenu.treeView.opened,
-    ).isOpened(internalPath),
-  }));
+    ).isOpened(internalPath);
+    const treeEntries = !isOpened
+      ? []
+      : createRepositoriesManager(
+          state.domain.repositories,
+        ).fetchCurrentTreeEntries(internalPath);
+
+    return {
+      isOpened,
+      treeEntries,
+    };
+  });
   const dispatch = useDispatch();
   const dispatchProps = {
     onClick: () =>
@@ -68,12 +78,6 @@ export default function(props: OwnProps) {
     onClickSecondaryAction: () =>
       dispatch(updateOpened(internalPath, !isOpened)),
   };
-
-  const treeEntries = useSelector((state: State) =>
-    createRepositoriesManager(
-      state.domain.repositories,
-    ).fetchCurrentTreeEntries(internalPath),
-  );
 
   const stateProps: StateProps = {
     isOpened,
