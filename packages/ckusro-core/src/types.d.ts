@@ -21,3 +21,13 @@ declare module 'remark-breaks';
 declare module 'remark-parse';
 declare module 'remark-rehype';
 declare module 'rehype-parse';
+
+type PromiseSourceResult<T> = T extends Promise<infer U>
+  ? U
+  : T extends (...args: unknown) => Promise<infer U>
+  ? U
+  : never;
+
+type ExcludeError<T extends Error | unknown> = Exclude<T, Error>;
+
+type PromiseThen<T> = ExcludeError<PromiseSourceResult<T>>;
