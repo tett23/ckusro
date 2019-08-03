@@ -11,6 +11,8 @@ import repositoryPrimitives from '../RepositoryPrimitives';
 import lsFiles from './lsFiles';
 import clearStage from './clearStage';
 
+export type Stage = PromiseThen<ReturnType<typeof stage>>;
+
 export default async function stage(config: CkusroConfig, fs: typeof FS) {
   const gitConfig = stageIsomorphicGitConfig(config);
 
