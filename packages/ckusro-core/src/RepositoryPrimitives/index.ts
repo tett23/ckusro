@@ -26,6 +26,8 @@ import fetchObjectByRef from './fetchObjectByRef';
 import add from './commands/add';
 import commit from './commands/commit';
 
+export type RepositoryPrimitives = ReturnType<typeof repositoryPrimitives>;
+
 export default function repositoryPrimitives(config: IsomorphicGitConfig) {
   return {
     add: (root: TreeObject, writeInfo: WriteInfo) =>
