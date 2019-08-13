@@ -4,7 +4,7 @@ import add from './commands/add';
 import { prepare } from './prepare';
 import { stageIsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import headTree from '../RepositoryPrimitives/headTree';
-import { GlobalWriteInfo } from '../models/GlobalWriteInfo';
+import { GlobalBlobWriteInfo } from '../models/GlobalWriteInfo';
 import repositoryPrimitives from '../RepositoryPrimitives';
 import lsFiles from './lsFiles';
 import clearStage from './clearStage';
@@ -31,7 +31,7 @@ export default async function stage(config: CkusroConfig, fs: typeof FS) {
     prepare: () => prepare(gitConfig, fs),
     clear: () => clearStage(config, fs),
     lsFiles: () => lsFiles(gitConfig, repoPaths),
-    add: (writeInfo: GlobalWriteInfo) => add(gitConfig, root, writeInfo),
+    add: (writeInfo: GlobalBlobWriteInfo) => add(gitConfig, root, writeInfo),
     config: () => gitConfig,
   };
 }

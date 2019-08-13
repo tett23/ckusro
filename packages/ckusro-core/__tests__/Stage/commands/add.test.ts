@@ -1,7 +1,6 @@
 import * as Git from 'isomorphic-git';
 import { initRepository } from '../../../src/Stage/prepare';
 import {
-  buildTreeEntry,
   buildIsomorphicGitConfig,
   buildInternalPath,
 } from '../../__fixtures__';
@@ -48,28 +47,5 @@ describe(add, () => {
       actual[actual.length - 1][1].oid,
     )) as BlobObject).content;
     expect(content.toString()).toBe('test');
-  });
-
-  it('returns TreeObject', async () => {
-    const root = (await headTree(config)) as TreeObject;
-    const internalPath = buildInternalPath({ path: '/foo/bar' });
-    const globalWriteInfo = createGlobalWriteInfo('tree', internalPath, [
-      buildTreeEntry(),
-    ]);
-
-    const actual = (await add(
-      config,
-      root,
-      globalWriteInfo,
-    )) as InternalPathGitObject[];
-    const expected = createInternalPath(internalPath).tree();
-
-    expect(actual.map(([item]) => item.path)).toMatchObject(expected);
-
-    const content = ((await fetchByOid(
-      config,
-      actual[actual.length - 1][1].oid,
-    )) as TreeObject).content;
-    expect(content).toMatchObject(globalWriteInfo.content);
   });
 });

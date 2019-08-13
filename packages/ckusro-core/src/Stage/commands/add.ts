@@ -2,13 +2,13 @@ import { join } from 'path';
 import pAdd from '../../RepositoryPrimitives/commands/add';
 import { TreeObject } from '../../models/GitObject';
 import { IsomorphicGitConfig } from '../../models/IsomorphicGitConfig';
-import { toWriteInfo, GlobalWriteInfo } from '../../models/GlobalWriteInfo';
+import { toWriteInfo, GlobalBlobWriteInfo } from '../../models/GlobalWriteInfo';
 import { InternalPathGitObject } from '../../models/InternalPathTreeObject';
 
-export default async function add<T extends GlobalWriteInfo>(
+export default async function add(
   config: IsomorphicGitConfig,
   root: TreeObject,
-  globalWriteInfo: T,
+  globalWriteInfo: GlobalBlobWriteInfo,
 ): Promise<InternalPathGitObject[] | Error> {
   const writeInfo = toWriteInfo(globalWriteInfo);
   const addResult = await pAdd(config, root, writeInfo);

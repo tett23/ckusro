@@ -6,7 +6,7 @@ import {
   CommitObject,
   GitObjectTypes,
 } from '../models/GitObject';
-import { BlobWriteInfo, TreeWriteInfo, WriteInfo } from '../models/writeInfo';
+import { BlobWriteInfo, TreeWriteInfo } from '../models/writeInfo';
 import { writeTree } from './writeTree';
 import { writeObject } from './writeObject';
 import { fetchByPath } from './fetchByPath';
@@ -30,7 +30,7 @@ export type RepositoryPrimitives = ReturnType<typeof repositoryPrimitives>;
 
 export default function repositoryPrimitives(config: IsomorphicGitConfig) {
   return {
-    add: (root: TreeObject, writeInfo: WriteInfo) =>
+    add: (root: TreeObject, writeInfo: BlobWriteInfo) =>
       add(config, root, writeInfo),
     commit: (root: TreeObject, message: string) =>
       commit(config, root, message),
