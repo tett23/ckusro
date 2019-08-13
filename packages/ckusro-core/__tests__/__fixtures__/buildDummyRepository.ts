@@ -1,6 +1,15 @@
 import * as Git from 'isomorphic-git';
 import FS from 'fs';
-import { RepoPath, CkusroConfig } from '../../src';
+import {
+  RepoPath,
+  CkusroConfig,
+  BlobWriteInfo,
+  TreeObject,
+  WriteInfo,
+  isTreeObject,
+  BlobObject,
+  createRepoPath,
+} from '../../src';
 import { initRepository } from '../../src/Stage/prepare';
 import {
   toIsomorphicGitConfig,
@@ -8,11 +17,28 @@ import {
 } from '../../src/models/IsomorphicGitConfig';
 import { pfs } from '../__helpers__';
 import { repository } from '../../src/Repository';
-import stage from '../../src/Stage';
+import stage, { Stage } from '../../src/Stage';
+import stageAdd from '../../src/Stage/commands/add';
 import { writeObject } from '../../src/RepositoryPrimitives/writeObject';
+import { RepositoryPrimitives } from '../../src/RepositoryPrimitives';
+import primitiveAdd from '../../src/RepositoryPrimitives/commands/add';
+import {
+  GlobalBlobWriteInfo,
+  GlobalWriteInfo,
+} from '../../src/models/GlobalWriteInfo';
+import { join } from 'path';
+import { type } from 'os';
+
+type BlobContentLike = Buffer | string;
+
+type DummyCommit = Record<
+  string,
+  Record<string, BlobContentLike> | BlobContentLike
+>;
 
 type DummyRepositoryOptions = {
   fs: typeof FS;
+  initialCommit: DummyCommit | null;
 };
 
 export async function buildDummyRepository(
@@ -20,7 +46,10 @@ export async function buildDummyRepository(
   repoPath: RepoPath,
   options: Partial<DummyRepositoryOptions>,
 ) {
-  const { fs } = { ...dummyRepositoryDefaultOptions(), ...options };
+  const { fs, initialCommit } = {
+    ...dummyRepositoryDefaultOptions(),
+    ...options,
+  };
   const isoConfig = toIsomorphicGitConfig(config, repoPath);
   const core = Git.cores.create(isoConfig.core);
   core.set('fs', fs);
@@ -43,6 +72,13 @@ export async function buildDummyRepository(
     return writeRefResult;
   }
 
+  if (initialCommit != null) {
+    const commitResult = await buildCommit(repo, initialCommit);
+    if (commitResult instanceof Error) {
+      return commitResult;
+    }
+  }
+
   return {
     isoConfig,
     repoPath,
@@ -53,9 +89,16 @@ export async function buildDummyRepository(
 
 export async function buildDummyStage(
   config: CkusroConfig,
-  options: Partial<DummyRepositoryOptions>,
+  options: Partial<
+    Omit<DummyRepositoryOptions, 'initialCommit'> & {
+      initialCommit: Array<[RepoPath, DummyCommit]>;
+    }
+  >,
 ) {
-  const { fs } = { ...dummyRepositoryDefaultOptions(), ...options };
+  const { fs, initialCommit } = {
+    ...{ fs: pfs(), initialCommit: null },
+    ...options,
+  };
   const isoConfig = stageIsomorphicGitConfig(config);
   const core = Git.cores.create(isoConfig.core + 'aa');
   core.set('fs', fs);
@@ -65,6 +108,28 @@ export async function buildDummyStage(
     throw new Error('');
   }
 
+  if (initialCommit != null) {
+    const ic = initialCommit
+      .map(
+        ([repoPath, dummyCommit]: [RepoPath, DummyCommit]): DummyCommit =>
+          flatDummyCommit(createRepoPath(repoPath).join(), dummyCommit),
+      )
+      .reduce((acc, item) => ({ ...acc, ...item }), {});
+    console.log(ic);
+
+    const commitResult = await buildCommit(
+      {
+        commit: repo.commit,
+        headTreeObject: repo.headTreeObject,
+        add: (a: TreeObject, b: BlobWriteInfo) => primitiveAdd(isoConfig, a, b),
+      },
+      ic,
+    );
+    if (commitResult instanceof Error) {
+      return commitResult;
+    }
+  }
+
   return {
     isoConfig,
     fs,
@@ -72,8 +137,84 @@ export async function buildDummyStage(
   };
 }
 
+async function buildCommit(
+  repo: Pick<RepositoryPrimitives, 'commit' | 'headTreeObject' | 'add'>,
+  commit: DummyCommit,
+): Promise<true | Error> {
+  if (Object.keys(commit).length === 0) {
+    return true;
+  }
+
+  const root = await repo.headTreeObject();
+  if (root instanceof Error) {
+    return root;
+  }
+
+  const addResult = await Object.entries(flatDummyCommit('', commit))
+    .filter((item): item is [string, string | Buffer] =>
+      isBlobContentLike(item[1]),
+    )
+    .map(
+      ([path, content]): BlobWriteInfo => ({
+        type: 'blob',
+        path,
+        content: typeof content === 'string' ? Buffer.from(content) : content,
+      }),
+    )
+    .reduce(async (acc: Promise<TreeObject | Error>, item): Promise<
+      TreeObject | Error
+    > => {
+      const left = await acc;
+      if (left instanceof Error) {
+        return left;
+      }
+
+      const addResult = await repo.add(left, item);
+      if (addResult instanceof Error) {
+        return addResult;
+      }
+
+      const [[, ret]] = addResult;
+      if (!isTreeObject(ret)) {
+        return new Error();
+      }
+
+      return ret;
+    }, Promise.resolve(root));
+  if (addResult instanceof Error) {
+    return addResult;
+  }
+
+  const result = await repo.commit(addResult, 'initial commit');
+  if (result instanceof Error) {
+    return result;
+  }
+
+  return true;
+}
+
 function dummyRepositoryDefaultOptions(): DummyRepositoryOptions {
   return {
     fs: pfs(),
+    initialCommit: null,
   };
+}
+
+function flatDummyCommit(
+  pathPrefix: string,
+  dummyCommit: DummyCommit,
+): DummyCommit {
+  return Object.entries(dummyCommit).reduce(
+    (acc: DummyCommit, [path, content]) => ({
+      ...acc,
+      ...(isBlobContentLike(content)
+        ? { [join(pathPrefix, path)]: content }
+        : flatDummyCommit(pathPrefix, content)),
+    }),
+    {},
+  );
+}
+
+function isBlobContentLike(obj: unknown): obj is BlobContentLike {
+  return typeof obj === 'string' || obj instanceof Buffer;
 }
