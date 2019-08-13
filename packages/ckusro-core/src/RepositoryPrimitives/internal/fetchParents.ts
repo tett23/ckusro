@@ -56,7 +56,7 @@ export default async function fetchParents(
         return [...left, [basename(path), fetchResult as TreeObject] as const];
       }
       if (!opts.create) {
-        return new Error('');
+        return new Error(`Entry not found. path=${path}`);
       }
 
       const writeResult = await writeObject(config, {
