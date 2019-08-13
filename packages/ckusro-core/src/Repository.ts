@@ -16,6 +16,7 @@ export function repository(config: IsomorphicGitConfig, repoPath: RepoPath) {
     pull: () => pull(config),
     checkout: (ref: string) => checkout(config, ref),
     lsFiles: () => lsFiles(config, repoPath),
+    config: () => config,
   };
 }
 
