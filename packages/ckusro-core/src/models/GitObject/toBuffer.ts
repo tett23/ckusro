@@ -4,7 +4,7 @@ import {
   BlobObject,
   TagObject,
   CommitObject,
-} from '../GitObject';
+} from './index';
 import formatAuthor from './formatAuthor';
 
 const NullTree = '4b825dc642cb6eb9a060e54bf8d69288fbee4904';

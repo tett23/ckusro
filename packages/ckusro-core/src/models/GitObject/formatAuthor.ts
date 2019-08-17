@@ -1,4 +1,4 @@
-import { Author } from '../GitObject';
+import { Author } from './index';
 
 // original code
 // https://github.com/isomorphic-git/isomorphic-git/blob/00d9155c17f51667697200486e22dca09364c1d1/src/utils/formatAuthor.js#L1

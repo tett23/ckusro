@@ -1,5 +1,5 @@
 import { CommitDescription, TagDescription, TreeEntry } from 'isomorphic-git';
-import typeToMode from '../utils/typeToMode';
+import typeToMode from '../../utils/typeToMode';
 
 export type CommitObject = {
   oid: string;
@@ -67,6 +67,8 @@ export type UnpersistedGitObject =
   | UnpersistedTreeObject
   | UnpersistedBlobObject
   | UnpersistedTagObject;
+
+export type Author = CommitDescription['author'];
 
 export function isCommitObject(obj: GitObject): obj is CommitObject {
   return obj.type === 'commit';

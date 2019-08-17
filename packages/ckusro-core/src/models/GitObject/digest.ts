@@ -1,4 +1,4 @@
-import { GitObject, GitObjectTypes } from '../GitObject';
+import { GitObject, GitObjectTypes } from './index';
 import shasum from './shasum';
 import { toBuffer } from './toBuffer';
 
