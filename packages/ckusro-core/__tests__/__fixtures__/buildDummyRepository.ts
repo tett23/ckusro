@@ -5,29 +5,22 @@ import {
   CkusroConfig,
   BlobWriteInfo,
   TreeObject,
-  WriteInfo,
   isTreeObject,
-  BlobObject,
   createRepoPath,
 } from '../../src';
 import { initRepository } from '../../src/Stage/prepare';
 import {
   toIsomorphicGitConfig,
   stageIsomorphicGitConfig,
+  IsomorphicGitConfig,
 } from '../../src/models/IsomorphicGitConfig';
 import { pfs } from '../__helpers__';
-import { repository } from '../../src/Repository';
+import { repository, Repository } from '../../src/Repository';
 import stage, { Stage } from '../../src/Stage';
-import stageAdd from '../../src/Stage/commands/add';
 import { writeObject } from '../../src/RepositoryPrimitives/writeObject';
 import { RepositoryPrimitives } from '../../src/RepositoryPrimitives';
 import primitiveAdd from '../../src/RepositoryPrimitives/commands/add';
-import {
-  GlobalBlobWriteInfo,
-  GlobalWriteInfo,
-} from '../../src/models/GlobalWriteInfo';
 import { join } from 'path';
-import { type } from 'os';
 
 type BlobContentLike = Buffer | string;
 
@@ -41,11 +34,24 @@ type DummyRepositoryOptions = {
   initialCommit: DummyCommit | null;
 };
 
+export type DummyRepositoryResult = {
+  isoConfig: IsomorphicGitConfig;
+  repoPath: RepoPath;
+  fs: typeof FS;
+  repository: Repository;
+};
+
+export type DummyStageResult = {
+  isoConfig: IsomorphicGitConfig;
+  fs: typeof FS;
+  repository: Stage;
+};
+
 export async function buildDummyRepository(
   config: CkusroConfig,
   repoPath: RepoPath,
   options: Partial<DummyRepositoryOptions>,
-) {
+): Promise<DummyRepositoryResult | Error> {
   const { fs, initialCommit } = {
     ...dummyRepositoryDefaultOptions(),
     ...options,
@@ -94,7 +100,7 @@ export async function buildDummyStage(
       initialCommit: Array<[RepoPath, DummyCommit]>;
     }
   >,
-) {
+): Promise<DummyStageResult | Error> {
   const { fs, initialCommit } = {
     ...{ fs: pfs(), initialCommit: null },
     ...options,
@@ -115,7 +121,6 @@ export async function buildDummyStage(
           flatDummyCommit(createRepoPath(repoPath).join(), dummyCommit),
       )
       .reduce((acc, item) => ({ ...acc, ...item }), {});
-    console.log(ic);
 
     const commitResult = await buildCommit(
       {

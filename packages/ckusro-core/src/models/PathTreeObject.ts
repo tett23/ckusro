@@ -9,3 +9,8 @@ export type LookupPathTreeObjectOrMixed<
   : T extends 'blob'
   ? PathTreeOrBlobObject
   : never;
+
+export type WithStageParents = {
+  repository: PathTreeObject[] | null;
+  stage: PathTreeObject[] | null;
+};
