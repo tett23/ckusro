@@ -5,13 +5,24 @@ import {
 import { InternalPath } from '../../src/models/InternalPath';
 import { Plugins } from '../../src/models/plugins';
 import { RepoPath } from '../../src/models/RepoPath';
-import { TreeEntry } from '../../src';
+import {
+  TreeEntry,
+  GitObjectTypes,
+  LookUpGitObject,
+  BlobObject,
+  SomeGitObject,
+  TreeObject,
+  CommitObject,
+  TagObject,
+  GitObject,
+} from '../../src';
 import { createHash } from 'crypto';
 import {
   IsomorphicGitConfig,
   toIsomorphicGitConfig,
 } from '../../src/models/IsomorphicGitConfig';
 import { RepositoryInfo } from '../../src/models/RepositoryInfo';
+import { CommitDescription, TagDescription } from 'isomorphic-git';
 
 export function fixtureBuilder<T>(base: T): (override?: Partial<T>) => T {
   return (override: Partial<T> = {}) => {
@@ -85,3 +96,53 @@ export function randomOid(): string {
     .update(currentDate + random)
     .digest('hex');
 }
+
+export const buildBlobObject = fixtureBuilder<BlobObject>({
+  type: 'blob',
+  oid: randomOid(),
+  content: Buffer.from(''),
+});
+
+export const buildTreeObject = fixtureBuilder<TreeObject>({
+  type: 'tree',
+  oid: randomOid(),
+  content: [],
+});
+
+export const buildAuthor = fixtureBuilder<CommitDescription['author']>({
+  name: 'test_user',
+  email: 'test_user@example.com',
+  timestamp: 0,
+  timezoneOffset: 0,
+});
+
+export const buildCommitDescription = fixtureBuilder<CommitDescription>({
+  oid: randomOid(),
+  message: 'test',
+  tree: randomOid(),
+  parent: [],
+  author: buildAuthor(),
+  committer: buildAuthor(),
+  gpgsig: undefined,
+});
+
+export const buildCommitObject = fixtureBuilder<CommitObject>({
+  type: 'commit',
+  oid: randomOid(),
+  content: buildCommitDescription(),
+});
+
+export const buildTagDescription = fixtureBuilder<TagDescription>({
+  object: randomOid(),
+  type: 'commit',
+  tag: 'test_tag',
+  tagger: buildAuthor(),
+  message: 'test tag',
+  signature: undefined,
+});
+
+export const buildTagObject = fixtureBuilder<TagObject>({
+  type: 'tag',
+  oid: randomOid(),
+  content: buildTagDescription(),
+});
