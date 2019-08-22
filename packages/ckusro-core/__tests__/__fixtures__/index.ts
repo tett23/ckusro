@@ -15,6 +15,7 @@ import {
   CommitObject,
   TagObject,
   GitObject,
+  UnpersistedGitObject,
 } from '../../src';
 import { createHash } from 'crypto';
 import {
@@ -145,4 +146,9 @@ export const buildTagObject = fixtureBuilder<TagObject>({
   type: 'tag',
   oid: randomOid(),
   content: buildTagDescription(),
+});
+
+export const buildUnpersistedGitObject = fixtureBuilder<UnpersistedGitObject>({
+  type: 'blob',
+  content: Buffer.from(''),
 });
