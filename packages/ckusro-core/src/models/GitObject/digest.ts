@@ -1,12 +1,12 @@
-import { GitObject, GitObjectTypes } from './index';
+import { GitObjectTypes, UnpersistedGitObject } from './index';
 import shasum from './shasum';
 import { toBuffer } from './toBuffer';
 
 export type OidInflatedObject = [string, Buffer];
 
-export function objectDigest<T extends GitObject>(
+export function objectDigest<T extends UnpersistedGitObject>(
   gitObject: T,
-): OidInflatedObject | Error {
+): string | Error {
   const buf = toBuffer(gitObject);
   if (buf instanceof Error) {
     return buf;
@@ -15,7 +15,7 @@ export function objectDigest<T extends GitObject>(
   const inflated = toInflatedObject(gitObject.type, buf);
   const oid = shasum(inflated);
 
-  return [oid, inflated];
+  return oid;
 }
 
 function toInflatedObject(objectType: GitObjectTypes, buffer: Buffer): Buffer {

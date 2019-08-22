@@ -25,6 +25,7 @@ import revParse from './revParse';
 import fetchObjectByRef from './fetchObjectByRef';
 import add from './commands/add';
 import commit from './commands/commit';
+import batchWriteObjects from './batchWriteObjects';
 
 export type RepositoryPrimitives = ReturnType<typeof repositoryPrimitives>;
 
@@ -55,6 +56,8 @@ export default function repositoryPrimitives(config: IsomorphicGitConfig) {
       commitObject: CommitObject,
       options: Partial<WriteRefOptions>,
     ) => writeRef(config, ref, commitObject, options),
+    batchWriteObjects: (objects: UnpersistedGitObject[]) =>
+      batchWriteObjects(config, objects),
     removeFromTree: (parents: PathTreeObject[], name: string) =>
       removeFromTree(config, parents, name),
     removeFromTreeByPath: (root: TreeObject, path: string) =>

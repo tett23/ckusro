@@ -1,34 +1,36 @@
 import {
-  GitObject,
-  TreeObject,
-  BlobObject,
-  TagObject,
-  CommitObject,
+  UnpersistedGitObject,
+  UnpersistedBlobObject,
+  UnpersistedCommitObject,
+  UnpersistedTagObject,
+  UnpersistedTreeObject,
 } from './index';
 import formatAuthor from './formatAuthor';
 
 const NullTree = '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
 
-export function toBuffer<T extends GitObject>(gitObject: T): Buffer | Error {
+export function toBuffer<T extends UnpersistedGitObject>(
+  gitObject: T,
+): Buffer | Error {
   switch (gitObject.type) {
     case 'blob':
-      return blobObjectToBuffer(gitObject as BlobObject);
+      return blobObjectToBuffer(gitObject as UnpersistedBlobObject);
     case 'commit':
-      return commitObjectToBuffer(gitObject as CommitObject);
+      return commitObjectToBuffer(gitObject as UnpersistedCommitObject);
     case 'tag':
-      return tagObjectToBuffer(gitObject as TagObject);
+      return tagObjectToBuffer(gitObject as UnpersistedTagObject);
     case 'tree':
-      return treeObjectToBuffer(gitObject as TreeObject);
+      return treeObjectToBuffer(gitObject as UnpersistedTreeObject);
     default:
       throw new Error();
   }
 }
 
-function blobObjectToBuffer(blobObject: BlobObject): Buffer {
+function blobObjectToBuffer(blobObject: UnpersistedBlobObject): Buffer {
   return blobObject.content;
 }
 
-function treeObjectToBuffer(treeObject: TreeObject): Buffer {
+function treeObjectToBuffer(treeObject: UnpersistedTreeObject): Buffer {
   return treeObject.content
     .map((entry) => {
       const mode = Buffer.from(entry.mode.replace(/^0/, ''));
@@ -43,7 +45,7 @@ function treeObjectToBuffer(treeObject: TreeObject): Buffer {
 
 function commitObjectToBuffer({
   content: { tree, parent, author, committer, gpgsig, message },
-}: CommitObject): Buffer | Error {
+}: UnpersistedCommitObject): Buffer | Error {
   if (parent == null) {
     return new Error();
   }
@@ -65,7 +67,7 @@ function commitObjectToBuffer({
 
 function tagObjectToBuffer({
   content: { object, type, tag, tagger, message, signature },
-}: TagObject): Buffer | Error {
+}: UnpersistedTagObject): Buffer | Error {
   const bufText = [
     `object ${object}`,
     `type ${type}`,

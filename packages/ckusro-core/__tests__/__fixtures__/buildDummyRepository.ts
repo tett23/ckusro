@@ -1,13 +1,6 @@
 import * as Git from 'isomorphic-git';
 import FS from 'fs';
-import {
-  RepoPath,
-  CkusroConfig,
-  BlobWriteInfo,
-  TreeObject,
-  isTreeObject,
-  createRepoPath,
-} from '../../src';
+import { RepoPath, CkusroConfig, createRepoPath } from '../../src';
 import { initRepository } from '../../src/Stage/prepare';
 import {
   toIsomorphicGitConfig,
@@ -19,19 +12,13 @@ import { repository, Repository } from '../../src/Repository';
 import stage, { Stage } from '../../src/Stage';
 import { writeObject } from '../../src/RepositoryPrimitives/writeObject';
 import { RepositoryPrimitives } from '../../src/RepositoryPrimitives';
-import primitiveAdd from '../../src/RepositoryPrimitives/commands/add';
-import { join } from 'path';
-
-type BlobContentLike = Buffer | string;
-
-type DummyCommit = Record<
-  string,
-  Record<string, BlobContentLike> | BlobContentLike
->;
+import buildTreeFromTreeLike, {
+  TreeContentLike,
+} from '../../src/models/GitObject/buildTreeFromTreeLike';
 
 type DummyRepositoryOptions = {
   fs: typeof FS;
-  initialCommit: DummyCommit | null;
+  initialTree: TreeContentLike | null;
 };
 
 export type DummyRepositoryResult = {
@@ -50,9 +37,9 @@ export type DummyStageResult = {
 export async function buildDummyRepository(
   config: CkusroConfig,
   repoPath: RepoPath,
-  options: Partial<DummyRepositoryOptions>,
+  options?: Partial<DummyRepositoryOptions>,
 ): Promise<DummyRepositoryResult | Error> {
-  const { fs, initialCommit } = {
+  const { fs, initialTree } = {
     ...dummyRepositoryDefaultOptions(),
     ...options,
   };
@@ -78,8 +65,8 @@ export async function buildDummyRepository(
     return writeRefResult;
   }
 
-  if (initialCommit != null) {
-    const commitResult = await buildCommit(repo, initialCommit);
+  if (initialTree != null) {
+    const commitResult = await buildCommit(repo, initialTree);
     if (commitResult instanceof Error) {
       return commitResult;
     }
@@ -95,14 +82,14 @@ export async function buildDummyRepository(
 
 export async function buildDummyStage(
   config: CkusroConfig,
-  options: Partial<
-    Omit<DummyRepositoryOptions, 'initialCommit'> & {
-      initialCommit: Array<[RepoPath, DummyCommit]>;
+  options?: Partial<
+    Omit<DummyRepositoryOptions, 'initiaTree'> & {
+      initialTree: Array<[RepoPath, TreeContentLike]>;
     }
   >,
 ): Promise<DummyStageResult | Error> {
-  const { fs, initialCommit } = {
-    ...{ fs: pfs(), initialCommit: null },
+  const { fs, initialTree } = {
+    ...{ fs: pfs(), initialTree: null },
     ...options,
   };
   const isoConfig = stageIsomorphicGitConfig(config);
@@ -114,22 +101,19 @@ export async function buildDummyStage(
     throw new Error('');
   }
 
-  if (initialCommit != null) {
-    const ic = initialCommit
+  if (initialTree != null) {
+    const treeLike = initialTree
       .map(
-        ([repoPath, dummyCommit]: [RepoPath, DummyCommit]): DummyCommit =>
-          flatDummyCommit(createRepoPath(repoPath).join(), dummyCommit),
+        ([repoPath, treeLike]: [
+          RepoPath,
+          TreeContentLike,
+        ]): TreeContentLike => ({
+          [createRepoPath(repoPath).join()]: treeLike,
+        }),
       )
       .reduce((acc, item) => ({ ...acc, ...item }), {});
 
-    const commitResult = await buildCommit(
-      {
-        commit: repo.commit,
-        headTreeObject: repo.headTreeObject,
-        add: (a: TreeObject, b: BlobWriteInfo) => primitiveAdd(isoConfig, a, b),
-      },
-      ic,
-    );
+    const commitResult = await buildCommit(repo, treeLike);
     if (commitResult instanceof Error) {
       return commitResult;
     }
@@ -143,54 +127,25 @@ export async function buildDummyStage(
 }
 
 async function buildCommit(
-  repo: Pick<RepositoryPrimitives, 'commit' | 'headTreeObject' | 'add'>,
-  commit: DummyCommit,
+  repo: Pick<RepositoryPrimitives, 'commit' | 'batchWriteObjects'>,
+  tree: TreeContentLike,
 ): Promise<true | Error> {
-  if (Object.keys(commit).length === 0) {
+  if (Object.keys(tree).length === 0) {
     return true;
   }
 
-  const root = await repo.headTreeObject();
-  if (root instanceof Error) {
-    return root;
+  const buildResult = await buildTreeFromTreeLike(tree);
+  if (buildResult instanceof Error) {
+    return buildResult;
   }
 
-  const addResult = await Object.entries(flatDummyCommit('', commit))
-    .filter((item): item is [string, string | Buffer] =>
-      isBlobContentLike(item[1]),
-    )
-    .map(
-      ([path, content]): BlobWriteInfo => ({
-        type: 'blob',
-        path,
-        content: typeof content === 'string' ? Buffer.from(content) : content,
-      }),
-    )
-    .reduce(async (acc: Promise<TreeObject | Error>, item): Promise<
-      TreeObject | Error
-    > => {
-      const left = await acc;
-      if (left instanceof Error) {
-        return left;
-      }
-
-      const addResult = await repo.add(left, item);
-      if (addResult instanceof Error) {
-        return addResult;
-      }
-
-      const [[, ret]] = addResult;
-      if (!isTreeObject(ret)) {
-        return new Error();
-      }
-
-      return ret;
-    }, Promise.resolve(root));
-  if (addResult instanceof Error) {
-    return addResult;
+  const { root, objects } = buildResult;
+  const writeResult = await repo.batchWriteObjects(objects);
+  if (writeResult instanceof Error) {
+    return writeResult;
   }
 
-  const result = await repo.commit(addResult, 'initial commit');
+  const result = await repo.commit(root, 'initial commit');
   if (result instanceof Error) {
     return result;
   }
@@ -201,25 +156,6 @@ async function buildCommit(
 function dummyRepositoryDefaultOptions(): DummyRepositoryOptions {
   return {
     fs: pfs(),
-    initialCommit: null,
+    initialTree: null,
   };
-}
-
-function flatDummyCommit(
-  pathPrefix: string,
-  dummyCommit: DummyCommit,
-): DummyCommit {
-  return Object.entries(dummyCommit).reduce(
-    (acc: DummyCommit, [path, content]) => ({
-      ...acc,
-      ...(isBlobContentLike(content)
-        ? { [join(pathPrefix, path)]: content }
-        : flatDummyCommit(pathPrefix, content)),
-    }),
-    {},
-  );
-}
-
-function isBlobContentLike(obj: unknown): obj is BlobContentLike {
-  return typeof obj === 'string' || obj instanceof Buffer;
 }

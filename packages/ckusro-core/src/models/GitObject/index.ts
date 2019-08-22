@@ -26,6 +26,7 @@ export type TagObject = {
 };
 
 export type GitObject = CommitObject | TreeObject | BlobObject | TagObject;
+export type BlobOrTreeObject = TreeObject | BlobObject;
 
 export type GitObjectTypeCommit = 'commit';
 export type GitObjectTyepTree = 'tree';

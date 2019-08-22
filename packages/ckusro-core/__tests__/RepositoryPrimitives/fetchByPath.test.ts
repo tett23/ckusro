@@ -39,6 +39,21 @@ describe(fetchByPath, () => {
     expect(isTreeObject(actual as GitObject)).toBe(true);
   });
 
+  it('returns GitObject', async () => {
+    const root = (await headTree(config)) as TreeObject;
+    const writeResult = (await fetchOrCreateTreeByPath(
+      config,
+      root,
+      '/foo',
+    )) as PathTreeObject[];
+    expect(writeResult).not.toBeInstanceOf(Error);
+    const [[, newRoot]] = writeResult;
+
+    const actual = await fetchByPath(config, newRoot, '/foo');
+
+    expect(isTreeObject(actual as GitObject)).toBe(true);
+  });
+
   it('returns null', async () => {
     const root = (await headTree(config)) as TreeObject;
     const actual = await fetchByPath(config, root, '/does_not_exist');
