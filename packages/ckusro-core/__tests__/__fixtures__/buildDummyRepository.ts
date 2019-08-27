@@ -10,7 +10,6 @@ import {
 import { pfs } from '../__helpers__';
 import { repository, Repository } from '../../src/Repository';
 import stage, { Stage } from '../../src/Stage';
-import { writeObject } from '../../src/RepositoryPrimitives/writeObject';
 import { RepositoryPrimitives } from '../../src/RepositoryPrimitives';
 import buildTreeFromTreeLike, {
   TreeContentLike,
@@ -48,22 +47,7 @@ export async function buildDummyRepository(
   core.set('fs', fs);
 
   await initRepository(isoConfig);
-
   const repo = repository(isoConfig, repoPath);
-  const rootTree = await writeObject(isoConfig, { type: 'tree', content: [] });
-  if (rootTree instanceof Error) {
-    return rootTree;
-  }
-  const commit = await repo.commit(rootTree, 'init');
-  if (commit instanceof Error) {
-    return commit;
-  }
-  const writeRefResult = await repo.writeRef('HEAD', commit, {
-    force: true,
-  });
-  if (writeRefResult instanceof Error) {
-    return writeRefResult;
-  }
 
   if (initialTree != null) {
     const commitResult = await buildCommit(repo, initialTree);
@@ -127,7 +111,7 @@ export async function buildDummyStage(
 }
 
 async function buildCommit(
-  repo: Pick<RepositoryPrimitives, 'commit' | 'batchWriteObjects'>,
+  repo: Pick<RepositoryPrimitives, 'commit' | 'batchWriteObjects' | 'writeRef'>,
   tree: TreeContentLike,
 ): Promise<true | Error> {
   if (Object.keys(tree).length === 0) {
@@ -145,9 +129,16 @@ async function buildCommit(
     return writeResult;
   }
 
-  const result = await repo.commit(root, 'initial commit');
-  if (result instanceof Error) {
-    return result;
+  const commitResult = await repo.commit(root, 'initial commit');
+  if (commitResult instanceof Error) {
+    return commitResult;
+  }
+
+  const writeRefResult = await repo.writeRef('HEAD', commitResult, {
+    force: true,
+  });
+  if (writeRefResult instanceof Error) {
+    return writeRefResult;
   }
 
   return true;

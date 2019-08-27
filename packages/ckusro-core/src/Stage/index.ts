@@ -8,6 +8,8 @@ import { GlobalBlobWriteInfo } from '../models/GlobalWriteInfo';
 import repositoryPrimitives from '../RepositoryPrimitives';
 import lsFiles from './lsFiles';
 import clearStage from './clearStage';
+import { RepoPath } from '../models/RepoPath';
+import checkout from './commands/checkout';
 
 export type Stage = PromiseThen<ReturnType<typeof stage>>;
 
@@ -32,6 +34,8 @@ export default async function stage(config: CkusroConfig, fs: typeof FS) {
     clear: () => clearStage(config, fs),
     lsFiles: () => lsFiles(gitConfig, repoPaths),
     add: (writeInfo: GlobalBlobWriteInfo) => add(gitConfig, root, writeInfo),
+    checkout: (repoPath: RepoPath, ref: string) =>
+      checkout(config, repoPath, ref),
     config: () => gitConfig,
   };
 }

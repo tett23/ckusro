@@ -7,14 +7,10 @@ import { Plugins } from '../../src/models/plugins';
 import { RepoPath } from '../../src/models/RepoPath';
 import {
   TreeEntry,
-  GitObjectTypes,
-  LookUpGitObject,
   BlobObject,
-  SomeGitObject,
   TreeObject,
   CommitObject,
   TagObject,
-  GitObject,
   UnpersistedGitObject,
 } from '../../src';
 import { createHash } from 'crypto';
