@@ -1,13 +1,17 @@
 import * as Git from 'isomorphic-git';
 import { LookUpGitObjectType, UnpersistedGitObject } from '../models/GitObject';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
+import sortTreeEntries from '../models/GitObject/sortTreeEntries';
+import { TreeEntry } from '../models/TreeEntry';
 
 export async function writeObject<T extends UnpersistedGitObject>(
   config: IsomorphicGitConfig,
   object: T,
 ): Promise<LookUpGitObjectType<T['type']> | Error> {
   const content =
-    object.type === 'tree' ? { entries: object.content } : object.content;
+    object.type === 'tree'
+      ? { entries: sortTreeEntries(object.content as TreeEntry[]) }
+      : object.content;
   const oid = await (async () =>
     await Git.writeObject({
       ...config,

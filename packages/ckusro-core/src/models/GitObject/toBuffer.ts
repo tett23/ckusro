@@ -6,6 +6,7 @@ import {
   UnpersistedTreeObject,
 } from './index';
 import formatAuthor from './formatAuthor';
+import sortTreeEntries from './sortTreeEntries';
 
 const NullTree = '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
 
@@ -31,7 +32,7 @@ function blobObjectToBuffer(blobObject: UnpersistedBlobObject): Buffer {
 }
 
 function treeObjectToBuffer(treeObject: UnpersistedTreeObject): Buffer {
-  return treeObject.content
+  return sortTreeEntries(treeObject.content)
     .map((entry) => {
       const mode = Buffer.from(entry.mode.replace(/^0/, ''));
       const space = Buffer.from(' ');

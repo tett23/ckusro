@@ -21,12 +21,12 @@ describe(buildTreeFromTreeLike, () => {
     }) as BuildTreeFromObjectResult;
 
     expect(printTree(actual.root, actual.objects)).toMatchInlineSnapshot(`
-      "foo(80f568)
-        bar(34707b)
-          baz.txt(e69de2)
+      "foo(e99b51)
         a(e69de2)
         b(587ff0)
           c(e69de2)
+        bar(34707b)
+          baz.txt(e69de2)
       hoge(ffac77)
         fuga(98f6fe)
           piyo(e69de2)"
