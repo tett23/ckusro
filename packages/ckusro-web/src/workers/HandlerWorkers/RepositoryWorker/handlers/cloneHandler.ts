@@ -4,6 +4,7 @@ import { addRef } from '../../../../modules/domain';
 import { cloneRepository } from '../../../../modules/workerActions/repository';
 import { HandlersResult, PayloadType } from '../../../handleAction';
 import { RepositoryWorkerResponseActions } from '../index';
+import checkout from './internal/checkout';
 
 export default async function cloneHandler(
   config: CkusroConfig,
@@ -26,11 +27,17 @@ export default async function cloneHandler(
     return oid;
   }
 
+  const checkoutResult = await checkout(core, repoPath);
+  if (checkoutResult instanceof Error) {
+    return checkoutResult;
+  }
+
   return [
     addRef({
       repoPath,
       name: 'HEAD',
       oid,
     }),
+    ...checkoutResult,
   ];
 }
