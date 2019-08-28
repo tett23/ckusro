@@ -24,7 +24,7 @@ export default async function deserialize(
   return {
     objectManager,
     stageHead: serializedManager.stageHead,
-    stagePathManager: serializedManager.stagePathManager,
+    stagePathCache: serializedManager.stagePathManager,
     repositoryPathManager: serializedManager.repositoryPathManager,
     refManager: serializedManager.refManager,
   };

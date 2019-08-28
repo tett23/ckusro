@@ -33,7 +33,7 @@ export default function() {
       state.domain.repositories.repositoryPathManager,
     ).fetch(bufferInfo.internalPath);
     const stage = createPathManager(
-      state.domain.repositories.stagePathManager,
+      state.domain.repositories.stagePathCache,
     ).fetch(bufferInfo.internalPath);
     if (original == null || stage == null) {
       return null;

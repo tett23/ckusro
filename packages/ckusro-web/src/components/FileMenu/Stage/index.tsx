@@ -36,12 +36,12 @@ export default function() {
   const { stageHead, stageEntries } = useSelector(
     ({
       domain: {
-        repositories: { stageHead, stagePathManager, repositoryPathManager },
+        repositories: { stageHead, stagePathCache, repositoryPathManager },
       },
     }: State) => ({
       stageHead,
       stageEntries: createPathManager(
-        createPathManager(stagePathManager).removeUnchanged(
+        createPathManager(stagePathCache).removeUnchanged(
           repositoryPathManager,
         ),
       ).filterBlob(),

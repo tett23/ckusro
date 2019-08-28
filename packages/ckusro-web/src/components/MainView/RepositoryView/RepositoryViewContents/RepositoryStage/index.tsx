@@ -38,7 +38,7 @@ export function RepositoryStage({ internalPathEntries }: RepositoryStageProps) {
 export default function() {
   const { repositoryInfo, stageManager } = useSelector((state: State) => ({
     repositoryInfo: state.ui.mainView.repositoryView.repositoryInfo,
-    stageManager: createPathManager(state.domain.repositories.stagePathManager),
+    stageManager: createPathManager(state.domain.repositories.stagePathCache),
   }));
   const dispatch = useDispatch();
   if (repositoryInfo == null) {

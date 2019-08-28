@@ -16,7 +16,7 @@ export default function serializeRepositoriesManager(
   return {
     oids: Object.keys(manager.objectManager.originalObjects),
     stageHead: manager.stageHead,
-    stagePathManager: manager.stagePathManager,
+    stagePathManager: manager.stagePathCache,
     repositoryPathManager: manager.repositoryPathManager,
     refManager: manager.refManager,
   };

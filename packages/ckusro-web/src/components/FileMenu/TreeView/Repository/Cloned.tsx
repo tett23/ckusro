@@ -2,7 +2,6 @@ import {
   CommitObject,
   InternalPath,
   RepositoryInfo,
-  compareInternalPath,
 } from '@ckusro/ckusro-core';
 import { Collapse, Box } from '@material-ui/core';
 import React from 'react';

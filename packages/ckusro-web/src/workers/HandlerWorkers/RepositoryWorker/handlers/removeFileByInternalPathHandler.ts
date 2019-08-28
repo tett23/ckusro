@@ -1,19 +1,11 @@
 import ckusroCore, {
   CkusroConfig,
-  toTreeEntry,
-  createRepoPath,
-  InternalPathEntry,
   createInternalPath,
 } from '@ckusro/ckusro-core';
 import FS from 'fs';
-import {
-  addObjects,
-  updateStageHead,
-  updateStagePaths,
-} from '../../../../modules/domain';
+import { addObjects, updateStageHead } from '../../../../modules/domain';
 import { removeByInternalPath } from '../../../../modules/workerActions/repository';
 import { HandlersResult, PayloadType } from '../../../handleAction';
-import { basename } from 'path';
 import { RepositoryWorkerResponseActions } from '../index';
 
 export default async function removeByInternalPathHandler(
@@ -50,25 +42,8 @@ export default async function removeByInternalPathHandler(
     return commitResult;
   }
 
-  const parentPath = createRepoPath(internalPath.repoPath).join();
-  const updates = removeResult
-    .map(([path, blobOrTree]) => {
-      if (path.length <= parentPath.length) {
-        return null;
-      }
-      return [
-        {
-          path: path.slice(parentPath.length),
-          repoPath: internalPath.repoPath,
-        },
-        toTreeEntry(basename(path), blobOrTree),
-      ] as const;
-    })
-    .filter((item): item is InternalPathEntry => item != null);
-
   return [
     addObjects([...removeResult.map(([, item]) => item), commitResult]),
     updateStageHead(commitResult.oid),
-    updateStagePaths(updates),
   ];
 }

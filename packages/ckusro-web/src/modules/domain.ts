@@ -54,15 +54,6 @@ export function updateStageHead(oid: string | null) {
   };
 }
 
-const UpdateStageEntries = 'Domain/UpdateStageEntries' as const;
-
-export function updateStagePaths(paths: InternalPathEntry[]) {
-  return {
-    type: UpdateStageEntries,
-    payload: paths,
-  };
-}
-
 const ClearStageManager = 'Domain/ClearStageManager' as const;
 
 export function clearStageManager() {
@@ -77,7 +68,6 @@ export type DomainActions =
   | ReturnType<typeof addObjects>
   | ReturnType<typeof updateRepositoryPaths>
   | ReturnType<typeof updateStageHead>
-  | ReturnType<typeof updateStagePaths>
   | ReturnType<typeof updateState>
   | ReturnType<typeof clearStageManager>;
 
@@ -120,14 +110,6 @@ export function domainReducer(
         repositories: createRepositoriesManager(
           state.repositories,
         ).updateStageHead(action.payload),
-      };
-    }
-    case UpdateStageEntries: {
-      return {
-        ...state,
-        repositories: createRepositoriesManager(
-          state.repositories,
-        ).updateStagePaths(action.payload),
       };
     }
     case ClearStageManager:

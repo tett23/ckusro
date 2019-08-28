@@ -4,11 +4,7 @@ import ckusroCore, {
   GitObject,
 } from '@ckusro/ckusro-core';
 import FS from 'fs';
-import {
-  addObjects,
-  updateStageHead,
-  updateStagePaths,
-} from '../../../../modules/domain';
+import { addObjects, updateStageHead } from '../../../../modules/domain';
 import { fetchStageInfo } from '../../../../modules/workerActions/repository';
 import { HandlersResult, PayloadType } from '../../../handleAction';
 import { RepositoryWorkerResponseActions } from '../index';
@@ -43,9 +39,5 @@ export default async function fetchStageInfoHandler(
 
   const objects = maybeNull.filter((item): item is GitObject => item != null);
 
-  return [
-    addObjects(objects),
-    updateStageHead(tree.oid),
-    updateStagePaths(result),
-  ];
+  return [addObjects(objects), updateStageHead(tree.oid)];
 }

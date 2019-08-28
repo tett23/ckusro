@@ -25,7 +25,7 @@ import { createFilesStatus } from '../FilesStatus';
 export type RepositoriesManager = {
   objectManager: ObjectManager;
   stageHead: string | null;
-  stagePathManager: PathManager;
+  stagePathCache: PathManager;
   repositoryPathManager: PathManager;
   refManager: RefManager;
 };
@@ -34,7 +34,7 @@ export function emptyRepositoriesManager(): RepositoriesManager {
   return {
     objectManager: createEmptyObjectManager(),
     stageHead: null,
-    stagePathManager: [],
+    stagePathCache: [],
     repositoryPathManager: [],
     refManager: emptyRefManager(),
   };
@@ -62,25 +62,19 @@ export function createRepositoriesManager(manager: RepositoriesManager) {
       ...manager,
       stageHead,
     }),
-    updateStagePaths: (paths: InternalPathEntry[]) => ({
-      ...manager,
-      stagePathManager: createPathManager(manager.stagePathManager).update(
-        paths,
-      ),
-    }),
     clearStageManager: () => ({
       ...manager,
-      stagePathManager: createPathManager(manager.stagePathManager).clear(),
+      stagePathManager: createPathManager(manager.stagePathCache).clear(),
     }),
     currentTree: (repoPath: RepoPath) =>
       createFilesStatus(
         manager.repositoryPathManager,
-        manager.stagePathManager,
+        manager.stagePathCache,
       ).filter((item) => compareRepoPath(repoPath, item.internalPath.repoPath)),
     entryStatus: (internalPath: InternalPath) => {
       const item = createFilesStatus(
         manager.repositoryPathManager,
-        manager.stagePathManager,
+        manager.stagePathCache,
       ).find((item) => compareInternalPath(internalPath, item.internalPath));
 
       return item || null;
@@ -89,7 +83,7 @@ export function createRepositoriesManager(manager: RepositoriesManager) {
       const originalEntry = createPathManager(
         manager.repositoryPathManager,
       ).fetch(internalPath);
-      const stageEntry = createPathManager(manager.stagePathManager).fetch(
+      const stageEntry = createPathManager(manager.stagePathCache).fetch(
         internalPath,
       );
       const originalOid = originalEntry == null ? null : originalEntry.oid;
