@@ -7,6 +7,7 @@ import { State } from '../../../../../../modules';
 import { IconButton, DialogContentText } from '@material-ui/core';
 import { createRepositoriesManager } from '../../../../../../models/RepositoriesManager';
 import ConfirmDialog from '../../../../../shared/DangerButton/ConfirmDialog';
+import { removeByInternalPath } from '../../../../../../modules/thunkActions';
 
 type StateProps = {
   disabled: boolean;
@@ -98,6 +99,9 @@ export function buildRemoveButtonProps(): RemoveButtonProps {
     },
     onClickDelete: () => {
       setIsDialogOpen(false);
+      if (bufferInfo != null) {
+        removeByInternalPath(bufferInfo.internalPath);
+      }
     },
   };
   const styleProps: StyleProps = {

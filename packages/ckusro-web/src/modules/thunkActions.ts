@@ -14,6 +14,7 @@ import {
   clearStageData as clearStageDataAction,
   removeAllRepositories as removeAllRepositoriesAction,
   lsFiles as lsFilesAction,
+  removeByInternalPath as removeByInternalPathAction,
 } from './workerActions/repository';
 import { updateMainViewType } from './ui/mainView/mainViewMisc';
 import { BufferInfo } from '../models/BufferInfo';
@@ -167,5 +168,11 @@ export function initializePersistedState() {
 export function lsFiles() {
   return async (_: Dispatch<Actions>, __: () => State, workers: PWorkers) => {
     return workers.dispatch('main', lsFilesAction());
+  };
+}
+
+export function removeByInternalPath(internalPath: InternalPath) {
+  return async (_: Dispatch<Actions>, __: () => State, workers: PWorkers) => {
+    return workers.dispatch('main', removeByInternalPathAction(internalPath));
   };
 }

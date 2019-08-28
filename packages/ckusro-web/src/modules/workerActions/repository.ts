@@ -91,6 +91,15 @@ export function removeAllRepositories() {
   };
 }
 
+export const RemoveByInternalPath = 'RepositoryWorker/RemoveByInternalPath' as const;
+
+export function removeByInternalPath(internalPath: InternalPath) {
+  return {
+    type: RemoveByInternalPath,
+    payload: internalPath,
+  };
+}
+
 export type RepositoryWorkerActions =
   | ReturnType<typeof cloneRepository>
   | ReturnType<typeof pullRepository>
@@ -101,4 +110,5 @@ export type RepositoryWorkerActions =
   | ReturnType<typeof fetchStageInfo>
   | ReturnType<typeof lsFiles>
   | ReturnType<typeof clearStageData>
-  | ReturnType<typeof removeAllRepositories>;
+  | ReturnType<typeof removeAllRepositories>
+  | ReturnType<typeof removeByInternalPath>;

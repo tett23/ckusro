@@ -11,6 +11,7 @@ import {
   RemoveAllRepositories,
   RepositoryWorkerActions,
   LsFiles,
+  RemoveByInternalPath,
 } from '../../../modules/workerActions/repository';
 import {
   ReadPersistedState,
@@ -41,6 +42,7 @@ import cloneHandler from './handlers/cloneHandler';
 import writeConfigHandler from './handlers/writeConfigHandler';
 import readConfigHandler from './handlers/readConfigHandler';
 import lsFilesHandler from './handlers/lsFilesHandler';
+import removeByInternalPathHandler from './handlers/removeFileByInternalPathHandler';
 
 export const WorkerResponseRepository = 'WorkerResponse/Repository' as const;
 
@@ -145,6 +147,11 @@ function actionHandlers(
       >;
     case LsFiles:
       return lsFilesHandler as Handler<
+        RepositoryWorkerRequestActions,
+        RepositoryWorkerResponseActions
+      >;
+    case RemoveByInternalPath:
+      return removeByInternalPathHandler as Handler<
         RepositoryWorkerRequestActions,
         RepositoryWorkerResponseActions
       >;
