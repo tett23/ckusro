@@ -1,6 +1,8 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+
 import ckusroCore from './ckusroCore';
+export * from './ckusroCore';
 
 export * from './models/CkusroConfig';
 export * from './models/GitObject';

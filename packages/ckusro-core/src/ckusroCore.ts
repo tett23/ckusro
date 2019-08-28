@@ -5,6 +5,8 @@ import { parser } from './Parser';
 import { repositories } from './Repositories';
 import stage from './Stage';
 
+export type CkusroCore = ReturnType<typeof ckusroCore>
+
 export default function ckusroCore(config: CkusroConfig, fs: typeof FS) {
   const core = Git.cores.create(config.coreId);
   core.set('fs', fs);
