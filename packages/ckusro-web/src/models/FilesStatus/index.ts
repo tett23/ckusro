@@ -40,35 +40,32 @@ export function createFilesStatus(
   stagePathManager: PathManager,
 ): MergedPathManager {
   const tmp = transformObject(repoPathManager);
-  const records = stagePathManager.reduce(
-    (acc, [internalPath, entry]) => {
-      const fullPath = createInternalPath(internalPath).flat();
-      const pathItem: MergedPathManagerItem | null = acc[fullPath];
-      if (pathItem == null) {
-        acc[fullPath] = {
-          internalPath,
-          originalOid: null,
-          changedOid: entry.oid,
-          flag: 'added',
-        };
-
-        return acc;
-      }
-      if (pathItem.originalOid === entry.oid) {
-        return acc;
-      }
-
-      const newItem: MergedPathManagerChangedItemItem = {
-        ...tmp[fullPath],
+  const records = stagePathManager.reduce((acc, [internalPath, entry]) => {
+    const fullPath = createInternalPath(internalPath).flat();
+    const pathItem: MergedPathManagerItem | null = acc[fullPath];
+    if (pathItem == null) {
+      acc[fullPath] = {
+        internalPath,
+        originalOid: null,
         changedOid: entry.oid,
-        flag: 'changed',
+        flag: 'added',
       };
-      acc[fullPath] = newItem;
 
       return acc;
-    },
-    tmp as Record<string, MergedPathManagerItem>,
-  );
+    }
+    if (pathItem.originalOid === entry.oid) {
+      return acc;
+    }
+
+    const newItem: MergedPathManagerChangedItemItem = {
+      ...tmp[fullPath],
+      changedOid: entry.oid,
+      flag: 'changed',
+    };
+    acc[fullPath] = newItem;
+
+    return acc;
+  }, tmp as Record<string, MergedPathManagerItem>);
 
   return Object.values(records);
 }

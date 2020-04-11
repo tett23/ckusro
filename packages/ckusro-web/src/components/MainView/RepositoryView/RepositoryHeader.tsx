@@ -26,7 +26,7 @@ export function RepositoryHeader({ repoPath, headOid }: RepositoryHeaderProps) {
   );
 }
 
-export default function() {
+export default function () {
   const { repositoryInfo, refManager } = useSelector((state: State) => ({
     repositoryInfo: state.ui.mainView.repositoryView.repositoryInfo,
     refManager: createRefManager(state.domain.repositories.refManager),

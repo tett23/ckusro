@@ -41,7 +41,7 @@ export function BlobObject({
   );
 }
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   return <BlobObject {...buildBlobObjectProps(props)} />;
 }
 

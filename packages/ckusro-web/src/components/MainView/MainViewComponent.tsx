@@ -37,7 +37,7 @@ export function MainViewComponent({ mainViewType }: MainViewComponentProps) {
   }
 }
 
-export default function() {
+export default function () {
   const state = useSelector((state: State) => ({
     mainViewType: state.ui.mainView.misc.mainViewType,
   }));

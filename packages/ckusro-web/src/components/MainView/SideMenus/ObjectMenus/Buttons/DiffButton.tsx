@@ -33,7 +33,7 @@ export function DiffButton({ disabled, onClick, classes }: DiffButtonProps) {
   );
 }
 
-export default function() {
+export default function () {
   const { bufferInfo } = useSelector((state: State) => ({
     bufferInfo: state.ui.mainView.objectView.bufferInfo,
   }));

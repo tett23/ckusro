@@ -32,7 +32,7 @@ export function Navigation({ bufferInfo }: NavigationProps) {
   return <InternalPathNavigation internalPath={internalPath} />;
 }
 
-export default function() {
+export default function () {
   const state = useSelector((state: State) => ({
     bufferInfo: state.ui.mainView.objectView.bufferInfo,
   }));

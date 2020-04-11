@@ -20,7 +20,7 @@ export function ObjectMenus({ classes }: StyleProps) {
   );
 }
 
-export default function() {
+export default function () {
   const styleProps: StyleProps = {
     classes: useSideMenusStyles(),
   };

@@ -18,7 +18,7 @@ export function CloneButton({ onClick }: CloneButtonProps) {
   );
 }
 
-export default function() {
+export default function () {
   const { repositoryInfo } = useSelector((state: State) => ({
     repositoryInfo: state.ui.mainView.repositoryView.repositoryInfo,
   }));

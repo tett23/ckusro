@@ -16,7 +16,7 @@ export function RawUIDomain({ domain }: RawUIDomainProps) {
   );
 }
 
-export default function() {
+export default function () {
   const stateProps = useSelector(({ domain }: State) => ({
     domain,
   }));

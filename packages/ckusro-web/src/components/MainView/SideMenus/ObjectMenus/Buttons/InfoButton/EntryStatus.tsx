@@ -39,7 +39,7 @@ export function EntryStatus({ entryStatus, classes }: EntryStatusProps) {
   }
 }
 
-export default function(ownProps: OwnProps) {
+export default function (ownProps: OwnProps) {
   const props = buildEntryStatusProps(ownProps);
 
   return <EntryStatus {...props} />;

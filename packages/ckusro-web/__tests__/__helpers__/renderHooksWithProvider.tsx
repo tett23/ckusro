@@ -29,9 +29,11 @@ export default function renderHooksWithProvider<F extends Function>(
   const store = createStore(
     reducers,
     options.state || buildState(),
-    applyMiddleware(thunk.withExtraArgument(
-      options.pWorkers || buildPWorkers(),
-    ) as ThunkMiddleware<State, Actions>),
+    applyMiddleware(
+      thunk.withExtraArgument(
+        options.pWorkers || buildPWorkers(),
+      ) as ThunkMiddleware<State, Actions>,
+    ),
   );
   const theme = createMuiTheme();
 

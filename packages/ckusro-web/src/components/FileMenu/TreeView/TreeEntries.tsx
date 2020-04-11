@@ -45,7 +45,7 @@ export function TreeEntries({ treeEntries, internalPath }: TreeEntriesProps) {
   );
 }
 
-export default function({ internalPath }: OwnProps) {
+export default function ({ internalPath }: OwnProps) {
   const { treeEntries } = useSelector((state: State) => ({
     treeEntries: createRepositoriesManager(
       state.domain.repositories,

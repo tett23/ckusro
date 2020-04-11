@@ -73,7 +73,7 @@ export function Directory({
   );
 }
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   const [entries, setEntries] = useState([] as Entry[]);
   const state = useSelector((state: State) => ({
     coreId: state.config.coreId,

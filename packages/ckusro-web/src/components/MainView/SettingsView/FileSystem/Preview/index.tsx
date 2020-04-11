@@ -12,7 +12,7 @@ export function Preview({ content }: PreviewProps) {
   return <div>{content}</div>;
 }
 
-export default function() {
+export default function () {
   const [content, setContent] = useState<string | null>(null);
   const state = useSelector((state: State) => ({
     coreId: state.config.coreId,

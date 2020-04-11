@@ -27,7 +27,7 @@ function CommitLog() {
   return <div />;
 }
 
-export default function() {
+export default function () {
   const stateProps: StateProps = useSelector((state: State) => ({
     selectedTab: state.ui.mainView.repositoryView.selectedTab,
   }));

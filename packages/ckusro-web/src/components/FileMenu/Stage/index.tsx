@@ -32,7 +32,7 @@ export function Stage({ pathEntries: stageEntries }: StageProps) {
 
 const Memoized = React.memo(Stage, (prev, next) => prev.oid === next.oid);
 
-export default function() {
+export default function () {
   const { stageHead, stageEntries } = useSelector(
     ({
       domain: {

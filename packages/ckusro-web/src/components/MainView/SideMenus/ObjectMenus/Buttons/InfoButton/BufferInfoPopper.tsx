@@ -39,7 +39,7 @@ export function BufferInfoPopper({
   );
 }
 
-export default function(ownProps: OwnProps) {
+export default function (ownProps: OwnProps) {
   const props = buildBufferInfoPopperProps(ownProps);
 
   return <BufferInfoPopper {...props} />;

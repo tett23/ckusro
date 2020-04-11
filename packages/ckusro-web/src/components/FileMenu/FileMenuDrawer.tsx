@@ -67,7 +67,7 @@ export function FileMenuDrawer({
   );
 }
 
-export default function() {
+export default function () {
   const fileMenuStyles = useFileMenuStyles();
   const stateProps = useSelector((state: State) => ({
     isDrawerOpen: state.ui.fileMenu.misc.isDrawerOpen,

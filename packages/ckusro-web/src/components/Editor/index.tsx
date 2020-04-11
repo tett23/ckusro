@@ -93,7 +93,7 @@ export function buildEditorProps(props: OwnProps) {
   };
 }
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   const componentProps: EditorProps | null = buildEditorProps(props);
   if (componentProps == null) {
     return null;

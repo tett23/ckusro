@@ -33,7 +33,7 @@ export function TreeName({
   );
 }
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   const styles = useGitObjectListStyles();
 
   return <TreeName {...props} {...styles} />;

@@ -24,7 +24,7 @@ export function ObjectView({ classes }: ObjectViewProps) {
   );
 }
 
-export default function() {
+export default function () {
   const styleProps: StyleProps = {
     classes: useObjectViewStyles(),
   };

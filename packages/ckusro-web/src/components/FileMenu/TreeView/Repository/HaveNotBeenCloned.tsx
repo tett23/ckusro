@@ -9,7 +9,5 @@ export type HaveNotBeenClonedProps = {
 export default function HaveNotBeenCloned({
   repository,
 }: HaveNotBeenClonedProps) {
-  return (
-    <RepositoryName repository={repository} headOid={null} onClick={() => {}} />
-  );
+  return <RepositoryName repository={repository} headOid={null} />;
 }

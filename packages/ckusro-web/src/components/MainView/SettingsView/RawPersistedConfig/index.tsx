@@ -25,7 +25,7 @@ export function RawPersistedConfig({ persisted }: RawConfigProps) {
   );
 }
 
-export default function() {
+export default function () {
   const { config } = useSelector(({ config }: State) => ({
     config,
   }));

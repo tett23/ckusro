@@ -103,7 +103,7 @@ export function DrawerFab({
   );
 }
 
-export default function() {
+export default function () {
   const [isOpen, setIsOpen] = useState(false);
   const [isAddRepositoryDialogOpen, setIsAddRepositoryDialogOpen] = useState(
     false,

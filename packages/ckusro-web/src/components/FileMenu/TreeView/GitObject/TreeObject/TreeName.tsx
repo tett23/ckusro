@@ -79,7 +79,7 @@ function FolderClosed() {
   return <FontAwesomeIcon icon={faFolder} />;
 }
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   const styleProps: StyleProps = {
     classes: useFileMenuStyles(),
   };

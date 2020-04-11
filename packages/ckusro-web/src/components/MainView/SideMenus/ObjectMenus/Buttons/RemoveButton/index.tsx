@@ -62,7 +62,7 @@ export function RemoveButton({
   );
 }
 
-export default function() {
+export default function () {
   return <RemoveButton {...buildRemoveButtonProps()} />;
 }
 

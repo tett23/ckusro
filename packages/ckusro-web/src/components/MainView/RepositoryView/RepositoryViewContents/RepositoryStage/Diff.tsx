@@ -16,7 +16,7 @@ export function Diff({ internalPath }: DiffProps) {
   return <>{internalPath.path}</>;
 }
 
-export default function() {
+export default function () {
   const { repositoryInfo, selectedStageEntry } = useSelector(
     (state: State) => ({
       repositoryInfo: state.ui.mainView.repositoryView.repositoryInfo,

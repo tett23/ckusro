@@ -18,7 +18,7 @@ export function SidebarButton({ classes }: SidebarButton) {
   );
 }
 
-export default function() {
+export default function () {
   const styleProps: StyleProps = {
     classes: useSideMenusStyles(),
   };

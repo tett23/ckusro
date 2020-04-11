@@ -61,7 +61,7 @@ export function Header({
   );
 }
 
-export default function() {
+export default function () {
   const styles = useGitObjectListStyles();
   const fileMenuStyles = useFileMenuStyles();
   const stateProps = useSelector((state: State) => {

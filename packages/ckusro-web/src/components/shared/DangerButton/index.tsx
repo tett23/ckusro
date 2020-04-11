@@ -64,7 +64,7 @@ export function DangerButton({
   );
 }
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dispatchProps: DispatchProps = {
     setIsOpen,

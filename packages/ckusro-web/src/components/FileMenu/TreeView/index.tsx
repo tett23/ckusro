@@ -28,9 +28,9 @@ export function TreeView({
   const classes = useStyles();
 
   const repos = repositories.map((item) => {
-    const oid = createRefManager(refManager).headOid(url2RepoPath(
-      item.url,
-    ) as RepoPath);
+    const oid = createRefManager(refManager).headOid(
+      url2RepoPath(item.url) as RepoPath,
+    );
     const commitObject =
       oid == null
         ? null
@@ -60,7 +60,7 @@ export function TreeView({
   );
 }
 
-export default function() {
+export default function () {
   const state = useSelector(
     ({
       config: { repositories },

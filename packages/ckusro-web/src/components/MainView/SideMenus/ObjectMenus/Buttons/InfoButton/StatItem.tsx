@@ -26,7 +26,7 @@ export function StatItem({ count, label, classes }: StatItemProps) {
   );
 }
 
-export default function(ownProps: OwnProps) {
+export default function (ownProps: OwnProps) {
   const props = buildStatItemProps(ownProps);
 
   return <StatItem {...props} />;

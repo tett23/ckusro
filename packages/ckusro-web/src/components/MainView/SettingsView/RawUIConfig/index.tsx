@@ -16,7 +16,7 @@ export function RawConfig({ config }: RawConfigProps) {
   );
 }
 
-export default function() {
+export default function () {
   const stateProps = useSelector(({ config }: State) => ({
     config,
   }));

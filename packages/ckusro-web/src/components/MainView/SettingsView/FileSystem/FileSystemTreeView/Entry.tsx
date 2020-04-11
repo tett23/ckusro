@@ -54,6 +54,6 @@ export function Entry({
   }
 }
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   return <Entry {...props} />;
 }

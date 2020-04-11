@@ -9,10 +9,7 @@ export function createBlobObject(content: string | Buffer): BlobObject {
     buffer = content;
   }
 
-  const oid = crypto
-    .createHash('sha1')
-    .update(buffer)
-    .digest('hex');
+  const oid = crypto.createHash('sha1').update(buffer).digest('hex');
 
   return {
     type: 'blob',

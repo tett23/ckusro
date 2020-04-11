@@ -24,7 +24,7 @@ import { updateMainViewType } from '../../../../modules/ui/mainView/mainViewMisc
 type OwnProps = {
   repository: RepositoryInfo;
   headOid: string | null;
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 type StateProps = {
@@ -106,7 +106,7 @@ function RepositoryName({
   );
 }
 
-export default function(ownProps: OwnProps) {
+export default function (ownProps: OwnProps) {
   const dispatch = useDispatch();
   const {
     repository: { url, repoPath },
@@ -117,7 +117,9 @@ export default function(ownProps: OwnProps) {
     onClick: () => {
       dispatch(updateRepoPath({ url, repoPath }));
       dispatch(updateMainViewType('repository'));
-      onClick();
+      if (onClick != null) {
+        onClick();
+      }
     },
     onClickClone: () => dispatch(cloneRepository(url)),
     onClickPull: () => dispatch(pullRepository(repoPath)),

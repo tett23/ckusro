@@ -25,7 +25,7 @@ export function GitObjectList({ classes }: HeaderProps) {
   );
 }
 
-export default function() {
+export default function () {
   const classes = useGitObjectListStyles();
 
   return <GitObjectList classes={classes} />;

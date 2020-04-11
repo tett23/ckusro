@@ -43,7 +43,7 @@ export function RepositoryStageEntry({
   );
 }
 
-export default function({ internalPath, treeEntry }: OwnProps) {
+export default function ({ internalPath, treeEntry }: OwnProps) {
   const { repositoryInfo } = useSelector((state: State) => ({
     repositoryInfo: state.ui.mainView.repositoryView.repositoryInfo,
   }));

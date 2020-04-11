@@ -45,7 +45,7 @@ export function BlobBufferPanel({
   );
 }
 
-export default function(ownProps: OwnProps) {
+export default function (ownProps: OwnProps) {
   const props = buildBlobBufferInfoProps(ownProps);
   if (props == null) {
     return null;

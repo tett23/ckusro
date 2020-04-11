@@ -23,7 +23,7 @@ export function App() {
   return <Inner />;
 }
 
-export default function({ workers, initialState }: AppProps) {
+export default function ({ workers, initialState }: AppProps) {
   const store = initializeStore(workers, initialState);
   workers.connectStore(store);
   const theme = createMuiTheme();

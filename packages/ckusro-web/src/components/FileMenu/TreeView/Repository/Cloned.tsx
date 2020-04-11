@@ -49,7 +49,7 @@ export function Cloned({
   );
 }
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   const { internalPath, isOpen } = useSelector((state: State) => {
     const repoPath = props.repository.repoPath;
     const internalPath = { repoPath, path: '/' };
