@@ -58,13 +58,13 @@
     "testURL": "http://localhost/"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.5.5",
-    "@types/jest": "^24.0.15",
+    "@babel/preset-env": "^7.9.5",
+    "@types/jest": "^25.2.1",
     "@types/lodash.merge": "^4.6.6",
-    "@types/mdast": "^3.0.2",
-    "@types/react": "^16.8.23",
-    "@types/react-dom": "^16.8.5",
-    "lerna": "^3.16.4"
+    "@types/mdast": "^3.0.3",
+    "@types/react": "^16.9.34",
+    "@types/react-dom": "^16.9.6",
+    "lerna": "^3.20.2"
   },
   "dependencies": {
     "mdast": "^3.0.0"
