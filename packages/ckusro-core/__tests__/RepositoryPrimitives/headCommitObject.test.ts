@@ -1,4 +1,4 @@
-import * as Git from 'isomorphic-git';
+import FS from 'fs';
 import headCommitObject from '../../src/RepositoryPrimitives/headCommitObject';
 import { pfs } from '../__helpers__';
 import { buildIsomorphicGitConfig } from '../__fixtures__';
@@ -7,15 +7,14 @@ import { isCommitObject, CommitObject } from '../../src';
 
 describe(headCommitObject, () => {
   const config = buildIsomorphicGitConfig();
+  let fs: typeof FS;
   beforeEach(async () => {
-    const core = Git.cores.create(config.core);
-    const fs = pfs();
-    core.set('fs', fs);
-    await initRepository(config);
+    fs = pfs();
+    await initRepository(fs, config);
   });
 
   it('returns CommitObject', async () => {
-    const actual = (await headCommitObject(config)) as CommitObject;
+    const actual = (await headCommitObject(fs, config)) as CommitObject;
 
     expect(isCommitObject(actual)).toBe(true);
   });

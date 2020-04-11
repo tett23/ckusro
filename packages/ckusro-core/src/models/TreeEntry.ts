@@ -1,6 +1,6 @@
-import { TreeEntry } from 'isomorphic-git';
+import { TreeEntry as TreeEntryType } from 'isomorphic-git';
 
-export type TreeEntry = TreeEntry;
+export type TreeEntry = TreeEntryType;
 
 export type BlobTreeEntry = TreeEntry & {
   type: 'blob';

@@ -1,4 +1,3 @@
-import * as Git from 'isomorphic-git';
 import { GitObject, BlobObject } from '../../src/models/GitObject';
 import { repositories } from '../../src/Repositories';
 import fetchByOid from '../../src/Repositories/fetchByOid';
@@ -17,9 +16,7 @@ describe(repositories.name, () => {
   describe(fetchByOid.name, () => {
     it('returns GitObject', async () => {
       const config = buildCkusroConfig();
-      const core = Git.cores.create(config.coreId);
       const fs = pfs();
-      core.set('fs', fs);
       const repoPath = buildRepoPath();
       const commits = [
         {
@@ -37,9 +34,10 @@ describe(repositories.name, () => {
       await dummyRepo(config, fs, repoPath, commits);
 
       const oid = (await headOid(
+        fs,
         toIsomorphicGitConfig(config, repoPath),
       )) as string;
-      const expected = await fetchByOid(config, fs, oid);
+      const expected = await fetchByOid(fs, config, oid);
 
       expect((expected as GitObject).oid).toBe(oid);
     });
@@ -47,7 +45,7 @@ describe(repositories.name, () => {
     it('returns Error when object does not exists', async () => {
       const config = buildCkusroConfig();
       const fs = pfs();
-      const expected = await fetchByOid(config, fs, 'hoge');
+      const expected = await fetchByOid(fs, config, 'hoge');
 
       expect(expected).toBeInstanceOf(Error);
     });
@@ -64,9 +62,7 @@ describe(repositories.name, () => {
     );
     const fs = pfs();
     beforeEach(async () => {
-      const core = Git.cores.create(config.coreId);
-      core.set('fs', fs);
-      await initRepository(gitConfig);
+      await initRepository(fs, gitConfig);
     });
 
     it('returns GitObject', async () => {

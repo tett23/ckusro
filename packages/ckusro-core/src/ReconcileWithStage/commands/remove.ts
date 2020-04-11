@@ -1,3 +1,4 @@
+import FS from 'fs';
 import { Stage } from '../../Stage';
 import { Repository } from '../../Repository';
 import { InternalPath, createInternalPath } from '../../models/InternalPath';
@@ -6,6 +7,7 @@ import { RepositoryPrimitives } from '../../RepositoryPrimitives';
 import { PathTreeObject, WithStageParents } from '../../models/PathTreeObject';
 
 export default async function remove(
+  fs: typeof FS,
   repository: Repository,
   stage: Stage,
   internalPath: InternalPath,
@@ -15,6 +17,7 @@ export default async function remove(
   }
 
   const parents = await fetchParentsByInternalPath(
+    fs,
     repository,
     stage,
     internalPath,

@@ -1,4 +1,4 @@
-import * as Git from 'isomorphic-git';
+import FS from 'fs';
 import { initRepository } from '../../src/Stage/prepare';
 import { buildTreeEntry, buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
@@ -11,21 +11,21 @@ import headTree from '../../src/RepositoryPrimitives/headTree';
 
 describe(updateOrAppendObject, () => {
   const config = buildIsomorphicGitConfig();
+  let fs: typeof FS;
   beforeEach(async () => {
-    const core = Git.cores.create(config.core);
-    const fs = pfs();
-    core.set('fs', fs);
-    await initRepository(config);
+    fs = pfs();
+    await initRepository(fs, config);
   });
 
   it('returns TreeEntry[]', async () => {
-    const root = (await headTree(config)) as TreeObject;
+    const root = (await headTree(fs, config)) as TreeObject;
     const parents = (await fetchOrCreateTreeByPath(
+      fs,
       config,
       root,
       '/',
     )) as PathTreeObject[];
-    const blob = (await writeObject(config, {
+    const blob = (await writeObject(fs, config, {
       type: 'blob',
       content: new Buffer(''),
     })) as BlobObject;
@@ -37,11 +37,11 @@ describe(updateOrAppendObject, () => {
         type: 'blob',
       }),
     ];
-    const treeObject = (await writeObject(config, {
+    const treeObject = (await writeObject(fs, config, {
       type: 'tree',
       content: tree,
     })) as TreeObject;
-    const actual = (await updateOrAppendObject(config, parents, [
+    const actual = (await updateOrAppendObject(fs, config, parents, [
       'bar',
       treeObject,
     ])) as PathTreeObject[];
@@ -50,13 +50,14 @@ describe(updateOrAppendObject, () => {
   });
 
   it('returns TreeEntry[]', async () => {
-    const root = (await headTree(config)) as TreeObject;
+    const root = (await headTree(fs, config)) as TreeObject;
     const parents = (await fetchOrCreateTreeByPath(
+      fs,
       config,
       root,
       '/',
     )) as PathTreeObject[];
-    const blob = (await writeObject(config, {
+    const blob = (await writeObject(fs, config, {
       type: 'blob',
       content: new Buffer(''),
     })) as BlobObject;
@@ -68,13 +69,13 @@ describe(updateOrAppendObject, () => {
         type: 'blob',
       }),
     ];
-    const treeObject = (await writeObject(config, {
+    const treeObject = (await writeObject(fs, config, {
       type: 'tree',
       content: tree,
     })) as TreeObject;
-    await updateOrAppendObject(config, parents, ['bar', treeObject]);
+    await updateOrAppendObject(fs, config, parents, ['bar', treeObject]);
 
-    const newBlob = (await writeObject(config, {
+    const newBlob = (await writeObject(fs, config, {
       type: 'blob',
       content: new Buffer('new blob object'),
     })) as BlobObject;
@@ -86,12 +87,12 @@ describe(updateOrAppendObject, () => {
         type: 'blob',
       }),
     ];
-    const newTreeObject = (await writeObject(config, {
+    const newTreeObject = (await writeObject(fs, config, {
       type: 'tree',
       content: newTree,
     })) as TreeObject;
 
-    const actual = (await updateOrAppendObject(config, parents, [
+    const actual = (await updateOrAppendObject(fs, config, parents, [
       'bar',
       newTreeObject,
     ])) as PathTreeObject[];

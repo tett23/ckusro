@@ -13,12 +13,12 @@ describe(fetchParents, () => {
 
   it('returns TreeObject', async () => {
     const findPath = '/foo/bar/baz';
-    const { repository, isoConfig } = (await buildDummyRepository(
+    const { repository, isoConfig, fs } = (await buildDummyRepository(
       config,
       repoPath,
     )) as DummyRepositoryResult;
     const root = (await repository.headTreeObject()) as TreeObject;
-    const actual = (await fetchParents(isoConfig, root, findPath, {
+    const actual = (await fetchParents(fs, isoConfig, root, findPath, {
       create: true,
     })) as PathTreeObject[];
 
@@ -27,17 +27,17 @@ describe(fetchParents, () => {
 
   it('returns TreeObject', async () => {
     const findPath = '/foo/bar/baz';
-    const { repository, isoConfig } = (await buildDummyRepository(
+    const { repository, isoConfig, fs } = (await buildDummyRepository(
       config,
       repoPath,
     )) as DummyRepositoryResult;
     const root = (await repository.headTreeObject()) as TreeObject;
 
-    const [[, newRoot]] = (await fetchParents(isoConfig, root, findPath, {
+    const [[, newRoot]] = (await fetchParents(fs, isoConfig, root, findPath, {
       create: true,
     })) as PathTreeObject[];
 
-    const actual = (await fetchParents(isoConfig, newRoot, findPath, {
+    const actual = (await fetchParents(fs, isoConfig, newRoot, findPath, {
       create: true,
     })) as PathTreeObject[];
 
@@ -46,18 +46,19 @@ describe(fetchParents, () => {
 
   it('returns TreeObject', async () => {
     const findPath = '/foo/bar/baz';
-    const { repository, isoConfig } = (await buildDummyRepository(
+    const { repository, isoConfig, fs } = (await buildDummyRepository(
       config,
       repoPath,
       {
         initialTree: {
-          'foo/bar/baz': '',
+          'foo/bar/baz': 'hoge',
         },
       },
     )) as DummyRepositoryResult;
     const root = (await repository.headTreeObject()) as TreeObject;
 
     const actual = (await fetchParents(
+      fs,
       isoConfig,
       root,
       findPath,
@@ -68,7 +69,7 @@ describe(fetchParents, () => {
 
   it('returns TreeObject', async () => {
     const findPath = '/';
-    const { repository, isoConfig } = (await buildDummyRepository(
+    const { repository, isoConfig, fs } = (await buildDummyRepository(
       config,
       repoPath,
       {
@@ -80,6 +81,7 @@ describe(fetchParents, () => {
     const root = (await repository.headTreeObject()) as TreeObject;
 
     const actual = (await fetchParents(
+      fs,
       isoConfig,
       root,
       findPath,
@@ -90,7 +92,7 @@ describe(fetchParents, () => {
 
   it('returns TreeObject', async () => {
     const findPath = '';
-    const { repository, isoConfig } = (await buildDummyRepository(
+    const { repository, isoConfig, fs } = (await buildDummyRepository(
       config,
       repoPath,
       {
@@ -101,6 +103,7 @@ describe(fetchParents, () => {
     )) as DummyRepositoryResult;
     const root = (await repository.headTreeObject()) as TreeObject;
     const actual = (await fetchParents(
+      fs,
       isoConfig,
       root,
       findPath,
@@ -111,12 +114,12 @@ describe(fetchParents, () => {
 
   it('returns Error when object does not exists', async () => {
     const findPath = '/foo/bar';
-    const { repository, isoConfig } = (await buildDummyRepository(
+    const { repository, isoConfig, fs } = (await buildDummyRepository(
       config,
       repoPath,
     )) as DummyRepositoryResult;
     const root = (await repository.headTreeObject()) as TreeObject;
-    const actual = await fetchParents(isoConfig, root, findPath);
+    const actual = await fetchParents(fs, isoConfig, root, findPath);
 
     expect(actual).toBeInstanceOf(Error);
   });

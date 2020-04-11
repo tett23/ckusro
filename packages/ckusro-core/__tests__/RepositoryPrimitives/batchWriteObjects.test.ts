@@ -26,6 +26,6 @@ describe(batchWriteObjects, () => {
     const actual = await repository.batchWriteObjects([object]);
 
     expect(actual).not.toBeInstanceOf(Error);
-    expect(actual).toEqual([{ ...object, oid: objectDigest(object) }]);
+    expect(actual).toEqual([{ ...object, oid: await objectDigest(object) }]);
   });
 });

@@ -57,10 +57,14 @@ export function createGlobalWriteInfo<T extends GlobalWriteInfo['type']>(
       return ret as LookupGlobalWriteInfo<T>;
     }
     case 'blob': {
+      if (!(content instanceof Uint8Array)) {
+        throw new Error('Blob format error');
+      }
+
       const ret: GlobalBlobWriteInfo = {
         type: 'blob',
         internalPath,
-        content: content as Buffer,
+        content: Buffer.from(content),
       };
 
       return ret as LookupGlobalWriteInfo<T>;

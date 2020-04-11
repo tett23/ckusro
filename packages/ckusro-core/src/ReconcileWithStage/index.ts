@@ -12,7 +12,7 @@ export async function reconcileWithStage(
   internalPath: InternalPath,
   fs: typeof FS,
 ) {
-  const stage = await Stage(config, fs);
+  const stage = await Stage(fs, config);
   if (stage instanceof Error) {
     return stage;
   }
@@ -24,6 +24,7 @@ export async function reconcileWithStage(
   }
 
   return {
-    remove: (internalPath: InternalPath) => remove(repo, stage, internalPath),
+    remove: (internalPath: InternalPath) =>
+      remove(fs, repo, stage, internalPath),
   };
 }

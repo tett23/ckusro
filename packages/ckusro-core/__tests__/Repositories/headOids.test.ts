@@ -1,4 +1,3 @@
-import * as Git from 'isomorphic-git';
 import * as FS from 'fs';
 import {
   buildCkusroConfig,
@@ -18,8 +17,6 @@ describe(headOids, () => {
       repositories: [buildRepositoryInfo()],
     });
     fs = pfs();
-    const core = Git.cores.create(config.coreId);
-    core.set('fs', fs);
 
     config.repositories.forEach(({ repoPath }) => {
       fs.mkdirSync(gitDir(config.base, repoPath), {

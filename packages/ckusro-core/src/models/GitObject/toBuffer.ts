@@ -67,7 +67,7 @@ function commitObjectToBuffer({
 }
 
 function tagObjectToBuffer({
-  content: { object, type, tag, tagger, message, signature },
+  content: { object, type, tag, tagger, message, gpgsig },
 }: UnpersistedTagObject): Buffer | Error {
   const bufText = [
     `object ${object}`,
@@ -76,7 +76,7 @@ function tagObjectToBuffer({
     `tagger ${formatAuthor(tagger)}`,
     ``,
     `${message}`,
-    `${signature ? signature : ''}`,
+    `${gpgsig ? gpgsig : ''}`,
   ].join('\n');
 
   return Buffer.from(bufText, 'utf8');

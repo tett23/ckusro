@@ -39,7 +39,7 @@ export async function dummyRepo(
 
   fs.mkdirSync(repoRoot, { recursive: true });
   await Git.init({
-    core: config.coreId,
+    fs,
     dir: repoRoot,
   });
 
@@ -48,7 +48,7 @@ export async function dummyRepo(
     await createDummyTree(config, fs, repoRoot, parent, tree);
 
     const result = await Git.commit({
-      core: config.coreId,
+      fs,
       dir: repoRoot,
       message,
       author: {
@@ -84,7 +84,7 @@ async function createDummyTree(
     }
 
     const result = await Git.add({
-      core: config.coreId,
+      fs,
       dir: repoRoot,
       filepath: entryPath,
     }).catch((err) => err);

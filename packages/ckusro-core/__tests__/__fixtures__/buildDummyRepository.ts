@@ -1,4 +1,3 @@
-import * as Git from 'isomorphic-git';
 import FS from 'fs';
 import { RepoPath, CkusroConfig, createRepoPath } from '../../src';
 import { initRepository } from '../../src/Stage/prepare';
@@ -43,16 +42,17 @@ export async function buildDummyRepository(
     ...options,
   };
   const isoConfig = toIsomorphicGitConfig(config, repoPath);
-  const core = Git.cores.create(isoConfig.core);
-  core.set('fs', fs);
 
-  await initRepository(isoConfig);
-  const repo = repository(isoConfig, repoPath);
+  const initResult = await initRepository(fs, isoConfig);
+  if (initResult instanceof Error) {
+    throw initResult;
+  }
+  const repo = repository(fs, isoConfig, repoPath);
 
   if (initialTree != null) {
     const commitResult = await buildCommit(repo, initialTree);
     if (commitResult instanceof Error) {
-      return commitResult;
+      throw commitResult;
     }
   }
 
@@ -77,10 +77,8 @@ export async function buildDummyStage(
     ...options,
   };
   const isoConfig = stageIsomorphicGitConfig(config);
-  const core = Git.cores.create(isoConfig.core + 'aa');
-  core.set('fs', fs);
 
-  const repo = await stage(config, fs);
+  const repo = await stage(fs, config);
   if (repo instanceof Error) {
     throw new Error('');
   }

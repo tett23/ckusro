@@ -1,3 +1,4 @@
+import FS from 'fs';
 import {
   TreeObject,
   UnpersistedCommitObject,
@@ -8,6 +9,7 @@ import { writeObject } from '../writeObject';
 import writeRef from '../writeRef';
 
 export default async function commit(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   root: TreeObject,
   message: string,
@@ -29,12 +31,12 @@ export default async function commit(
     },
   };
 
-  const commit = await writeObject(config, unpersistedCommitObject);
+  const commit = await writeObject(fs, config, unpersistedCommitObject);
   if (commit instanceof Error) {
     return commit;
   }
 
-  const refResult = await writeRef(config, 'HEAD', commit, { force: true });
+  const refResult = await writeRef(fs, config, 'HEAD', commit, { force: true });
   if (refResult instanceof Error) {
     return refResult;
   }

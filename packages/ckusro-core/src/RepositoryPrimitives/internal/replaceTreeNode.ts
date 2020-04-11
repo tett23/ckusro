@@ -1,3 +1,4 @@
+import FS from 'fs';
 import { IsomorphicGitConfig } from '../../models/IsomorphicGitConfig';
 import { LookupPathTreeObjectOrMixed } from '../../models/PathTreeObject';
 import fetchParents from './fetchParents';
@@ -11,12 +12,15 @@ import wrapError from '../../utils/wrapError';
 export default async function replaceTreeNode<
   T extends TreeObject | BlobObject
 >(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   path: string,
   gitObject: T,
   options: { root?: TreeObject } = {},
 ): Promise<Array<LookupPathTreeObjectOrMixed<T['type']>> | Error> {
-  const root = await (options.root == null ? headTree(config) : options.root);
+  const root = await (options.root == null
+    ? headTree(fs, config)
+    : options.root);
   if (root instanceof Error) {
     return wrapError(root);
   }
@@ -29,12 +33,12 @@ export default async function replaceTreeNode<
     >;
   }
 
-  const parents = await fetchParents(config, root, path, { create: false });
+  const parents = await fetchParents(fs, config, root, path, { create: false });
   if (parents instanceof Error) {
     return wrapError(parents);
   }
 
-  return updateOrAppendObject(config, parents, [
+  return updateOrAppendObject(fs, config, parents, [
     basename(normalized),
     gitObject,
   ]);

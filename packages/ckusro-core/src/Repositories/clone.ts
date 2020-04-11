@@ -7,10 +7,11 @@ import { toIsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import mkdirP from '../utils/mkdirP';
 import rmrf from '../utils/rmrf';
 import isCloned from './internal/isCloned';
+import { httpClient } from '../utils/httpClient';
 
 export default async function clone(
-  config: CkusroConfig,
   fs: typeof FS,
+  config: CkusroConfig,
   url: string,
 ): Promise<Repository | Error> {
   const repoPath = url2RepoPath(url);
@@ -28,18 +29,24 @@ export default async function clone(
     Git.clone({
       ...gitConfig,
       corsProxy: config.corsProxy || undefined,
-      token: config.authentication.github || undefined,
+      fs,
+      http: httpClient(),
       dir: toPath(config.base, repoPath),
       url,
       singleBranch: true,
       depth: 1,
       noCheckout: true,
+      onAuth: () =>
+        ({
+          oauth2format: 'github',
+          token: config.authentication.github,
+        } as any),
     }))().catch((err: Error) => err);
   if (result instanceof Error) {
     return result;
   }
 
-  const repo = repository(gitConfig, repoPath);
+  const repo = repository(fs, gitConfig, repoPath);
   const checkoutResult = await repo.checkout('origin/master');
   if (checkoutResult instanceof Error) {
     return checkoutResult;

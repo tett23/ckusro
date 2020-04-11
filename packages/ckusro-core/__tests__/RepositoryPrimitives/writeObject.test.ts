@@ -1,4 +1,4 @@
-import * as Git from 'isomorphic-git';
+import FS from 'fs';
 import { initRepository } from '../../src/Stage/prepare';
 import { buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
@@ -16,15 +16,14 @@ import { writeObject } from '../../src/RepositoryPrimitives/writeObject';
 
 describe(writeObject, () => {
   const config = buildIsomorphicGitConfig();
+  let fs: typeof FS;
   beforeEach(async () => {
-    const core = Git.cores.create(config.core);
-    const fs = pfs();
-    core.set('fs', fs);
-    await initRepository(config);
+    fs = pfs();
+    await initRepository(fs, config);
   });
 
   it('returns CommitObject', async () => {
-    const tree = await writeObject(config, { type: 'tree', content: [] });
+    const tree = await writeObject(fs, config, { type: 'tree', content: [] });
     const author = {
       name: 'test',
       email: 'test@example.com',
@@ -38,7 +37,7 @@ describe(writeObject, () => {
       author,
       committer: author,
     };
-    const actual = await writeObject(config, {
+    const actual = await writeObject(fs, config, {
       type: 'commit',
       content: commit,
     });
@@ -47,7 +46,7 @@ describe(writeObject, () => {
   });
 
   it('returns TreeObject', async () => {
-    const blob = await writeObject(config, {
+    const blob = await writeObject(fs, config, {
       type: 'blob',
       content: new Buffer(''),
     });
@@ -59,13 +58,16 @@ describe(writeObject, () => {
         type: 'blob',
       },
     ];
-    const actual = await writeObject(config, { type: 'tree', content: tree });
+    const actual = await writeObject(fs, config, {
+      type: 'tree',
+      content: tree,
+    });
 
     expect(isTreeObject(actual as TreeObject)).toBe(true);
   });
 
   it('returns BlobObject', async () => {
-    const actual = await writeObject(config, {
+    const actual = await writeObject(fs, config, {
       type: 'blob',
       content: new Buffer('test'),
     });
@@ -74,7 +76,7 @@ describe(writeObject, () => {
   });
 
   it('returns TagObject', async () => {
-    const blob = await writeObject(config, {
+    const blob = await writeObject(fs, config, {
       type: 'blob',
       content: new Buffer('test'),
     });
@@ -92,7 +94,7 @@ describe(writeObject, () => {
       message: 'test',
       tagger: author,
     };
-    const actual = await writeObject(config, { type: 'tag', content: tag });
+    const actual = await writeObject(fs, config, { type: 'tag', content: tag });
 
     expect(isTagObject(actual as TagObject)).toBe(true);
   });

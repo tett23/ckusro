@@ -1,12 +1,14 @@
+import FS from 'fs';
 import { BlobObject, TreeObject } from '../models/GitObject';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import fetchByOid from './fetchByOid';
 
 export async function fetchTreeEntries(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   oid: string,
 ): Promise<Array<TreeObject | BlobObject> | Error> {
-  const tree = await fetchByOid(config, oid);
+  const tree = await fetchByOid(fs, config, oid);
   if (tree instanceof Error) {
     return tree;
   }
@@ -19,7 +21,7 @@ export async function fetchTreeEntries(
 
   const entries = await (async () => {
     const ps = tree.content.map(async (item) => {
-      const entry = await fetchByOid(config, item.oid);
+      const entry = await fetchByOid(fs, config, item.oid);
       if (entry instanceof Error) {
         throw entry;
       }

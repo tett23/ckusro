@@ -1,4 +1,4 @@
-import * as Git from 'isomorphic-git';
+import FS from 'fs';
 import { initRepository } from '../../src/Stage/prepare';
 import { buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
@@ -15,21 +15,21 @@ import headTree from '../../src/RepositoryPrimitives/headTree';
 
 describe(writeBlob, () => {
   const config = buildIsomorphicGitConfig();
+  let fs: typeof FS;
   beforeEach(async () => {
-    const core = Git.cores.create(config.core);
-    const fs = pfs();
-    core.set('fs', fs);
-    await initRepository(config);
+    fs = pfs();
+    await initRepository(fs, config);
   });
 
   it('returns PathTreeOrBlobObject[]', async () => {
-    const root = (await headTree(config)) as TreeObject;
+    const root = (await headTree(fs, config)) as TreeObject;
     const writeInfo = createWriteInfo(
       'blob',
       '/foo/bar/baz.txt',
       new Buffer('test', 'utf8'),
     );
     const actual = (await writeBlob(
+      fs,
       config,
       root,
       writeInfo,
@@ -39,6 +39,7 @@ describe(writeBlob, () => {
     expect(actual.map(([item]) => item)).toMatchObject(expected);
 
     const content = ((await fetchByOid(
+      fs,
       config,
       actual[actual.length - 1][1].oid,
     )) as BlobObject).content;
@@ -46,13 +47,14 @@ describe(writeBlob, () => {
   });
 
   it('returns PathTreeOrBlobObject[]', async () => {
-    const root = (await headTree(config)) as TreeObject;
+    const root = (await headTree(fs, config)) as TreeObject;
     const writeInfo = createWriteInfo(
       'blob',
       '/foo/bar/baz.txt',
       new Buffer('test', 'utf8'),
     );
     const treeResult = (await writeBlob(
+      fs,
       config,
       root,
       writeInfo,
@@ -65,6 +67,7 @@ describe(writeBlob, () => {
       content: new Buffer('updated'),
     };
     const actual = (await writeBlob(
+      fs,
       config,
       newRoot,
       newWriteInfo,
@@ -74,6 +77,7 @@ describe(writeBlob, () => {
     expect(actual.map(([item]) => item)).toMatchObject(expected);
 
     const content = ((await fetchByOid(
+      fs,
       config,
       actual[actual.length - 1][1].oid,
     )) as BlobObject).content;
@@ -81,8 +85,9 @@ describe(writeBlob, () => {
   });
 
   it('returns PathTreeOrBlobObject[]', async () => {
-    const root = (await headTree(config)) as TreeObject;
+    const root = (await headTree(fs, config)) as TreeObject;
     const treeResult = (await fetchOrCreateTreeByPath(
+      fs,
       config,
       root,
       '/foo/bar/baz.txt',
@@ -97,6 +102,7 @@ describe(writeBlob, () => {
     );
 
     const actual = (await writeBlob(
+      fs,
       config,
       newRoot,
       writeInfo,
@@ -106,6 +112,7 @@ describe(writeBlob, () => {
     expect(actual.map(([item]) => item)).toMatchObject(expected);
 
     const content = ((await fetchByOid(
+      fs,
       config,
       actual[actual.length - 1][1].oid,
     )) as BlobObject).content;

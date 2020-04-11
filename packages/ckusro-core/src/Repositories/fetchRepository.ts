@@ -6,8 +6,8 @@ import { toIsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import isExistFileOrDirectory from '../utils/isExistFileOrDirectory';
 
 export default async function fetchRepository(
-  config: CkusroConfig,
   fs: typeof FS,
+  config: CkusroConfig,
   repoPath: RepoPath,
 ): Promise<Repository | Error> {
   const gitConfig = toIsomorphicGitConfig(config, repoPath);
@@ -16,5 +16,5 @@ export default async function fetchRepository(
     return new Error('Repository have not been cloned.');
   }
 
-  return repository(gitConfig, repoPath);
+  return repository(fs, gitConfig, repoPath);
 }

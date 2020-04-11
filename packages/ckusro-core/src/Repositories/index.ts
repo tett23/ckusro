@@ -14,12 +14,12 @@ export type Repositories = ReturnType<typeof repositories>;
 
 export function repositories(config: CkusroConfig, fs: typeof FS) {
   return {
-    clone: (url: string) => clone(config, fs, url),
+    clone: (url: string) => clone(fs, config, url),
     removeAllRepositories: () => removeAllRepositories(config, fs),
-    allRepositories: () => clonedRepositories(config, fs),
+    allRepositories: () => clonedRepositories(fs, config),
     fetchRepository: (repoPath: RepoPath) =>
-      fetchRepository(config, fs, repoPath),
-    fetchObject: (oid: string) => fetchByOid(config, fs, oid),
+      fetchRepository(fs, config, repoPath),
+    fetchObject: (oid: string) => fetchByOid(fs, config, oid),
     fetchObjectByInternalPath: (internalPath: InternalPath) =>
       fetchObjectByInternalPath(config, fs, internalPath),
     headOids: () => headOids(config, fs),

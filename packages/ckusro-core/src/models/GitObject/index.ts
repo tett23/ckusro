@@ -1,4 +1,8 @@
-import { CommitDescription, TagDescription, TreeEntry } from 'isomorphic-git';
+import {
+  CommitObject as CommitDescription,
+  TagObject as TagDescription,
+  TreeEntry,
+} from 'isomorphic-git';
 import typeToMode from '../../utils/typeToMode';
 
 export type CommitObject = {

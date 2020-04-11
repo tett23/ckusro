@@ -1,3 +1,4 @@
+import FS from 'fs';
 import { basename, dirname } from 'path';
 import { writeObject } from './writeObject';
 import { fetchOrCreateTreeByPath } from './fetchOrCreateTreeByPath';
@@ -9,6 +10,7 @@ import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import normalizePath from '../utils/normalizePath';
 
 export async function writeBlob(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   currentTree: TreeObject,
   writeInfo: BlobWriteInfo,
@@ -18,6 +20,7 @@ export async function writeBlob(
   const parentPath = dirname(normalized);
 
   const parents = await fetchOrCreateTreeByPath(
+    fs,
     config,
     currentTree,
     parentPath,
@@ -30,10 +33,10 @@ export async function writeBlob(
     type: 'blob',
     content: writeInfo.content,
   };
-  const persistedBlob = await writeObject(config, unpersistedBlob);
+  const persistedBlob = await writeObject(fs, config, unpersistedBlob);
   if (persistedBlob instanceof Error) {
     return persistedBlob;
   }
 
-  return updateOrAppendObject(config, parents, [blobName, persistedBlob]);
+  return updateOrAppendObject(fs, config, parents, [blobName, persistedBlob]);
 }

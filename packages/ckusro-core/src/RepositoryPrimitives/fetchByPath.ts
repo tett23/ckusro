@@ -1,3 +1,4 @@
+import FS from 'fs';
 import {
   TreeObject,
   isTreeObject,
@@ -9,6 +10,7 @@ import normalizePath from '../utils/normalizePath';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 
 export async function fetchByPath(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   tree: TreeObject,
   path: string,
@@ -26,7 +28,7 @@ export async function fetchByPath(
   const [leafName] = paths.slice(-1);
   const parentPaths = paths.slice(0, -1);
 
-  const parent = await fetchItem(config, tree, parentPaths);
+  const parent = await fetchItem(fs, config, tree, parentPaths);
   if (parent == null || parent instanceof Error) {
     return parent;
   }
@@ -36,7 +38,7 @@ export async function fetchByPath(
     return null;
   }
 
-  const object = await fetchByOid(config, leafEntry.oid);
+  const object = await fetchByOid(fs, config, leafEntry.oid);
   if (object == null || object instanceof Error) {
     return object;
   }
@@ -48,6 +50,7 @@ export async function fetchByPath(
 }
 
 async function fetchItem(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   tree: TreeObject,
   paths: string[],
@@ -62,7 +65,7 @@ async function fetchItem(
     return null;
   }
 
-  const newTreeOrBlob = await fetchByOid(config, entry.oid);
+  const newTreeOrBlob = await fetchByOid(fs, config, entry.oid);
   if (newTreeOrBlob == null || newTreeOrBlob instanceof Error) {
     return newTreeOrBlob;
   }
@@ -70,5 +73,5 @@ async function fetchItem(
     return new Error('Invalid object type.');
   }
 
-  return fetchItem(config, newTreeOrBlob as TreeObject, tail);
+  return fetchItem(fs, config, newTreeOrBlob as TreeObject, tail);
 }

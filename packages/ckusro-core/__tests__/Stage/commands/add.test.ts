@@ -1,4 +1,4 @@
-import * as Git from 'isomorphic-git';
+import FS from 'fs';
 import { initRepository } from '../../../src/Stage/prepare';
 import {
   buildIsomorphicGitConfig,
@@ -18,15 +18,14 @@ import { createGlobalWriteInfo } from '../../../src/models/GlobalWriteInfo';
 
 describe(add, () => {
   const config = buildIsomorphicGitConfig();
+  let fs: typeof FS;
   beforeEach(async () => {
-    const core = Git.cores.create(config.core);
-    const fs = pfs();
-    core.set('fs', fs);
-    await initRepository(config);
+    fs = pfs();
+    await initRepository(fs, config);
   });
 
   it('returns TreeObject', async () => {
-    const root = (await headTree(config)) as TreeObject;
+    const root = (await headTree(fs, config)) as TreeObject;
     const internalPath = buildInternalPath({ path: '/foo/bar/baz.txt' });
     const globalWriteInfo = createGlobalWriteInfo(
       'blob',
@@ -35,6 +34,7 @@ describe(add, () => {
     );
 
     const actual = (await add(
+      fs,
       config,
       root,
       globalWriteInfo,
@@ -43,6 +43,7 @@ describe(add, () => {
     expect(actual.map(([item]) => item.path)).toMatchObject(expected);
 
     const content = ((await fetchByOid(
+      fs,
       config,
       actual[actual.length - 1][1].oid,
     )) as BlobObject).content;

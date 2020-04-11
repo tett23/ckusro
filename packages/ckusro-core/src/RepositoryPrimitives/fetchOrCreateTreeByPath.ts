@@ -1,3 +1,4 @@
+import FS from 'fs';
 import { TreeObject, isTreeObject } from '../models/GitObject';
 import { writeObject } from './writeObject';
 import updateOrAppendObject from './updateOrAppendObject';
@@ -9,12 +10,13 @@ import { basename } from 'path';
 import normalizePath from '../utils/normalizePath';
 
 export async function fetchOrCreateTreeByPath(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   root: TreeObject,
   path: string,
 ): Promise<PathTreeObject[] | Error> {
   const normalized = normalizePath(path);
-  const parents = await fetchParents(config, root, normalized, {
+  const parents = await fetchParents(fs, config, root, normalized, {
     create: true,
   });
   if (parents instanceof Error) {
@@ -26,10 +28,11 @@ export async function fetchOrCreateTreeByPath(
 
   const name = basename(normalized);
 
-  return fetchOrCreate(config, parents, name);
+  return fetchOrCreate(fs, config, parents, name);
 }
 
 async function fetchOrCreate(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   parents: PathTreeObject[],
   name: string,
@@ -41,10 +44,10 @@ async function fetchOrCreate(
 
   const leafEntry = parentObject.content.find((item) => item.path === name);
   if (leafEntry == null) {
-    return appendAndUpdate(config, parents, name);
+    return appendAndUpdate(fs, config, parents, name);
   }
 
-  const leaf = await fetchByOid(config, leafEntry.oid, 'tree');
+  const leaf = await fetchByOid(fs, config, leafEntry.oid, 'tree');
   if (leaf instanceof Error) {
     return leaf;
   }
@@ -52,15 +55,16 @@ async function fetchOrCreate(
     return [...parents, [name, leaf]];
   }
 
-  return appendAndUpdate(config, parents, name);
+  return appendAndUpdate(fs, config, parents, name);
 }
 
 async function appendAndUpdate(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   parents: PathTreeObject[],
   name: string,
 ): Promise<PathTreeObject[] | Error> {
-  const writeResult = await writeObject(config, {
+  const writeResult = await writeObject(fs, config, {
     type: 'tree',
     content: [],
   });
@@ -68,5 +72,5 @@ async function appendAndUpdate(
     return writeResult;
   }
 
-  return updateOrAppendObject(config, parents, [name, writeResult]);
+  return updateOrAppendObject(fs, config, parents, [name, writeResult]);
 }

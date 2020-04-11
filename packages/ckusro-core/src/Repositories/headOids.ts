@@ -9,7 +9,7 @@ export default async function headOids(
   fs: typeof FS,
 ): Promise<OidRepoPath[] | Error[]> {
   const ps = config.repositories.map(async ({ repoPath }) => {
-    const repo = await fetchRepository(config, fs, repoPath);
+    const repo = await fetchRepository(fs, config, repoPath);
     if (repo instanceof Error) {
       return null;
     }

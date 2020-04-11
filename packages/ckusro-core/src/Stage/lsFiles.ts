@@ -1,3 +1,4 @@
+import FS from 'fs';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import lsFilesByRef from '../RepositoryPrimitives/lsFilesByRef';
 import { RepoPath } from '../models/RepoPath';
@@ -5,10 +6,11 @@ import { InternalPathEntry } from '../models/InternalPathEntry';
 import pathToInternalPath from './internal/pathToInternalPath';
 
 export default async function lsFiles(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   repoPaths: RepoPath[],
 ): Promise<InternalPathEntry[] | Error> {
-  const lsResult = await lsFilesByRef(config, 'HEAD');
+  const lsResult = await lsFilesByRef(fs, config, 'HEAD');
   if (lsResult instanceof Error) {
     return lsResult;
   }

@@ -13,15 +13,15 @@ import checkout from './commands/checkout';
 
 export type Stage = PromiseThen<ReturnType<typeof stage>>;
 
-export default async function stage(config: CkusroConfig, fs: typeof FS) {
+export default async function stage(fs: typeof FS, config: CkusroConfig) {
   const gitConfig = stageIsomorphicGitConfig(config);
 
-  const prepareResult = await prepare(gitConfig, fs);
+  const prepareResult = await prepare(fs, gitConfig);
   if (prepareResult instanceof Error) {
     return prepareResult;
   }
 
-  const root = await headTree(gitConfig);
+  const root = await headTree(fs, gitConfig);
   if (root instanceof Error) {
     return root;
   }
@@ -29,13 +29,14 @@ export default async function stage(config: CkusroConfig, fs: typeof FS) {
   const repoPaths = config.repositories.map((item) => item.repoPath);
 
   return {
-    ...repositoryPrimitives(gitConfig),
-    prepare: () => prepare(gitConfig, fs),
-    clear: () => clearStage(config, fs),
-    lsFiles: () => lsFiles(gitConfig, repoPaths),
-    add: (writeInfo: GlobalBlobWriteInfo) => add(gitConfig, root, writeInfo),
+    ...repositoryPrimitives(fs, gitConfig),
+    prepare: () => prepare(fs, gitConfig),
+    clear: () => clearStage(fs, config),
+    lsFiles: () => lsFiles(fs, gitConfig, repoPaths),
+    add: (writeInfo: GlobalBlobWriteInfo) =>
+      add(fs, gitConfig, root, writeInfo),
     checkout: (repoPath: RepoPath, ref: string) =>
-      checkout(config, repoPath, ref),
+      checkout(fs, config, repoPath, ref),
     config: () => gitConfig,
   };
 }

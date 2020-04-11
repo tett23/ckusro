@@ -1,3 +1,4 @@
+import FS from 'fs';
 import { Stage } from '../../Stage';
 import { Repository } from '../../Repository';
 import { InternalPath, createInternalPath } from '../../models/InternalPath';
@@ -5,16 +6,17 @@ import primitiveFetchParents from '../../RepositoryPrimitives/internal/fetchPare
 import { PathTreeObject, WithStageParents } from '../../models/PathTreeObject';
 
 export default async function fetchParentsByInternalPath(
+  fs: typeof FS,
   repository: Repository,
   stage: Stage,
   internalPath: InternalPath,
 ): Promise<WithStageParents | Error> {
-  const repoParents = await repositoryParents(repository, internalPath);
+  const repoParents = await repositoryParents(fs, repository, internalPath);
   if (repoParents instanceof Error) {
     return repoParents;
   }
 
-  const sParents = await stageParents(stage, internalPath);
+  const sParents = await stageParents(fs, stage, internalPath);
   if (sParents instanceof Error) {
     return sParents;
   }
@@ -26,6 +28,7 @@ export default async function fetchParentsByInternalPath(
 }
 
 async function repositoryParents(
+  fs: typeof FS,
   repository: Repository,
   internalPath: InternalPath,
 ): Promise<PathTreeObject[] | Error> {
@@ -35,6 +38,7 @@ async function repositoryParents(
   }
 
   return primitiveFetchParents(
+    fs,
     repository.config(),
     repoHeadTreeObject,
     internalPath.path,
@@ -45,6 +49,7 @@ async function repositoryParents(
 }
 
 async function stageParents(
+  fs: typeof FS,
   stage: Stage,
   internalPath: InternalPath,
 ): Promise<PathTreeObject[] | Error> {
@@ -54,6 +59,7 @@ async function stageParents(
   }
 
   return primitiveFetchParents(
+    fs,
     stage.config(),
     repoHeadTreeObject,
     createInternalPath(internalPath).flat(),

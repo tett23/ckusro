@@ -1,3 +1,4 @@
+import FS from 'fs';
 import * as Git from 'isomorphic-git';
 import { IsomorphicGitConfig } from './models/IsomorphicGitConfig';
 import repositoryPrimitives from './RepositoryPrimitives';
@@ -6,30 +7,42 @@ import { dirname } from 'path';
 import lsFilesByRef from './RepositoryPrimitives/lsFilesByRef';
 import { RepoPath } from './models/RepoPath';
 import { InternalPathEntry } from './models/InternalPathEntry';
+import { httpClient } from './utils/httpClient';
 
 export type Repository = ReturnType<typeof repository>;
 
-export function repository(config: IsomorphicGitConfig, repoPath: RepoPath) {
+export function repository(
+  fs: typeof FS,
+  config: IsomorphicGitConfig,
+  repoPath: RepoPath,
+) {
   return {
-    ...repositoryPrimitives(config),
-    fetch: (ref?: string) => fetch(config, ref),
-    pull: () => pull(config),
-    checkout: (ref: string) => checkout(config, ref),
-    lsFiles: () => lsFiles(config, repoPath),
+    ...repositoryPrimitives(fs, config),
+    fetch: (ref?: string) => fetch(fs, config, ref),
+    pull: () => pull(fs, config),
+    checkout: (ref: string) => checkout(fs, config, ref),
+    lsFiles: () => lsFiles(fs, config, repoPath),
     config: () => config,
   };
 }
 
 export async function fetch(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   ref?: string,
 ): Promise<true | Error> {
   const result = await Git.fetch({
     ...config,
+    fs,
+    http: httpClient(),
     corsProxy: config.corsProxy || undefined,
-    token: config.authentication.github || undefined,
     ref: ref || 'master',
     singleBranch: true,
+    onAuth: () =>
+      ({
+        oauth2format: 'github',
+        token: config.authentication.github,
+      } as any),
   }).catch((err: Error) => err);
   if (result instanceof Error) {
     return result;
@@ -39,7 +52,7 @@ export async function fetch(
     return true;
   }
 
-  const checkoutResult = await checkout(config, result.fetchHead);
+  const checkoutResult = await checkout(fs, config, result.fetchHead);
   if (checkoutResult instanceof Error) {
     return checkoutResult;
   }
@@ -48,22 +61,25 @@ export async function fetch(
 }
 
 export async function pull(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
 ): Promise<string | Error> {
-  const result = await fetch(config);
+  const result = await fetch(fs, config);
   if (result instanceof Error) {
     return result;
   }
 
-  return headOid(config);
+  return headOid(fs, config);
 }
 
 export async function checkout(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   ref: string,
 ): Promise<void | Error> {
   const checkoutResult = await Git.checkout({
     ...config,
+    fs,
     dir: dirname(config.gitdir),
     ref,
   }).catch((err: Error) => err);
@@ -75,10 +91,11 @@ export async function checkout(
 }
 
 export async function lsFiles(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   repoPath: RepoPath,
 ): Promise<InternalPathEntry[] | Error> {
-  const lsResult = await lsFilesByRef(config, 'HEAD');
+  const lsResult = await lsFilesByRef(fs, config, 'HEAD');
   if (lsResult instanceof Error) {
     return lsResult;
   }

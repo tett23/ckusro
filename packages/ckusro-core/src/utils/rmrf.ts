@@ -13,7 +13,7 @@ export default async function rmrf(
   }
 
   const rmrfResult = await (async () =>
-    await promisify(rimraf)(path, {
+    await promisify<any, any, any>(rimraf)(path, {
       ...fs,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       lstat: callbackify(fs.promises.stat) as any,

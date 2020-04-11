@@ -1,3 +1,4 @@
+import FS from 'fs';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import { writeBlob } from './writeBlob';
 import {
@@ -29,41 +30,44 @@ import batchWriteObjects from './batchWriteObjects';
 
 export type RepositoryPrimitives = ReturnType<typeof repositoryPrimitives>;
 
-export default function repositoryPrimitives(config: IsomorphicGitConfig) {
+export default function repositoryPrimitives(
+  fs: typeof FS,
+  config: IsomorphicGitConfig,
+) {
   return {
     add: (root: TreeObject, writeInfo: BlobWriteInfo) =>
-      add(config, root, writeInfo),
+      add(fs, config, root, writeInfo),
     commit: (root: TreeObject, message: string) =>
-      commit(config, root, message),
+      commit(fs, config, root, message),
 
-    headOid: () => headOid(config),
-    headCommitObject: () => headCommitObject(config),
-    headTreeObject: () => headTree(config),
+    headOid: () => headOid(fs, config),
+    headCommitObject: () => headCommitObject(fs, config),
+    headTreeObject: () => headTree(fs, config),
     fetchByOid: <T extends GitObjectTypes>(oid: string, objectType?: T) =>
-      fetchByOid(config, oid, objectType),
+      fetchByOid(fs, config, oid, objectType),
     fetchByPath: (root: TreeObject, path: string) =>
-      fetchByPath(config, root, path),
-    fetchByRef: (ref: string) => fetchObjectByRef(config, ref),
-    fetchTreeEntries: (oid: string) => fetchTreeEntries(config, oid),
+      fetchByPath(fs, config, root, path),
+    fetchByRef: (ref: string) => fetchObjectByRef(fs, config, ref),
+    fetchTreeEntries: (oid: string) => fetchTreeEntries(fs, config, oid),
     writeBlob: (currentTree: TreeObject, writeInfo: BlobWriteInfo) =>
-      writeBlob(config, currentTree, writeInfo),
+      writeBlob(fs, config, currentTree, writeInfo),
     writeTree: (currentTree: TreeObject, writeInfo: TreeWriteInfo) =>
-      writeTree(config, currentTree, writeInfo),
+      writeTree(fs, config, currentTree, writeInfo),
     writeObject: (unpersistedObject: UnpersistedGitObject) =>
-      writeObject(config, unpersistedObject),
+      writeObject(fs, config, unpersistedObject),
     writeRef: (
       ref: string,
       commitObject: CommitObject,
       options: Partial<WriteRefOptions>,
-    ) => writeRef(config, ref, commitObject, options),
+    ) => writeRef(fs, config, ref, commitObject, options),
     batchWriteObjects: (objects: UnpersistedGitObject[]) =>
-      batchWriteObjects(config, objects),
+      batchWriteObjects(fs, config, objects),
     removeFromTree: (parents: PathTreeObject[], name: string) =>
-      removeFromTree(config, parents, name),
+      removeFromTree(fs, config, parents, name),
     removeFromTreeByPath: (root: TreeObject, path: string) =>
-      removeFromTreeByPath(config, root, path),
-    revParse: (ref: string) => revParse(config, ref),
-    lsFilesByRef: (ref: string) => lsFilesByRef(config, ref),
-    lsFilesByTree: (tree: TreeObject) => lsFilesByTree(config, tree),
+      removeFromTreeByPath(fs, config, root, path),
+    revParse: (ref: string) => revParse(fs, config, ref),
+    lsFilesByRef: (ref: string) => lsFilesByRef(fs, config, ref),
+    lsFilesByTree: (tree: TreeObject) => lsFilesByTree(fs, config, tree),
   };
 }
