@@ -1,4 +1,4 @@
-import * as Git from 'isomorphic-git';
+import FS from 'fs';
 import { fetchTreeEntries } from '../../src/RepositoryPrimitives/fetchTreeEntries';
 import { buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
@@ -8,16 +8,19 @@ import { TreeObject, isTreeObject, isBlobObject } from '../../src';
 
 describe(fetchTreeEntries, () => {
   const config = buildIsomorphicGitConfig();
+  let fs: typeof FS;
   beforeEach(async () => {
-    const core = Git.cores.create(config.core);
-    const fs = pfs();
-    core.set('fs', fs);
-    await initRepository(config);
+    fs = pfs();
+    await initRepository(fs, config);
   });
 
   it('returns Array<TreeObject|BlobObject>', async () => {
-    const tree = (await headTree(config)) as TreeObject;
-    const actual = (await fetchTreeEntries(config, tree.oid)) as TreeObject[];
+    const tree = (await headTree(fs, config)) as TreeObject;
+    const actual = (await fetchTreeEntries(
+      fs,
+      config,
+      tree.oid,
+    )) as TreeObject[];
 
     actual.forEach((item) =>
       expect(isTreeObject(item) || isBlobObject(item)).toBe(true),

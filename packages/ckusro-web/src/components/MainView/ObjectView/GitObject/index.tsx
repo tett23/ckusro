@@ -79,7 +79,7 @@ const Memoized = React.memo(
   (prev, next) => prev.gitObject === next.gitObject,
 );
 
-export default function() {
+export default function () {
   const { oid, gitObject, bufferInfo } = useSelector((state: State) => {
     const oid = (state.ui.mainView.objectView.bufferInfo || { oid: null }).oid;
 

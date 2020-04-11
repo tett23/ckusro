@@ -93,7 +93,7 @@ export function AddRepositoryDialog({
   );
 }
 
-export default function({ isOpen, setIsOpen }: OwnProps) {
+export default function ({ isOpen, setIsOpen }: OwnProps) {
   const [url, setUrl] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const stateProps: StateProps = {

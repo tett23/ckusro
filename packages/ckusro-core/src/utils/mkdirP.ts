@@ -2,7 +2,7 @@ import * as FS from 'fs';
 import splitPath from './splitPath';
 import isExistFileOrDirectory from './isExistFileOrDirectory';
 
-export default async function(
+export default async function (
   fs: typeof FS,
   path: string,
 ): Promise<true | Error> {

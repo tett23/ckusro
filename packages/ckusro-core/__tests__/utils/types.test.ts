@@ -19,7 +19,7 @@ describe(isNonNullObject, () => {
       [[undefined], false],
       [[true], false],
       [[1], false],
-      [[() => {}], false], // tslint:disable-line no-empty
+      [[() => {}], false], // eslint-disable-line @typescript-eslint/no-empty-function
     ]).toValidatePair(isNonNullObject);
   });
 });
@@ -39,7 +39,7 @@ describe(isErrors, () => {
       [[1], false],
       [[[]], false],
       [[{}], false],
-      [[() => {}], false], // tslint:disable-line no-empty
+      [[() => {}], false], // eslint-disable-line @typescript-eslint/no-empty-function
     ]).toValidatePair(isErrors);
   });
 });
@@ -57,7 +57,7 @@ describe(isArrayOf, () => {
       [[true, validator], false],
       [[1, validator], false],
       [[{}, validator], false],
-      [[() => {}, validator], false], // tslint:disable-line no-empty
+      [[() => {}, validator], false], // eslint-disable-line @typescript-eslint/no-empty-function
     ]).toValidatePair(isArrayOf);
   });
 });
@@ -76,7 +76,7 @@ describe(isPropertyValidTypeOf, () => {
       [[true, 'does_not_exists', validator], false],
       [[undefined, 'does_not_exists', validator], false],
       [[null, 'does_not_exists', validator], false],
-      [[() => {}, 'does_not_exists', validator], false], // tslint:disable-line no-empty
+      [[() => {}, 'does_not_exists', validator], false], // eslint-disable-line @typescript-eslint/no-empty-function
     ]).toValidatePair(isPropertyValidTypeOf);
   });
 });
@@ -91,7 +91,7 @@ describe(isValidTypeOf, () => {
       [[true, validator], false],
       [[undefined, validator], false],
       [[null, validator], false],
-      [[() => {}, validator], false], // tslint:disable-line no-empty
+      [[() => {}, validator], false], // eslint-disable-line @typescript-eslint/no-empty-function
     ]).toValidatePair(isValidTypeOf);
   });
 });
@@ -121,7 +121,7 @@ describe(isTypeOf, () => {
       [[{ a: 1 }, 'object'], true],
       [[null, 'object'], false],
       [[true, 'object'], false],
-      [[() => {}, 'function'], true], // tslint:disable-line no-empty
+      [[() => {}, 'function'], true], // eslint-disable-line @typescript-eslint/no-empty-function
       [[null, 'function'], false],
       [[undefined, 'function'], false],
       [[true, 'function'], false],
@@ -139,7 +139,7 @@ describe(hasProperty, () => {
       [[true, 'does_not_exists'], false],
       [[undefined, 'does_not_exists'], false],
       [[null, 'does_not_exists'], false],
-      [[() => {}, 'does_not_exists'], false], // tslint:disable-line no-empty
+      [[() => {}, 'does_not_exists'], false], // eslint-disable-line @typescript-eslint/no-empty-function
     ]).toValidatePair(hasProperty);
   });
 });

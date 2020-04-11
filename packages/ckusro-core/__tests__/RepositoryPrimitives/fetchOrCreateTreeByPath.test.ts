@@ -1,4 +1,4 @@
-import * as Git from 'isomorphic-git';
+import FS from 'fs';
 import { initRepository } from '../../src/Stage/prepare';
 import { buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
@@ -9,16 +9,16 @@ import { TreeObject } from '../../src';
 
 describe(fetchOrCreateTreeByPath, () => {
   const config = buildIsomorphicGitConfig();
+  let fs: typeof FS;
   beforeEach(async () => {
-    const core = Git.cores.create(config.core);
-    const fs = pfs();
-    core.set('fs', fs);
-    await initRepository(config);
+    fs = pfs();
+    await initRepository(fs, config);
   });
 
   it('returns TreeObject', async () => {
-    const root = (await headTree(config)) as TreeObject;
+    const root = (await headTree(fs, config)) as TreeObject;
     const actual = (await fetchOrCreateTreeByPath(
+      fs,
       config,
       root,
       '/foo/bar/baz',
@@ -33,8 +33,9 @@ describe(fetchOrCreateTreeByPath, () => {
   });
 
   it('returns TreeObject', async () => {
-    const root = (await headTree(config)) as TreeObject;
+    const root = (await headTree(fs, config)) as TreeObject;
     const actual = (await fetchOrCreateTreeByPath(
+      fs,
       config,
       root,
       '/a/b/c/d/e/f/g',
@@ -53,11 +54,17 @@ describe(fetchOrCreateTreeByPath, () => {
   });
 
   it('returns TreeObject', async () => {
-    const root = (await headTree(config)) as TreeObject;
-    const result = await fetchOrCreateTreeByPath(config, root, '/foo/bar/baz');
+    const root = (await headTree(fs, config)) as TreeObject;
+    const result = await fetchOrCreateTreeByPath(
+      fs,
+      config,
+      root,
+      '/foo/bar/baz',
+    );
     expect(result).not.toBeInstanceOf(Error);
 
     const actual = (await fetchOrCreateTreeByPath(
+      fs,
       config,
       root,
       '/foo/bar/baz',
@@ -72,8 +79,9 @@ describe(fetchOrCreateTreeByPath, () => {
   });
 
   it('returns TreeObject', async () => {
-    const root = (await headTree(config)) as TreeObject;
+    const root = (await headTree(fs, config)) as TreeObject;
     const actual = (await fetchOrCreateTreeByPath(
+      fs,
       config,
       root,
       '/',
@@ -83,13 +91,15 @@ describe(fetchOrCreateTreeByPath, () => {
   });
 
   it('returns TreeObject', async () => {
-    const root = (await headTree(config)) as TreeObject;
+    const root = (await headTree(fs, config)) as TreeObject;
     const expected = (await fetchOrCreateTreeByPath(
+      fs,
       config,
       root,
       '/foo',
     )) as PathTreeObject[];
     const actual = (await fetchOrCreateTreeByPath(
+      fs,
       config,
       expected[0][1],
       '/foo',
@@ -101,8 +111,9 @@ describe(fetchOrCreateTreeByPath, () => {
   });
 
   it('returns TreeObject when path does not normalized', async () => {
-    const root = (await headTree(config)) as TreeObject;
+    const root = (await headTree(fs, config)) as TreeObject;
     const actual = (await fetchOrCreateTreeByPath(
+      fs,
       config,
       root,
       '//foo/./bar/..',

@@ -52,7 +52,7 @@ export function Entries({
   );
 }
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   const classes = useFileSystemTreeViewStyles();
 
   return <Entries {...props} classes={classes} />;

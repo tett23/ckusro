@@ -53,7 +53,7 @@ export function TreeObject({
   );
 }
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   const { oid, internalPath } = props;
 
   const { isOpened, treeEntries } = useSelector((state: State) => {

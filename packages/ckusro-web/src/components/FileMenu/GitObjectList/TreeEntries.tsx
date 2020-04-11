@@ -49,7 +49,7 @@ export function TreeEntries({
 
 const Memoized = React.memo(TreeEntries, (prev, next) => prev.oid === next.oid);
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   const { oid, internalPath } = props;
   const classes = useGitObjectListStyles();
   const { objectManager } = useSelector((state: State) => ({

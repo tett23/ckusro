@@ -1,4 +1,4 @@
-import * as Git from 'isomorphic-git';
+import FS from 'fs';
 import {
   buildIsomorphicGitConfig,
   buildRepoPath,
@@ -21,13 +21,12 @@ import { initRepository } from '../../src/Stage/prepare';
 describe(lsFiles, () => {
   const config = buildIsomorphicGitConfig();
   const repoPath = buildRepoPath();
+  let fs: typeof FS;
   beforeEach(async () => {
-    const core = Git.cores.create(config.core);
-    const fs = pfs();
-    core.set('fs', fs);
-    await initRepository(config);
+    fs = pfs();
+    await initRepository(fs, config);
 
-    const root = (await headTree(config)) as TreeObject;
+    const root = (await headTree(fs, config)) as TreeObject;
     const globalWriteInfo = createGlobalWriteInfo(
       'blob',
       buildInternalPath({ path: '/foo/bar/baz.txt', repoPath }),
@@ -35,17 +34,18 @@ describe(lsFiles, () => {
     );
 
     const addResult = (await add(
+      fs,
       config,
       root,
       globalWriteInfo,
     )) as InternalPathGitObject[];
     const [[, newRoot]] = addResult as InternalPathTreeObject[];
 
-    (await commit(config, newRoot, 'test')) as CommitObject;
+    (await commit(fs, config, newRoot, 'test')) as CommitObject;
   });
 
   it('returns InternalPathEntry[]', async () => {
-    const actual = await lsFiles(config, [repoPath]);
+    const actual = await lsFiles(fs, config, [repoPath]);
 
     expect(actual).toMatchObject([
       [buildInternalPath({ path: '/', repoPath }), expect.anything()],

@@ -41,7 +41,7 @@ const Memoized = React.memo(
     prev.ast === next.ast,
 );
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   const { ast, viewMode } = useSelector((state: State) => {
     return {
       ast: state.ui.mainView.objectView.currentAst,

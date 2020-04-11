@@ -27,7 +27,7 @@ export function ClearStageButton({ onClick }: ClearStageButtonProps) {
   );
 }
 
-export default function() {
+export default function () {
   const dispatch = useDispatch();
   const dispatchProps = {
     onClick: () => dispatch(clearStageData()),

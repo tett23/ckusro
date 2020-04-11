@@ -8,7 +8,7 @@ const debounced = debounce((workers: PWorkers, state: State) => {
   workers.writePersistedState(serializeState(state));
 }, 3000);
 
-export default function(workers: PWorkers) {
+export default function (workers: PWorkers) {
   const middleware = (store: ThunkStore<State, Actions>) => (
     next: (action: Actions) => Actions,
   ) => (action: Actions) => {

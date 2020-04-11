@@ -52,10 +52,14 @@ export function createWriteInfo<T extends WriteInfo['type']>(
       return ret as LookupWriteInfo<T>;
     }
     case 'blob': {
+      if (!(content instanceof Uint8Array)) {
+        throw new Error('Blob format error');
+      }
+
       const ret: BlobWriteInfo = {
         type: 'blob',
         path,
-        content: content as Buffer,
+        content: Buffer.from(content),
       };
 
       return ret as LookupWriteInfo<T>;

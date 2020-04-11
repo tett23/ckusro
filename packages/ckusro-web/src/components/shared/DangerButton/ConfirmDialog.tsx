@@ -57,7 +57,7 @@ export function ConfirmDialog({
   );
 }
 
-export default function(ownProps: OwnProps) {
+export default function (ownProps: OwnProps) {
   const props = buildConfirmDialogProps(ownProps);
 
   if (!ownProps.isOpen) {

@@ -4,8 +4,8 @@ import buildTreeFromTreeLike, {
 import printTree from '../../__helpers__/printTree';
 
 describe(buildTreeFromTreeLike, () => {
-  it('returns root TreeObject and GitObjects', () => {
-    const actual = buildTreeFromTreeLike({
+  it('returns root TreeObject and GitObjects', async () => {
+    const actual = (await buildTreeFromTreeLike({
       'foo/bar': '',
       'foo/a': '',
       'foo/b/c': '',
@@ -18,7 +18,7 @@ describe(buildTreeFromTreeLike, () => {
         piyo: '',
       },
       empty: {},
-    }) as BuildTreeFromObjectResult;
+    })) as BuildTreeFromObjectResult;
 
     expect(printTree(actual.root, actual.objects)).toMatchInlineSnapshot(`
       "foo(e99b51)
@@ -33,8 +33,10 @@ describe(buildTreeFromTreeLike, () => {
     `);
   });
 
-  it('returns Error when passed empty TreeContentLike', () => {
-    const actual = buildTreeFromTreeLike({}) as BuildTreeFromObjectResult;
+  it('returns Error when passed empty TreeContentLike', async () => {
+    const actual = (await buildTreeFromTreeLike(
+      {},
+    )) as BuildTreeFromObjectResult;
 
     expect(actual).toBeInstanceOf(Error);
   });

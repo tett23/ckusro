@@ -1,3 +1,4 @@
+import FS from 'fs';
 import * as Git from 'isomorphic-git';
 import { CommitObject } from '../models/GitObject';
 import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
@@ -11,6 +12,7 @@ export type WriteRefOptions = {
 };
 
 export default async function writeRef(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   ref: string,
   commitObject: CommitObject,
@@ -21,6 +23,7 @@ export default async function writeRef(
   const result = await (async () =>
     await Git.writeRef({
       ...config,
+      fs,
       ref,
       value: commitObject.oid,
       force: opts.force,

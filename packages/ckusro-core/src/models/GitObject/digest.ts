@@ -1,12 +1,12 @@
-import { GitObjectTypes, UnpersistedGitObject } from './index';
-import shasum from './shasum';
+import { UnpersistedGitObject, GitObjectTypes } from './index';
 import { toBuffer } from './toBuffer';
+import shasum from './shasum';
 
 export type OidInflatedObject = [string, Buffer];
 
-export function objectDigest<T extends UnpersistedGitObject>(
+export async function objectDigest<T extends UnpersistedGitObject>(
   gitObject: T,
-): string | Error {
+): Promise<string | Error> {
   const buf = toBuffer(gitObject);
   if (buf instanceof Error) {
     return buf;

@@ -1,4 +1,3 @@
-import * as Git from 'isomorphic-git';
 import * as FS from 'fs';
 import clonedRepositories from '../../src/Repositories/clonedRepositories';
 import {
@@ -16,8 +15,6 @@ describe(clonedRepositories, () => {
   beforeEach(async () => {
     config = buildCkusroConfig({ repositories: [buildRepositoryInfo()] });
     fs = pfs();
-    const core = Git.cores.create(config.coreId);
-    core.set('fs', fs);
 
     config.repositories.forEach(({ repoPath }) => {
       fs.mkdirSync(gitDir(config.base, repoPath), {
@@ -27,7 +24,7 @@ describe(clonedRepositories, () => {
   });
 
   it('returns Repository[]', async () => {
-    const expected = (await clonedRepositories(config, fs)) as Repository[];
+    const expected = (await clonedRepositories(fs, config)) as Repository[];
 
     expect(expected.length).toBe(1);
   });
@@ -38,7 +35,7 @@ describe(clonedRepositories, () => {
         repoPath: buildRepoPath({ name: 'does_not_exist' }),
       }),
     ];
-    const expected = (await clonedRepositories(config, fs)) as Repository[];
+    const expected = (await clonedRepositories(fs, config)) as Repository[];
 
     expect(expected).toEqual([]);
   });

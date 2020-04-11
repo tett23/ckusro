@@ -59,7 +59,7 @@ export function InfoButton({
   );
 }
 
-export default function() {
+export default function () {
   return <InfoButton {...buildProps()} />;
 }
 

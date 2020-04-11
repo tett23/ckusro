@@ -21,7 +21,7 @@ export function ObjectLinkView({
   return <div onClick={updateCurrentOid}>{children}</div>;
 }
 
-export default function(ownProps: OwnProps) {
+export default function (ownProps: OwnProps) {
   const dispatch = useDispatch();
   const actions = {
     updateCurrentOid() {

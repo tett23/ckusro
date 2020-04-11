@@ -1,3 +1,4 @@
+import FS from 'fs';
 import { toTreeEntry } from '../models/GitObject';
 import { writeObject } from './writeObject';
 import updateOrAppendTreeEntries from './updateOrAppendTreeEntries';
@@ -11,6 +12,7 @@ import {
 export default async function updateOrAppendObject<
   T extends PathTreeOrBlobObject
 >(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   parents: PathTreeObject[],
   init: T,
@@ -33,7 +35,7 @@ export default async function updateOrAppendObject<
           toTreeEntry(childPath, childTree),
         );
 
-        const newTree = await writeObject(config, {
+        const newTree = await writeObject(fs, config, {
           type: 'tree',
           content: newEntries,
         }).catch((err: Error) => err);

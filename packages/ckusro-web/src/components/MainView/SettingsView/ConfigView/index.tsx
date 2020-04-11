@@ -125,7 +125,7 @@ export function ConfigView({
   );
 }
 
-export default function() {
+export default function () {
   const state = useSelector((state: State) => ({
     ckusroConfig: state.config,
   }));

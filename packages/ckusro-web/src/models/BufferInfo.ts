@@ -57,7 +57,6 @@ export type LookUpBufferInfoArg<T> = T extends CommitBufferInfo['type']
   ? RepoPath
   : never;
 
-/* eslint-disable @typescript-eslint/no-object-literal-type-assertion */
 export function createBufferInfo<T extends BufferTypes>(
   type: T,
   oid: string,
@@ -92,7 +91,6 @@ export function createBufferInfo<T extends BufferTypes>(
       throw new Error('');
   }
 }
-/* eslint-enable @typescript-eslint/no-object-literal-type-assertion */
 
 export function compareBufferInfo(
   left: BufferInfo,

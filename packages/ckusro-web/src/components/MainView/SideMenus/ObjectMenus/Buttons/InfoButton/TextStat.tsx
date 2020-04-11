@@ -45,7 +45,7 @@ export function TextStat({
   );
 }
 
-export default function(ownProps: OwnProps) {
+export default function (ownProps: OwnProps) {
   const props = buildTextStatProps(ownProps);
 
   return <TextStat {...props} />;

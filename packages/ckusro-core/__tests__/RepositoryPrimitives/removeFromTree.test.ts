@@ -1,4 +1,4 @@
-import * as Git from 'isomorphic-git';
+import FS from 'fs';
 import { initRepository } from '../../src/Stage/prepare';
 import { buildTreeEntry, buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
@@ -13,21 +13,20 @@ import { writeBlob } from '../../src/RepositoryPrimitives/writeBlob';
 
 describe(removeFromTree, () => {
   const config = buildIsomorphicGitConfig();
+  let fs: typeof FS;
   beforeEach(async () => {
-    const core = Git.cores.create(config.core);
-    const fs = pfs();
-    core.set('fs', fs);
-    await initRepository(config);
+    fs = pfs();
+    await initRepository(fs, config);
   });
 
   it('returns TreeEntry[]', async () => {
-    const root = (await headTree(config)) as TreeObject;
-    const tmp = (await writeBlob(config, root, {
+    const root = (await headTree(fs, config)) as TreeObject;
+    const tmp = (await writeBlob(fs, config, root, {
       type: 'blob',
       path: '/foo/exists',
       content: Buffer.from(''),
     })) as PathTreeObject[];
-    const writeResult = (await writeBlob(config, tmp[0][1], {
+    const writeResult = (await writeBlob(fs, config, tmp[0][1], {
       type: 'blob',
       path: '/foo/remove',
       content: Buffer.from(''),
@@ -42,6 +41,7 @@ describe(removeFromTree, () => {
     ).toMatchObject(['exists', 'remove']);
 
     const actual = (await removeFromTree(
+      fs,
       config,
       parents,
       removeEntry.path,
@@ -57,13 +57,14 @@ describe(removeFromTree, () => {
       path: '/test',
     });
 
-    const actual = await removeFromTree(config, [], removeEntry.path);
+    const actual = await removeFromTree(fs, config, [], removeEntry.path);
     expect(actual).toBeInstanceOf(Error);
   });
 
   it('returns Error when TreeEntry does not exists', async () => {
-    const root = (await headTree(config)) as TreeObject;
+    const root = (await headTree(fs, config)) as TreeObject;
     const writeResult = (await writeBlob(
+      fs,
       config,
       root,
       createWriteInfo('blob', '/test', Buffer.from('')),
@@ -73,7 +74,7 @@ describe(removeFromTree, () => {
       path: 'does_not_exist',
     });
 
-    const actual = await removeFromTree(config, parents, removeEntry.path);
+    const actual = await removeFromTree(fs, config, parents, removeEntry.path);
     expect(actual).toBeInstanceOf(Error);
   });
 });

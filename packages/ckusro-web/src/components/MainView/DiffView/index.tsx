@@ -22,7 +22,7 @@ export function DiffView({ internalPath, original, stage }: DiffViewProps) {
   return <Diff name={internalPath.path} a={a} b={b} />;
 }
 
-export default function() {
+export default function () {
   const state = useSelector((state: State) => {
     const bufferInfo = state.ui.mainView.objectView.bufferInfo;
     if (bufferInfo == null || bufferInfo.type != 'blob') {

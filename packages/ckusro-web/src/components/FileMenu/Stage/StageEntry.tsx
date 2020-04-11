@@ -57,7 +57,7 @@ const Memoized = React.memo(
     ) && prev.blobEntry.oid === next.blobEntry.oid,
 );
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   const dispatch: ThunkDispatch<State, unknown, Actions> = useDispatch();
   const dispatchProps: DispatchProps = {
     onClick: () => {

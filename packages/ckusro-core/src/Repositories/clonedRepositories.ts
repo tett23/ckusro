@@ -6,8 +6,8 @@ import isCloned from './internal/isCloned';
 import separateErrors from '../utils/separateErrors';
 
 export default async function clonedRepositories(
-  config: CkusroConfig,
   fs: typeof FS,
+  config: CkusroConfig,
 ): Promise<Repository[] | Error> {
   const ps = config.repositories.map(async ({ repoPath }) => {
     const cloned = await isCloned(config, fs, repoPath);
@@ -15,7 +15,7 @@ export default async function clonedRepositories(
       return null;
     }
 
-    return fetchRepository(config, fs, repoPath);
+    return fetchRepository(fs, config, repoPath);
   });
   const results = await Promise.all(ps);
   const [maybeNull, errors] = separateErrors(results);

@@ -50,7 +50,7 @@ export function TreeObject({
 
 const Memoized = React.memo(TreeObject, (prev, next) => prev.oid === next.oid);
 
-export default function(ownProps: OwnProps) {
+export default function (ownProps: OwnProps) {
   const styles = useGitObjectListStyles();
   const gitObject = useSelector((state: State) =>
     createObjectManager(state.domain.repositories.objectManager).fetch(

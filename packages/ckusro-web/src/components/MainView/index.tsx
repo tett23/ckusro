@@ -27,7 +27,7 @@ export function MainView({ classes }: MainViewProps) {
   );
 }
 
-export default function() {
+export default function () {
   const styleProps: StyleProps = {
     classes: useMainViewStyles(),
   };

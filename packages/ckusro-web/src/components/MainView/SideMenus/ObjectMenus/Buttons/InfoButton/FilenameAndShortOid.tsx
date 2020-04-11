@@ -32,7 +32,7 @@ export function FilenameAndShortOid({
   );
 }
 
-export default function(ownProps: OwnProps) {
+export default function (ownProps: OwnProps) {
   const props = buildFilenameAndShortOidProps(ownProps);
 
   return <FilenameAndShortOid {...props} />;

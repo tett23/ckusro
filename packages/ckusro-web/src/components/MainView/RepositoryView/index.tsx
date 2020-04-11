@@ -16,7 +16,7 @@ export function RepositoryView() {
   );
 }
 
-export default function() {
+export default function () {
   const { repositoryInfo } = useSelector((state: State) => ({
     repositoryInfo: state.ui.mainView.repositoryView.repositoryInfo,
   }));

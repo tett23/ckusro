@@ -1,3 +1,4 @@
+import FS from 'fs';
 import { writeObject } from './writeObject';
 import updateOrAppendObject from './updateOrAppendObject';
 import { PathTreeObject } from '../models/PathTreeObject';
@@ -5,6 +6,7 @@ import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import removeTreeEntry from './removeTreeEntry';
 
 export async function removeFromTree(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   parents: PathTreeObject[],
   name: string,
@@ -20,7 +22,7 @@ export async function removeFromTree(
     return removeResult;
   }
 
-  const newTree = await writeObject(config, {
+  const newTree = await writeObject(fs, config, {
     type: 'tree',
     content: removeResult,
   });
@@ -33,5 +35,5 @@ export async function removeFromTree(
     return [newLeaf];
   }
 
-  return updateOrAppendObject(config, head, newLeaf);
+  return updateOrAppendObject(fs, config, head, newLeaf);
 }

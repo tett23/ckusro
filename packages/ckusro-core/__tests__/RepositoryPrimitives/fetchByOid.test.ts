@@ -1,4 +1,4 @@
-import * as Git from 'isomorphic-git';
+import FS from 'fs';
 import headOid from '../../src/RepositoryPrimitives/headOid';
 import { initRepository } from '../../src/Stage/prepare';
 import { randomOid, buildIsomorphicGitConfig } from '../__fixtures__';
@@ -7,16 +7,15 @@ import fetchByOid from '../../src/RepositoryPrimitives/fetchByOid';
 
 describe(fetchByOid, () => {
   const config = buildIsomorphicGitConfig();
+  let fs: typeof FS;
   beforeEach(async () => {
-    const core = Git.cores.create(config.core);
-    const fs = pfs();
-    core.set('fs', fs);
-    await initRepository(config);
+    fs = pfs();
+    await initRepository(fs, config);
   });
 
   it('returns TreeObject', async () => {
-    const oid = (await headOid(config)) as string;
-    const actual = await fetchByOid(config, oid);
+    const oid = (await headOid(fs, config)) as string;
+    const actual = await fetchByOid(fs, config, oid);
 
     expect(actual).toMatchObject({
       oid: oid,
@@ -24,16 +23,16 @@ describe(fetchByOid, () => {
   });
 
   it('returns Error ', async () => {
-    await initRepository(config);
-    const oid = (await headOid(config)) as string;
-    const actual = await fetchByOid(config, oid, 'tag');
+    await initRepository(fs, config);
+    const oid = (await headOid(fs, config)) as string;
+    const actual = await fetchByOid(fs, config, oid, 'tag');
 
     expect(actual).toBeInstanceOf(Error);
   });
 
   it('returns null', async () => {
-    await initRepository(config);
-    const actual = await fetchByOid(config, randomOid());
+    await initRepository(fs, config);
+    const actual = await fetchByOid(fs, config, randomOid());
 
     expect(actual).toBe(null);
   });

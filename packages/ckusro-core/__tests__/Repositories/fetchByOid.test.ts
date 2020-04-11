@@ -1,4 +1,3 @@
-import * as Git from 'isomorphic-git';
 import * as FS from 'fs';
 import {
   buildCkusroConfig,
@@ -19,8 +18,6 @@ describe(fetchByOid, () => {
       repositories: [buildRepositoryInfo()],
     });
     fs = pfs();
-    const core = Git.cores.create(config.coreId);
-    core.set('fs', fs);
 
     config.repositories.forEach(({ repoPath }) => {
       fs.mkdirSync(gitDir(config.base, repoPath), {
@@ -34,15 +31,15 @@ describe(fetchByOid, () => {
       config,
       config.repositories[0].repoPath,
     );
-    const repo = repository(isoConfig, config.repositories[0].repoPath);
+    const repo = repository(fs, isoConfig, config.repositories[0].repoPath);
     const oid = (await repo.headOid()) as string;
-    const expected = (await fetchByOid(config, fs, oid, 'commit')) as GitObject;
+    const expected = (await fetchByOid(fs, config, oid, 'commit')) as GitObject;
 
     expect(expected).not.toBeNull();
   });
 
   it('returns Error when the object does not exists', async () => {
-    const expected = await fetchByOid(config, fs, randomOid());
+    const expected = await fetchByOid(fs, config, randomOid());
 
     expect(expected).toBeInstanceOf(Error);
   });

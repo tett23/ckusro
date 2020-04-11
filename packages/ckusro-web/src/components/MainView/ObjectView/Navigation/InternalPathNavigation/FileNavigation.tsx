@@ -43,7 +43,7 @@ export function FileNavigation({
   );
 }
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   const dispatch = useDispatch();
   const dispatchProps = {
     onClick: (internalPath: InternalPath) => {

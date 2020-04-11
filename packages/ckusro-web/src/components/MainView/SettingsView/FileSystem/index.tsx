@@ -45,7 +45,7 @@ export function FileSystem({
   );
 }
 
-export default function() {
+export default function () {
   const state = useSelector((state: State) => ({
     ...state.ui.mainView.settingsView.fileSystem,
   }));

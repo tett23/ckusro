@@ -7,24 +7,24 @@ import { writeObject } from '../RepositoryPrimitives/writeObject';
 import isExistFileOrDirectory from '../utils/isExistFileOrDirectory';
 
 export async function prepare(
-  config: IsomorphicGitConfig,
   fs: typeof FS,
+  config: IsomorphicGitConfig,
 ): Promise<true | Error> {
-  if (await isInitialized(config, fs)) {
+  if (await isInitialized(fs, config)) {
     return true;
   }
 
-  const result = await prepareStageDirectory(config, fs);
+  const result = await prepareStageDirectory(fs, config);
   if (result instanceof Error) {
     return result;
   }
 
-  const result2 = await prepareStageRepository(config);
+  const result2 = await prepareStageRepository(fs, config);
   if (result2 instanceof Error) {
     return result2;
   }
 
-  const result3 = await initRepository(config);
+  const result3 = await initRepository(fs, config);
   if (result3 instanceof Error) {
     return result3;
   }
@@ -33,16 +33,17 @@ export async function prepare(
 }
 
 export async function isInitialized(
-  config: IsomorphicGitConfig,
   fs: typeof FS,
+  config: IsomorphicGitConfig,
 ) {
   return isExistFileOrDirectory(fs, config.gitdir);
 }
 
 export async function initRepository(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
 ): Promise<true | Error> {
-  const blob = await writeObject(config, {
+  const blob = await writeObject(fs, config, {
     type: 'blob',
     content: Buffer.from(''),
   }).catch((err: Error) => err);
@@ -50,7 +51,7 @@ export async function initRepository(
     return blob;
   }
 
-  const tree = await writeObject(config, {
+  const tree = await writeObject(fs, config, {
     type: 'tree',
     content: [toTreeEntry('.gitkeep', blob)],
   }).catch((err: Error) => err);
@@ -74,14 +75,14 @@ export async function initRepository(
     },
   };
 
-  const commit = await writeObject(config, unpersistedCommitObject).catch(
+  const commit = await writeObject(fs, config, unpersistedCommitObject).catch(
     (err: Error) => err,
   );
   if (commit instanceof Error) {
     return commit;
   }
 
-  const writeRefResult = await writeRef(config, 'HEAD', commit, {
+  const writeRefResult = await writeRef(fs, config, 'HEAD', commit, {
     force: true,
   });
   if (writeRefResult instanceof Error) {
@@ -92,8 +93,8 @@ export async function initRepository(
 }
 
 export async function prepareStageDirectory(
-  config: IsomorphicGitConfig,
   fs: typeof FS,
+  config: IsomorphicGitConfig,
 ): Promise<true | Error> {
   const statResult = await fs.promises
     .stat(config.gitdir)
@@ -113,10 +114,12 @@ export async function prepareStageDirectory(
 }
 
 export async function prepareStageRepository(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
 ): Promise<true | Error> {
   const initResult = await Git.init({
     ...config,
+    fs,
     bare: true,
   }).catch((err: Error) => err);
   if (initResult instanceof Error) {

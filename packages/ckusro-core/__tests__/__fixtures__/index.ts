@@ -19,7 +19,10 @@ import {
   toIsomorphicGitConfig,
 } from '../../src/models/IsomorphicGitConfig';
 import { RepositoryInfo } from '../../src/models/RepositoryInfo';
-import { CommitDescription, TagDescription } from 'isomorphic-git';
+import {
+  CommitObject as CommitDescription,
+  TagObject as TagDescription,
+} from 'isomorphic-git';
 
 export function fixtureBuilder<T>(base: T): (override?: Partial<T>) => T {
   return (override: Partial<T> = {}) => {
@@ -114,7 +117,6 @@ export const buildAuthor = fixtureBuilder<CommitDescription['author']>({
 });
 
 export const buildCommitDescription = fixtureBuilder<CommitDescription>({
-  oid: randomOid(),
   message: 'test',
   tree: randomOid(),
   parent: [],
@@ -135,7 +137,6 @@ export const buildTagDescription = fixtureBuilder<TagDescription>({
   tag: 'test_tag',
   tagger: buildAuthor(),
   message: 'test tag',
-  signature: undefined,
 });
 
 export const buildTagObject = fixtureBuilder<TagObject>({

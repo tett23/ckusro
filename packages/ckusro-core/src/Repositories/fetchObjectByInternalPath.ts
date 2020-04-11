@@ -9,7 +9,7 @@ export default async function fetchObjectByInternalPath(
   fs: typeof FS,
   internalPath: InternalPath,
 ): Promise<GitObject | null | Error> {
-  const repo = await fetchRepository(config, fs, internalPath.repoPath);
+  const repo = await fetchRepository(fs, config, internalPath.repoPath);
   if (repo instanceof Error) {
     return repo;
   }

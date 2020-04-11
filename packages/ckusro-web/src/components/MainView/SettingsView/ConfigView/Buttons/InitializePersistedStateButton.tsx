@@ -29,7 +29,7 @@ export function InitializePersistedStateButton({
   );
 }
 
-export default function() {
+export default function () {
   const dispatch = useDispatch();
   const dispatchProps = {
     onClick: () => dispatch(initializePersistedState()),

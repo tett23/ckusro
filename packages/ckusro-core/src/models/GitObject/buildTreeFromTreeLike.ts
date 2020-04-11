@@ -13,21 +13,21 @@ export type BuildTreeFromObjectResult = {
   objects: Array<TreeObject | BlobObject>;
 };
 
-export default function buildTreeFromTreeLike(
+export default async function buildTreeFromTreeLike(
   root: TreeContentLike,
-): BuildTreeFromObjectResult | Error {
+): Promise<BuildTreeFromObjectResult | Error> {
   if (Object.keys(root).length === 0) {
     return new Error();
   }
 
   const normalized = normalizeTree(root);
-  const result = buildRecursibily(normalized);
+  const result = await buildRecursibily(normalized);
   if (result instanceof Error) {
     return result;
   }
 
   const [entries, objects] = result;
-  const tree = createTreeObject(entries);
+  const tree = await createTreeObject(entries);
   if (tree instanceof Error) {
     return tree;
   }
@@ -82,24 +82,25 @@ function normalizeTree(root: TreeContentLike): TreeContentLike {
 
 type BuildRecursibilyResult = [TreeEntry[], BlobOrTreeObject[]];
 
-function buildRecursibily(
+async function buildRecursibily(
   tree: TreeContentLike,
-): BuildRecursibilyResult | Error {
+): Promise<BuildRecursibilyResult | Error> {
   return Object.entries(tree).reduce(
-    (acc: BuildRecursibilyResult | Error, [key, value]) => {
-      if (acc instanceof Error) {
-        return acc;
+    async (acc: Promise<BuildRecursibilyResult | Error>, [key, value]) => {
+      const left = await acc;
+      if (left instanceof Error) {
+        return left;
       }
 
-      const result = isBlobContentLike(value)
+      const result = await (isBlobContentLike(value)
         ? buildBlob(key, value)
-        : buildTree(key, value);
+        : buildTree(key, value));
       if (result instanceof Error) {
         return result;
       }
 
       const [entry, newObjects] = result;
-      const [entries, objects] = acc;
+      const [entries, objects] = left;
 
       return [
         [...entries, entry],
@@ -109,23 +110,25 @@ function buildRecursibily(
             {},
           ),
         ),
-      ];
+      ] as BuildRecursibilyResult;
     },
-    [[], []],
+    Promise.resolve([[], []] as BuildRecursibilyResult) as Promise<
+      BuildRecursibilyResult
+    >,
   );
 }
 
-function buildTree(
+async function buildTree(
   path: string,
   content: TreeContentLike,
-): [TreeTreeEntry, BlobOrTreeObject[]] | Error {
-  const result = buildRecursibily(content);
+): Promise<[TreeTreeEntry, BlobOrTreeObject[]] | Error> {
+  const result = await buildRecursibily(content);
   if (result instanceof Error) {
     return result;
   }
 
   const [entries, objects] = result;
-  const tree = createTreeObject(entries);
+  const tree = await createTreeObject(entries);
   if (tree instanceof Error) {
     return tree;
   }
@@ -141,11 +144,11 @@ function buildTree(
   ];
 }
 
-function buildBlob(
+async function buildBlob(
   path: string,
   content: Buffer | string,
-): [BlobTreeEntry, BlobOrTreeObject[]] | Error {
-  const blob = createBlobObject(
+): Promise<[BlobTreeEntry, BlobOrTreeObject[]] | Error> {
+  const blob = await createBlobObject(
     typeof content === 'string' ? Buffer.from(content) : content,
   );
   if (blob instanceof Error) {
@@ -163,8 +166,8 @@ function buildBlob(
   ];
 }
 
-function createBlobObject(buffer: Buffer): BlobObject | Error {
-  const oid = objectDigest({ type: 'blob', content: buffer });
+async function createBlobObject(buffer: Buffer): Promise<BlobObject | Error> {
+  const oid = await objectDigest({ type: 'blob', content: buffer });
   if (oid instanceof Error) {
     return oid;
   }
@@ -176,8 +179,10 @@ function createBlobObject(buffer: Buffer): BlobObject | Error {
   };
 }
 
-function createTreeObject(treeEntries: TreeEntry[]): TreeObject | Error {
-  const oid = objectDigest({ type: 'tree', content: treeEntries });
+async function createTreeObject(
+  treeEntries: TreeEntry[],
+): Promise<TreeObject | Error> {
+  const oid = await objectDigest({ type: 'tree', content: treeEntries });
   if (oid instanceof Error) {
     return oid;
   }

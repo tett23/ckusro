@@ -18,7 +18,7 @@ describe(replaceTreeNode, () => {
 
   it('returns PathTreeObject[]', async () => {
     const internalPath = buildInternalPath();
-    const { repository, isoConfig } = (await buildDummyRepository(
+    const { repository, isoConfig, fs } = (await buildDummyRepository(
       config,
       internalPath.repoPath,
       {
@@ -28,10 +28,10 @@ describe(replaceTreeNode, () => {
       },
     )) as DummyRepositoryResult;
 
-    const { objects } = buildTreeFromTreeLike({
+    const { objects } = (await buildTreeFromTreeLike({
       'foo/bar': 'updated',
-    }) as BuildTreeFromObjectResult;
-    await batchWriteObjects(isoConfig, objects);
+    })) as BuildTreeFromObjectResult;
+    await batchWriteObjects(fs, isoConfig, objects);
 
     expect(
       await printTree2(
@@ -44,6 +44,7 @@ describe(replaceTreeNode, () => {
             `);
 
     const [[, newRoot]] = (await replaceTreeNode(
+      fs,
       isoConfig,
       '/foo/bar',
       objects.find((item) => item.type === 'blob') as BlobObject,
@@ -58,15 +59,16 @@ describe(replaceTreeNode, () => {
 
   it('returns PathTreeObject[] when the path is root', async () => {
     const internalPath = buildInternalPath();
-    const { repository, isoConfig } = (await buildDummyRepository(
+    const { repository, isoConfig, fs } = (await buildDummyRepository(
       config,
       internalPath.repoPath,
     )) as DummyRepositoryResult;
 
-    const { root: replace } = buildTreeFromTreeLike({
+    const { root: replace } = (await buildTreeFromTreeLike({
       updated: '',
-    }) as BuildTreeFromObjectResult;
+    })) as BuildTreeFromObjectResult;
     const [[, newRoot]] = (await replaceTreeNode(
+      fs,
       isoConfig,
       '/',
       replace,

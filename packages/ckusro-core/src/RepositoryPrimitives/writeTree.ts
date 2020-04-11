@@ -1,3 +1,4 @@
+import FS from 'fs';
 import { TreeWriteInfo } from '../models/writeInfo';
 import updateOrAppendObject from './updateOrAppendObject';
 import { PathTreeObject } from '../models/PathTreeObject';
@@ -13,12 +14,13 @@ import { IsomorphicGitConfig } from '../models/IsomorphicGitConfig';
 import normalizePath from '../utils/normalizePath';
 
 export async function writeTree(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   currentTree: TreeObject,
   writeInfo: TreeWriteInfo,
 ): Promise<PathTreeObject[] | Error> {
   const path = normalizePath(writeInfo.path);
-  const tree = await fetchOrCreateTreeByPath(config, currentTree, path);
+  const tree = await fetchOrCreateTreeByPath(fs, config, currentTree, path);
   if (tree instanceof Error) {
     return tree;
   }
@@ -44,12 +46,12 @@ export async function writeTree(
     type: 'tree',
     content: newEntries,
   };
-  const persistedTree = await writeObject(config, unpersistedTree);
+  const persistedTree = await writeObject(fs, config, unpersistedTree);
   if (persistedTree instanceof Error) {
     return persistedTree;
   }
 
   const parents = tree.slice(0, -1);
 
-  return updateOrAppendObject(config, parents, [leafPath, persistedTree]);
+  return updateOrAppendObject(fs, config, parents, [leafPath, persistedTree]);
 }

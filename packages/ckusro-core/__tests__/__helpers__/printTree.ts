@@ -3,7 +3,7 @@ import { TreeObject, BlobOrTreeObject, GitObject } from '../../src';
 export default function printTree(
   tree: TreeObject,
   objects: BlobOrTreeObject[],
-  indent: number = 0,
+  indent = 0,
 ): string {
   const spacer = Array.from({ length: indent })
     .map(() => ' ')
@@ -31,7 +31,7 @@ export default function printTree(
 export async function printTree2(
   tree: TreeObject,
   readObject: (oid: string) => Promise<GitObject | null | Error>,
-  indent: number = 0,
+  indent = 0,
 ): Promise<string> {
   const spacer = Array.from({ length: indent })
     .map(() => ' ')

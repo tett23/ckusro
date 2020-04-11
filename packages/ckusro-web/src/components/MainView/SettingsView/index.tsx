@@ -68,7 +68,7 @@ export function SettingsView({
   );
 }
 
-export default function() {
+export default function () {
   const state = useSelector((state: State) => ({
     settingsViewType: state.ui.mainView.settingsView.misc.settingsViewTypes,
   }));

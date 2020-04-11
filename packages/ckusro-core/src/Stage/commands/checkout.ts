@@ -1,3 +1,4 @@
+import FS from 'fs';
 import { GitObject, TreeObject } from '../../models/GitObject';
 import {
   IsomorphicGitConfig,
@@ -15,6 +16,7 @@ import wrapError from '../../utils/wrapError';
 import { fetchOrCreateTreeByPath } from '../../RepositoryPrimitives/fetchOrCreateTreeByPath';
 import headTree from '../../RepositoryPrimitives/headTree';
 import { CkusroConfig } from '../../models/CkusroConfig';
+import { PathTreeEntry } from '../../models/PathTreeEntry';
 
 export type CheckoutResult = {
   root: TreeObject;
@@ -22,24 +24,26 @@ export type CheckoutResult = {
 };
 
 export default async function checkout(
+  fs: typeof FS,
   config: CkusroConfig,
   repoPath: RepoPath,
   ref: string,
 ): Promise<CheckoutResult | Error> {
   const stageConfig = stageIsomorphicGitConfig(config);
   const repoConfig = toIsomorphicGitConfig(config, repoPath);
-  const repo = repository(repoConfig, repoPath);
-  const copyResult = await copyTree(stageConfig, repo, ref);
+  const repo = repository(fs, repoConfig, repoPath);
+  const copyResult = await copyTree(fs, stageConfig, repo, ref);
   if (copyResult instanceof Error) {
     return wrapError(copyResult);
   }
 
-  const head = await headTree(stageConfig);
+  const head = await headTree(fs, stageConfig);
   if (head instanceof Error) {
     return wrapError(head);
   }
 
   const fetchOrCreateResult = await fetchOrCreateTreeByPath(
+    fs,
     stageConfig,
     head,
     createRepoPath(repoPath).join(),
@@ -55,6 +59,7 @@ export default async function checkout(
 
   const [[, root]] = fetchOrCreateResult;
   const replaceTreeNodeResult = await replaceTreeNode(
+    fs,
     stageConfig,
     createRepoPath(repoPath).join(),
     tree,
@@ -81,6 +86,7 @@ export default async function checkout(
 }
 
 async function copyTree(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   repository: Repository,
   ref: string,
@@ -95,7 +101,9 @@ async function copyTree(
     return wrapError(entries);
   }
 
-  const ps = entries.map(([, item]) => repository.fetchByOid(item.oid));
+  const ps = entries.map(([, item]: PathTreeEntry) =>
+    repository.fetchByOid(item.oid),
+  );
   const fetchResults = await Promise.all(ps);
   const [nullable, errors] = separateErrors(fetchResults);
   if (isErrors(errors)) {
@@ -103,7 +111,7 @@ async function copyTree(
   }
 
   const objects = nullable.filter((item): item is GitObject => item != null);
-  const batchWriteResult = await batchWriteObjects(config, objects);
+  const batchWriteResult = await batchWriteObjects(fs, config, objects);
   if (batchWriteResult instanceof Error) {
     return wrapError(batchWriteResult);
   }

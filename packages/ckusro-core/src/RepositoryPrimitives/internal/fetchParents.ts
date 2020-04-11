@@ -1,4 +1,5 @@
 import { basename } from 'path';
+import FS from 'fs';
 import { fetchByPath } from '../fetchByPath';
 import { TreeObject, isTreeObject } from '../../models/GitObject';
 import { writeObject } from '../writeObject';
@@ -17,6 +18,7 @@ const DefaultOptions = {
 };
 
 export default async function fetchParents(
+  fs: typeof FS,
   config: IsomorphicGitConfig,
   root: TreeObject,
   path: string,
@@ -48,7 +50,7 @@ export default async function fetchParents(
         return new Error('');
       }
 
-      const fetchResult = await fetchByPath(config, parent, path);
+      const fetchResult = await fetchByPath(fs, config, parent, path);
       if (fetchResult instanceof Error) {
         return fetchResult;
       }
@@ -59,7 +61,7 @@ export default async function fetchParents(
         return new Error(`Entry not found. path=${path}`);
       }
 
-      const writeResult = await writeObject(config, {
+      const writeResult = await writeObject(fs, config, {
         type: 'tree',
         content: [],
       });
@@ -67,7 +69,10 @@ export default async function fetchParents(
         return writeResult;
       }
 
-      return updateOrAppendObject(config, left, [basename(path), writeResult]);
+      return updateOrAppendObject(fs, config, left, [
+        basename(path),
+        writeResult,
+      ]);
     },
     Promise.resolve(init),
   );

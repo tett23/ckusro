@@ -51,7 +51,7 @@ export function ObjectViewFab({
   );
 }
 
-export default function() {
+export default function () {
   const stateProps: StateProps = useSelector((state: State) => ({
     viewMode: state.ui.mainView.objectView.viewMode,
   }));

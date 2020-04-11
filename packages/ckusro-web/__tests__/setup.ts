@@ -4,5 +4,4 @@ import { TextDecoder } from 'util';
 
 jest.setTimeout(5000);
 
-// @ts-ignore
-global.TextDecoder = TextDecoder;
+(global as any).TextDecoder = TextDecoder; // eslint-disable-line @typescript-eslint/no-explicit-any

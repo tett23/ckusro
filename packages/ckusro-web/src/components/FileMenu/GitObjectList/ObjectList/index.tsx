@@ -28,7 +28,7 @@ export function ObjectList({ bufferInfo }: HeaderProps) {
   );
 }
 
-export default function() {
+export default function () {
   const { objectManager, bufferInfo } = useSelector((state: State) => ({
     objectManager: createObjectManager(state.domain.repositories.objectManager),
     bufferInfo: state.ui.fileMenu.gitObjectList.bufferInfo,

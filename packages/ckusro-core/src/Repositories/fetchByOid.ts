@@ -5,12 +5,12 @@ import clonedRepositories from './clonedRepositories';
 import separateErrors from '../utils/separateErrors';
 
 export default async function fetchByOid<T extends GitObjectTypes>(
-  config: CkusroConfig,
   fs: typeof FS,
+  config: CkusroConfig,
   oid: string,
   objectType?: T,
 ): Promise<LookUpGitObjectType<T> | Error> {
-  const repositories = await clonedRepositories(config, fs);
+  const repositories = await clonedRepositories(fs, config);
   if (repositories instanceof Error) {
     return repositories;
   }

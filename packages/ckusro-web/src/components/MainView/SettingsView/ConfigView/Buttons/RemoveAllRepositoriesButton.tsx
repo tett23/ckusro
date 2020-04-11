@@ -29,7 +29,7 @@ export function RemoveAllRepositoriesButton({
   );
 }
 
-export default function() {
+export default function () {
   const dispatch = useDispatch();
   const dispatchProps = {
     onClick: () => dispatch(removeAllRepositories()),

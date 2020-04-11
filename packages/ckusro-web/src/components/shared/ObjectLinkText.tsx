@@ -21,7 +21,7 @@ export function ObjectLinkText({
   return <span onClick={updateCurrentOid}>{children}</span>;
 }
 
-export default function(ownProps: OwnProps) {
+export default function (ownProps: OwnProps) {
   const dispatch = useDispatch();
   const actions = {
     updateCurrentOid() {

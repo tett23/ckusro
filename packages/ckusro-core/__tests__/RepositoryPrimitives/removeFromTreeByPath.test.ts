@@ -1,4 +1,4 @@
-import * as Git from 'isomorphic-git';
+import FS from 'fs';
 import { initRepository } from '../../src/Stage/prepare';
 import { buildIsomorphicGitConfig } from '../__fixtures__';
 import { pfs } from '../__helpers__';
@@ -13,21 +13,20 @@ import removeFromTreeByPath from '../../src/RepositoryPrimitives/removeFromTreeB
 
 describe(removeFromTreeByPath, () => {
   const config = buildIsomorphicGitConfig();
+  let fs: typeof FS;
   beforeEach(async () => {
-    const core = Git.cores.create(config.core);
-    const fs = pfs();
-    core.set('fs', fs);
-    await initRepository(config);
+    fs = pfs();
+    await initRepository(fs, config);
   });
 
   it('returns PathTreeObject[]', async () => {
-    const root = (await headTree(config)) as TreeObject;
-    const tmp = (await writeBlob(config, root, {
+    const root = (await headTree(fs, config)) as TreeObject;
+    const tmp = (await writeBlob(fs, config, root, {
       type: 'blob',
       path: '/test/exists',
       content: Buffer.from(''),
     })) as PathTreeObject[];
-    const writeResult = (await writeBlob(config, tmp[0][1], {
+    const writeResult = (await writeBlob(fs, config, tmp[0][1], {
       type: 'blob',
       path: '/test/remove',
       content: Buffer.from(''),
@@ -41,6 +40,7 @@ describe(removeFromTreeByPath, () => {
     ]);
 
     const actual = (await removeFromTreeByPath(
+      fs,
       config,
       newRoot,
       '/test/remove',

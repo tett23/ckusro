@@ -38,7 +38,7 @@ export function InternalPathNavigation({
   );
 }
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   const classes = useStyles();
 
   return <InternalPathNavigation {...props} classes={classes} />;

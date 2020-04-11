@@ -30,7 +30,7 @@ export function EntryName({ internalPath, status, classes }: EntryNameProps) {
   );
 }
 
-export default function(props: OwnProps) {
+export default function (props: OwnProps) {
   const { entryStatus } = useSelector(
     (state: State) => ({
       stageOid: state.domain.repositories.stageHead,
