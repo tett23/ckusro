@@ -22,7 +22,7 @@ describe(repository.name, () => {
   });
 
   describe(pull, () => {
-    it('returns string', async () => {});
+    it('returns string', async () => {}); // eslint-disable-line @typescript-eslint/no-empty-function
   });
 
   describe(checkout, () => {

@@ -40,7 +40,7 @@ export default async function clone(
         ({
           oauth2format: 'github',
           token: config.authentication.github,
-        } as any),
+        } as any), // eslint-disable-line @typescript-eslint/no-explicit-any
     }))().catch((err: Error) => err);
   if (result instanceof Error) {
     return result;

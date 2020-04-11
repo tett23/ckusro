@@ -13,10 +13,10 @@ export default async function rmrf(
   }
 
   const rmrfResult = await (async () =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await promisify<any, any, any>(rimraf)(path, {
       ...fs,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      lstat: callbackify(fs.promises.stat) as any,
+      lstat: callbackify(fs.promises.stat) as any, // eslint-disable-line @typescript-eslint/no-explicit-any
     }))().catch((err: Error) => err);
   if (rmrfResult instanceof Error) {
     return rmrfResult;

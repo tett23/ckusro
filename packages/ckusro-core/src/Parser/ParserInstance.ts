@@ -12,16 +12,13 @@ export default function parserInstance<
   PP extends Record<string, unknown>,
   CP extends Record<string, unknown>
 >(plugins: Plugins<PP, CP>): ParserInstance {
-  let parser = unified()
-    .use(remarkParse, { gfm: true })
-    .use(remarkBreaks);
+  let parser = unified().use(remarkParse, { gfm: true }).use(remarkBreaks);
 
   plugins.parsers.forEach(({ plugin }) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parser = parser.use(plugin as any);
   });
 
-  // @ts-ignore
   parser = parser.use(remarkRehype, null, jsxHandlers(plugins.components));
 
   return parser;

@@ -36,9 +36,7 @@ export default function renderJSXComponent<P extends Record<string, unknown>>(
   React.createElement;
   const html = ReactDOMServer.renderToString(<Component {...(props || {})} />);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const hast: any = unified()
-    .use(rehypeParse)
-    .parse(html);
+  const hast: any = unified().use(rehypeParse).parse(html);
   const body = hast.children[0].children[1].children;
 
   return body;

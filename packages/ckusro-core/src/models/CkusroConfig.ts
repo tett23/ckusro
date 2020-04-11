@@ -34,15 +34,13 @@ export type ColorScheme = {
 export type ColorSchemeText = { [K in keyof ColorScheme]: string };
 
 export function convertColorScheme(colorScheme: ColorSchemeText): ColorScheme {
+  // eslint-disable @typescript-eslint/no-object-literal-type-assertion
   return (Object.entries(colorScheme) as Array<
     [keyof ColorScheme, string]
-  >).reduce(
-    (acc, [key, value]) => {
-      acc[key] = parseInt(value.replace(/^#/, ''), 16);
+  >).reduce((acc, [key, value]) => {
+    acc[key] = parseInt(value.replace(/^#/, ''), 16);
 
-      return acc;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
-    {} as ColorScheme,
-  );
+    return acc;
+  }, {} as ColorScheme);
+  // eslint-enable @typescript-eslint/no-object-literal-type-assertion
 }

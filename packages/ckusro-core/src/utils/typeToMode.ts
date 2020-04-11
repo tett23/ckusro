@@ -1,6 +1,6 @@
 import { GitObjectTypes } from '../models/GitObject';
 
-export default function(type: GitObjectTypes) {
+export default function (type: GitObjectTypes) {
   if (type === 'tree') {
     return '040000';
   }
